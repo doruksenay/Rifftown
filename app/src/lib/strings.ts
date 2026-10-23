@@ -896,8 +896,8 @@ export const tr = {
   reportMessageQ: 'Bu mesaj yöneticilere şikâyet edilsin mi? (Mesaja basılı tutarak şikâyet edebilirsin.)',
   err_ring_pledged: 'Bu yüzük bekleyen bir evlilik teklifinde. Önce teklifi geri çek.',
   err_crafted_not_sellable: 'Atölyede üretilen eşyalar dükkâna satılmaz. İkinci el pazarında satabilirsin.',
-  brandLine1: 'Ritmi kur.',
-  brandLine2: 'Şehri fethet.',
+  brandLine1: 'Şehir senin.',
+  brandLine2: 'Sahne senin.',
 };
 
 export type StringKey = keyof typeof tr;
@@ -1773,6 +1773,6 @@ export const en: Record<StringKey, string> = {
   reportMessageQ: 'Report this message to the moderators? (Press and hold any message to report it.)',
   err_ring_pledged: 'This ring is part of a pending proposal. Withdraw the proposal first.',
   err_crafted_not_sellable: 'Crafted items cannot be sold to shops. Sell them on the second-hand market.',
-  brandLine1: 'Build the beat.',
-  brandLine2: 'Own the town.',
+  brandLine1: 'Your City.',
+  brandLine2: 'Your Stage.',
 };

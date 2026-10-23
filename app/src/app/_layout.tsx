@@ -1,4 +1,3 @@
-import { Fredoka_600SemiBold, Fredoka_700Bold } from '@expo-google-fonts/fredoka';
 import { Nunito_500Medium, Nunito_700Bold, Nunito_800ExtraBold, useFonts } from '@expo-google-fonts/nunito';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
@@ -16,8 +15,9 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    Fredoka_600SemiBold,
-    Fredoka_700Bold,
+    // Fredoka'nın Türkçe harfleri (Ş ş Ğ ğ İ) eklenmiş sürümü: assets/fonts/README.md
+    RifftownDisplay_600SemiBold: require('../../assets/fonts/RifftownDisplay-SemiBold.ttf'),
+    RifftownDisplay_700Bold: require('../../assets/fonts/RifftownDisplay-Bold.ttf'),
     Nunito_500Medium,
     Nunito_700Bold,
     Nunito_800ExtraBold,

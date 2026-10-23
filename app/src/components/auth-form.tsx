@@ -31,6 +31,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     }
   };
 
+  const motto = { fontFamily: fonts.display, fontSize: type.lead, lineHeight: type.lead * 1.3 };
   const canSubmit = email.includes('@') && password.length >= (mode === 'register' ? 8 : 1) && (mode === 'login' || accepted);
 
   return (
@@ -48,9 +49,15 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
         </View>
         <View style={{ paddingTop: space.xl, paddingBottom: space.xl, alignItems: 'center' }}>
           <BrandLogo width={240} />
-          <Text style={{ fontFamily: fonts.display, fontSize: type.lead, lineHeight: type.lead * 1.3, color: c.ink, marginTop: space.md, textAlign: 'center' }}>
-            {t('brandLine1')} <Text style={{ color: c.pink }}>{t('brandLine2')}</Text>
-          </Text>
+          <View
+            accessible
+            accessibilityRole="header"
+            accessibilityLabel={`${t('brandLine1')} ${t('brandLine2')}`}
+            style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'baseline', columnGap: 6, marginTop: space.md }}
+          >
+            <Text style={[motto, { color: c.ink }]}>{t('brandLine1')}</Text>
+            <Text style={[motto, { color: c.pink }]}>{t('brandLine2')}</Text>
+          </View>
           <Body style={{ marginTop: space.xs, maxWidth: 320, textAlign: 'center' }} color={c.inkSoft}>
             {t('tagline')}
           </Body>

@@ -1,6 +1,6 @@
 # Rifftown marka rehberi
 
-**Build the beat. Own the town.** · *Ritmi kur. Şehri fethet.*
+**Şehir senin. Sahne senin.** · *Your City. Your Stage.*
 
 ![Marka panosu](docs/brand-board.png)
 
@@ -39,10 +39,10 @@ Degradeler:
 
 ## Yazı tipleri
 
-- **Başlıklar:** [Fredoka](https://fonts.google.com/specimen/Fredoka) 600 / 700. Yuvarlak hatlı, logodaki yazıya yakın.
+- **Başlıklar:** Rifftown Display 600 / 700: [Fredoka](https://fonts.google.com/specimen/Fredoka) temel alınıp eksik Türkçe harfleri (Ş ş Ğ ğ İ) eklenmiş sürüm (`app/assets/fonts`). Yuvarlak hatlı, logodaki yazıya yakın. Google'ın Fredoka dosyasında bu harfler olmadığı için başka bir yerde Fredoka kullanılacaksa bu dosyalar kullanılmalı.
 - **Metin:** [Nunito](https://fonts.google.com/specimen/Nunito) 500 / 700 / 800.
 
-İkisi de SIL Open Font License ile ücretsizdir ve uygulamaya `@expo-google-fonts` paketleriyle gömülür.
+İkisi de SIL Open Font License ile ücretsizdir. Nunito `@expo-google-fonts/nunito` paketinden, Rifftown Display `app/assets/fonts` klasöründen yüklenir.
 
 ## Biçim
 

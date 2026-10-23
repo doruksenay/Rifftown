@@ -29,7 +29,7 @@
       "shortName": "Rifftown",
       "themeColor": "#1A0E4B",
       "backgroundColor": "#F8F9FF",
-      "description": "Build the beat. Own the town."
+      "description": "Your City. Your Stage."
     },
     "plugins": [
       "expo-router",

@@ -21,10 +21,8 @@ export function MissionsCard() {
 
   return (
     <>
-      <Row style={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <Heading>{t('missions')}</Heading>
-        {data.endsAt ? <Small>{t('missionsEnd', { time: duration(new Date(data.endsAt).getTime() - Date.now(), lang) })}</Small> : null}
-      </Row>
+      <Heading style={{ marginBottom: data.endsAt ? 0 : space.sm }}>{t('missions')}</Heading>
+      {data.endsAt ? <Small style={{ marginBottom: space.sm }}>{t('missionsEnd', { time: duration(new Date(data.endsAt).getTime() - Date.now(), lang) })}</Small> : null}
       {!data.weekId || !data.missions.length ? (
         <Small>{t('missionsNone')}</Small>
       ) : (

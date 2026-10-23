@@ -1,7 +1,7 @@
 // Rifftown görsel dili (BRAND.md): neon bir müzik şehri.
 // Marka renkleri: Neon Cyan #00E5FF, Hot Pink #FF2EB6, Electric Purple #8A2BFF,
 // Sky Blue #3B82FF, Midnight Indigo #1A0E4B, Soft Off-White #F8F9FF.
-// Başlıklar yuvarlak hatlı Fredoka, metinler Nunito ile. Köşeler yumuşak, ana düğmeler pembe→mor degrade.
+// Başlıklar yuvarlak hatlı Rifftown Display (Türkçe harfleri eklenmiş Fredoka), metinler Nunito ile. Köşeler yumuşak, ana düğmeler pembe→mor degrade.
 // Açık temada küçük metinde kullanılan renkler okunurluk için (WCAG AA) markanın biraz koyu tonlarıdır.
 
 import { useColorScheme } from 'react-native';
@@ -63,8 +63,8 @@ export function useColors(): Palette {
 }
 
 export const fonts = {
-  display: 'Fredoka_700Bold',
-  displayMedium: 'Fredoka_600SemiBold',
+  display: 'RifftownDisplay_700Bold',
+  displayMedium: 'RifftownDisplay_600SemiBold',
   body: 'Nunito_500Medium',
   bodyMedium: 'Nunito_700Bold',
   bodyBold: 'Nunito_800ExtraBold',

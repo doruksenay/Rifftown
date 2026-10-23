@@ -2,7 +2,7 @@
 
 # Rifftown
 
-*Build the beat. Own the town.*
+*Şehir senin. Sahne senin.* · *Your City. Your Stage.*
 
 Online, gerçek zamanlı bir müzik kariyeri yaşam simülasyonu: iOS ve Android uygulaması, oyun sunucusu ve yönetim paneli. Oyun kuralları ve tüm formüller için [GAME_DESIGN.md](GAME_DESIGN.md) dosyasına bak.
 
