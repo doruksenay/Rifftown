@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.expo/
+web-build/
+*.log
+.env
+deploy/.env
+deploy/backups/
+app/ios/
+app/android/
+.DS_Store

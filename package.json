@@ -1,0 +1,17 @@
+{
+  "name": "rifftown",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Rifftown — online müzik kariyeri yaşam simülasyonu (mobil MMO)",
+  "workspaces": [
+    "packages/shared",
+    "server",
+    "app"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:worker": "npm run worker:dev -w server",
+    "test": "npm test -w server",
+    "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w server && npm run typecheck -w app"
+  }
+}

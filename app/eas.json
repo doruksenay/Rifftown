@@ -1,0 +1,39 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.20:3000",
+        "EXPO_PUBLIC_REVENUECAT_IOS_KEY": "appl_BURAYA",
+        "EXPO_PUBLIC_REVENUECAT_ANDROID_KEY": "goog_BURAYA"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.ornekoyun.com",
+        "EXPO_PUBLIC_REVENUECAT_IOS_KEY": "appl_BURAYA",
+        "EXPO_PUBLIC_REVENUECAT_ANDROID_KEY": "goog_BURAYA"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.ornekoyun.com",
+        "EXPO_PUBLIC_REVENUECAT_IOS_KEY": "appl_BURAYA",
+        "EXPO_PUBLIC_REVENUECAT_ANDROID_KEY": "goog_BURAYA"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
