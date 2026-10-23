@@ -1,9 +1,12 @@
 import { config } from './config';
-import { pool } from './db';
+import { createPool, pool } from './db';
 import { migrate } from './migrate';
 import { startWorker } from './worker';
 
-await migrate(pool);
+// Güncellemeler doğrudan bağlantıyla (Neon: DATABASE_URL_UNPOOLED)
+const migrationPool = createPool(config.migrationUrl);
+await migrate(migrationPool);
+await migrationPool.end();
 console.log(`Rifftown zamanlayıcısı çalışıyor · her ${config.workerIntervalMs} ms · oyun hızı x${config.gameSpeed}`);
 const stop = startWorker(config.workerIntervalMs);
 

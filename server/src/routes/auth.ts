@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { notify } from '../game/common';
 import { createSession, deleteSession, hashPassword, requireUser, verifyPassword } from '../auth';
 import { many, one, pool, tx } from '../db';
+import { config } from '../config';
 import { fail } from '../errors';
 import { parse } from './util';
 
@@ -29,6 +30,10 @@ export async function authRoutes(app: FastifyInstance) {
       'INSERT INTO users(email, password_hash, lang, terms_accepted_at) VALUES ($1, $2, $3, now()) RETURNING *',
       [email, await hashPassword(body.password), body.lang],
     );
+    if (config.adminEmails.includes(email)) {
+      await pool.query('UPDATE users SET is_admin = TRUE WHERE id = $1', [user.id]);
+      user.is_admin = true;
+    }
     return { token: await createSession(user.id), user: toUser(user) };
   });
 
@@ -64,6 +69,12 @@ export async function authRoutes(app: FastifyInstance) {
 }
 
 /** Grubu devreder ya da dağıtır, sonra kullanıcıyı siler (karakter ve ona bağlı her şey zincirleme silinir) */
+/** ADMIN_EMAILS listesindeki hesapları yönetici yapar (açılışta çalışır). */
+export async function grantAdmins() {
+  if (!config.adminEmails.length) return;
+  await pool.query('UPDATE users SET is_admin = TRUE WHERE lower(email) = ANY($1::text[]) AND NOT is_admin', [config.adminEmails]);
+}
+
 export async function deleteAccount(userId: number) {
   await tx(async (c) => {
     const ch = await one(c, 'SELECT id FROM characters WHERE user_id = $1 FOR UPDATE', [userId]);

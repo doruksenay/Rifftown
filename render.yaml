@@ -1,0 +1,47 @@
+# Render Blueprint: Rifftown oyun sunucusu (API + zamanlayıcı tek süreçte).
+# Render panelinde "New → Blueprint" ile bu depo seçilince kurulur; main dalına her
+# yüklemede sunucu yeniden derlenir. Veritabanı Neon'da (README → "Canlıya alma").
+
+services:
+  - type: web
+    name: rifftown-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    # Sadece sunucuyu etkileyen değişikliklerde yeniden derle (mobil uygulama değişiklikleri derlemez)
+    buildFilter:
+      paths:
+        - server/**
+        - packages/shared/**
+        - Dockerfile
+        - package.json
+        - package-lock.json
+        - render.yaml
+    envVars:
+      # Neon → Connect → "Connection pooling" açık adres (-pooler içerir)
+      - key: DATABASE_URL
+        sync: false
+      # Neon → Connect → "Connection pooling" kapalı adres (veritabanı güncellemeleri için)
+      - key: DATABASE_URL_UNPOOLED
+        sync: false
+      # Kayıt olunca yönetici olacak e-posta(lar), virgülle
+      - key: ADMIN_EMAILS
+        sync: false
+      # Şartlarda, gizlilik politikasında ve uygulamada görünen iletişim adresi
+      - key: CONTACT_EMAIL
+        sync: false
+      # Zamanlayıcı API ile aynı süreçte (ücretsiz planda ayrı arka plan servisi yok)
+      - key: RUN_WORKER
+        value: "1"
+      # 1 = gerçek zaman. Test için hızlandırmak istersen artır (ör. 6: 4 saatlik iş 40 dakika)
+      - key: GAME_SPEED
+        value: "1"
+      # Uyuyan Neon veritabanını daha az uyandırmak için 5 saniyede bir kontrol
+      - key: WORKER_INTERVAL_MS
+        value: "5000"
+      - key: PG_POOL_MAX
+        value: "5"

@@ -1,12 +1,17 @@
 import { buildApp } from './app';
 import { config } from './config';
-import { pool } from './db';
+import { createPool, pool } from './db';
+import { grantAdmins } from './routes/auth';
 import { migrate } from './migrate';
 import { startWorker } from './worker';
 
 // API sunucusu. RUN_WORKER=1 ise zamanlayıcıyı da aynı süreçte çalıştırır
 // (tek sunuculu küçük kurulumlar için pratik).
-await migrate(pool);
+// Güncellemeler doğrudan bağlantıyla (oturum kilidi gerekir), oyun trafiği havuzlu bağlantıyla
+const migrationPool = createPool(config.migrationUrl);
+await migrate(migrationPool);
+await migrationPool.end();
+await grantAdmins();
 const app = await buildApp();
 await app.listen({ port: config.port, host: config.host });
 app.log.info(`Rifftown API hazır · oyun hızı x${config.gameSpeed}`);

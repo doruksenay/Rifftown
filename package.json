@@ -12,6 +12,12 @@
     "dev:server": "npm run dev -w server",
     "dev:worker": "npm run worker:dev -w server",
     "test": "npm test -w server",
-    "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w server && npm run typecheck -w app"
+    "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w server && npm run typecheck -w app",
+    "build": "npm run typecheck && npm run build -w server",
+    "build:web": "npm run build:web -w app"
+  },
+  "dependencies": {
+    "@neon/config": "^1.9.3",
+    "@neon/env": "^1.6.4"
   }
 }

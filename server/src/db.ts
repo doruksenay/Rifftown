@@ -8,7 +8,22 @@ pg.types.setTypeParser(1016 as any, (v: string) => (v === '{}' ? [] : v.slice(1,
 export type Db = pg.Pool | pg.PoolClient;
 
 export function createPool(url = config.databaseUrl) {
-  return new pg.Pool({ connectionString: url, max: 10 });
+  const p = new pg.Pool({
+    connectionString: url,
+    max: config.poolMax,
+    // Neon boşta kalan veritabanını 5 dakikada uyutur ve bağlantıları keser: boştaki bağlantıları
+    // ondan önce kendimiz kapatalım; uyanma birkaç saniye sürebileceği için bağlanma süresi geniş.
+    idleTimeoutMillis: 30_000,
+    connectionTimeoutMillis: 20_000,
+  });
+  // Sunucu tarafında kapanan boştaki bağlantı süreci çökertmesin; havuz yeni bağlantı açar.
+  p.on('error', (e) => console.error('veritabanı bağlantısı koptu:', e.message));
+  // Kullanımdaki bir bağlantı koparsa da (Neon uyurken ya da yeniden başlarken) süreç çökmesin:
+  // o sorgu hata döner, havuz bir sonraki istekte yeni bağlantı açar.
+  p.on('connect', (client) => {
+    client.on('error', (e) => console.error('veritabanı bağlantısı koptu:', e.message));
+  });
+  return p;
 }
 
 export let pool = createPool();

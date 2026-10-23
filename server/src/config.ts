@@ -3,7 +3,21 @@
 const num = (v: string | undefined, d: number) => (v && !Number.isNaN(Number(v)) ? Number(v) : d);
 
 export const config = {
+  /** Uygulama bağlantısı. Neon'da havuzlu (-pooler) adres önerilir. */
   databaseUrl: process.env.DATABASE_URL ?? 'postgres://postgres@localhost:5432/rifftown',
+  /**
+   * Veritabanı güncellemeleri (migration) için doğrudan bağlantı. Güncelleyici oturum düzeyinde
+   * kilit (pg_advisory_lock) kullandığından PgBouncer'lı havuz adresi burada çalışmaz.
+   * Neon'un DATABASE_URL_UNPOOLED değişkeni; yoksa DATABASE_URL.
+   */
+  migrationUrl: process.env.DATABASE_URL_UNPOOLED ?? process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL ?? 'postgres://postgres@localhost:5432/rifftown',
+  /** Bağlantı havuzunun en fazla bağlantı sayısı */
+  poolMax: num(process.env.PG_POOL_MAX, 10),
+  /** Kayıt olunca kendiliğinden yönetici yapılacak e-postalar (virgülle). Komut satırı olmayan barındırmalar için. */
+  adminEmails: (process.env.ADMIN_EMAILS ?? '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean),
   port: num(process.env.PORT, 3000),
   host: process.env.HOST ?? '0.0.0.0',
   /** 1 = gerçek zaman. Geliştirmede 60 → 1 oyun saati 1 dakika sürer. */

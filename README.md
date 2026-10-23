@@ -62,7 +62,34 @@ npm test
 
 76 test, gerçek bir veritabanına karşı oyunun tüm akışını sınar: kayıt, eylemler, beceri ağacı ve kitapçı, seviye atlama bildirimleri, dükkânlar, hastane, seyahat, şarkı, grup, davet, sohbet, kiralık müzisyenlerle konser ve eleştirisi, meslekler ve terfi, sokak müziği, seçimler ve makam maaşları, VIP avantajları (kesin sayıların gizlenmesi dahil), mağaza bildirimleri ve iadeler, şarkı kaydı, single ve albüm yayını, haftalık satışlar ve listeler, suç ve soruşturma, mahkeme kararları, cezaevi ve kefalet, başarımlar, oyunun kendi grupları, ev ve kira, rehber görevler, profil fotoğrafı ve moderasyonu, özel mesajlar, arkadaşlık, ziyaretçi defteri, hediye, engelleme ve şikâyet, flörtten evliliğe ve evlat edinmeye ilişkiler, ikinci el pazarı, sprey boya ve isim verme, atölyede üretim, araç, evcil hayvan, otel, restoran, banka, dövme ve spor salonu, oyuncu işletmeleri ve çalışanlar, sahne efektleri ve festivaller, haftalık görevler, kayıtta şartlar onayı, hesap silme, küfür filtresi, şikâyet kuyruğu, kötüye kullanım korumaları (teklifteki yüzük, üretilen eşyanın dükkâna satılması, VIP eşyası hediyesi, el değiştiren işletmede mesai), yönetim paneli ve oyun dengesi.
 
-## Sunucuyu yayına alma
+## Ücretsiz test sunucusu (Render + Neon + GitHub Pages)
+
+Test için her şey ücretsiz planlarda çalışır ve `main` dalına her yüklemede kendiliğinden güncellenir:
+
+| Parça | Nerede | Ne zaman güncellenir |
+|---|---|---|
+| Oyun sunucusu ve zamanlayıcı | Render (ücretsiz web servisi, `render.yaml`) | `server/` ya da `packages/shared/` değişince |
+| Veritabanı | Neon (ücretsiz Postgres) | Sunucu açılışta tabloları kendisi günceller |
+| Web sürümü | GitHub Pages (`.github/workflows/web.yml`) | `app/` değişince |
+| Testler ve Docker derlemesi | GitHub Actions (`.github/workflows/ci.yml`) | Her yüklemede |
+
+Bir kez yapılacaklar:
+
+1. **Neon:** Projede **Connect** düğmesine bas. "Connection pooling" açıkken çıkan adresi (`-pooler` içerir) ve kapalıyken çıkan adresi kopyala.
+2. **Render:** New → Blueprint → bu depo. Sorulan değerler:
+   - `DATABASE_URL`: Neon'un havuzlu (`-pooler`) adresi
+   - `DATABASE_URL_UNPOOLED`: Neon'un havuzsuz adresi (veritabanı güncellemeleri oturum kilidi kullandığı için gerekir)
+   - `ADMIN_EMAILS`: yönetici olacak e-posta. Bu adresle kayıt olunca yönetim paneli (`/admin`) açılır.
+   - `CONTACT_EMAIL`: oyuncuların göreceği destek adresi
+3. **GitHub:** Settings → Pages → Source: **GitHub Actions**. Render adresin `https://rifftown-api.onrender.com` değilse Settings → Secrets and variables → Actions → **Variables** altına `API_URL` olarak yaz.
+
+Web sürümü: `https://<github-kullanıcı-adı>.github.io/Rifftown/`
+
+Ücretsiz planın sınırları: Render sunucusu 15 dakika trafik gelmezse uyur, ilk istek yaklaşık 1 dakika sürer. Uyurken biten eylemler ve konserler uyanınca toplu sonuçlanır, push bildirimleri o arada gitmez. Neon 5 dakika boşta kalınca uyur ve ayda 100 işlem saati verir; sunucu da boştayken uyuduğu için test için yeter. Oyun zamanını hızlandırmak için Render'da `GAME_SPEED` değerini artır (ör. `6`).
+
+Yerelde Neon ile çalışmak için: `neon env pull` (adresleri `.env.local` dosyasına yazar), sonra `npm run dev:server`. Sunucu `.env.local` dosyasını kendisi okur.
+
+## Kendi sunucunda yayına alma
 
 Ayda yaklaşık 5–40 € tutan, en az 2 GB RAM'li bir Ubuntu sunucusu yeterli (Hetzner, DigitalOcean, Contabo vb.).
 
@@ -148,5 +175,5 @@ Anahtarlar girilmemişse uygulamadaki satın alma düğmeleri kapalı kalır ve 
 - Zamanlayıcının her aşaması (eylemler, konserler, adalet, listeler, kira, seçimler, bildirimler) ayrı çalışır; biri hata verirse diğerleri etkilenmez. Her eylem kendi veritabanı işleminde sonuçlanır.
 - Profil fotoğrafları veritabanında saklanır (kişi başı en fazla 300 KB) ve `/api/avatars/:id` adresinden uzun süreli önbellekle sunulur.
 - Para ve eşya hareketleri (pazar, hediye, işletme kasası, maaş, düğün ücretleri) tek veritabanı işleminde ve karakter satırları her zaman aynı sırayla (id'ye göre) kilitlenerek yapılır; iki istek aynı anda gelse de para ya da eşya çoğalmaz.
-- Sunucu ortam değişkenleri: `DATABASE_URL`, `PORT`, `GAME_SPEED`, `RUN_WORKER`, `WORKER_INTERVAL_MS`, `EXPO_ACCESS_TOKEN`, `REVENUECAT_WEBHOOK_SECRET`, `PUSH_ENABLED`, `RATE_LIMIT`, `LOG_LEVEL`, `NPC` (`0` ise oyunun kendi grupları kapalı), `CONTACT_EMAIL` (şartlarda, gizlilikte ve uygulamada görünen iletişim adresi).
-- Uygulama ortam değişkenleri: `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_REVENUECAT_IOS_KEY`, `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY`.
+- Sunucu ortam değişkenleri: `DATABASE_URL`, `DATABASE_URL_UNPOOLED` (veritabanı güncellemeleri için doğrudan bağlantı; yoksa `DATABASE_URL`), `PG_POOL_MAX`, `ADMIN_EMAILS`, `PORT`, `GAME_SPEED`, `RUN_WORKER`, `WORKER_INTERVAL_MS`, `EXPO_ACCESS_TOKEN`, `REVENUECAT_WEBHOOK_SECRET`, `PUSH_ENABLED`, `RATE_LIMIT`, `LOG_LEVEL`, `NPC` (`0` ise oyunun kendi grupları kapalı), `CONTACT_EMAIL` (şartlarda, gizlilikte ve uygulamada görünen iletişim adresi).
+- Uygulama ortam değişkenleri: `EXPO_BASE_URL` (web sürümü alt klasörde yayınlanacaksa), `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_REVENUECAT_IOS_KEY`, `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY`.

@@ -9,3 +9,6 @@ deploy/backups/
 app/ios/
 app/android/
 .DS_Store
+.neon
+.env.local
+.env.*.local

@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/main.ts",
-    "worker:dev": "tsx watch src/worker-main.ts",
-    "migrate": "tsx src/migrate-main.ts",
+    "dev": "tsx watch --env-file-if-exists=../.env.local --env-file-if-exists=../.env src/main.ts",
+    "worker:dev": "tsx watch --env-file-if-exists=../.env.local --env-file-if-exists=../.env src/worker-main.ts",
+    "migrate": "tsx --env-file-if-exists=../.env.local --env-file-if-exists=../.env src/migrate-main.ts",
     "build": "tsup",
     "start": "node dist/main.js",
     "start:worker": "node dist/worker-main.js",

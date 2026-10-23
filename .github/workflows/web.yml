@@ -1,0 +1,58 @@
+# Web sürümünü GitHub Pages'e yayınlar: https://<kullanıcı>.github.io/Rifftown/
+# Bir kez: depo Settings → Pages → Source: "GitHub Actions".
+# Sunucu adresi: Settings → Secrets and variables → Actions → Variables → API_URL
+# (yoksa Render'daki varsayılan adres kullanılır).
+name: Web
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - app/**
+      - packages/shared/**
+      - package-lock.json
+      - .github/workflows/web.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Web derlemesi
+        working-directory: app
+        env:
+          EXPO_PUBLIC_API_URL: ${{ vars.API_URL || 'https://rifftown-api.onrender.com' }}
+          EXPO_BASE_URL: /${{ github.event.repository.name }}
+        run: npx expo export --platform web --output-dir dist
+      - name: Tek sayfa uygulama için yönlendirme ve Jekyll'i kapatma (_expo klasörü yayınlansın)
+        working-directory: app/dist
+        run: cp index.html 404.html && touch .nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
