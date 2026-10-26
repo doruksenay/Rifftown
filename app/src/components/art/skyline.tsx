@@ -4,6 +4,7 @@
 import { Fragment, type ReactNode } from 'react';
 import Svg, { Circle, Defs, G, LinearGradient, Path, Polygon, Rect, Stop } from 'react-native-svg';
 import { night, rng } from './seed';
+import { ArtImage, hasArt } from './asset';
 
 export const SCENE_W = 360;
 export const SCENE_H = 160;
@@ -265,6 +266,10 @@ export function SkylineLayers({ cityId, dim = false }: { cityId: string; dim?: b
 
 /** Şehir başlığı: ay, yıldızlar, silüet ve ışıklı sokak */
 export function CitySkyline({ cityId, height = 150 }: { cityId: string; height?: number }) {
+  // Üretilmiş şehir görseli varsa o; yoksa çizim silüet
+  if (hasArt(`city/${cityId}`)) {
+    return <ArtImage id={`city/${cityId}`} style={{ width: '100%', height }} />;
+  }
   return (
     <Svg width="100%" height={height} viewBox={`0 0 ${SCENE_W} ${SCENE_H}`} preserveAspectRatio="xMidYMax slice" accessibilityElementsHidden>
       <NightSky id={cityId} />

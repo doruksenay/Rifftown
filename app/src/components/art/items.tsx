@@ -7,6 +7,7 @@ import { View } from 'react-native';
 import Svg, { Circle, Defs, Ellipse, G, Line, LinearGradient, Path, Polygon, Rect, Stop } from 'react-native-svg';
 import { ITEM_BY_ID, PAINT_COLORS, type PaintColor } from '@rifftown/shared';
 import { night, shade } from './seed';
+import { hasArt, itemArtId, PaintedItemImage } from './asset';
 
 type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
 
@@ -193,6 +194,33 @@ const ICON_BY_SLOT: Record<string, IconName> = {
 
 /** Bir eşyanın çıkartması. color: boya rengi (yoksa fabrika rengi). */
 export function ItemArt({ itemId, color, legendary, size = 48 }: { itemId: string; color?: string | null; legendary?: boolean; size?: number }) {
+  // Üretilmiş görsel varsa o (boyanabilense maskesiyle); yoksa aşağıdaki eski çizim
+  const artId = itemArtId(itemId);
+  if (hasArt(artId)) {
+    const def0 = ITEM_BY_ID[itemId];
+    const sprayColor0 = (def0 as { color?: PaintColor } | undefined)?.color;
+    const paintId = (color ?? (artId === 'item/spray' ? sprayColor0 : null)) as PaintColor | null;
+    const paintHex = paintId && PAINT_COLORS[paintId] ? PAINT_COLORS[paintId].hex : null;
+    const inner = Math.round(size * 0.9);
+    return (
+      <View
+        style={{
+          width: size,
+          height: size,
+          borderRadius: size * 0.24,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(26,14,75,0.06)',
+          borderWidth: legendary ? 2 : 0,
+          borderColor: night.lamp,
+        }}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        <PaintedItemImage id={artId} paint={paintHex} size={inner} />
+      </View>
+    );
+  }
   const def = ITEM_BY_ID[itemId];
   const slot = def?.slot ?? 'material';
   const tier = Math.min(4, Math.max(1, def?.tier ?? 1));

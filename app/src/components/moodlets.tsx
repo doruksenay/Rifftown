@@ -7,6 +7,7 @@ import { duration } from '@/lib/format';
 import { useI18n } from '@/lib/i18n';
 import { useIsVip } from '@/lib/session';
 import { fonts, radius, space, type, useColors } from '@/theme';
+import { ArtImage, hasArt } from '@/components/art/asset';
 
 /** Etkinin gücü kelime yerine okla: ▲ küçük, ▲▲ orta, ▲▲▲ büyük (VIP sayıyı da görür) */
 const arrows = (v: number) => {
@@ -46,6 +47,7 @@ export function MoodletList({ moodlets }: { moodlets: MoodletDto[] }) {
                 alignItems: 'baseline',
               }}
             >
+              {hasArt(`moodlet/${m.id}`) ? <ArtImage id={`moodlet/${m.id}`} style={{ width: 16, height: 16, alignSelf: 'center' }} cover={false} /> : null}
               <Text style={{ fontFamily: fonts.bodyBold, fontSize: type.caption, color: c.ink }}>{p(def.name)}</Text>
               <Text style={{ fontFamily: fonts.bodyBold, fontSize: type.caption, color: col }}>
                 {vip ? `${good ? '+' : ''}${Math.round(m.effect)}` : arrows(m.effect)}

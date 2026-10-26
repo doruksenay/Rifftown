@@ -12,3 +12,4 @@ app/android/
 .neon
 .env.local
 .env.*.local
+art-incoming/

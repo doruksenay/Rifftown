@@ -22,6 +22,8 @@ import { IllustratedAvatar } from '@/components/art/avatar';
 import { API_URL } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
 import { fonts, gradients, radius, space, type, useColors } from '@/theme';
+import { ArtImage, hasArt } from '@/components/art/asset';
+import { hash } from '@/components/art/seed';
 
 // ---------- Metin ----------
 
@@ -315,6 +317,10 @@ export function Meter({ label, value, max = 100, color, right }: { label: string
   );
 }
 
+/** Hazır portre sayısı (docs/art/ASSET_MANIFEST.json: avatar/01–32) */
+const PRESET_AVATARS = 32;
+const presetAvatarId = (name: string) => `avatar/${String((hash(name) % PRESET_AVATARS) + 1).padStart(2, '0')}`;
+
 export function Avatar({ name, color, size = 40, uri }: { name: string; color: string; size?: number; uri?: string | null }) {
   if (uri) {
     return (
@@ -325,7 +331,15 @@ export function Avatar({ name, color, size = 40, uri }: { name: string; color: s
       />
     );
   }
-  // Fotoğraf yoksa isimden türeyen çizim portre
+  // Fotoğraf yoksa: isimden türeyen sabit bir hazır portre (üretildiyse), yoksa çizim portre
+  const preset = presetAvatarId(name);
+  if (hasArt(preset)) {
+    return (
+      <View style={{ width: size, height: size, borderRadius: size / 2, overflow: 'hidden', backgroundColor: color }} accessibilityLabel={name} accessible>
+        <ArtImage id={preset} style={{ width: size, height: size }} />
+      </View>
+    );
+  }
   return <IllustratedAvatar name={name} color={color} size={size} />;
 }
 

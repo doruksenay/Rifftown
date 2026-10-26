@@ -9,6 +9,7 @@ import type { LocationType } from '@rifftown/shared';
 import { Car, Guitar, Jacket, Keys, Spray } from './items';
 import { night, rng, shade } from './seed';
 import { NightSky, SCENE_H, SCENE_W, SkylineLayers } from './skyline';
+import { ArtImage, hasArt } from './asset';
 
 type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
 
@@ -567,7 +568,21 @@ function facadeFor(type: LocationType, base: string): string {
 const ASPECT = SCENE_W / SCENE_H;
 
 /** Mekânın büyük resmi (ekranın üstünde). crowd: konser mekânlarında doluluk (0–1) */
-export function PlaceArt({ type, id, cityId, crowd = 0.5 }: { type: LocationType; id: string; cityId?: string | null; crowd?: number }) {
+export function PlaceArt({ type, id, cityId, crowd }: { type: LocationType; id: string; cityId?: string | null; crowd?: number }) {
+  // Üretilmiş görsel: konser raporunda doluluğa göre boş / yarı / dolu hali, yoksa mekânın kendi resmi
+  const level = crowd === undefined ? null : crowd < 0.25 ? 'empty' : crowd < 0.7 ? 'half' : 'full';
+  const artId = level && hasArt(`crowd/${type}.${level}`) ? `crowd/${type}.${level}` : `place/${type}`;
+  if (hasArt(artId)) {
+    return (
+      <View style={{ width: '100%', aspectRatio: 1600 / 700, overflow: 'hidden' }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        <ArtImage id={artId} style={{ width: '100%', height: '100%' }} />
+      </View>
+    );
+  }
+  return <PlaceArtFallback type={type} id={id} cityId={cityId} crowd={crowd ?? 0.5} />;
+}
+
+function PlaceArtFallback({ type, id, cityId, crowd }: { type: LocationType; id: string; cityId?: string | null; crowd: number }) {
   const group = placeGroup(type);
   const colors = GROUP_COLORS[group];
   const isStage = group === 'stage';
@@ -620,6 +635,7 @@ export function PlaceArt({ type, id, cityId, crowd = 0.5 }: { type: LocationType
 
 /** Listelerde küçük yuvarlak mekân rozeti */
 export function PlaceIcon({ type, size = 36 }: { type: LocationType; size?: number }) {
+  if (hasArt(`icon/place/${type}`)) return <ArtImage id={`icon/place/${type}`} style={{ width: size, height: size }} cover={false} />;
   const [a, b] = GROUP_COLORS[placeGroup(type)].badge;
   const gid = `pi-${type}`;
   return (
@@ -655,6 +671,7 @@ const SKILL_ICON: Record<string, [IconName, string, string]> = {
 };
 
 export function SkillCategoryIcon({ category, size = 28 }: { category: string; size?: number }) {
+  if (hasArt(`icon/skill/${category}`)) return <ArtImage id={`icon/skill/${category}`} style={{ width: size, height: size }} cover={false} />;
   const [icon, a, b] = SKILL_ICON[category] ?? ['star-four-points', night.purple, night.pink];
   const gid = `sk-${category}`;
   return (

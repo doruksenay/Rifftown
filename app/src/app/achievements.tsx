@@ -15,6 +15,7 @@ import { Heading, ListRow, Meter, Screen, Small } from '@/components/ui';
 import { api } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
 import { fonts, space, type, useColors } from '@/theme';
+import { ArtImage, hasArt } from '@/components/art/asset';
 
 const CATS = Object.keys(ACHIEVEMENT_CATEGORY_NAMES) as AchievementCategory[];
 
@@ -58,6 +59,11 @@ function AchievementsScreen() {
                 <ListRow
                   key={a.id}
                   left={
+                    !hidden && hasArt(`achievement/${a.id}`) ? (
+                      <View style={{ opacity: at ? 1 : 0.3 }}>
+                        <ArtImage id={`achievement/${a.id}`} style={{ width: 40, height: 40 }} cover={false} />
+                      </View>
+                    ) : (
                     <View
                       style={{
                         width: 36,
@@ -72,6 +78,7 @@ function AchievementsScreen() {
                     >
                       <Text style={{ fontFamily: fonts.display, fontSize: type.small, color: at ? c.onInk : c.inkSoft }}>{hidden ? '?' : a.points}</Text>
                     </View>
+                    )
                   }
                   title={hidden ? t('secretAchievement') : p(a.name)}
                   subtitle={

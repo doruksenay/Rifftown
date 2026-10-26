@@ -29,6 +29,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
+      - name: Görselleri doğrula (eksikler hata değil; hatalı dosya ya da sahipsiz görsel varsa düşer)
+        run: npm run art:validate
 
   docker:
     runs-on: ubuntu-latest

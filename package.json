@@ -12,12 +12,19 @@
     "dev:server": "npm run dev -w server",
     "dev:worker": "npm run worker:dev -w server",
     "test": "npm test -w server",
-    "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w server && npm run typecheck -w app",
+    "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w server && npm run typecheck -w app && tsc -p scripts",
     "build": "npm run typecheck && npm run build -w server",
-    "build:web": "npm run build:web -w app"
+    "build:web": "npm run build:web -w app",
+    "art:manifest": "tsx scripts/art/cli.ts manifest",
+    "art:prepare": "tsx scripts/art/cli.ts prepare",
+    "art:validate": "tsx scripts/art/cli.ts validate",
+    "art:sync": "tsx scripts/art/cli.ts sync"
   },
   "dependencies": {
     "@neon/config": "^1.9.3",
     "@neon/env": "^1.6.4"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

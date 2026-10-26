@@ -1,0 +1,47 @@
+// OTOMATİK ÜRETİLİR: npm run art:sync — elle düzenlemeyin.
+// Sadece doğrulamadan geçmiş görseller burada; eksik olanlar için bileşenler eski görünüme döner.
+
+/* eslint-disable */
+export const ART: Record<string, number> = {
+};
+
+/** Boyanabilen eşyalar: maskenin kimliği ve boyanmamış hâlinin fabrika rengi */
+export const PAINTABLE: Record<string, { mask: string; defaultPaint: string }> = {
+  'item/vocals_1': { mask: 'item/vocals_1.mask', defaultPaint: '#2B2B30' },
+  'item/vocals_2': { mask: 'item/vocals_2.mask', defaultPaint: '#1B1B1E' },
+  'item/vocals_3': { mask: 'item/vocals_3.mask', defaultPaint: '#E9E9EE' },
+  'item/guitar_1': { mask: 'item/guitar_1.mask', defaultPaint: '#2F6FB5' },
+  'item/guitar_2': { mask: 'item/guitar_2.mask', defaultPaint: '#1B1B1E' },
+  'item/guitar_3': { mask: 'item/guitar_3.mask', defaultPaint: '#8C1C2B' },
+  'item/bass_1': { mask: 'item/bass_1.mask', defaultPaint: '#1B1B1E' },
+  'item/bass_2': { mask: 'item/bass_2.mask', defaultPaint: '#2E7D6B' },
+  'item/bass_3': { mask: 'item/bass_3.mask', defaultPaint: '#5A2A82' },
+  'item/drums_1': { mask: 'item/drums_1.mask', defaultPaint: '#3A3F4A' },
+  'item/drums_2': { mask: 'item/drums_2.mask', defaultPaint: '#9E1B32' },
+  'item/drums_3': { mask: 'item/drums_3.mask', defaultPaint: '#1F3B73' },
+  'item/keys_1': { mask: 'item/keys_1.mask', defaultPaint: '#2B2B30' },
+  'item/keys_2': { mask: 'item/keys_2.mask', defaultPaint: '#E9E9EE' },
+  'item/keys_3': { mask: 'item/keys_3.mask', defaultPaint: '#1B1B1E' },
+  'item/vocals_4': { mask: 'item/vocals_4.mask', defaultPaint: '#C9A227' },
+  'item/guitar_4': { mask: 'item/guitar_4.mask', defaultPaint: '#C9A227' },
+  'item/bass_4': { mask: 'item/bass_4.mask', defaultPaint: '#B5382F' },
+  'item/drums_4': { mask: 'item/drums_4.mask', defaultPaint: '#C9A227' },
+  'item/keys_4': { mask: 'item/keys_4.mask', defaultPaint: '#C8B48A' },
+  'item/outfit_1': { mask: 'item/outfit_1.mask', defaultPaint: '#3B5BA5' },
+  'item/outfit_2': { mask: 'item/outfit_2.mask', defaultPaint: '#1B1B1E' },
+  'item/outfit_3': { mask: 'item/outfit_3.mask', defaultPaint: '#5A2A82' },
+  'item/outfit_4': { mask: 'item/outfit_4.mask', defaultPaint: '#B8860B' },
+  'item/car_1': { mask: 'item/car_1.mask', defaultPaint: '#B5382F' },
+  'item/moto_1': { mask: 'item/moto_1.mask', defaultPaint: '#1B1B1E' },
+  'item/car_2': { mask: 'item/car_2.mask', defaultPaint: '#8A8F99' },
+  'item/van_1': { mask: 'item/van_1.mask', defaultPaint: '#E9E9EE' },
+  'item/car_3': { mask: 'item/car_3.mask', defaultPaint: '#1F3B73' },
+  'item/car_4': { mask: 'item/car_4.mask', defaultPaint: '#2E7D6B' },
+  'item/vocals_crafted': { mask: 'item/vocals_crafted.mask', defaultPaint: '#6B4A2E' },
+  'item/guitar_crafted': { mask: 'item/guitar_crafted.mask', defaultPaint: '#5B7F3A' },
+  'item/bass_crafted': { mask: 'item/bass_crafted.mask', defaultPaint: '#6B4A2E' },
+  'item/drums_crafted': { mask: 'item/drums_crafted.mask', defaultPaint: '#7A5230' },
+  'item/keys_crafted': { mask: 'item/keys_crafted.mask', defaultPaint: '#6B4A2E' },
+  'item/outfit_crafted': { mask: 'item/outfit_crafted.mask', defaultPaint: '#4A6B3A' },
+  'item/spray': { mask: 'item/spray.mask', defaultPaint: '#8A8F99' },
+};
