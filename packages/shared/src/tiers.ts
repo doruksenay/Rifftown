@@ -10,7 +10,7 @@ export interface Tier {
   name: L;
 }
 
-export type ScaleName = 'quality' | 'skill' | 'familiarity' | 'fame' | 'mood' | 'health' | 'friendship' | 'romance' | 'energy' | 'inspiration';
+export type ScaleName = 'quality' | 'skill' | 'familiarity' | 'fame' | 'mood' | 'health' | 'friendship' | 'romance' | 'energy' | 'inspiration' | 'press';
 
 const t = (min: number, tr: string, en: string): Tier => ({ min, name: { tr, en } });
 
@@ -87,6 +87,15 @@ export const SCALES: Record<ScaleName, Tier[]> = {
     t(45, 'ilhamlı', 'inspired'),
     t(70, 'coşkun', 'brimming'),
     t(90, 'ilham perisi yanında', 'touched by the muse'),
+  ],
+  /** Bir grubun bir şehirdeki basın desteği. Nötr 20. */
+  press: [
+    t(0, 'basın düşman', 'hostile press'),
+    t(10, 'basın soğuk', 'cold press'),
+    t(20, 'basın nötr', 'neutral press'),
+    t(40, 'basın ilgili', 'press interested'),
+    t(60, 'basın sıcak', 'warm press'),
+    t(80, 'basının gözdesi', 'press darling'),
   ],
   /** İki oyuncu arasındaki arkadaşlık. Flört 30'da açılır. */
   friendship: [

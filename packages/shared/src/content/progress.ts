@@ -133,7 +133,9 @@ export type WeeklyKind =
   | 'stage_events'
   | 'encores'
   | 'cities_played'
-  | 'gifts';
+  | 'gifts'
+  | 'press'
+  | 'articles';
 
 export interface WeeklyDef {
   id: string;
@@ -162,6 +164,7 @@ export const EXTRA_MISSIONS: WeeklyDef[] = [
   W('encore_2', 'encores', 2, 35, 'Bu hafta 2 bis yap', 'Play 2 encores this week'),
   W('cities_2', 'cities_played', 2, 55, 'Bu hafta 2 farklı şehirde çal', 'Play in 2 different cities'),
   W('gift_1', 'gifts', 1, 20, 'Bir arkadaşına hediye ver', 'Give a friend a gift'),
+  W('press_1', 'press', 1, 35, 'Bir röportaj ya da basın toplantısı ver', 'Give an interview or press conference'),
 ];
 
 // ---------- Görev zincirleri ----------

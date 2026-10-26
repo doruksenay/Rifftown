@@ -7,6 +7,7 @@ import type { BusinessType } from './world';
 import type { ActionKind, GigFactorId, GigFactors, TravelMode } from './rules';
 import type { NextGoal } from './progression';
 import type { EncoreOutcome, EncorePlan, StageEventOutcome, Tempo } from './performance';
+import type { ArticleTone, PressMode } from './press';
 import type { Skills } from './skills';
 import type { Genre, Instrument, Lang } from './world';
 
@@ -203,6 +204,8 @@ export interface BandDetailDto {
   members: BandMemberDto[];
   songs: SongDto[];
   fame: Record<string, number>; // şehir id → şöhret (0–100)
+  /** şehir id → basın desteği (0–100, nötr 20; listede olmayan şehir nötr) */
+  press: Record<string, number>;
   upcomingGigs: GigDto[];
   pastGigs: GigDto[];
   pendingInvites: { id: number; characterId: number; name: string }[];
@@ -311,7 +314,9 @@ export type StartActionRequest =
   | { kind: 'crime'; crime: string; locationId: string }
   | { kind: 'investigate'; locationId: string }
   | { kind: 'workout'; hours: number; locationId: string }
-  | { kind: 'craft'; recipe: string; locationId: string };
+  | { kind: 'craft'; recipe: string; locationId: string }
+  | { kind: 'press'; mode: PressMode; locationId: string }
+  | { kind: 'write_article'; locationId: string; title: string; body: string; bandId?: number | null; tone?: ArticleTone };
 
 export interface ElectionDto {
   id: number;

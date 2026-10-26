@@ -27,6 +27,15 @@ const startSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('investigate'), locationId: z.string() }),
   z.object({ kind: z.literal('workout'), hours: z.number(), locationId: z.string() }),
   z.object({ kind: z.literal('craft'), recipe: z.string().max(20), locationId: z.string() }),
+  z.object({ kind: z.literal('press'), mode: z.enum(['conference', 'interview']), locationId: z.string() }),
+  z.object({
+    kind: z.literal('write_article'),
+    locationId: z.string(),
+    title: z.string().max(200),
+    body: z.string().max(4000),
+    bandId: z.number().int().nullable().optional(),
+    tone: z.enum(['positive', 'neutral', 'negative']).optional(),
+  }),
 ]);
 
 export async function actionRoutes(app: FastifyInstance) {

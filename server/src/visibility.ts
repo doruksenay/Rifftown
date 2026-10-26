@@ -24,10 +24,11 @@ const KEY_RULES: Record<string, Rule[]> = {
   myFamiliarity: [{ scale: 'familiarity' }],
   familiarity: [{ scale: 'familiarity' }, { scale: 'familiarity', map: true }],
   fame: [{ scale: 'fame' }, { scale: 'fame', map: true }],
+  press: [{ scale: 'press' }, { scale: 'press', map: true }],
 };
 
 /** Bu anahtarlarda VIP olmayanlara yalnızca işaret (-1, 0, 1) gider */
-const SIGN_ONLY = new Set(['flow']);
+const SIGN_ONLY = new Set(['flow', 'pressDelta', 'impact']);
 
 function blurNode(node: unknown, depth = 0): unknown {
   if (depth > 12 || node === null || typeof node !== 'object') return node;

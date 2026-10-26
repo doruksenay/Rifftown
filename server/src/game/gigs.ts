@@ -49,6 +49,7 @@ import {
   ticketsSold,
 } from '@rifftown/shared';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
+import { bandPress } from './press';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
@@ -359,6 +360,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     rand: Math.random,
     fxBonus: Math.min(MAX_FX_BONUS, (gig.effects ?? []).reduce((sum: number, id: string) => sum + (ITEM_BY_ID[id]?.bonus ?? 0), 0)),
     plan: gig.plan ?? {},
+    press: await bandPress(c, gig.band_id, gig.city_id),
     cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür

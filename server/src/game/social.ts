@@ -262,13 +262,19 @@ export async function deleteGuestbook(id: number, viewer: number, isAdmin: boole
 
 // ---------- Şikâyet ----------
 
-export async function report(reporter: number, kind: 'message' | 'guestbook' | 'profile', targetId: number, text: string) {
+export async function report(reporter: number, kind: 'message' | 'guestbook' | 'profile' | 'article', targetId: number, text: string) {
   const exists =
     kind === 'message'
       ? await one(pool, 'SELECT 1 FROM direct_messages WHERE id = $1 AND to_id = $2', [targetId, reporter])
       : kind === 'guestbook'
         ? await one(pool, 'SELECT 1 FROM guestbook WHERE id = $1', [targetId])
-        : await one(pool, 'SELECT 1 FROM characters WHERE id = $1', [targetId]);
+        : kind === 'article'
+          ? await one(pool, 'SELECT 1 FROM articles WHERE id = $1 AND NOT removed', [targetId])
+          : await one(pool, 'SELECT 1 FROM characters WHERE id = $1', [targetId]);
+  // Aynı kişi aynı içeriği bir kez şikâyet eder (kuyruk şişmesin)
+  if (await one(pool, `SELECT 1 FROM reports WHERE reporter_id = $1 AND kind = $2 AND target_id = $3 AND status = 'open'`, [reporter, kind, targetId])) {
+    return { ok: true };
+  }
   if (!exists) fail('not_found', 404);
   await pool.query('INSERT INTO reports(reporter_id, kind, target_id, text) VALUES ($1, $2, $3, $4)', [reporter, kind, targetId, cleanText(text ?? '').slice(0, 300)]);
   return { ok: true };

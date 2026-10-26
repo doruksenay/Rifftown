@@ -17,6 +17,7 @@ import { communityRoutes } from './routes/community';
 import { economyRoutes } from './routes/economy';
 import { avatarPublicRoutes, profileRoutes } from './routes/profile';
 import { webhookRoutes } from './routes/webhooks';
+import { mediaRoutes } from './routes/media';
 import { publicRoutes, worldRoutes } from './routes/world';
 
 export async function buildApp(opts: { logger?: boolean } = {}) {
@@ -62,6 +63,7 @@ export async function buildApp(opts: { logger?: boolean } = {}) {
       await api.register(profileRoutes);
       await api.register(communityRoutes);
       await api.register(economyRoutes);
+      await api.register(mediaRoutes);
       await api.register(webhookRoutes);
       await api.register(adminRoutes);
     },

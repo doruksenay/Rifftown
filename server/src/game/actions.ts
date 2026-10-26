@@ -74,6 +74,7 @@ import {
   skillMult,
 } from '@rifftown/shared';
 import { characterAge, treatIndulgence } from './consequences';
+import { prepareArticle, preparePress, resolveArticle, resolvePress } from './press';
 import type pg from 'pg';
 import { config } from '../config';
 import { one, tx } from '../db';
@@ -99,7 +100,7 @@ import {
   toActionDto,
 } from './common';
 
-const ACTIVITY_KINDS = new Set(['study', 'work', 'write_song', 'rehearse', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft']);
+const ACTIVITY_KINDS = new Set(['study', 'work', 'write_song', 'rehearse', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article']);
 
 function requireHours(kind: keyof typeof HOUR_OPTIONS, hours: unknown): number {
   const opts = HOUR_OPTIONS[kind] as readonly number[];
@@ -289,6 +290,21 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         hours = requireHours('workout', req.hours);
         locationId = loc.id;
         cost = priceFor(GYM_PRICE_PER_HOUR, city, hours);
+        break;
+      }
+      case 'press': {
+        const p = await preparePress(c, char, req.mode, req.locationId);
+        hours = p.hours;
+        cost = p.cost;
+        locationId = p.locationId;
+        Object.assign(params, p.params);
+        break;
+      }
+      case 'write_article': {
+        const p = await prepareArticle(c, char, req.locationId, req);
+        hours = p.hours;
+        locationId = p.locationId;
+        Object.assign(params, p.params);
         break;
       }
       case 'craft': {
@@ -616,6 +632,22 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
     }
     case 'craft': {
       Object.assign(result, await resolveCraft(c, char, params, skills, fraction));
+      break;
+    }
+    case 'press': {
+      if (fraction < 1) {
+        result.cancelled = true;
+        break;
+      }
+      Object.assign(result, await resolvePress(c, { ...char, skills }, params));
+      break;
+    }
+    case 'write_article': {
+      if (fraction < 1) {
+        result.cancelled = true;
+        break;
+      }
+      Object.assign(result, await resolveArticle(c, { ...char, skills }, params));
       break;
     }
     case 'travel': {

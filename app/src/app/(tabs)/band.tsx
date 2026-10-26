@@ -274,7 +274,12 @@ function MyBand() {
       {fame.length ? (
         fame.map(([cityId, f], i) => (
           <View key={cityId}>
-            <ListRow title={p(CITY_BY_ID[cityId].name)} right={<TierText scale="fame" value={f} />} last />
+            <ListRow
+              title={p(CITY_BY_ID[cityId].name)}
+              subtitle={band.press?.[cityId] !== undefined ? tierName('press', band.press[cityId], lang) : undefined}
+              right={<TierText scale="fame" value={f} />}
+              last
+            />
             <VenueProgress fame={f} />
             {i === fame.length - 1 ? null : <View style={{ height: 1, backgroundColor: c.line }} />}
           </View>

@@ -37,6 +37,8 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       if (d.kind === 'investigate' && !d.cancelled) {
         return d.solved ? t('n_investigate_solved', { money: `$${Number(d.bonus).toLocaleString('en-US')}` }) : t('n_investigate_none');
       }
+      if (d.kind === 'press' && !d.cancelled) return d.defused ? t('n_press_defused') : d.success ? t('n_press_ok') : t('n_press_bad');
+      if (d.kind === 'write_article' && d.title) return t('n_article_published', { title: d.title });
       if (d.kind === 'rehearse' && typeof d.familiarity === 'number') {
         return `${t('n_action_done', { action: t('action_rehearse') })}: ${tierName('familiarity', d.familiarity, lang)}`;
       }
@@ -139,6 +141,8 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       return t(`n_${n.kind}` as StringKey, { from: d.from ?? '' });
     case 'trade_failed':
       return t('n_trade_failed');
+    case 'press_article':
+      return t('n_press_article', { by: d.by ?? '', title: d.title ?? '' });
     case 'scandal':
       return t('n_scandal', { kind: t(`scandal_${d.kind}` as StringKey), city: CITY_BY_ID[d.cityId] ? p(CITY_BY_ID[d.cityId].name) : '' });
     case 'addicted':

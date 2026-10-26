@@ -444,6 +444,16 @@ Kötü kararın bedeli var. Kurallar `packages/shared/src/consequences.ts`, sunu
 - Kullanıcı yeni karakter açar. Cep, banka ve işletme kasasındaki paranın yarısı (en fazla $10.000) yeni karaktere bir kez miras kalır. Para basılmaz, yalnızca taşınır; miras aynı işlemde sıfırlanır, iki kez alınamaz.
 - Testlerde ve geliştirmede `DECAY=0` aşinalık ve şöhret çürümesini, `AGING=0` yaşlanmayı kapatır.
 
+## Basın ve medya
+
+Şöhretin yanında ikinci bir eksen. Kurallar `packages/shared/src/press.ts`, sunucu `server/src/game/press.ts`.
+
+- **Basın desteği:** her grubun her şehirde ayrı bir basın desteği vardır (0–100, nötr 20): basın düşman 0 · soğuk 10 · nötr 20 · ilgili 40 · sıcak 60 · basının gözdesi 80. Konser seyircisini ×0,95–×1,2, şöhret kazancını ×0,94–×1,25 etkiler. Her oyun günü nötre olan mesafenin %3'ü kapanır. Grup ekranında şehrin altında kelimeyle görünür; VIP olmayanlara bulanık.
+- **Basın toplantısı:** yalnızca lider, şehir gazetesinde, 2 saat, $100 × şehir çarpanı; grup ve şehir başına 72 oyun saatinde bir. **Röportaj:** her üye, 1 saat, ücretsiz, kişi başına 24 saatte bir. Başarı şansı = 0,4 + medya × 0,004 + retorik × 0,003 + karizma × 0,002 + şöhret ÷ 300 (%15–%95). Başarı: toplantı +6 (+medya ÷ 20) ve +0,3 şöhret, röportaj +3 (+karizma ÷ 40); başarısızlık −3 / −1. Başarılı toplantı son 7 gündeki yatıştırılmamış skandalın şöhret ve basın kaybının yarısını geri getirir.
+- **Skandallar** basın desteğini düşürür: mahkûmiyet −15, iptal −8, felaket konser −10, bağımlılık −10.
+- **Gazetecilik:** gazeteci mesleğindeki oyuncu gazetede 2 saatlik "haber yaz" eylemiyle başlık (3–80) ve metin (20–2.000 karakter) yazar, isteğe bağlı bir grup ve ton (olumlu, tarafsız, eleştirel) seçer. Etki = 2 + gazetecilik × 0,05 + söz yazımı × 0,02 + rütbe (eleştirel haberde %80'i). Kendi grubu hakkında haber etkisizdir; aynı gruba 72 saatte bir yazılır; bir grubun bir şehirdeki basın desteği haberlerle 7 günde toplam en fazla 20 puan oynar (toplu karalama ya da şişirme olmasın). Haber şehir gazetesi akışında yayınlanır, grubun üyelerine bildirim gider. Gazetecilik kitapçıdaki yeni bir beceridir (söz yazımında çırak).
+- **Moderasyon:** başlık ve metin kontrol karakterlerinden temizlenir, küfür yıldızlanır. Haberler şikâyet edilebilir; yönetim panelinde "Son haberler ve yazılar" listesi ve şikâyet kuyruğundan kaldırılır, kaldırılan haberin basın etkisi geri alınır. Engellenen ya da engelleyen kişinin yazıları akışta görünmez.
+
 ## EFSANEVİ konser
 
 DESTANSI'nın da üstünde, çok nadir bir seviye. DESTANSI kalitede (90+) biten bir konser %1 + grubun ortalama ilhamına göre %6'ya kadar olasılıkla EFSANEVİ olur. O gece:

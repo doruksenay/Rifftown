@@ -3,6 +3,7 @@
 
 import { type Skills, roleSkill, stageScore } from './skills';
 import { energyFactor, legendaryChance } from './wellbeing';
+import { PRESS_NEUTRAL, pressAttendanceMult, pressFameMult } from './press';
 import {
   type EncorePlan,
   type EncoreOutcome,
@@ -34,7 +35,7 @@ export const MAX_SKILL = 100;
 
 // ---------- Eylemler ----------
 
-export const ACTION_KINDS = ['study', 'work', 'rest', 'write_song', 'rehearse', 'travel', 'treat', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft'] as const;
+export const ACTION_KINDS = ['study', 'work', 'rest', 'write_song', 'rehearse', 'travel', 'treat', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article'] as const;
 export type ActionKind = (typeof ACTION_KINDS)[number];
 
 /** Seçilebilir süreler (oyun saati). */
@@ -65,6 +66,8 @@ export const MOOD_PER_HOUR: Record<ActionKind, number> = {
   investigate: -3,
   workout: 1,
   craft: -2,
+  press: -2,
+  write_article: -2,
 };
 
 /** Saat başına sağlık değişimi. Ruh hâli 25'in altındayken her saat fazladan -2 uygulanır. */
@@ -82,6 +85,8 @@ export const HEALTH_PER_HOUR: Record<ActionKind, number> = {
   investigate: -0.5,
   workout: 1,
   craft: -0.5,
+  press: -0.5,
+  write_article: -0.5,
 };
 export const LOW_MOOD_THRESHOLD = 25;
 export const LOW_MOOD_HEALTH_PER_HOUR = -2;
@@ -223,6 +228,8 @@ export interface GigInput {
   rand: Rand;
   /** Sahne efektlerinden gelen kalite artışı (puan) */
   fxBonus?: number;
+  /** Grubun o şehirdeki basın desteği (0–100, nötr 20) */
+  press?: number;
   /** Performans planı: sahne olayları ve bis kararı */
   plan?: { events?: string[]; encore?: EncorePlan };
   /** Bekleme süresi dolmamış sahne olayları (denenmez) */
@@ -280,7 +287,7 @@ export function computeGig(input: GigInput): GigResult {
   const present = performers.filter((p) => p.present);
   const memberCount = performers.length;
   const genrePop = city.genrePopularity[genre];
-  const attendance = expectedAttendance(venue, fame, genrePop, rand);
+  const attendance = Math.min(VENUE_RULES[venue].capacity, Math.round(expectedAttendance(venue, fame, genrePop, rand) * pressAttendanceMult(input.press ?? PRESS_NEUTRAL)));
 
   // Grubun kendi üyelerinden kimse sahnede değilse (sadece kiralık müzisyenler) konser yapılmamış sayılır
   const hasOwn = performers.some((p) => p.characterId !== null);
@@ -385,6 +392,8 @@ export function computeGig(input: GigInput): GigResult {
   const avgInspiration = players.length ? players.reduce((sum, p) => sum + (p.inspiration ?? 0), 0) / players.length : 0;
   const legendary = rand() < legendaryChance(quality, avgInspiration);
   if (legendary) fameDelta *= 1.5;
+  // Basın desteği şöhret kazancını büyütür ya da küçültür
+  if (fameDelta > 0) fameDelta *= pressFameMult(input.press ?? PRESS_NEUTRAL);
   // Bis şöhreti biraz büyütür ya da (başarısızsa) küçültür; kayıp da büyür
   if (enc.fameMult !== 1) fameDelta = fameDelta >= 0 ? fameDelta * enc.fameMult : fameDelta / enc.fameMult;
 

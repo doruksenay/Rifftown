@@ -39,6 +39,7 @@ import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
 import { type CharacterRow, lockCharacter, notify } from './common';
 import { addMoodlet } from './wellbeing';
+import { scandalPress } from './press';
 
 const hoursMs = (h: number) => gameHoursToMs(h, config.gameSpeed);
 
@@ -153,6 +154,7 @@ export async function createScandal(
       others,
       loss * SCANDAL_SPILLOVER,
     ]);
+    await scandalPress(c, s.bandId, s.cityId, s.kind, severity);
     for (const m of await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [s.bandId])) members.push(Number(m.character_id));
   }
   if (s.characterId && !members.includes(s.characterId)) members.push(s.characterId);

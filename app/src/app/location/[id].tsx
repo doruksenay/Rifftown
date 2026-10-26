@@ -49,6 +49,7 @@ import { Bank, FestivalPanel, Gym, Hotel, Restaurant, TattooStudio, Workshop } f
 import { ColorDot, FleaMarket } from '@/components/market';
 import { ProfessionsHere, VipTag } from '@/components/careers';
 import { Politics } from '@/components/politics';
+import { Newspaper } from '@/components/newspaper';
 import { useIsVip } from '@/lib/session';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -201,6 +202,7 @@ function LocationScreenScreen() {
         <View style={{ marginTop: space.lg }}>
           {loc.type === 'worship' ? <Body color={c.inkSoft}>{t('restIntroWorship')}</Body> : null}
           {loc.type === 'courthouse' ? <Courtroom cityId={loc.cityId} /> : null}
+          {loc.type === 'newspaper' ? <Newspaper locationId={loc.id} /> : null}
           <ProfessionsHere locationId={loc.id} zone={loc.type} />
           {loc.type === 'police' ? <PoliceDesk locationId={loc.id} cityId={loc.cityId} /> : null}
           <Politics cityId={loc.cityId} zone={loc.type as CivicType} />

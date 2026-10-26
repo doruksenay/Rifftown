@@ -8,6 +8,7 @@ import { avatarUrl, gateGig, getCharacter, membership, notify, toGigDto } from '
 import { config } from '../config';
 import { bookGig, cancelGig, estimateAttendance } from '../game/gigs';
 import { memberLeaveFameLoss } from '../game/consequences';
+import { bandPressAll } from '../game/press';
 import { addMoodlet } from '../game/wellbeing';
 import { bandReleases, createRelease, getChart, nextReleaseAt } from '../game/music';
 import { idParam, parse } from './util';
@@ -98,6 +99,7 @@ export async function bandDetail(db: Db, bandId: number, viewerId: number, isVip
     })),
     songs: allSongs.filter((s) => s.inBand),
     fame: Object.fromEntries(fame.map((f) => [f.city_id, Math.round(f.fame * 10) / 10])),
+    press: await bandPressAll(db, bandId),
     upcomingGigs: gigs.filter((g) => g.status === 'scheduled').map((g) => toGigDto({ ...g, band_name: band.name })),
     pastGigs: gigs
       .filter((g) => g.status === 'done')

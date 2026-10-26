@@ -68,7 +68,7 @@ export async function communityRoutes(app: FastifyInstance) {
 
   // ---------- Şikâyet ve hediye ----------
   app.post('/reports', async (req) => {
-    const body = parse(z.object({ kind: z.enum(['message', 'guestbook', 'profile']), targetId: z.number().int(), text: z.string().max(300).default('') }), req.body);
+    const body = parse(z.object({ kind: z.enum(['message', 'guestbook', 'profile', 'article']), targetId: z.number().int(), text: z.string().max(300).default('') }), req.body);
     return report(charId(req), body.kind, body.targetId, body.text);
   });
   app.post('/gifts', async (req) => {
