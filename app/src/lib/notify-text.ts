@@ -37,6 +37,8 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       if (d.kind === 'investigate' && !d.cancelled) {
         return d.solved ? t('n_investigate_solved', { money: `$${Number(d.bonus).toLocaleString('en-US')}` }) : t('n_investigate_none');
       }
+      if (d.kind === 'video' && typeof d.quality === 'number') return t('n_video_done', { q: tierName('quality', d.quality, lang) });
+      if (d.kind === 'travel' && d.breakdown) return d.usedKit ? t('n_breakdown_kit') : t('n_breakdown');
       if (d.kind === 'press' && !d.cancelled) return d.defused ? t('n_press_defused') : d.success ? t('n_press_ok') : t('n_press_bad');
       if (d.kind === 'write_article' && d.title) return t('n_article_published', { title: d.title });
       if (d.kind === 'rehearse' && typeof d.familiarity === 'number') {
@@ -141,6 +143,20 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       return t(`n_${n.kind}` as StringKey, { from: d.from ?? '' });
     case 'trade_failed':
       return t('n_trade_failed');
+    case 'crew_quit':
+    case 'label_counter':
+    case 'label_declined':
+    case 'label_signed':
+      return t(`n_${n.kind}` as StringKey);
+    case 'tour_done':
+    case 'tour_failed':
+      return t(`n_${n.kind}` as StringKey, { name: d.name ?? '', n: d.played ?? 0, total: d.total ?? 0 });
+    case 'video_chart':
+      return t('n_video_chart', { pos: d.position ?? '' });
+    case 'label_offer':
+      return t('n_label_offer', { label: d.label ?? '' });
+    case 'label_closed':
+      return t('n_label_closed', { name: d.name ?? '' });
     case 'press_article':
       return t('n_press_article', { by: d.by ?? '', title: d.title ?? '' });
     case 'scandal':
@@ -180,6 +196,9 @@ export function notificationHref(n: NotificationDto, myId?: number): string | nu
   if (n.kind.startsWith('job_') && d.locationId) return `/location/${d.locationId}`;
   if (n.kind === 'item_sold') return '/me';
   if (n.kind.startsWith('trade_')) return '/trades';
+  if (n.kind.startsWith('label_')) return '/label';
+  if (n.kind.startsWith('tour_') || n.kind === 'crew_quit') return '/tour';
+  if (n.kind === 'video_chart') return '/charts';
   if (n.kind === 'hospitalized' && d.cityId) return `/location/${d.cityId}-hospital`;
   if (n.kind === 'scandal' || n.kind === 'member_died') return '/band';
   if (n.kind === 'festival_selected' && d.cityId) return `/location/${d.cityId}-festival`;

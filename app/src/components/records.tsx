@@ -8,6 +8,14 @@ import {
   RECORDING_PRICE_PER_HOUR,
   RECORD_HOURS,
   RELEASE_NAMES,
+  DIRECTOR_NAMES,
+  PRODUCERS,
+  PRODUCER_NAMES,
+  type ProducerTier,
+  VIDEO_DIRECTORS,
+  VIDEO_HOURS,
+  VIDEO_PRICE,
+  type VideoDirector,
   type ReleaseDto,
   priceFor,
   tierName,
@@ -23,12 +31,15 @@ import { useI18n } from '@/lib/i18n';
 import { space, useColors } from '@/theme';
 
 export function RecordingStudio({ locationId }: { locationId: string }) {
-  const { t, lang } = useI18n();
+  const { t, p, lang } = useI18n();
   const c = useColors();
   const band = useBand();
   const city = CITY_BY_ID[LOCATION_BY_ID[locationId].cityId];
   const songs = band.data?.songs ?? [];
   const [songId, setSongId] = useState<number | null>(null);
+  const [producer, setProducer] = useState<ProducerTier | ''>('');
+  const [director, setDirector] = useState<VideoDirector>('none');
+  const isLeader = band.data?.leaderId !== undefined && band.data.members.some((m) => m.isLeader);
   const selected = songId ?? songs[0]?.id ?? null;
   const releasesButton = (
     <Button title={t('releasesAndCharts')} variant="secondary" onPress={() => router.push('/releases')} style={{ marginTop: space.xl }} />
@@ -56,13 +67,42 @@ export function RecordingStudio({ locationId }: { locationId: string }) {
         onChange={setSongId}
       />
       <View style={{ height: space.xl }} />
+      <Heading>{t('producer')}</Heading>
+      <Choice
+        options={[
+          { value: '' as ProducerTier | '', label: t('producerBand') },
+          ...(Object.keys(PRODUCERS) as ProducerTier[]).map((k) => ({ value: k as ProducerTier | '', label: p(PRODUCER_NAMES[k]), hint: money(priceFor(PRODUCERS[k].fee, city, 1)) })),
+        ]}
+        value={producer}
+        onChange={setProducer}
+      />
+      <Small style={{ marginVertical: space.sm }}>{t('producerHint')}</Small>
       <HoursAction
         options={[RECORD_HOURS]}
-        build={() => ({ kind: 'record', songId: selected!, locationId })}
-        price={(h) => priceFor(RECORDING_PRICE_PER_HOUR, city, h)}
+        build={() => ({ kind: 'record', songId: selected!, locationId, producer: producer || null })}
+        price={(h) => priceFor(RECORDING_PRICE_PER_HOUR, city, h) + (producer ? priceFor(PRODUCERS[producer].fee, city, 1) : 0)}
         label={t('recordHere')}
         disabled={!selected}
       />
+      {isLeader && songs.find((s) => s.id === selected)?.recordingQuality != null ? (
+        <>
+          <Heading>{t('musicVideo')}</Heading>
+          <Small style={{ marginBottom: space.sm }}>{t('musicVideoHint')}</Small>
+          <Choice
+            options={(Object.keys(VIDEO_DIRECTORS) as VideoDirector[]).map((k) => ({ value: k, label: p(DIRECTOR_NAMES[k]), hint: money(priceFor(VIDEO_DIRECTORS[k].fee, city, 1)) }))}
+            value={director}
+            onChange={setDirector}
+          />
+          <View style={{ height: space.md }} />
+          <HoursAction
+            options={[VIDEO_HOURS]}
+            build={() => ({ kind: 'video', songId: selected!, locationId, director })}
+            price={() => priceFor(VIDEO_PRICE, city, 1) + priceFor(VIDEO_DIRECTORS[director].fee, city, 1)}
+            label={t('shootVideo')}
+            disabled={!selected}
+          />
+        </>
+      ) : null}
       {releasesButton}
     </View>
   );

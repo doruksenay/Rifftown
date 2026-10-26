@@ -25,3 +25,5 @@ export * from './consequences';
 export * from './pacing';
 export * from './content/progress';
 export * from './press';
+export * from './touring';
+export * from './broadcast';

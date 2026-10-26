@@ -7,6 +7,13 @@ import { pool } from '../db';
 import { bandPress, cityNews } from '../game/press';
 import { membership } from '../game/common';
 import { parse } from './util';
+import { CREW_ROLES } from '@rifftown/shared';
+import { fail } from '../errors';
+import { fireCrew, hireCrew, repairGear, startTour, tourView } from '../game/touring';
+import { answerContract, foundLabel, labelView, labelsList, moveLabelTill, offerContract } from '../game/labels';
+import { videoChart } from '../game/media';
+
+const terms = z.object({ bandShare: z.number().min(0).max(1), advance: z.number().int().min(0), weeks: z.number().int() });
 
 export async function mediaRoutes(app: FastifyInstance) {
   app.addHook('preHandler', requireUser);
@@ -17,6 +24,40 @@ export async function mediaRoutes(app: FastifyInstance) {
     const viewer = charId(req);
     const items = await cityNews(p.cityId, viewer, { kind: q.kind, before: q.before });
     return { articles: items.map((a) => ({ ...a, mine: a.author?.characterId === viewer })) };
+  });
+
+  // ---------- Turne ve ekip ----------
+  app.get('/tour', async (req) => {
+    const m = await membership(pool, charId(req));
+    if (!m) fail('no_band');
+    return tourView(pool, m!.band_id);
+  });
+  app.post('/tour', async (req) => {
+    const body = parse(z.object({ name: z.string().max(60), cityIds: z.array(z.string().max(30)).max(10), days: z.number().int() }), req.body);
+    return startTour(charId(req), body);
+  });
+  app.post('/crew/:role', async (req) => hireCrew(charId(req), parse(z.object({ role: z.enum(CREW_ROLES) }), req.params).role));
+  app.delete('/crew/:role', async (req) => fireCrew(charId(req), parse(z.object({ role: z.enum(CREW_ROLES) }), req.params).role));
+  app.post('/repair', async (req) => {
+    const body = parse(z.object({ kitId: z.number().int(), targetId: z.number().int().optional() }), req.body);
+    return repairGear(charId(req), body.kitId, body.targetId);
+  });
+
+  // ---------- Klip listesi ----------
+  app.get('/charts/videos', async () => videoChart(pool));
+
+  // ---------- Plak şirketi ----------
+  app.get('/labels', async (req) => ({ labels: await labelsList(pool), mine: await labelView(pool, charId(req)) }));
+  app.post('/labels', async (req) => foundLabel(charId(req), parse(z.object({ name: z.string().max(60) }), req.body).name));
+  app.post('/labels/mine/till', async (req) => moveLabelTill(charId(req), parse(z.object({ amount: z.number().int() }), req.body).amount));
+  app.post('/labels/mine/offers', async (req) => {
+    const body = parse(terms.extend({ bandId: z.number().int() }), req.body);
+    return offerContract(charId(req), body.bandId, body);
+  });
+  app.post('/contracts/:id/:answer', async (req) => {
+    const p = parse(z.object({ id: z.coerce.number().int(), answer: z.enum(['accept', 'decline', 'counter']) }), req.params);
+    const body = p.answer === 'counter' ? parse(terms, req.body) : undefined;
+    return answerContract(charId(req), p.id, p.answer, body);
   });
 
   app.get('/press/mine', async (req) => {

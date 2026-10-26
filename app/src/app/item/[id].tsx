@@ -48,6 +48,7 @@ function ItemScreen() {
   }
   const refresh = () => qc.invalidateQueries({ queryKey: ['inventory'] });
   const sprays = (inv.data ?? []).filter((i) => ITEM_BY_ID[i.itemId]?.slot === 'spray' && !i.listed);
+  const kits = (inv.data ?? []).filter((i) => i.itemId === 'repair_kit' && !i.listed);
   const nameable = isPaintable(def.slot) || def.slot === 'pet' || def.slot === 'art';
   const city = me.data?.character?.cityId;
   const here = (friends.data?.friends ?? []).filter((f) => f.cityId && f.cityId === city);
@@ -71,7 +72,17 @@ function ItemScreen() {
           </Row>
         ) : null}
         {item.listed ? <Small color={c.pink}>{t('listedBadge')}</Small> : null}
+        {item.wear > 0 ? <Small color={item.wear >= 50 ? c.danger : c.inkSoft}>{t('wearLine', { n: item.wear })}</Small> : null}
       </View>
+      {item.wear > 0 && kits.length ? (
+        <Button
+          title={t('repairWithKit')}
+          variant="secondary"
+          style={{ marginTop: space.md }}
+          disabled={pending || locked}
+          onPress={() => run(() => api.post('/repair', { kitId: kits[0].id, targetId: item.id }), { success: t('repaired'), invalidate: ['inventory', 'me'] })}
+        />
+      ) : null}
 
       {isEquippable(def.slot) ? (
         <Button

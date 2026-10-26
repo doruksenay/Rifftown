@@ -38,6 +38,7 @@ export const toInventoryDto = (r: any): InventoryItemDto => ({
   color: r.color ?? null,
   nickname: r.nickname ?? null,
   bonus: itemBonus(r),
+  wear: Math.round(Number(r.wear ?? 0)),
   listed: !!r.listed,
   craftedBy: r.crafted_by_name ?? null,
   legendary: r.legendary_at

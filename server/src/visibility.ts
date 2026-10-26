@@ -27,6 +27,8 @@ const KEY_RULES: Record<string, Rule[]> = {
   press: [{ scale: 'press' }, { scale: 'press', map: true }],
 };
 
+/** Bu anahtarlarda VIP olmayanlara 10'luk adımlarla */
+const COARSE_10 = new Set(['wear', 'morale']);
 /** Bu anahtarlarda VIP olmayanlara yalnızca işaret (-1, 0, 1) gider */
 const SIGN_ONLY = new Set(['flow', 'pressDelta', 'impact']);
 
@@ -47,6 +49,9 @@ function blurNode(node: unknown, depth = 0): unknown {
     } else if (k === 'chance' && typeof v === 'number') {
       // Suç başarı şansı: VIP olmayanlara sadece düşük / orta / yüksek (uygulamadaki eşiklerle aynı)
       out[k] = v < 0.35 ? 0.2 : v < 0.65 ? 0.5 : 0.8;
+    } else if (COARSE_10.has(k) && typeof v === 'number') {
+      // Yıpranma ve moral: VIP olmayanlara 10'luk adımlarla
+      out[k] = Math.floor(v / 10) * 10;
     } else if (SIGN_ONLY.has(k) && typeof v === 'number') {
       // Etkinin yalnızca yönü gösterilir (setlist sırası, basın etkisi vb.)
       out[k] = Math.sign(v);

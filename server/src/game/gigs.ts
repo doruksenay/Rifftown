@@ -50,6 +50,7 @@ import {
 } from '@rifftown/shared';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import { bandPress } from './press';
+import { afterGigCrew, crewForGig, wearGigGear } from './touring';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
@@ -350,6 +351,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     });
   }
 
+  // Turne ekibi (oyunun kendi grupları ekip tutmaz)
+  const crew = await crewForGig(c, gig.band_id, gig.city_id);
   const res = computeGig({
     venue,
     fame,
@@ -361,11 +364,15 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     fxBonus: Math.min(MAX_FX_BONUS, (gig.effects ?? []).reduce((sum: number, id: string) => sum + (ITEM_BY_ID[id]?.bonus ?? 0), 0)),
     plan: gig.plan ?? {},
     press: await bandPress(c, gig.band_id, gig.city_id),
+    crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult },
     cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür
   const ownerShare = await barGigShare(c, gig.location_id, res.revenue, ids);
   res.revenue -= ownerShare;
+  // Ekip ücreti bilet gelirinden ödenir; yetmezse ödenmez ve moral çöker
+  const crewPaid = crew.roles.length > 0 && res.revenue >= crew.fee;
+  if (crewPaid) res.revenue -= crew.fee;
 
   const presentChars = chars.filter(onStage);
   const perMember = presentChars.length ? Math.floor(res.revenue / presentChars.length) : 0;
@@ -393,7 +400,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     await notifySkillUps(c, ch.id, ch.skills, skills);
     // Sahne yorar ama ilham verir; iyi ya da kötü bir gece ruh hâlinde iz bırakır
     const inspiration = res.legendary ? INSPIRATION_GAIN.legendaryGig : INSPIRATION_GAIN.gig + Math.max(0, (res.quality - 50) / 8);
-    await changeWellbeing(c, ch, { energy: -GIG_ENERGY_COST - (res.encoreEnergy ?? 0), inspiration });
+    await changeWellbeing(c, ch, { energy: -Math.max(0, GIG_ENERGY_COST - crew.energySaved) - (res.encoreEnergy ?? 0), inspiration });
     if (res.legendary) await addMoodlet(c, ch.id, 'legendary_gig');
     else if (res.quality >= 70) await addMoodlet(c, ch.id, 'great_gig');
     else if (res.quality < GIG_BREAK_EVEN_QUALITY) await addMoodlet(c, ch.id, 'bad_gig');
@@ -424,6 +431,9 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   // Konser verilen şehirde şöhret canlı kalır; sahnede çalınan şarkılar unutulmaz
   await markFameActive(c, gig.band_id, gig.city_id);
   await touchFamiliarity(c, presentChars.map((x) => x.id), gig.setlist);
+  // Sahnedeki enstrümanlar yıpranır; ekip morali güncellenir
+  await wearGigGear(c, presentChars.map((x) => x.id), presentChars.map((x) => memberRows[chars.indexOf(x)].role), crew.wearMult);
+  if (crew.roles.length && res.presentCount > 0) await afterGigCrew(c, gig.band_id, crewPaid, res.quality, crew.moraleLoss);
   // Kulüp ve üstünde felaket bir gece haber olur
   if (res.presentCount > 0 && venue !== 'bar' && res.quality < DISASTER_QUALITY && !band.npc_key) {
     await createScandal(c, { bandId: gig.band_id, characterId: null, cityId: gig.city_id, kind: 'disaster' });
@@ -474,6 +484,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     fame: fameAfter,
     effects: gig.effects ?? [],
     ownerShare,
+    crewFee: crewPaid ? crew.fee : 0,
+    crewUnpaid: crew.roles.length > 0 && !crewPaid,
     festivalId: gig.festival_id ?? null,
   };
   await c.query(`UPDATE gigs SET status = 'done', result = $2, legendary = $3 WHERE id = $1`, [gig.id, JSON.stringify(result), !!res.legendary]);

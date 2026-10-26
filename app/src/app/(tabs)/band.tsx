@@ -252,6 +252,10 @@ function MyBand() {
         <Button title={t('releases')} variant="secondary" onPress={() => router.push('/releases')} style={{ flex: 1 }} />
         <Button title={t('charts')} variant="secondary" onPress={() => router.push('/charts')} style={{ flex: 1 }} />
       </Row>
+      <Row style={{ marginTop: space.sm }}>
+        <Button title={t('tourTitle')} variant="secondary" onPress={() => router.push('/tour')} style={{ flex: 1 }} />
+        <Button title={t('labelTitle')} variant="secondary" onPress={() => router.push('/label')} style={{ flex: 1 }} />
+      </Row>
 
       <Heading>{t('upcomingGigs')}</Heading>
       {band.upcomingGigs.length ? (

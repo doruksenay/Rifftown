@@ -35,7 +35,7 @@ export const MAX_SKILL = 100;
 
 // ---------- Eylemler ----------
 
-export const ACTION_KINDS = ['study', 'work', 'rest', 'write_song', 'rehearse', 'travel', 'treat', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article'] as const;
+export const ACTION_KINDS = ['study', 'work', 'rest', 'write_song', 'rehearse', 'travel', 'treat', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article', 'video'] as const;
 export type ActionKind = (typeof ACTION_KINDS)[number];
 
 /** Seçilebilir süreler (oyun saati). */
@@ -68,6 +68,7 @@ export const MOOD_PER_HOUR: Record<ActionKind, number> = {
   craft: -2,
   press: -2,
   write_article: -2,
+  video: -2,
 };
 
 /** Saat başına sağlık değişimi. Ruh hâli 25'in altındayken her saat fazladan -2 uygulanır. */
@@ -87,6 +88,7 @@ export const HEALTH_PER_HOUR: Record<ActionKind, number> = {
   craft: -0.5,
   press: -0.5,
   write_article: -0.5,
+  video: -0.5,
 };
 export const LOW_MOOD_THRESHOLD = 25;
 export const LOW_MOOD_HEALTH_PER_HOUR = -2;
@@ -230,6 +232,8 @@ export interface GigInput {
   fxBonus?: number;
   /** Grubun o şehirdeki basın desteği (0–100, nötr 20) */
   press?: number;
+  /** Turne ekibinin etkileri: kaliteye eklenen puan ve seyirci çarpanı */
+  crew?: { quality: number; attendanceMult: number };
   /** Performans planı: sahne olayları ve bis kararı */
   plan?: { events?: string[]; encore?: EncorePlan };
   /** Bekleme süresi dolmamış sahne olayları (denenmez) */
@@ -287,7 +291,10 @@ export function computeGig(input: GigInput): GigResult {
   const present = performers.filter((p) => p.present);
   const memberCount = performers.length;
   const genrePop = city.genrePopularity[genre];
-  const attendance = Math.min(VENUE_RULES[venue].capacity, Math.round(expectedAttendance(venue, fame, genrePop, rand) * pressAttendanceMult(input.press ?? PRESS_NEUTRAL)));
+  const attendance = Math.min(
+    VENUE_RULES[venue].capacity,
+    Math.round(expectedAttendance(venue, fame, genrePop, rand) * pressAttendanceMult(input.press ?? PRESS_NEUTRAL) * (input.crew?.attendanceMult ?? 1)),
+  );
 
   // Grubun kendi üyelerinden kimse sahnede değilse (sadece kiralık müzisyenler) konser yapılmamış sayılır
   const hasOwn = performers.some((p) => p.characterId !== null);
@@ -371,7 +378,7 @@ export function computeGig(input: GigInput): GigResult {
 
   const noise = 0.92 + rand() * 0.16;
   const base = Math.round(
-    clamp(avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + flow + eventDelta, 0, 100),
+    clamp(avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + (input.crew?.quality ?? 0) + flow + eventDelta, 0, 100),
   );
   // Bis: gece iyi geçtiyse seyirci ister; cesur bis enerjiye bağlı bir kumardır
   const enc = encoreOutcome(input.plan?.encore, base, avg((p) => p.energy ?? 100), rand);

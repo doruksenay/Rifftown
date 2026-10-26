@@ -34,6 +34,7 @@ export const ENERGY_PER_HOUR: Record<ActionKind, number> = {
   craft: -6,
   press: -5,
   write_article: -6,
+  video: -6,
 };
 /** Evde ya da otelde dinlenince saat başına fazladan enerji */
 export const HOME_REST_ENERGY_BONUS = 6;

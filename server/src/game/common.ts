@@ -18,6 +18,7 @@ import {
   tierOf,
   ageOf,
   START_AGE,
+  wornBonus,
 } from '@rifftown/shared';
 import type { Db } from '../db';
 import { many, one } from '../db';
@@ -213,7 +214,7 @@ export async function gearBonuses(db: Db, characterIds: number[]): Promise<Map<n
   if (characterIds.length === 0) return out;
   const rows = await many(
     db,
-    `SELECT character_id, item_id, slot, equipped, bonus, legendary_at FROM inventory WHERE character_id = ANY($1::bigint[]) AND NOT listed`,
+    `SELECT character_id, item_id, slot, equipped, bonus, legendary_at, wear FROM inventory WHERE character_id = ANY($1::bigint[]) AND NOT listed`,
     [characterIds],
   );
   for (const r of rows) {
@@ -227,7 +228,8 @@ export async function gearBonuses(db: Db, characterIds: number[]): Promise<Map<n
     else if (def.slot === 'outfit') g.outfit = bonus;
     else if (def.slot === 'pet') g.pet = bonus;
     else if (def.slot === 'vehicle') g.vehicleSpeed = def.speed ?? 0;
-    else if ((INSTRUMENTS as readonly string[]).includes(def.slot)) g.instruments[def.slot as Instrument] = bonus;
+    // Yıpranmış enstrüman bonusunun bir kısmını kaybeder (tamirle geri gelir)
+    else if ((INSTRUMENTS as readonly string[]).includes(def.slot)) g.instruments[def.slot as Instrument] = wornBonus(bonus, Number(r.wear ?? 0));
   }
   const tattoos = await many(db, 'SELECT character_id, count(*)::int AS n FROM tattoos WHERE character_id = ANY($1::bigint[]) GROUP BY character_id', [
     characterIds,

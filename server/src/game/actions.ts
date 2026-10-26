@@ -72,9 +72,12 @@ import {
   ageLearnFactor,
   skillBonus,
   skillMult,
+  PRODUCERS,
 } from '@rifftown/shared';
 import { characterAge, treatIndulgence } from './consequences';
 import { prepareArticle, preparePress, resolveArticle, resolvePress } from './press';
+import { prepareVideo, resolveVideo } from './media';
+import { rollBreakdown } from './touring';
 import type pg from 'pg';
 import { config } from '../config';
 import { one, tx } from '../db';
@@ -100,7 +103,7 @@ import {
   toActionDto,
 } from './common';
 
-const ACTIVITY_KINDS = new Set(['study', 'work', 'write_song', 'rehearse', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article']);
+const ACTIVITY_KINDS = new Set(['study', 'work', 'write_song', 'rehearse', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article', 'video']);
 
 function requireHours(kind: keyof typeof HOUR_OPTIONS, hours: unknown): number {
   const opts = HOUR_OPTIONS[kind] as readonly number[];
@@ -268,8 +271,23 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         hours = RECORD_HOURS;
         locationId = loc.id;
         cost = priceFor(RECORDING_PRICE_PER_HOUR, city, hours);
+        // Dışarıdan prodüktör tutmak: ücret kayıt başında ödenir (şehir çarpanıyla)
+        if (req.producer) {
+          const pr = PRODUCERS[req.producer];
+          if (!pr) fail('invalid_producer');
+          cost += priceFor(pr.fee, city, 1);
+          params.producer = req.producer;
+        }
         params.songId = req.songId;
         params.bandId = m!.band_id;
+        break;
+      }
+      case 'video': {
+        const p = await prepareVideo(c, char, req.songId, req.locationId, req.director ?? 'none');
+        hours = p.hours;
+        cost = p.cost;
+        locationId = p.locationId;
+        Object.assign(params, p.params);
         break;
       }
       case 'crime': {
@@ -320,6 +338,14 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         if (!opt) fail('invalid_route');
         hours = opt!.hours;
         cost = opt!.cost;
+        if (req.mode === 'car') {
+          const b = await rollBreakdown(c, char, char.city_id!, req.toCityId, hours);
+          hours = b.hours;
+          if (b.breakdown) {
+            params.breakdown = true;
+            params.usedKit = !!b.usedKit;
+          }
+        }
         params.from = char.city_id;
         params.to = req.toCityId;
         params.mode = req.mode;
@@ -634,6 +660,14 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       Object.assign(result, await resolveCraft(c, char, params, skills, fraction));
       break;
     }
+    case 'video': {
+      if (fraction < 1) {
+        result.cancelled = true;
+        break;
+      }
+      Object.assign(result, await resolveVideo(c, { ...char, skills }, params));
+      break;
+    }
     case 'press': {
       if (fraction < 1) {
         result.cancelled = true;
@@ -654,6 +688,10 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       cityId = params.to;
       locationId = null;
       result.to = params.to;
+      if (params.breakdown) {
+        result.breakdown = true;
+        result.usedKit = !!params.usedKit;
+      }
       // Yeni bir şehir: heyecan ve ilham
       if (params.to !== params.from) {
         inspirationDelta += INSPIRATION_GAIN.travel;

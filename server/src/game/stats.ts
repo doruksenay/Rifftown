@@ -52,7 +52,10 @@ export async function lifetimeStats(db: Db, characterId: number): Promise<Stats>
        (SELECT COALESCE(max(fame), 0) FROM band_fame WHERE band_id IN (SELECT band_id FROM band)) AS max_fame,
        (SELECT COALESCE(array_agg(fame), '{}') FROM band_fame WHERE band_id IN (SELECT band_id FROM band)) AS fames,
        (SELECT count(*)::int FROM articles WHERE author_id = $1 AND kind = 'news' AND NOT removed) AS articles,
-       (SELECT count(*)::int FROM press_events WHERE character_id = $1) AS interviews`,
+       (SELECT count(*)::int FROM press_events WHERE character_id = $1) AS interviews,
+       (SELECT count(*)::int FROM music_videos WHERE band_id IN (SELECT band_id FROM band)) AS videos,
+       (SELECT COALESCE(sum(radio_plays), 0)::int FROM releases WHERE band_id IN (SELECT band_id FROM band)) AS radio_plays,
+       (SELECT count(*)::int FROM tours WHERE band_id IN (SELECT band_id FROM band) AND status = 'done') AS tours_done`,
     [characterId],
   );
   const skills = Object.values((r?.skills ?? {}) as Record<string, number>);
@@ -95,11 +98,10 @@ export async function lifetimeStats(db: Db, characterId: number): Promise<Stats>
     married: n('married'),
     stage_events: n('stage_events'),
     encores: n('encores'),
-    // Klip, radyo ve turne istatistikleri ilgili sistemler eklenince doldurulur
     articles: n('articles'),
     interviews: n('interviews'),
-    videos: 0,
-    radio_plays: 0,
-    tours_done: 0,
+    videos: n('videos'),
+    radio_plays: n('radio_plays'),
+    tours_done: n('tours_done'),
   };
 }

@@ -16,6 +16,8 @@ import { pruneMoodlets } from './game/wellbeing';
 import { sendPendingPushes } from './push';
 import { closeDueElections, ensureElections, payOfficeSalaries } from './game/politics';
 import { processPressDrift } from './game/press';
+import { processCrewMorale, processTours } from './game/touring';
+import { processLabels } from './game/labels';
 import { processAddiction, processFameDecay, processFamiliarityDecay, processHospitalizations, processMortality } from './game/consequences';
 
 /** Bir aşama hata verirse diğer aşamalar yine çalışır */
@@ -53,6 +55,9 @@ export async function tick() {
   }
   await stage('bağımlılık', () => processAddiction());
   await stage('basın', () => processPressDrift());
+  await stage('turneler', () => processTours());
+  await stage('ekip morali', () => processCrewMorale());
+  await stage('plak şirketleri', () => processLabels());
   await stage('hastane', () => processHospitalizations());
   await stage('ölüm', () => processMortality());
   const pushes = await stage('bildirimler', () => sendPendingPushes());

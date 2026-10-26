@@ -231,7 +231,7 @@ Satın alma akışı: uygulama RevenueCat ile satın almayı başlatır → Reve
 | Satış süresi | 16 liste haftası (112 gün) | 32 liste haftası (224 gün) |
 
 - **Haftalık satış:** Liste haftası 7 oyun günüdür (bkz. "Tempo"). Hafta kapanınca her yayının her şehirdeki satışı hesaplanır: temel × (0,04 + 0,96 × (şöhret/100)^1,2) × tür popülerliği × (0,3 + kalite/100) × pazar büyüklüğü × düşüş^hafta, ±%15. Grubun hiç tanınmadığı şehirde satış olmaz; az tanındığı yerde küçük bir taban satış olur, böylece yeni gruplar da listelere girebilir. Pazar büyüklüğü pahalı ve büyük şehirlerde yüksektir. Satışlar haftadan haftaya azalır (her liste haftası single'da ~%16, albümde ~%9; günlük düşüş pacing.ts içinde).
-- **Gelir:** Satış gelirinin yarısı gruba kalır (gerisi plak şirketi ve dağıtım), grup üyeleri arasında eşit bölünür.
+- **Gelir:** Plak şirketi olmayan grupta satış gelirinin yarısı gruba kalır (gerisi dağıtım), grup üyeleri arasında eşit bölünür. Oyuncunun plak şirketiyle sözleşmeli grupta pay sözleşmeyle belirlenir (bkz. "Plak şirketi").
 - **Listeler:** Her şehrin ve dünyanın single ve albüm listeleri ayrı çıkar (ilk 20). Şehir listesinde 1. olmak +1,6, ilk 3 +1,05, ilk 10 +0,47, ilk 20 +0,23 şöhret getirir (7 günlük haftaya göre; hafta kısalırsa orantılı küçülür, günlük ödül aynı kalır); şöhret yükseldikçe bu bonus küçülür. Listede önceki haftaya göre yükselme ve düşme gösterilir.
 - 1.000 satışta altın, 10.000 satışta platin plak.
 - Son haftanın listesini herkes görür; geçmiş haftaların listeleri VIP avantajıdır.
@@ -444,6 +444,56 @@ Kötü kararın bedeli var. Kurallar `packages/shared/src/consequences.ts`, sunu
 - Kullanıcı yeni karakter açar. Cep, banka ve işletme kasasındaki paranın yarısı (en fazla $10.000) yeni karaktere bir kez miras kalır. Para basılmaz, yalnızca taşınır; miras aynı işlemde sıfırlanır, iki kez alınamaz.
 - Testlerde ve geliştirmede `DECAY=0` aşinalık ve şöhret çürümesini, `AGING=0` yaşlanmayı kapatır.
 
+## Turne, klip, radyo ve plak şirketi
+
+Kurallar `packages/shared/src/touring.ts` ve `broadcast.ts`; sunucu `server/src/game/touring.ts`, `media.ts`, `labels.ts`. Ekranlar: grup sekmesinden "Turne ve ekip" ve "Plak şirketi"; kayıt stüdyosunda prodüktör ve klip; listelerde klip listesi.
+
+### Tur ekibi ve moral
+
+Grup lideri 8 rolden ekip tutar; ekip oyunun kendi çalışanıdır, ücreti her konserde bilet gelirinden ödenir (şehir çarpanıyla):
+
+| Rol | Konser başı | Etki |
+|---|---|---|
+| Yükleme ekibi | $25 | Enstrüman yıpranması %40'a iner |
+| Ses teknisyeni | $60 | Konser kalitesine +3 |
+| Işık teknisyeni | $45 | Konser kalitesine +1,5 |
+| Şoför | $30 | Kendi araçla yolculukta arıza şansı yarıya iner |
+| Kişisel asistan | $30 | Konser 6 enerji daha az yorar |
+| Tur menajeri | $70 | Konser başı moral kaybı yarıya iner |
+| Promotör | $55 | Seyirci ×1,08 |
+| Muhasebeci | $40 | Ekip ücretleri %15 düşer |
+
+Moral 70'te başlar: her konser −4 (tur menajeriyle −2), iyi konser (60+) +3, ücreti ödenemeyen konser −25; konser olmayan her oyun günü +5 (en fazla 90). Moral 50'nin altında etkiler yarıya iner, 20'nin altında hiç çalışmaz; 10'un altına düşerse ekip dağılır. Bilet geliri ücreti karşılamazsa ücret ödenmez (para basılmaz). Etkiler sahne efektleri gibi küçük tutuldu; bar konserinde ekip kârlı değildir, kulüp ve üstü için anlamlıdır.
+
+### Araç arızası ve ekipman yıpranması
+
+- Enstrümanlar her konserde %3 yıpranır (yükleme ekibiyle %1,2). Yıpranma bonusu düşürür: %100 yıpranmış enstrüman bonusunun yarısını verir. Araçlar her 100 km'de %1,2 yıpranır.
+- Kendi aracıyla yolculukta arıza şansı = (0,03 + yıpranma × 0,004) × (1 − sürücülük ÷ 250) × (1 − mekanik ÷ 250) × (şoför varsa 0,5), %0,5–%50. Arıza yolculuğu %60 uzatır; envanterde tamir kiti varsa kit harcanır ve yalnızca %15 uzar.
+- **Tamir kiti** ($120, hırdavatçı; atölyede de yapılır) bir eşyanın yıpranmasını 60 azaltır. **Ekipman bakım paketi** ($200, sahne ekipmanı dükkânı) kuşanılmış bütün eşyaları onarır. VIP olmayanlar yıpranmayı ve morali 10'luk adımlarla görür.
+
+### Turne planı
+
+Lider 3–8 şehir ve 3–28 günlük bir turne başlatır (grup başına tek aktif turne). Süre bitince turne şehirlerinin hepsinde, turne süresi içinde, en az bir üyenin sahnede olduğu bir konser verildiyse turne tamamlanır: her turne şehrine +0,6 şöhret, ekibe +15 moral, "Yola çıktık" başarımı ve "Yolun hikâyesi" zincirinin adımı.
+
+### Müzik klibi
+
+Kayıt stüdyosunda grubun lideri kayıtlı bir şarkı için 6 saatlik çekim yapar: $400 + yönetmen (kendimiz $0, bağımsız $500 / beceri 45, ünlü $2.500 / beceri 75; şehir çarpanıyla). Grubun 14 oyun gününde bir klibi olabilir. Kalite = 0,45 × kayıt + 0,3 × yönetmenlik (tutulan yönetmen ya da şehirdeki üyelerin en iyi film yönetmenliği) + 0,25 × şehirdeki üyelerin ortalama oyunculuğu ± 5. Klip 12 liste haftası izlenir (haftada %20 düşüş); dünya klip listesinin ilk 20'si grubun en tanındığı şehre şöhret getirir (1.: +0,6, ilk 3: +0,35, ilk 10: +0,15, ilk 20: +0,05). Klibi olan şarkıyı içeren yayın kaliteye göre en fazla %15 daha çok satar.
+
+### Radyo
+
+Her liste haftası, satıştaki single'lar ilk 10 haftaları boyunca her şehir radyosunda çalınır: çalınma = 40 × (kalite ÷ 100)^1,5 × (0,1 + şöhret ÷ 100) × tür popülerliği × (0,8 + basın ÷ 100) × 0,82^hafta. Grup hiç tanınmıyorsa çalınmaz. Çalınma o şehirde şöhret getirir (grup ve şehir başına haftada en fazla +0,4) ve o haftanın satışını en fazla %15 artırır. Toplam çalınma yayında saklanır; "Radyo dostu" başarımı ve "Manşetlere doğru" zinciri buna bakar.
+
+### Plak şirketi (oyuncu işletmesi)
+
+- Kuruluş $30.000 × şehir çarpanı, haftalık gider $400 × şehir çarpanı (önce kasadan, yetmezse sahibinin cebinden; ikisi de yetmezse şirket kapanır, kasadaki para sahibine kalır, sözleşmeler biter). Kişi başı tek şirket, en fazla 5 grup.
+- Sahip, bir şehirde en az "şehirde konuşuluyor" (15) şöhretteki bir gruba teklif verir: grubun payı %30–%60, avans, 4–52 liste haftası. Grubun lideri kabul eder, reddeder ya da karşı teklif verir; sıra son teklifi yapmayan taraftadır (pazarlık). Kabulde avans şirketin kasasından grup üyelerine eşit bölünür; grubun bekleyen diğer teklifleri düşer.
+- Sözleşme süresince çıkan her yayın şirkete bağlanır. Haftalık brüt satışın %40'ı dağıtıma gider, kalan %60'lık havuzun sözleşmedeki payı gruba, kalanı şirketin kasasına girer; avans grubun payından geri alınır. Şirketin pazarlaması satışı %10 artırır. Sabit %50 yalnızca şirketsiz gruplar için geçerli kaldı.
+- **Sömürü korumaları:** yeni hesaplar şirket kuramaz, teklif veremez ve kabul edemez; kendi grubuyla sözleşme yapılamaz (kabul anında da kontrol edilir); avans en fazla $5.000 ve grubun en yüksek şöhretinin 100 katı (tanınmamış ek hesap grubuna para aktarılamaz); pay aralığı sabit; şirket parayı yalnızca gerçek satıştan kazanır; iki tarafın karakter satırları id sırasıyla kilitlenir.
+
+### Prodüktör
+
+Kayıtta prodüktörlük artık bir rol: kaydın yapımcılık değeri, kaydı başlatan dahil şehirdeki üyelerin en iyi yapımcısıdır (kayıt yapımcılığı + miks/mastering gibi becerilerin etkisi). İstenirse dışarıdan prodüktör tutulur: genç ($150, beceri 35), deneyimli ($600, 60), yıldız ($2.000, 85); ücret kayıt başında ödenir ve iyi olan değer kullanılır. Kaydın prodüktörü saklanır.
+
 ## Basın ve medya
 
 Şöhretin yanında ikinci bir eksen. Kurallar `packages/shared/src/press.ts`, sunucu `server/src/game/press.ts`.
@@ -548,7 +598,6 @@ Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düş
 Henüz eklenmemiş olanlar, önem sırasıyla:
 
 1. **Makamlara gerçek yetkiler:** başkanın şehirdeki vergi ya da bilet payını belirlemesi, emniyet müdürünün devriye ve suçla mücadele kararları.
-2. **Plak şirketleri ve radyo:** oyuncuların kurduğu plak şirketleri, radyoda çalınma ile satışa etki.
 3. **Nesiller:** çocukların büyüyüp oynanabilir karakter olması, miras.
 4. **Daha fazla işletme türü:** plak dükkânı, kayıt stüdyosu, konser salonu ruhsatları.
 5. Turne paketleri.

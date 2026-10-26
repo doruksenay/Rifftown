@@ -8,6 +8,7 @@ import type { ActionKind, GigFactorId, GigFactors, TravelMode } from './rules';
 import type { NextGoal } from './progression';
 import type { EncoreOutcome, EncorePlan, StageEventOutcome, Tempo } from './performance';
 import type { ArticleTone, PressMode } from './press';
+import type { ProducerTier, VideoDirector } from './broadcast';
 import type { Skills } from './skills';
 import type { Genre, Instrument, Lang } from './world';
 
@@ -310,7 +311,8 @@ export type StartActionRequest =
   | { kind: 'travel'; toCityId: string; mode: TravelMode }
   | { kind: 'treat'; hours: number; locationId: string }
   | { kind: 'busk'; role: Instrument; hours: number; locationId: string }
-  | { kind: 'record'; songId: number; locationId: string }
+  | { kind: 'record'; songId: number; locationId: string; producer?: ProducerTier | null }
+  | { kind: 'video'; songId: number; locationId: string; director?: VideoDirector }
   | { kind: 'crime'; crime: string; locationId: string }
   | { kind: 'investigate'; locationId: string }
   | { kind: 'workout'; hours: number; locationId: string }
@@ -366,6 +368,8 @@ export interface InventoryItemDto {
   nickname: string | null;
   /** Geçerli bonus (üretilen eşyalarda üretime göre) */
   bonus: number;
+  /** Yıpranma (0–100): enstrüman bonusunu düşürür, araçta arıza riskini artırır */
+  wear: number;
   /** İkinci el pazarında satışta */
   listed: boolean;
   craftedBy: string | null;
