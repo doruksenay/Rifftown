@@ -8,6 +8,7 @@ import { dateTime } from '@/lib/format';
 import { ReleaseRow } from '@/components/records';
 import { TierText } from '@/components/tier';
 import { useI18n } from '@/lib/i18n';
+import { PlaceIcon } from '@/components/art/place';
 
 export default function BandProfile() {
   const gate = useGate();
@@ -59,6 +60,7 @@ function BandProfileScreen() {
         b.pastGigs.map((g, i) => (
           <ListRow
             key={g.id}
+            left={LOCATION_BY_ID[g.locationId] ? <PlaceIcon type={LOCATION_BY_ID[g.locationId].type} size={34} /> : undefined}
             title={p(LOCATION_BY_ID[g.locationId].name)}
             subtitle={`${dateTime(g.startsAt, locale)}${g.result ? `, ${t('attendance', { n: g.result.attendance })}` : ''}`}
             onPress={() => router.push(`/gig/${g.id}`)}

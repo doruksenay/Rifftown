@@ -6,7 +6,6 @@ import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { useGate } from '@/components/gate';
-import { ColorDot } from '@/components/market';
 import { Body, Button, Choice, Empty, Field, Heading, Loading, Row, Screen, Small } from '@/components/ui';
 import { api } from '@/lib/api';
 import { money } from '@/lib/format';
@@ -15,6 +14,7 @@ import { useI18n } from '@/lib/i18n';
 import { itemBonusText, itemDisplayName } from '@/lib/item-text';
 import { useMe } from '@/lib/session';
 import { space, useColors } from '@/theme';
+import { ItemArt } from '@/components/art/items';
 
 export default function NewTrade() {
   const gate = useGate();
@@ -143,7 +143,7 @@ function Picker({ items, selected, onToggle }: { items: InventoryItemDto[]; sele
               >
                 {on ? <Small color={c.onBlue}>✓</Small> : null}
               </View>
-              <ColorDot color={it.color} />
+              <ItemArt itemId={it.itemId} color={it.color} legendary={!!it.legendary} size={36} />
               <View style={{ flex: 1 }}>
                 <Body numberOfLines={1}>{itemDisplayName(def, p, it)}</Body>
                 <Small numberOfLines={1}>{`${itemBonusText(def, t, p, it.bonus)}${it.equipped ? ` · ${t('equipped')}` : ''}`}</Small>

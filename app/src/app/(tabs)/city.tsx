@@ -1,4 +1,4 @@
-import { CITY_BY_ID, type LocationType, LOCATION_TYPE_NAMES, VENUE_RULES, isVenue } from '@rifftown/shared';
+import { CITY_BY_ID, LOCATION_BY_ID, type LocationType, LOCATION_TYPE_NAMES, VENUE_RULES, isVenue } from '@rifftown/shared';
 import { router } from 'expo-router';
 import { RefreshControl, View } from 'react-native';
 import { Body, Button, Empty, Heading, ListRow, Row, Screen, ScreenHeader, Small } from '@/components/ui';
@@ -10,6 +10,9 @@ import { useI18n } from '@/lib/i18n';
 import type { StringKey } from '@/lib/strings';
 import { useMe } from '@/lib/session';
 import { space, useColors } from '@/theme';
+import { Bleed } from '@/components/art/hero';
+import { PlaceIcon } from '@/components/art/place';
+import { CitySkyline } from '@/components/art/skyline';
 
 const GROUPS: { key: StringKey; types: LocationType[] }[] = [
   { key: 'venues', types: ['bar', 'club', 'hall'] },
@@ -48,6 +51,9 @@ export default function CityTab() {
         right={<Button title={t('travel')} small variant="secondary" onPress={() => router.push('/travel')} disabled={!!me.data?.action} />}
       />
 
+      <Bleed>
+        <CitySkyline cityId={city.id} height={140} />
+      </Bleed>
       <MayorAnnouncement cityId={city.id} />
 
       <ListRow
@@ -70,6 +76,7 @@ export default function CityTab() {
               return (
                 <ListRow
                   key={l.id}
+                  left={<PlaceIcon type={l.type} size={34} />}
                   title={p(l.name)}
                   subtitle={sub}
                   right={ch.locationId === l.id ? <Small color={c.pink}>{t('here')}</Small> : '›'}
@@ -90,6 +97,7 @@ export default function CityTab() {
           return (
             <ListRow
               key={l.id}
+              left={<PlaceIcon type={l.type} size={34} />}
               title={owned ? owned.name : p(l.name)}
               subtitle={`${p(LOCATION_TYPE_NAMES[l.type])}, ${owned ? t('ownerShort', { name: owned.ownerName }) : t('licenceForSale')}`}
               right={ch.locationId === l.id ? <Small color={c.pink}>{t('here')}</Small> : '›'}
@@ -104,6 +112,7 @@ export default function CityTab() {
         info.data.upcomingGigs.map((g, i, arr) => (
           <ListRow
             key={g.id}
+            left={LOCATION_BY_ID[g.locationId] ? <PlaceIcon type={LOCATION_BY_ID[g.locationId].type} size={34} /> : undefined}
             title={g.bandName}
             subtitle={`${p(city.locations.find((l) => l.id === g.locationId)?.name ?? city.name)}, ${dateTime(g.startsAt, locale)}`}
             onPress={() => router.push(`/gig/${g.id}`)}

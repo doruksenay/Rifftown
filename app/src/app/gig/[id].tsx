@@ -1,4 +1,4 @@
-import { CITY_BY_ID, type GigDto, LOCATION_BY_ID, ROLE_NAMES } from '@rifftown/shared';
+import { CITY_BY_ID, type GigDto, LOCATION_BY_ID, ROLE_NAMES, VENUE_RULES, isVenue } from '@rifftown/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -14,6 +14,8 @@ import { useRun } from '@/lib/hooks';
 import { useI18n } from '@/lib/i18n';
 import { useMe } from '@/lib/session';
 import { fonts, space, type, useColors } from '@/theme';
+import { Bleed } from '@/components/art/hero';
+import { PlaceArt } from '@/components/art/place';
 
 export default function GigScreen() {
   const gate = useGate();
@@ -72,6 +74,14 @@ function GigScreenScreen() {
   return (
     <Screen edges={[]}>
       <Stack.Screen options={{ title: p(loc.name) }} />
+      <Bleed>
+        <PlaceArt
+          type={loc.type}
+          id={`gig-${gig.id}`}
+          cityId={gig.cityId}
+          crowd={r && isVenue(loc.type) ? Math.min(1, r.attendance / VENUE_RULES[loc.type].capacity) : 0.5}
+        />
+      </Bleed>
       <View style={{ paddingTop: space.lg }}>
         <Body style={{ fontFamily: fonts.display, fontSize: type.display, lineHeight: type.display * 1.15 }}>{gig.bandName}</Body>
         <Small>{p(CITY_BY_ID[gig.cityId].name)}</Small>

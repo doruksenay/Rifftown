@@ -37,6 +37,7 @@ import { useBand, useInvites, useRun, useSongs } from '@/lib/hooks';
 import { useI18n } from '@/lib/i18n';
 import { useMe } from '@/lib/session';
 import { space, useColors } from '@/theme';
+import { PlaceIcon } from '@/components/art/place';
 
 function confirmThen(title: string, message: string, ok: string, cancel: string, fn: () => void) {
   if (Platform.OS === 'web') {
@@ -257,6 +258,7 @@ function MyBand() {
         band.upcomingGigs.map((g, i) => (
           <ListRow
             key={g.id}
+            left={LOCATION_BY_ID[g.locationId] ? <PlaceIcon type={LOCATION_BY_ID[g.locationId].type} size={34} /> : undefined}
             title={p(LOCATION_BY_ID[g.locationId].name)}
             subtitle={`${p(CITY_BY_ID[g.cityId].name)}, ${dateTime(g.startsAt, locale)}`}
             onPress={() => router.push(`/gig/${g.id}`)}

@@ -66,6 +66,10 @@ import { useI18n } from '@/lib/i18n';
 import type { StringKey } from '@/lib/strings';
 import { useMe } from '@/lib/session';
 import { space, useColors } from '@/theme';
+import { ItemArt } from '@/components/art/items';
+import { Bleed } from '@/components/art/hero';
+import { PlaceArt } from '@/components/art/place';
+import { PlaceIcon } from '@/components/art/place';
 
 export default function LocationScreen() {
   const gate = useGate();
@@ -91,6 +95,9 @@ function LocationScreenScreen() {
   return (
     <Screen edges={[]}>
       <Stack.Screen options={{ title: owned ? owned.name : p(loc.name) }} />
+      <Bleed>
+        <PlaceArt type={loc.type} id={loc.id} cityId={loc.cityId} />
+      </Bleed>
       <Row style={{ justifyContent: 'space-between', marginTop: space.lg }}>
         <Small>{`${p(LOCATION_TYPE_NAMES[loc.type])}, ${p(city.name)}`}</Small>
         {here && !atPlace && loc.type !== 'prison' && !ch.jailedUntil ? (
@@ -254,6 +261,7 @@ function Venue({ locationId, venue }: { locationId: string; venue: VenueType }) 
           {recentHere.map((g, i) => (
             <ListRow
               key={g.id}
+              left={LOCATION_BY_ID[g.locationId] ? <PlaceIcon type={LOCATION_BY_ID[g.locationId].type} size={34} /> : undefined}
               title={g.bandName}
               subtitle={`${dateTime(g.startsAt, locale)}${g.result ? `, ${tierName('quality', g.result.quality, lang)}` : ''}`}
               onPress={() => router.push(`/gig/${g.id}`)}
@@ -466,6 +474,7 @@ function Shop({ locationId, shop }: { locationId: string; shop: ShopType }) {
             return (
               <ListRow
                 key={item.id}
+                left={<ItemArt itemId={item.id} size={44} />}
                 title={p(item.name)}
                 subtitle={itemBonusText(item, t, p)}
                 right={
@@ -498,7 +507,7 @@ function Shop({ locationId, shop }: { locationId: string; shop: ShopType }) {
             return (
               <ListRow
                 key={m.id}
-                left={<ColorDot color={m.color} />}
+                left={<ItemArt itemId={m.itemId} color={m.color} legendary={!!m.legendary} size={40} />}
                 title={`${itemDisplayName(item, p, m)}${n > 1 ? ` ×${n}` : ''}`}
                 subtitle={m.listed ? t('listedBadge') : m.equipped && item.slot !== 'art' ? t('equipped') : undefined}
                 right={

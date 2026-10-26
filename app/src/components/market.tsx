@@ -12,6 +12,7 @@ import { useI18n } from '@/lib/i18n';
 import { itemBonusText, itemDisplayName } from '@/lib/item-text';
 import { useIsVip, useMe } from '@/lib/session';
 import { space, useColors } from '@/theme';
+import { ItemArt } from '@/components/art/items';
 
 export function ColorDot({ color }: { color: string | null | undefined }) {
   if (!color || !(color in PAINT_COLORS)) return null;
@@ -63,7 +64,7 @@ export function FleaMarket({ locationId }: { locationId: string }) {
               return (
                 <ListRow
                   key={i.id}
-                  left={<ColorDot color={i.color} />}
+                  left={<ItemArt itemId={i.itemId} color={i.color} legendary={!!i.legendary} size={40} />}
                   title={itemDisplayName(def, p, i)}
                   subtitle={itemBonusText(def, t, p, i.bonus)}
                   right={<Body color={picked === i.id ? c.pink : c.inkSoft}>{picked === i.id ? '●' : '○'}</Body>}
@@ -107,7 +108,7 @@ export function FleaMarket({ locationId }: { locationId: string }) {
             return (
               <ListRow
                 key={l.id}
-                left={<ColorDot color={l.color} />}
+                left={<ItemArt itemId={l.itemId} color={l.color} legendary={l.legendary} size={40} />}
                 title={itemDisplayName(def, p, l)}
                 subtitle={`${itemBonusText(def, t, p, l.bonus)}${l.craftedBy ? ` · ${t('craftedByName', { name: l.craftedBy })}` : ''} · ${t('sellerName', { name: l.seller.name })}`}
                 right={

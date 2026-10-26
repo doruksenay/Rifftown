@@ -229,6 +229,39 @@ describe('oyuncular ve sahneler', () => {
   });
 });
 
+describe('sahne önceliği', () => {
+  it('oyuncunun rezervasyonu oyunun kendi grubunun çakışan konserini iptal eder; oyuncu konseri çakışmayı engeller', async () => {
+    const prev = config.gameSpeed;
+    config.gameSpeed = 3600; // 1 oyun saati = 1 sn
+    try {
+      await q(`UPDATE gigs SET status = 'cancelled' WHERE location_id = 'ankara-bar' AND status = 'scheduled'`);
+      const npcLeader = await newPlayer({ cityId: 'ankara' });
+      const npc = (
+        await q(`INSERT INTO bands(name, genre, leader_id, npc_key) VALUES ('Oyunun Grubu', 'rock', $1, 'test-npc') RETURNING id`, [npcLeader.character.id])
+      ).rows[0];
+      const npcGig = (
+        await q(
+          `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles) VALUES ($1, 'ankara', 'ankara-bar', now() + interval '2 seconds', '{}', '{}') RETURNING id`,
+          [npc.id],
+        )
+      ).rows[0];
+      const p = await newPlayer({ cityId: 'ankara' });
+      await q(`INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, 'Ankara', 'rock', 40)`, [p.character.id]);
+      const band = (await p.c.post('/api/bands', { name: 'Başkent Grubu', genre: 'rock', role: 'guitar' })).body.band;
+      const ids = band.songs.map((x: any) => x.id);
+      const g = await p.c.post('/api/gigs', { locationId: 'ankara-bar', inHours: 2, setlist: ids });
+      expect(g.status).toBe(200);
+      expect((await q('SELECT status FROM gigs WHERE id = $1', [npcGig.id])).rows[0].status).toBe('cancelled');
+      // Grup başına en fazla 2 ayarlı konser
+      expect((await p.c.post('/api/gigs', { locationId: 'ankara-bar', inHours: 12, setlist: ids })).status).toBe(200);
+      expect((await p.c.post('/api/gigs', { locationId: 'ankara-bar', inHours: 24, setlist: ids })).body.error).toBe('too_many_gigs');
+      await q(`UPDATE gigs SET status = 'cancelled' WHERE band_id = ANY($1::bigint[])`, [[band.id, npc.id]]);
+    } finally {
+      config.gameSpeed = prev;
+    }
+  });
+});
+
 describe('ek hesap önlemleri', () => {
   it('yeni hesap pazar, takas ve hediyeyi kullanamaz; fiyat tavanı uygulanır', async () => {
     const s = await newPlayer({ cityId: 'berlin' });

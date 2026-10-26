@@ -49,3 +49,15 @@ Degradeler:
 - Köşeler yumuşak: kartlar 18, giriş alanları 12, düğmeler hap şeklinde.
 - Ana düğmeler degradeli, ikincil düğmeler ince çerçeveli, metin düğmeleri mavi.
 - Ses tonu: oyuncu, modern, samimi. Oyuncuya "sen" diye hitap edilir.
+
+## Çizimler: "Gece Rifftown"
+
+Oyundaki bütün resimler kodla çizilir (`app/src/components/art`, react-native-svg); dışarıdan görsel dosyası yok, telefonda da web'de de keskin görünür.
+
+- **Şehir silüetleri:** gece göğü, üç kat bina, yanan pencereler ve her şehrin simge yapısı (Galata Kulesi, Atakule, Saat Kulesi, TV Kulesi, Elbphilharmonie, Frauenkirche, Big Ben, Beetham Tower, Liver Building, Eyfel, Fourvière, Notre-Dame de la Garde, Empire State, palmiyeli tepeler, Nashville'in iki sivri kuleli binası). Aynı şehir her açılışta aynı silüeti verir. Ana ekranda, şehir sekmesinde, profilde ve seyahat listesinde.
+- **Mekân sahneleri:** her mekân geceleyin ışıkları yanan bir yer. Konser mekânları içeriden görünür (barda "LIVE" neon tabela ve tuğla duvar, kulüpte lazerler ve disko topu, salonda perdeler, stadyumda projektörler, festivalde çadırlar ve bayraklar); seyirci kalabalığı konserin gerçek doluluğuna göre çizilir. Dükkânların vitrininde sattıkları durur (gitarlar, ceketler, araba, sprey boyalar, tablolar, kitaplar); kamu binaları sütunlu, karakol ışıklı, cezaevi gözetleme kuleli.
+- **Eşya çıkartmaları:** gitar kutusuna yapıştırılmış çıkartma gibi beyaz kenarlı. Arka plan seviyeyi gösterir (1 lacivert, 2 mavi, 3 mor-pembe, 4 altın). Enstrüman, kıyafet, araba ve sprey boyalar boyandıkları renkte çizilir; EFSANEVİ eşyanın kenarı altın ve köşesinde yıldız var.
+- **Çizim avatarlar:** fotoğraf yüklemeyen her oyuncuya isminden türeyen, hep aynı kalan bir portre (ten, saç modeli ve rengi, gözlük, küpe, sakal). Gömlek oyuncunun seçtiği avatar rengindedir.
+- **Rozetler:** şehir listesinde her mekânın, beceri listesinde her kategorinin renkli rozeti.
+
+Renkler marka paletinden; tek ek renk pencerelerden sızan sıcak lamba ışığı `#FFD36E` (soğuk neonun yanında "burada yaşanıyor" hissi için, idareli).

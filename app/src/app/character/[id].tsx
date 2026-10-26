@@ -14,6 +14,8 @@ import { api } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
 import type { StringKey } from '@/lib/strings';
 import { fonts, radius, space, type, useColors } from '@/theme';
+import { Bleed } from '@/components/art/hero';
+import { CitySkyline } from '@/components/art/skyline';
 
 export default function CharacterProfile() {
   const gate = useGate();
@@ -44,8 +46,13 @@ function CharacterProfileScreen() {
   return (
     <Screen edges={[]}>
       <Stack.Screen options={{ title: ch.name }} />
-      <View style={{ alignItems: 'center', paddingTop: space.xl, gap: space.xs }}>
-        <Avatar name={ch.name} color={ch.avatarColor} uri={ch.avatarUrl} size={112} />
+      <Bleed>
+        <CitySkyline cityId={ch.cityId ?? 'on-the-road'} height={120} />
+      </Bleed>
+      <View style={{ alignItems: 'center', marginTop: -60, gap: space.xs }}>
+        <View style={{ borderRadius: 120, borderWidth: 4, borderColor: c.paper, backgroundColor: c.paper }}>
+          <Avatar name={ch.name} color={ch.avatarColor} uri={ch.avatarUrl} size={112} />
+        </View>
         <Title style={{ textAlign: 'center', marginTop: space.md }}>{ch.name}</Title>
         {ch.headline ? <Body style={{ textAlign: 'center' }}>{ch.headline}</Body> : null}
         <Row style={{ flexWrap: 'wrap', justifyContent: 'center', marginTop: space.xs }}>

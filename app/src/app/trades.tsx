@@ -5,7 +5,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Stack, router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { useGate } from '@/components/gate';
-import { ColorDot } from '@/components/market';
 import { Avatar, Body, Button, Card, Empty, ErrorView, Heading, Loading, Row, Screen, Small, Strong } from '@/components/ui';
 import { api } from '@/lib/api';
 import { dateTime, money } from '@/lib/format';
@@ -14,6 +13,7 @@ import { useI18n } from '@/lib/i18n';
 import { itemDisplayName } from '@/lib/item-text';
 import type { StringKey } from '@/lib/strings';
 import { space, useColors } from '@/theme';
+import { ItemArt } from '@/components/art/items';
 
 export default function Trades() {
   const gate = useGate();
@@ -66,7 +66,7 @@ function ItemLine({ it }: { it: TradeItemDto }) {
   if (!def) return null;
   return (
     <Row style={{ gap: space.xs }}>
-      <ColorDot color={it.color} />
+      <ItemArt itemId={it.itemId} color={it.color} legendary={it.legendary} size={28} />
       <Body numberOfLines={1} style={{ flexShrink: 1 }}>
         {itemDisplayName(def, p, it)}
       </Body>

@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { IllustratedAvatar } from '@/components/art/avatar';
 import { API_URL } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
 import { fonts, gradients, radius, space, type, useColors } from '@/theme';
@@ -324,17 +325,8 @@ export function Avatar({ name, color, size = 40, uri }: { name: string; color: s
       />
     );
   }
-  const initials = name
-    .split(' ')
-    .map((p) => p[0])
-    .slice(0, 2)
-    .join('')
-    .toLocaleUpperCase('tr-TR');
-  return (
-    <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: color, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontFamily: fonts.display, fontSize: size * 0.45, color: '#FFFFFF' }}>{initials}</Text>
-    </View>
-  );
+  // Fotoğraf yoksa isimden türeyen çizim portre
+  return <IllustratedAvatar name={name} color={color} size={size} />;
 }
 
 /** Dokunulabilir liste satırı. */

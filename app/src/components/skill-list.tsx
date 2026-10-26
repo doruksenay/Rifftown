@@ -11,6 +11,7 @@ import {
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { TierMeter } from '@/components/tier';
+import { SkillCategoryIcon } from '@/components/art/place';
 import { Heading, Small } from '@/components/ui';
 import { money } from '@/lib/format';
 import { useI18n } from '@/lib/i18n';
@@ -29,7 +30,12 @@ export function SkillList({ skills, onlyKnown = false }: { skills: Skills; onlyK
         if (!defs.length) return null;
         return (
           <View key={cat}>
-            <Heading>{p(SKILL_CATEGORY_NAMES[cat])}</Heading>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: space.sm }}>
+              <View style={{ marginBottom: space.sm }}>
+                <SkillCategoryIcon category={cat} />
+              </View>
+              <Heading>{p(SKILL_CATEGORY_NAMES[cat])}</Heading>
+            </View>
             {defs.map((d) => {
               if (knows(skills, d.id)) {
                 return (

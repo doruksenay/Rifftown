@@ -9,6 +9,7 @@ import { useInventory, useRun } from '@/lib/hooks';
 import { useI18n } from '@/lib/i18n';
 import { useGameSpeed, useMe } from '@/lib/session';
 import { space, useColors } from '@/theme';
+import { CitySkyline } from '@/components/art/skyline';
 
 export default function Travel() {
   const gate = useGate();
@@ -54,7 +55,12 @@ function TravelScreen() {
             return (
               <View key={ct.id} style={{ paddingVertical: space.md, borderBottomWidth: 1, borderBottomColor: c.line }}>
                 <Row style={{ justifyContent: 'space-between' }}>
-                  <Strong>{p(ct.name)}</Strong>
+                  <Row style={{ flex: 1 }}>
+                    <View style={{ width: 84, height: 48, borderRadius: 10, overflow: 'hidden' }}>
+                      <CitySkyline cityId={ct.id} height={48} />
+                    </View>
+                    <Strong>{p(ct.name)}</Strong>
+                  </Row>
                   {ct.id === from ? <Small color={c.pink}>{t('youAreHere')}</Small> : null}
                 </Row>
                 {opts.length ? (

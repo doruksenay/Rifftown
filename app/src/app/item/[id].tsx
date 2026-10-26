@@ -15,6 +15,7 @@ import { useI18n } from '@/lib/i18n';
 import { itemBonusText, itemDisplayName } from '@/lib/item-text';
 import { useMe } from '@/lib/session';
 import { space, useColors } from '@/theme';
+import { ItemArt } from '@/components/art/items';
 
 export default function ItemDetail() {
   const gate = useGate();
@@ -56,7 +57,8 @@ function ItemScreen() {
     <Screen edges={[]}>
       <Stack.Screen options={{ title: t('itemTitle') }} />
       <View style={{ paddingTop: space.xl, gap: space.xs }}>
-        <Row style={{ alignItems: 'center' }}>
+        <ItemArt itemId={item.itemId} color={item.color} legendary={!!item.legendary} size={112} />
+        <Row style={{ alignItems: 'center', marginTop: space.sm }}>
           <ColorDot color={item.color} />
           <Title style={{ flex: 1 }}>{itemDisplayName(def, p, item)}</Title>
         </Row>

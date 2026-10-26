@@ -127,12 +127,15 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     if (clash) fail('gig_clash', 409);
     // Aynı sahnede aynı saatlerde başka bir grup çalamaz (eşzamanlı iki rezervasyonu sırala)
     await c.query('SELECT pg_advisory_xact_lock(hashtext($1))', [`venue:${loc!.id}`]);
-    const busy = await one(
+    const clashing = await many(
       c,
-      `SELECT 1 FROM gigs WHERE location_id = $1 AND status = 'scheduled' AND starts_at BETWEEN $2 AND $3`,
+      `SELECT g.id, (b.npc_key IS NOT NULL) AS npc FROM gigs g JOIN bands b ON b.id = g.band_id
+        WHERE g.location_id = $1 AND g.status = 'scheduled' AND g.starts_at BETWEEN $2 AND $3 FOR UPDATE OF g`,
       [loc!.id, new Date(startsAt.getTime() - blockMs), new Date(startsAt.getTime() + blockMs)],
     );
-    if (busy) fail('venue_busy', 409);
+    if (clashing.some((g) => !g.npc)) fail('venue_busy', 409);
+    // Oyunun kendi grupları oyunculara yer açar: çakışan konserleri iptal edilir (bir sonraki turda yeni saat bulurlar)
+    if (clashing.length) await c.query(`UPDATE gigs SET status = 'cancelled' WHERE id = ANY($1::bigint[]) AND status = 'scheduled'`, [clashing.map((g) => g.id)]);
 
     // Sahne efektleri: liderin envanterinden ayrılır, konserde tüketilir (iptalde geri verilir)
     const fxIds = [...new Set((req.effects ?? []).map(Number))];

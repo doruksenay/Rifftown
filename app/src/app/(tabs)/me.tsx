@@ -26,6 +26,7 @@ import { useInventory, useRun, useSongs } from '@/lib/hooks';
 import { useI18n } from '@/lib/i18n';
 import { useMe, useSession } from '@/lib/session';
 import { space, useColors } from '@/theme';
+import { ItemArt } from '@/components/art/items';
 
 export default function MeTab() {
   const me = useMe();
@@ -176,7 +177,7 @@ export default function MeTab() {
             return (
               <ListRow
                 key={it.id}
-                left={<ColorDot color={it.color} />}
+                left={<ItemArt itemId={it.itemId} color={it.color} legendary={!!it.legendary} size={40} />}
                 title={`${itemDisplayName(def, p, it)}${n > 1 ? ` ×${n}` : ''}`}
                 subtitle={`${it.listed ? `${t('listedBadge')} · ` : ''}${itemBonusText(def, t, p, it.bonus)}`}
                 onPress={() => router.push(`/item/${it.id}`)}

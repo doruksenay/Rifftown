@@ -14,6 +14,7 @@ import { useI18n } from '@/lib/i18n';
 import { notificationHref, notificationText } from '@/lib/notify-text';
 import { useMe } from '@/lib/session';
 import { fonts, space, type, useColors } from '@/theme';
+import { CityHero } from '@/components/art/hero';
 
 export default function Home() {
   const me = useMe();
@@ -40,11 +41,13 @@ export default function Home() {
         />
       }
     >
-      <View style={{ paddingTop: space.lg }}>
-        <Display numberOfLines={1}>{ch.name}</Display>
-        <Small style={{ marginTop: space.xs }}>{city ? t('inCity', { city: p(city.name) }) : t('traveling')}</Small>
-        {loc ? <Small>{t('atLocation', { place: p(loc.name) })}</Small> : null}
-      </View>
+      <CityHero
+        cityId={ch.cityId}
+        name={ch.name}
+        color={ch.avatarColor}
+        avatarUrl={ch.avatarUrl}
+        lines={[city ? t('inCity', { city: p(city.name) }) : t('traveling'), ...(loc ? [t('atLocation', { place: p(loc.name) })] : [])]}
+      />
 
       {jailed && !data.action ? null : <ActionTicket action={data.action} />}
       <JailBanner />
