@@ -355,6 +355,19 @@ Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr 
 - Olumlu şöhretin %25'i aynı ülkedeki diğer şehirlere yayılır.
 - Konseri iptal etmek o şehirde 1 şöhret puanı kaybettirir. Hiç kimse gelmezse konser gelirsiz biter ve şöhret düşer.
 
+### Karar derinliği: setlist sırası, sahne olayları ve bis
+
+Kurallar `packages/shared/src/performance.ts` dosyasındadır.
+
+- **Setlist sırası:** her şarkının o geceki puanı konum ağırlığıyla tartılır: açılış ×1,1, ısınma bölümü ×0,85'ten ×1,1'e doğru artar, kapanış ×1,35. Ağırlıklı ortalama ile düz ortalama arasındaki farkın iki katı kaliteye eklenir (en fazla ±8 puan). Kısacası zayıf şarkıları ortaya, en güçlüsünü sona koymak kazandırır. Tempo da sayılır: yavaş olmayan bir açılış +1, hızlı kapanış +1,5, üst üste üç yavaş şarkı −2. 3 şarkıdan kısa setlerde sıra etkisizdir. Raporda "Setlist sırası" ayrı bir etken olarak görünür; VIP olmayanlar yalnızca yönünü görür.
+- **Sahne olayları (performans planı):** konser ayarlarken en fazla 3 olay seçilir: seyirciyle sohbet (şovmenlik çırak, +2/−1, 12 saat bekleme), hep bir ağızdan (seyirci farkındalığı çırak, +4/−2, 24 saat), uzun solo (rol becerisi yetenekli, +5/−3, 24 saat), dans koreografisi (dans amatör, +4/−3, 24 saat), akustik ara (doğaçlama çırak, +3/−2, 24 saat), sahneden atlama (VIP becerisi, +6/−5, 48 saat). Olayı grubun sahnedeki üyelerinden o beceride en iyi olan dener; kiralık müzisyenler plana uymaz. Başarı şansı = 0,45 + (beceri − eşik) × 0,02, %15–%95. Eşiğin altındaysa olay kesin bozulur. Toplam etki ±12 puanla sınırlı. Bekleme süresi dolmamış olay "denenmedi" olarak geçer.
+- **Bis:** "bis yok", "güvenli bis" (kalite 40'ın üstündeyse +1 kalite, şöhret ×1,05, 5 enerji; istenmezse çıkılmaz) ya da "cesur bis" (+3 kalite ve şöhret ×1,15; tutma şansı 0,3 + enerji × 0,6 + (kalite − 40)/200, %10–%90; tutmazsa −3 kalite ve şöhret ×0,95; seyirci istemezken çıkmak −4 kalite, şöhret ×0,9; her durumda 12 enerji).
+
+### Şarkı yazma: alt tür, tempo ve hız sınırı
+
+- Şarkı yazarken türün yanında isteğe bağlı bir **alt tür** (17 alt tür, ör. hard rock, tekno, trap, smooth caz, psikedelik Anadolu) ve **tempo** (yavaş, orta, hızlı) seçilir. Alt türün tür becerisi eşiğini geçmek +2 ile +4, geçmemek −2; alt türün doğal temposuna uymak +2, bir basamak sapmak 0, iki basamak −3.
+- **Hız sınırı:** son 3 oyun gününde yazılmış şarkı sayısına göre kalite ×1 / ×0,85 / ×0,72 / ×0,6. Bildirim "aceleye geldi" der. İlham bonusu bu çarpandan sonra eklenir.
+
 ### Konser eleştirisi
 
 Her konser bittiğinde sunucu, o konsere özel iki cümlelik bir eleştiri üretip sonuçla birlikte saklar (Türkçe ve İngilizce). Eleştiri konseri bilir: mekânın adı, şehir, gerçek seyirci sayısı, gecenin en iyi şarkısı ve sahneye çıkmayan üye sayısı. Örnek: "Kadıköy Bodrum Bar tıklım tıklımdı. 72 seyirci bis istedi; Kadıköy Bodrum Bar yerinden oynadı." Oyuncu eleştiriyi tek dokunuşla grup ya da şehir sohbetinde paylaşabilir.

@@ -29,7 +29,8 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       }
       if (d.kind === 'write_song' && d.title) {
         const base = `${t('n_action_done', { action: t('action_write_song') })}: "${d.title}", ${tierName('quality', d.quality, lang)}`;
-        return d.inspirationBonus ? `${base}. ${t('n_song_inspired', { n: d.inspirationBonus })}` : base;
+        const withInspo = d.inspirationBonus ? `${base}. ${t('n_song_inspired', { n: d.inspirationBonus })}` : base;
+        return d.fatigued ? `${withInspo}. ${t('n_song_fatigued')}` : withInspo;
       }
       if (d.kind === 'record' && d.title) return t('n_record', { title: d.title, q: tierName('quality', d.quality, lang) });
       if (d.kind === 'crime' && d.success) return t('n_crime_ok', { money: `$${Number(d.loot).toLocaleString('en-US')}` });

@@ -20,3 +20,4 @@ export * from './festivals';
 export * from './moderation';
 export * from './wellbeing';
 export * from './progression';
+export * from './performance';

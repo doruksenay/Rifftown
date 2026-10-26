@@ -148,6 +148,7 @@ export const toGigDto = (r: any): GigDto => ({
   setlist: r.setlist,
   sessionRoles: r.session_roles ?? [],
   result: r.result,
+  plan: r.plan ?? {},
 });
 
 export async function lockCharacter(db: Db, id: number): Promise<CharacterRow> {

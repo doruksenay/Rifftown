@@ -1,4 +1,4 @@
-import { BAND_NAME_RE, CITY_BY_ID, containsProfanity, GENRES, INSTRUMENTS, MAX_BAND_MEMBERS, VIP, roleSkill } from '@rifftown/shared';
+import { ENCORE_PLANS, MAX_STAGE_EVENTS, BAND_NAME_RE, CITY_BY_ID, containsProfanity, GENRES, INSTRUMENTS, MAX_BAND_MEMBERS, VIP, roleSkill } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { charId, requireUser } from '../auth';
@@ -31,6 +31,8 @@ async function songsFor(db: Db, characterId: number, bandId: number | null) {
     id: r.id,
     title: r.title,
     genre: r.genre,
+    subgenre: r.subgenre ?? null,
+    tempo: r.tempo ?? 'mid',
     quality: r.quality,
     authorId: r.author_id,
     authorName: r.author_name,
@@ -331,6 +333,12 @@ export async function bandRoutes(app: FastifyInstance) {
         setlist: z.array(z.number().int()).min(1),
         sessionRoles: z.array(z.enum(INSTRUMENTS)).max(5).optional(),
         effects: z.array(z.number().int()).max(6).optional(),
+        plan: z
+          .object({
+            events: z.array(z.string().max(30)).max(MAX_STAGE_EVENTS).optional(),
+            encore: z.enum(ENCORE_PLANS).optional(),
+          })
+          .optional(),
       }),
       req.body,
     );

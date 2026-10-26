@@ -1,5 +1,10 @@
 import {
   ITEM_BY_ID,
+  ENCORE_PLANS,
+  type EncorePlan,
+  MAX_STAGE_EVENTS,
+  STAGE_EVENTS,
+  TEMPO_NAMES,
   type GigEstimateResponse,
   GIG_LEAD_HOURS,
   VIP,
@@ -44,6 +49,8 @@ function BookGigScreen() {
   const [setlist, setSetlist] = useState<number[]>([]);
   const [session, setSession] = useState<Instrument[]>([]);
   const [effects, setEffects] = useState<number[]>([]);
+  const [events, setEvents] = useState<string[]>([]);
+  const [encore, setEncore] = useState<EncorePlan>('none');
   const inv = useInventory();
   const fxItems = (inv.data ?? []).filter((i) => ITEM_BY_ID[i.itemId]?.slot === 'fx' && !i.listed);
   const vip = useIsVip();
@@ -62,10 +69,21 @@ function BookGigScreen() {
 
   const toggleSong = (id: number) =>
     setSetlist((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length >= MAX_SETLIST ? s : [...s, id]));
+  const move = (id: number, dir: -1 | 1) =>
+    setSetlist((s) => {
+      const i = s.indexOf(id);
+      const j = i + dir;
+      if (i < 0 || j < 0 || j >= s.length) return s;
+      const next = [...s];
+      [next[i], next[j]] = [next[j], next[i]];
+      return next;
+    });
+  const toggleEvent = (id: string) =>
+    setEvents((e) => (e.includes(id) ? e.filter((x) => x !== id) : e.length >= MAX_STAGE_EVENTS ? e : [...e, id]));
   const toggleRole = (r: Instrument) => setSession((s) => (s.includes(r) ? s.filter((x) => x !== r) : [...s, r]));
 
   const book = async () => {
-    const r = await run(() => api.post('/gigs', { locationId, inHours, setlist, sessionRoles: session, effects }), {
+    const r = await run(() => api.post('/gigs', { locationId, inHours, setlist, sessionRoles: session, effects, plan: { events, encore } }), {
       success: t('booked'),
       invalidate: ['band', 'me', 'city', 'inventory', 'venueGigs'],
     });
@@ -109,6 +127,22 @@ function BookGigScreen() {
       <Heading>{t('setlist')}</Heading>
       <Small style={{ marginBottom: space.sm }}>{t('setlistHint')}</Small>
       {songs.length === 0 ? <Empty text={t('noRepertoire')} /> : null}
+      {setlist.length >= 2 ? (
+        <View style={{ marginBottom: space.md }}>
+          <Small style={{ marginBottom: space.sm }}>{t('setOrderHint')}</Small>
+          {setlist.map((id, i) => {
+            const s = songs.find((x) => x.id === id);
+            if (!s) return null;
+            return (
+              <Row key={id} style={{ justifyContent: 'space-between', paddingVertical: 4 }}>
+                <Body style={{ flex: 1 }}>{`${i + 1}. ${s.title} · ${p(TEMPO_NAMES[s.tempo ?? 'mid'])}`}</Body>
+                <Button title={t('moveUp')} small variant="ghost" disabled={i === 0} onPress={() => move(id, -1)} />
+                <Button title={t('moveDown')} small variant="ghost" disabled={i === setlist.length - 1} onPress={() => move(id, 1)} />
+              </Row>
+            );
+          })}
+        </View>
+      ) : null}
       {songs.map((s) => {
         const pos = setlist.indexOf(s.id);
         const on = pos >= 0;
@@ -189,6 +223,20 @@ function BookGigScreen() {
       ) : (
         <Small>{t('noEffects')}</Small>
       )}
+
+      <Heading>{t('performancePlan')}</Heading>
+      <Small style={{ marginBottom: space.sm }}>{t('performancePlanHint')}</Small>
+      <Row style={{ flexWrap: 'wrap' }}>
+        {STAGE_EVENTS.map((e) => (
+          <Button key={e.id} small variant={events.includes(e.id) ? 'primary' : 'secondary'} title={p(e.name)} onPress={() => toggleEvent(e.id)} />
+        ))}
+      </Row>
+      <Heading>{t('encorePlan')}</Heading>
+      <Choice
+        options={ENCORE_PLANS.map((x) => ({ value: x, label: t(`encore_${x}`), hint: t(`encoreHint_${x}`) }))}
+        value={encore}
+        onChange={setEncore}
+      />
 
       <Body style={{ marginTop: space.xl }}>{t('totalFee', { fee: money(fee) })}</Body>
       <Button

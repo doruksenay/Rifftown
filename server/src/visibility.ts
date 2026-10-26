@@ -26,6 +26,9 @@ const KEY_RULES: Record<string, Rule[]> = {
   fame: [{ scale: 'fame' }, { scale: 'fame', map: true }],
 };
 
+/** Bu anahtarlarda VIP olmayanlara yalnızca işaret (-1, 0, 1) gider */
+const SIGN_ONLY = new Set(['flow']);
+
 function blurNode(node: unknown, depth = 0): unknown {
   if (depth > 12 || node === null || typeof node !== 'object') return node;
   if (Array.isArray(node)) return node.map((x) => blurNode(x, depth + 1));
@@ -43,6 +46,9 @@ function blurNode(node: unknown, depth = 0): unknown {
     } else if (k === 'chance' && typeof v === 'number') {
       // Suç başarı şansı: VIP olmayanlara sadece düşük / orta / yüksek (uygulamadaki eşiklerle aynı)
       out[k] = v < 0.35 ? 0.2 : v < 0.65 ? 0.5 : 0.8;
+    } else if (SIGN_ONLY.has(k) && typeof v === 'number') {
+      // Etkinin yalnızca yönü gösterilir (setlist sırası, basın etkisi vb.)
+      out[k] = Math.sign(v);
     } else if (k === 'totalFame' && typeof v === 'number') {
       out[k] = Math.round(v);
     } else {

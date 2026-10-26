@@ -18,7 +18,7 @@ import { useI18n } from '@/lib/i18n';
 import type { StringKey } from '@/lib/strings';
 import { space, useColors } from '@/theme';
 
-const FACTOR_ORDER: GigFactorId[] = ['songs', 'familiarity', 'skill', 'stage', 'setLength', 'presence', 'energy', 'mood'];
+const FACTOR_ORDER: GigFactorId[] = ['songs', 'familiarity', 'skill', 'stage', 'setLength', 'flow', 'events', 'presence', 'energy', 'mood'];
 
 /** Öneriye göre gidilecek ekran */
 function adviceTarget(f: GigFactorId, cityId: string): { label: StringKey; href: Href } | null {

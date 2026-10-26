@@ -6,6 +6,7 @@ import type { RelationStage } from './relations';
 import type { BusinessType } from './world';
 import type { ActionKind, GigFactorId, GigFactors, TravelMode } from './rules';
 import type { NextGoal } from './progression';
+import type { EncoreOutcome, EncorePlan, StageEventOutcome, Tempo } from './performance';
 import type { Skills } from './skills';
 import type { Genre, Instrument, Lang } from './world';
 
@@ -124,6 +125,8 @@ export interface SongDto {
   id: number;
   title: string;
   genre: Genre;
+  subgenre: string | null;
+  tempo: Tempo;
   quality: number;
   authorId: number;
   authorName: string;
@@ -174,7 +177,13 @@ export interface GigDto {
     advice?: GigFactorId[];
     /** Konserden sonra o şehirdeki şöhret (sıradaki sahneye ne kaldığını göstermek için; VIP değilse kaba) */
     fame?: number;
+    /** Setlist sırasının etkisi (VIP olmayanlara işareti) */
+    flow?: number;
+    events?: { id: string; outcome: StageEventOutcome; by: number | null }[];
+    encore?: EncoreOutcome;
   } | null;
+  /** Performans planı (sahne olayları ve bis) */
+  plan?: { events?: string[]; encore?: EncorePlan };
   /** Normal üyelerde rapor süresi dolduysa true (VIP'te hiç dolmaz) */
   reportExpired?: boolean;
 }
@@ -287,7 +296,7 @@ export type StartActionRequest =
   | { kind: 'study'; skill: string; hours: number; locationId?: string }
   | { kind: 'work'; locationId: string; hours: number }
   | { kind: 'rest'; hours: number }
-  | { kind: 'write_song'; title: string; genre: Genre }
+  | { kind: 'write_song'; title: string; genre: Genre; subgenre?: string | null; tempo?: Tempo }
   | { kind: 'rehearse'; songId: number; hours: number; locationId: string }
   | { kind: 'travel'; toCityId: string; mode: TravelMode }
   | { kind: 'treat'; hours: number; locationId: string }
@@ -333,6 +342,8 @@ export interface BookGigRequest {
   sessionRoles?: Instrument[];
   /** Konserde kullanılacak sahne efektleri (envanter satırları; konserde tüketilir) */
   effects?: number[];
+  /** Performans planı: en fazla 3 sahne olayı ve bis kararı */
+  plan?: { events?: string[]; encore?: EncorePlan };
 }
 
 export interface InventoryItemDto {

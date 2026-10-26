@@ -63,6 +63,11 @@ import {
   energyAfter,
   energyFactor,
   songInspirationBonus,
+  SONG_FATIGUE_WINDOW_DAYS,
+  SUBGENRE_BY_ID,
+  isTempo,
+  songFatigueFactor,
+  styleBonus,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -221,9 +226,14 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         const title = typeof req.title === 'string' ? req.title.trim() : '';
         if (title.length < 1 || title.length > 40) fail('invalid_title');
         if (!(GENRES as readonly string[]).includes(req.genre)) fail('invalid_genre');
+        // Alt tür ve tempo isteğe bağlı; alt tür seçilen türe ait olmalı
+        if (req.subgenre != null && SUBGENRE_BY_ID[req.subgenre]?.genre !== req.genre) fail('invalid_subgenre');
+        if (req.tempo != null && !isTempo(req.tempo)) fail('invalid_tempo');
         hours = 2;
         params.title = title;
         params.genre = req.genre;
+        params.subgenre = req.subgenre ?? null;
+        params.tempo = req.tempo ?? SUBGENRE_BY_ID[req.subgenre ?? '']?.tempo ?? 'mid';
         break;
       }
       case 'rehearse': {
@@ -487,13 +497,23 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       const genre = params.genre as Genre;
       // İlham şarkıyı güçlendirir ve yarısı harcanır
       const inspirationBonus = songInspirationBonus(well.inspiration);
-      const quality = clamp(songQuality(songwritingScore(skills, genre), Math.random) + inspirationBonus, 0, 100);
+      const tempo = isTempo(params.tempo) ? params.tempo : 'mid';
+      const subgenre = (params.subgenre as string | null) ?? null;
+      // Kısa sürede çok şarkı yazmak kaliteyi düşürür (Popmundo: 3 günde birden fazla şarkı)
+      const recent = await one(c, 'SELECT count(*)::int AS n FROM songs WHERE author_id = $1 AND created_at > $2', [
+        char.id,
+        new Date(Date.now() - gameHoursToMs(SONG_FATIGUE_WINDOW_DAYS * 24, config.gameSpeed)),
+      ]);
+      const fatigue = songFatigueFactor(recent?.n ?? 0);
+      const raw = songQuality(songwritingScore(skills, genre), Math.random) + styleBonus(skills, genre, subgenre, tempo);
+      const quality = Math.round(clamp(raw * fatigue + inspirationBonus, 1, 100));
       setInspiration = well.inspiration * (1 - SONG_INSPIRATION_SPEND);
       result.inspirationBonus = inspirationBonus;
+      if (fatigue < 1) result.fatigued = true;
       const song = await one(
         c,
-        'INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, $2, $3, $4) RETURNING id',
-        [char.id, params.title, params.genre, quality],
+        'INSERT INTO songs(author_id, title, genre, quality, subgenre, tempo) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+        [char.id, params.title, params.genre, quality, subgenre, tempo],
       );
       for (const [id, amount] of [['composing', 0.4], ['lyrics', 0.4], [genreSkillId(genre), 0.2]] as const) {
         if (knows(skills, id)) skills[id] = clamp(skills[id] + amount * diminishing(skills[id]), 0, 100);

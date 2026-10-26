@@ -38,6 +38,11 @@ import {
   gigAdvice,
   GIG_ENERGY_COST,
   INSPIRATION_GAIN,
+  MAX_STAGE_EVENTS,
+  STAGE_EVENTS,
+  STAGE_EVENT_BY_ID,
+  ENCORE_PLANS,
+  type EncorePlan,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -148,12 +153,13 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     if (fx.length !== fxIds.length) fail('invalid_item');
     if (fx.length) await c.query('DELETE FROM inventory WHERE id = ANY($1::bigint[])', [fx.map((f) => f.id)]);
 
+    const plan = normalizePlan(req.plan);
     await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee]);
     const gig = await one(
       c,
-      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id)],
+      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan)],
     );
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
@@ -168,6 +174,36 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     }
     return toGigDto({ ...gig, band_name: m!.name });
   });
+}
+
+/** Performans planını doğrular: bilinmeyen olay ya da bis seçeneği reddedilir */
+export function normalizePlan(plan: { events?: string[]; encore?: string } | undefined): { events: string[]; encore: EncorePlan } {
+  const events = [...new Set(plan?.events ?? [])];
+  if (events.length > MAX_STAGE_EVENTS) fail('too_many_events');
+  if (events.some((e) => !STAGE_EVENT_BY_ID[e])) fail('invalid_event');
+  const encore = (plan?.encore ?? 'none') as EncorePlan;
+  if (!(ENCORE_PLANS as readonly string[]).includes(encore)) fail('invalid_encore');
+  return { events, encore };
+}
+
+/** Grubun bekleme süresi dolmamış sahne olayları (son konserlerde denenmiş olanlar) */
+export async function eventsOnCooldown(db: Db, bandId: number, at = Date.now()): Promise<string[]> {
+  const longest = Math.max(...STAGE_EVENTS.map((e) => e.cooldownHours));
+  const rows = await many(
+    db,
+    `SELECT starts_at, result->'events' AS events FROM gigs
+      WHERE band_id = $1 AND status = 'done' AND starts_at > $2 AND result ? 'events'`,
+    [bandId, new Date(at - gameHoursToMs(longest, config.gameSpeed))],
+  );
+  const out = new Set<string>();
+  for (const r of rows) {
+    for (const e of (r.events ?? []) as { id: string; outcome: string }[]) {
+      const def = STAGE_EVENT_BY_ID[e.id];
+      if (!def || e.outcome === 'skipped') continue;
+      if (r.starts_at.getTime() + gameHoursToMs(def.cooldownHours, config.gameSpeed) > at) out.add(e.id);
+    }
+  }
+  return [...out];
 }
 
 export async function cancelGig(characterId: number, gigId: number) {
@@ -243,7 +279,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     'SELECT character_id, song_id, value FROM familiarity WHERE character_id = ANY($1::bigint[]) AND song_id = ANY($2::bigint[])',
     [ids, gig.setlist],
   );
-  const songs = await many(c, 'SELECT id, title, genre, quality FROM songs WHERE id = ANY($1::bigint[])', [gig.setlist]);
+  const songs = await many(c, 'SELECT id, title, genre, quality, tempo FROM songs WHERE id = ANY($1::bigint[])', [gig.setlist]);
   const fame = await bandFame(c, gig.band_id, gig.city_id);
   // Görünen ruh hâli (moodlet'lerle), enerji ve ilham
   const wells = new Map<number, Wellbeing>();
@@ -306,6 +342,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     setlist: gig.setlist.map((id: number) => songs.find((s) => s.id === id)).filter(Boolean),
     rand: Math.random,
     fxBonus: Math.min(MAX_FX_BONUS, (gig.effects ?? []).reduce((sum: number, id: string) => sum + (ITEM_BY_ID[id]?.bonus ?? 0), 0)),
+    plan: gig.plan ?? {},
+    cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür
   const ownerShare = await barGigShare(c, gig.location_id, res.revenue, ids);
@@ -337,7 +375,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     await notifySkillUps(c, ch.id, ch.skills, skills);
     // Sahne yorar ama ilham verir; iyi ya da kötü bir gece ruh hâlinde iz bırakır
     const inspiration = res.legendary ? INSPIRATION_GAIN.legendaryGig : INSPIRATION_GAIN.gig + Math.max(0, (res.quality - 50) / 8);
-    await changeWellbeing(c, ch, { energy: -GIG_ENERGY_COST, inspiration });
+    await changeWellbeing(c, ch, { energy: -GIG_ENERGY_COST - (res.encoreEnergy ?? 0), inspiration });
     if (res.legendary) await addMoodlet(c, ch.id, 'legendary_gig');
     else if (res.quality >= 70) await addMoodlet(c, ch.id, 'great_gig');
     else if (res.quality < GIG_BREAK_EVEN_QUALITY) await addMoodlet(c, ch.id, 'bad_gig');
@@ -405,6 +443,9 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     songScores: res.songScores,
     factors: res.factors,
     advice: res.factors ? gigAdvice(res.factors) : [],
+    flow: res.flow ?? 0,
+    events: res.events ?? [],
+    encore: res.encore ?? 'none',
     fame: fameAfter,
     effects: gig.effects ?? [],
     ownerShare,

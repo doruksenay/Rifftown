@@ -3,6 +3,17 @@
 
 import { type Skills, roleSkill, stageScore } from './skills';
 import { energyFactor, legendaryChance } from './wellbeing';
+import {
+  type EncorePlan,
+  type EncoreOutcome,
+  MAX_STAGE_EVENTS,
+  STAGE_EVENT_BY_ID,
+  type StageEventOutcome,
+  type Tempo,
+  encoreOutcome,
+  setlistFlow,
+  stageEventChance,
+} from './performance';
 import { CITY_BY_ID, type City, type Genre, INSTRUMENTS, type Instrument, VENUE_RULES, type VenueType } from './world';
 
 export type Rand = () => number;
@@ -198,6 +209,8 @@ export interface GigPerformer {
 export interface GigSong {
   id: number;
   quality: number;
+  /** Şarkının temposu (setlist akışını etkiler); eski şarkılarda yok */
+  tempo?: Tempo;
 }
 
 export interface GigInput {
@@ -210,7 +223,14 @@ export interface GigInput {
   rand: Rand;
   /** Sahne efektlerinden gelen kalite artışı (puan) */
   fxBonus?: number;
+  /** Performans planı: sahne olayları ve bis kararı */
+  plan?: { events?: string[]; encore?: EncorePlan };
+  /** Bekleme süresi dolmamış sahne olayları (denenmez) */
+  cooldownEvents?: string[];
 }
+
+/** Sahne olaylarının toplam kalite etkisi sınırı (±puan) */
+export const MAX_EVENT_EFFECT = 12;
 
 export interface GigResult {
   quality: number;
@@ -224,9 +244,16 @@ export interface GigResult {
   legendary?: boolean;
   /** Raporda "neden böyle geçti" açıklaması için etkenlerin kaba değerlendirmesi (sayı değil) */
   factors?: GigFactors;
+  /** Setlist sırasının kaliteye etkisi (puan) */
+  flow?: number;
+  /** Sahne olaylarının sonucu */
+  events?: { id: string; outcome: StageEventOutcome; by: number | null }[];
+  /** Bisin sonucu ve sahnedekilerden ek enerji */
+  encore?: EncoreOutcome;
+  encoreEnergy?: number;
 }
 
-export type GigFactorId = 'songs' | 'familiarity' | 'skill' | 'stage' | 'presence' | 'setLength' | 'energy' | 'mood';
+export type GigFactorId = 'songs' | 'familiarity' | 'skill' | 'stage' | 'presence' | 'setLength' | 'energy' | 'mood' | 'flow' | 'events';
 export type GigFactorRating = 'weak' | 'ok' | 'strong';
 export type GigFactors = Partial<Record<GigFactorId, GigFactorRating>>;
 
@@ -234,7 +261,7 @@ const rate = (v: number, weak: number, strong: number): GigFactorRating => (v < 
 
 /** Konserden sonra ne yapılmalı: en zayıf etkenler önce (en fazla 3). Sırası etkinin büyüklüğüne göredir. */
 export function gigAdvice(factors: GigFactors): GigFactorId[] {
-  const order: GigFactorId[] = ['presence', 'setLength', 'familiarity', 'songs', 'skill', 'energy', 'mood', 'stage'];
+  const order: GigFactorId[] = ['presence', 'setLength', 'familiarity', 'songs', 'skill', 'energy', 'mood', 'stage', 'flow', 'events'];
   return order.filter((f) => factors[f] === 'weak').slice(0, 3);
 }
 
@@ -303,10 +330,45 @@ export function computeGig(input: GigInput): GigResult {
     energy: rate(avg((p) => p.energy ?? 100), 40, 70),
     mood: rate(avg((p) => p.mood), 35, 70),
   };
+  // Setlist sırası: zayıfı öne, güçlüyü sona (Popmundo). Konum ağırlıkları performance.ts içinde.
+  const flow = setlistFlow(setlist.map((s, i) => ({ score: songScores[i].score, tempo: s.tempo })));
+  if (setlist.length >= 3) factors.flow = flow <= -1.5 ? 'weak' : flow >= 1.5 ? 'strong' : 'ok';
+
+  // Sahne olayları: grubun kendi sahnedeki üyelerinden en uygun olanı dener (kiralık müzisyenler plana uymaz)
+  const events: { id: string; outcome: StageEventOutcome; by: number | null }[] = [];
+  let eventDelta = 0;
+  const cooldown = new Set(input.cooldownEvents ?? []);
+  for (const id of [...new Set(input.plan?.events ?? [])].slice(0, MAX_STAGE_EVENTS)) {
+    const def = STAGE_EVENT_BY_ID[id];
+    if (!def) continue;
+    if (cooldown.has(id)) {
+      events.push({ id, outcome: 'skipped', by: null });
+      continue;
+    }
+    let best: GigPerformer | null = null;
+    let bestLevel = -1;
+    for (const p of own) {
+      const level = def.skill === 'role' ? clamp(roleSkill(p.skills, p.role) + p.instrumentBonus, 0, 110) : (p.skills[def.skill] ?? -1);
+      if (level > bestLevel) {
+        best = p;
+        bestLevel = level;
+      }
+    }
+    // Kimse bilmiyorsa ya da eşiğin altındaysa olay bozulur
+    const ok = best !== null && bestLevel >= def.min && rand() < stageEventChance(bestLevel, def.min);
+    eventDelta += ok ? def.bonus : -def.penalty;
+    events.push({ id, outcome: ok ? 'success' : 'fail', by: best?.characterId ?? null });
+  }
+  eventDelta = clamp(eventDelta, -MAX_EVENT_EFFECT, MAX_EVENT_EFFECT);
+  if (events.some((e) => e.outcome !== 'skipped')) factors.events = eventDelta < 0 ? 'weak' : eventDelta >= 4 ? 'strong' : 'ok';
+
   const noise = 0.92 + rand() * 0.16;
-  const quality = Math.round(
-    clamp(avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0), 0, 100),
+  const base = Math.round(
+    clamp(avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + flow + eventDelta, 0, 100),
   );
+  // Bis: gece iyi geçtiyse seyirci ister; cesur bis enerjiye bağlı bir kumardır
+  const enc = encoreOutcome(input.plan?.encore, base, avg((p) => p.energy ?? 100), rand);
+  const quality = Math.round(clamp(base + enc.qualityDelta, 0, 100));
 
   const revenue = Math.round(attendance * rules.ticket * city.costMult * rules.bandShare);
 
@@ -323,11 +385,17 @@ export function computeGig(input: GigInput): GigResult {
   const avgInspiration = players.length ? players.reduce((sum, p) => sum + (p.inspiration ?? 0), 0) / players.length : 0;
   const legendary = rand() < legendaryChance(quality, avgInspiration);
   if (legendary) fameDelta *= 1.5;
+  // Bis şöhreti biraz büyütür ya da (başarısızsa) küçültür; kayıp da büyür
+  if (enc.fameMult !== 1) fameDelta = fameDelta >= 0 ? fameDelta * enc.fameMult : fameDelta / enc.fameMult;
 
   return {
     quality,
     legendary,
     factors,
+    flow,
+    events,
+    encore: enc.outcome,
+    encoreEnergy: enc.energy,
     attendance,
     revenue,
     fameDelta: round1(fameDelta),

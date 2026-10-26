@@ -1,4 +1,4 @@
-import { CITY_BY_ID, type GigDto, LOCATION_BY_ID, ROLE_NAMES, VENUE_RULES, isVenue } from '@rifftown/shared';
+import { CITY_BY_ID, type GigDto, LOCATION_BY_ID, ROLE_NAMES, STAGE_EVENT_BY_ID, VENUE_RULES, isVenue } from '@rifftown/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -114,6 +114,15 @@ function GigScreenScreen() {
             <Body color={r.fameDelta >= 0 ? c.blue : c.pink}>{t(fameChangeKey(r.fameDelta))}</Body>
           </View>
           <Small style={{ marginTop: space.sm }}>{t('present', { a: r.presentCount, b: r.memberCount })}</Small>
+          {r.events?.length ? (
+            <>
+              <Heading>{t('eventsTitle')}</Heading>
+              {r.events.map((e) => (
+                <Body key={e.id}>{`${STAGE_EVENT_BY_ID[e.id] ? p(STAGE_EVENT_BY_ID[e.id].name) : e.id}: ${t(`event_${e.outcome}`)}`}</Body>
+              ))}
+            </>
+          ) : null}
+          {r.encore && r.encore !== 'none' ? <Body style={{ marginTop: space.sm }}>{t(`encoreResult_${r.encore}`)}</Body> : null}
           <GigExplain result={r} cityId={gig.cityId} isMember={me.data?.band?.id === gig.bandId} />
           {r.review ? (
             <Button title={t('shareToChat')} variant="secondary" small style={{ alignSelf: 'flex-start', marginTop: space.lg }} loading={sharing} onPress={share} />

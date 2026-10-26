@@ -1,4 +1,4 @@
-import { GENRES, INSTRUMENTS, SKILLS } from '@rifftown/shared';
+import { GENRES, INSTRUMENTS, SKILLS, TEMPOS } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { charId, requireUser } from '../auth';
@@ -12,7 +12,13 @@ const startSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('work'), locationId: z.string(), hours: z.number() }),
   z.object({ kind: z.literal('rest'), hours: z.number() }),
   z.object({ kind: z.literal('treat'), locationId: z.string(), hours: z.number() }),
-  z.object({ kind: z.literal('write_song'), title: z.string(), genre: z.enum(GENRES) }),
+  z.object({
+    kind: z.literal('write_song'),
+    title: z.string(),
+    genre: z.enum(GENRES),
+    subgenre: z.string().max(40).nullable().optional(),
+    tempo: z.enum(TEMPOS).optional(),
+  }),
   z.object({ kind: z.literal('rehearse'), songId: z.number().int(), hours: z.number(), locationId: z.string() }),
   z.object({ kind: z.literal('travel'), toCityId: z.string(), mode: z.enum(['bus', 'plane', 'car']) }),
   z.object({ kind: z.literal('busk'), role: z.enum(INSTRUMENTS), hours: z.number(), locationId: z.string() }),
