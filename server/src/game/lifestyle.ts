@@ -16,7 +16,9 @@ import {
   TATTOO_REMOVAL_PRICE,
   MEAL_ENERGY,
   gameHoursToMs,
+  INDULGENCE_PER_MEAL,
 } from '@rifftown/shared';
+import { indulge } from './consequences';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
@@ -76,6 +78,7 @@ export async function eatMeal(characterId: number, locationId: string, mealId: s
     );
     await c.query('INSERT INTO meals(character_id, location_id, meal_id, price) VALUES ($1, $2, $3, $4)', [ch.id, locationId, meal!.id, price]);
     await payBusinessForMeal(c, locationId, price, ch.id);
+    await indulge(c, ch, INDULGENCE_PER_MEAL);
     const energy = MEAL_ENERGY[meal!.id] ?? 0;
     await changeWellbeing(c, ch, { energy });
     await addMoodlet(c, ch.id, meal!.id === 'chef' ? 'feast' : 'good_meal');

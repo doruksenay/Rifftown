@@ -89,6 +89,10 @@ export interface CharacterDto {
   /** Yüklenmiş profil fotoğrafı (/api'ye göre yol) ya da null */
   avatarUrl: string | null;
   home: HomeDto | null;
+  /** Oyun yılıyla yaş */
+  age: number;
+  /** Bağımlı mı (alışveriş/tüketim) */
+  addicted: boolean;
 }
 
 export interface HomeDto {
@@ -119,6 +123,8 @@ export interface MeResponse {
   unreadMessages: number;
   /** Bekleyen gelen takas teklifleri */
   pendingTrades: number;
+  /** Karakteri yoksa ve önceki karakteri öldüyse (PERMADEATH) */
+  death?: { characterId: number; name: string; cause: string; at: string; inheritance: number } | null;
 }
 
 export interface SongDto {

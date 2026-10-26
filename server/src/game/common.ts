@@ -16,6 +16,8 @@ import {
   gameHoursToMs,
   tierChange,
   tierOf,
+  ageOf,
+  START_AGE,
 } from '@rifftown/shared';
 import type { Db } from '../db';
 import { many, one } from '../db';
@@ -51,6 +53,12 @@ export interface CharacterRow {
   energy_at: Date;
   inspiration: number;
   inspiration_at: Date;
+  indulgence: number;
+  indulgence_at: Date;
+  indulged_at: Date | null;
+  addicted_since: Date | null;
+  critical_since: Date | null;
+  dead_at: Date | null;
 }
 
 /** Profil fotoğrafının adresi (/api'ye göre); fotoğraf yoksa null */
@@ -102,6 +110,8 @@ export const toCharacterDto = (
   bank: r.bank ?? 0,
   hotel: extra.hotel ?? null,
   business: extra.business ?? null,
+  age: Math.floor(config.agingEnabled ? ageOf(r.created_at, config.gameSpeed) : START_AGE),
+  addicted: !!r.addicted_since,
   };
 };
 

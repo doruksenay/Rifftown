@@ -68,7 +68,10 @@ import {
   isTempo,
   songFatigueFactor,
   styleBonus,
+  ADDICTION_TREAT_PER_HOUR,
+  ageLearnFactor,
 } from '@rifftown/shared';
+import { characterAge, treatIndulgence } from './consequences';
 import type pg from 'pg';
 import { config } from '../config';
 import { one, tx } from '../db';
@@ -451,7 +454,8 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       }
       const instBonus = Math.max(0, ...rolesForSkill(skill).map((r) => gear.instruments[r] ?? 0));
       if (result.learned) inspirationDelta += INSPIRATION_GAIN.learnSkill;
-      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency;
+      // Yaş öğrenmeyi yavaşlatır (35 yaştan sonra)
+      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency * ageLearnFactor(characterAge(char.created_at));
       skills[skill] = clamp(lv(skills, skill) + gain, 0, 100);
       result.skill = skill;
       result.gain = Math.round(gain * 100) / 100;
@@ -541,7 +545,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
         result.capped = next >= cap;
         await c.query(
           `INSERT INTO familiarity(character_id, song_id, value) VALUES ($1, $2, $3)
-           ON CONFLICT (character_id, song_id) DO UPDATE SET value = EXCLUDED.value`,
+           ON CONFLICT (character_id, song_id) DO UPDATE SET value = EXCLUDED.value, touched_at = now(), decayed_at = NULL`,
           [char.id, params.songId, next],
         );
         const role = (m!.role ?? params.role) as Instrument;
@@ -587,6 +591,13 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       careerHours = r.careerHours;
       careerRank = r.careerRank;
       Object.assign(result, r.result);
+      break;
+    }
+    case 'treat': {
+      // Hastanede tedavi bağımlılığı da hafifletir
+      if (char.addicted_since || (char.indulgence ?? 0) > 0) {
+        if (await treatIndulgence(c, char, ADDICTION_TREAT_PER_HOUR * hours)) result.recovered = true;
+      }
       break;
     }
     case 'workout': {

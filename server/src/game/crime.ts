@@ -34,6 +34,7 @@ import {
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
+import { createScandal } from './consequences';
 import { fail } from '../errors';
 import { evaluateAchievements } from './achievements';
 import { type CharacterRow, activeAction, getCharacter, isJailed, lockCharacter, notify, notifySkillUps } from './common';
@@ -234,6 +235,8 @@ async function convict(c: Db, kase: any, sentenceHours: number, judgeId: number 
     judgeId,
   ]);
   await notify(c, suspect.id, 'convicted', { caseId: kase.id, sentenceHours, fine, until: until.toISOString() });
+  const band = await one(c, 'SELECT band_id FROM band_members WHERE character_id = $1', [suspect.id]);
+  if (band) await createScandal(c, { bandId: Number(band.band_id), characterId: suspect.id, cityId: kase.city_id, kind: 'conviction' });
   await evaluateAchievements(c, suspect.id);
 }
 

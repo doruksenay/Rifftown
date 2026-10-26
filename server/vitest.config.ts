@@ -8,6 +8,8 @@ export default defineConfig({
       GAME_SPEED: '3600000',
       PUSH_ENABLED: '0',
       NPC: '0',
+      DECAY: '0',
+      AGING: '0',
       RATE_LIMIT: '0',
       REGISTER_PER_IP_DAY: '0',
       TRADE_MIN_ACCOUNT_HOURS: '0',

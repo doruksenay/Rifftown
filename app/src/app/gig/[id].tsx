@@ -62,10 +62,10 @@ function GigScreenScreen() {
       if (ok) router.back();
     };
     if (Platform.OS === 'web') {
-      if (globalThis.confirm?.(t('cancelGigConfirm'))) go();
+      if (globalThis.confirm?.(`${t('cancelGigConfirm')} ${t('cancelGigConfirmTickets')}`)) go();
       return;
     }
-    Alert.alert(t('cancelGig'), t('cancelGigConfirm'), [
+    Alert.alert(t('cancelGig'), `${t('cancelGigConfirm')} ${t('cancelGigConfirmTickets')}`, [
       { text: t('cancel'), style: 'cancel' },
       { text: t('confirm'), style: 'destructive', onPress: go },
     ]);

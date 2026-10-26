@@ -353,7 +353,7 @@ Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr 
 - Aynı sahnede aynı saatlerde (±3 oyun saati) iki grup çalamaz; oyunun kendi grupları da boş saat arar ve oyuncuya her zaman yer açar (oyuncu rezervasyonu çakışan oyun grubu konserini iptal eder). Bir grubun aynı anda en fazla 2 ayarlı konseri olabilir (sahneler boş rezervasyonla kapatılamasın).
 - Grubun kendi üyelerinden kimse sahneye çıkmazsa konser sadece kiralık müzisyenlerle yapılmaz: gelir yok, şöhret düşer.
 - Olumlu şöhretin %25'i aynı ülkedeki diğer şehirlere yayılır.
-- Konseri iptal etmek o şehirde 1 şöhret puanı kaybettirir. Hiç kimse gelmezse konser gelirsiz biter ve şöhret düşer.
+- Konseri iptal etmek o şehirde şöhret kaybettirir; ceza satılan biletle büyür (bkz. "Kayıp ve sonuç"). Hiç kimse gelmezse konser gelirsiz biter ve şöhret düşer.
 
 ### Karar derinliği: setlist sırası, sahne olayları ve bis
 
@@ -379,6 +379,30 @@ Raporun altında **"Neden böyle geçti?"** bölümü her etkeni zayıf / idare 
 - **Enerji (0–100):** Yorucu işler saat başına enerji harcar (çalışma 8, prova ve kayıt 7, antrenman 12, ders 6, şarkı yazma 5). Zamanla saatte 2 dolar; dinlenmek saatte 14 (evde ya da otelde 20), yemek anında 10 / 20 / 35 doldurur. İş bitince enerji sıfırın altına düşecekse iş başlamaz; dinlenme, tedavi ve yolculuk her zaman serbest. Düşük enerji ders, prova ve konser verimini %30'a kadar azaltır. Her konser sahnedekilere 20 enerjiye mal olur.
 - **İlham (0–100):** Zamanla saatte 0,5 söner. Konser (+6 ve iyi geçtiyse fazlası), başka şehre varmak (+8), randevu (+8), takılmak (+3), düğün (+20), sokak müziği (saatte +2), sanat eserleriyle dinlenmek ve yeni beceri öğrenmek ilham verir. Şarkı yazarken kaliteye en fazla +15 ekler ve yarısı harcanır.
 - **Moodlet'ler:** Olaylardan doğan, süresi dolunca kaybolan ruh hâli etkileri: Harika konser (+12, 1 gün), Efsanevi gece (+25, 3 gün), Kötü konser (−10), Ziyafet, Karnı tok, Yeni şehir heyecanı, İyi sohbet, Romantik akşam, Nişanlı, Yeni evli (+25, 1 hafta), Kalp kırıklığı (−20), Boşanma (−25), Hediye, Başarı, Endorfin, İşsiz kaldı, Evsiz, İyi takas. Durumdan doğanlar: Bitkin (enerji 20'nin altı, −15), Yorgun (−6), İlham dolu (+8), Hasta (−8), Parmaklıklar ardında (−20). Görünen ruh hâli = temel ruh hâli + moodlet'ler (toplam en fazla ±30) ve oyundaki tüm hesaplarda bu kullanılır. VIP olmayanlar etkiyi okla (▲▲) görür.
+
+## Kayıp ve sonuç
+
+Kötü kararın bedeli var. Kurallar `packages/shared/src/consequences.ts`, sunucu tarafı `server/src/game/consequences.ts`. Zamanlayıcının her biri ayrı aşamadır (biri hata verirse diğerleri çalışır).
+
+| Ne | Kural |
+|---|---|
+| Aşinalık çürümesi | Bir şarkı 12 oyun günü prova edilmez, konserde çalınmaz ya da kaydedilmezse her gün 1,5 aşinalık kaybeder; 15'in altına inmez. Prova, konser ve kayıt sayacı sıfırlar. Oyunun kendi müzisyenleri hariç. |
+| Şöhret azalması | Bir grup bir şehirde 54 oyun günü konser vermezse o şehirdeki şöhreti her gün %1 (en az 0,05 puan) azalır. O şehirde konser vermek sayacı sıfırlar. Oyunun kendi grupları hariç (yönetmen onları bantta tutar). |
+| Üye ayrılması | Gruptan ayrılan ya da çıkarılan üye, grubun her şehirdeki şöhretinin %6'sını götürür. Gruba 24 oyun saatinden kısa süre önce katılan üye için ceza yoktur (yanlış davet, deneme). Ayrılan "Ayrılık" moodlet'i alır. |
+| İptal cezası | Biletler rezervasyondan konsere doğru satılır: satılan = beklenen seyirci × (geçen süre ÷ toplam süre), en az %10. Şöhret cezası = 0,5 + satılan ÷ kapasite × 2 × mekân çarpanı, 0,5–6 arası. Kapasitenin yarısından fazlası satılmışsa iptal skandala dönüşür. |
+| Yaşlanma | Karakter 18 yaşında başlar; bir oyun yılı 56 oyun günüdür (GAME_SPEED=1 iken ~8 hafta). 35 yaştan sonra her yıl öğrenme %1 yavaşlar (en fazla %40). 70 yaşından sonra "Yaş yetmiş" moodlet'i (−3). Yaş profilde görünür. |
+| Bağımlılık | Dükkân alışverişi (her $150 için 1, tek seferde en fazla 3; malzeme sayılmaz) ve her yemek "düşkünlük" ekler; düşkünlük günde 4 söner. 16'yı geçince bağımlılık başlar: son 12 oyun saatinde isteğini gidermeyen bağımlı "Canı çekiyor" (−12) moodlet'i alır. Hastanede tedavi saatte 2 düşkünlük azaltır; düşkünlük 6'nın altına inince bağımlılık biter (zamanla da biter). Grubu o şehirde "yerel yıldız" ve üstüyse bağımlılık skandal olur. |
+| Skandal | Mahkûmiyet (grup üyesi hüküm giyince; −2 şöhret), satılmış konserin iptali (−1), kulüp ve üstünde kalitesi 10'un altında biten konser (−1,5), bağımlılık haberi (−1). Şöhret kaybının %30'u aynı ülkenin diğer şehirlerine yayılır. Üyeler "Skandal" moodlet'i (−12, 2 gün) ve bildirim alır. Aynı tür skandal aynı şehirde bir günde bir kez sayılır. Basın desteğine etkisi basın bölümünde. |
+| Hastaneye kaldırılma | Sağlığı 10'un altına düşen, boştaki (yolda ya da cezaevinde olmayan) karakter kendiliğinden hastaneye kaldırılır: 4 saatlik tedavi başlar, ücret cepteki parayla sınırlıdır (borç yok; doktorlar ücretsiz). |
+
+### Ölüm (HASSAS, varsayılan KAPALI)
+
+> **Dikkat:** kalıcı ölüm oyuncunun emeğini geri dönüşsüz siler. Yalnızca `PERMADEATH=1` ortam değişkeniyle açılır; varsayılan kapalıdır. Kapalıyken hiçbir karakter ölmez, yalnızca hastaneye kaldırılır. Açmadan önce kullanım şartlarında ve uygulama içinde oyunculara açıkça duyurulmalıdır.
+
+- Açıkken: sağlığı 48 oyun saati boyunca 3'ün altında kalan karakter ihmalden ölür; 85 yaşından sonra her oyun günü küçük bir yaşlılık olasılığı vardır (85'te %0,2, 95'te ~%7, en fazla %20).
+- Ölen karakter gruptan (liderlik devredilir ya da grup dağılır), işletmeden, makamdan, evden, açık takas ve ilanlardan ayrılır; eşine haber gider. Kayıtlar ve geçmiş korunur, karakter aramalarda ve sosyal hedeflerde görünmez.
+- Kullanıcı yeni karakter açar. Cep, banka ve işletme kasasındaki paranın yarısı (en fazla $10.000) yeni karaktere bir kez miras kalır. Para basılmaz, yalnızca taşınır; miras aynı işlemde sıfırlanır, iki kez alınamaz.
+- Testlerde ve geliştirmede `DECAY=0` aşinalık ve şöhret çürümesini, `AGING=0` yaşlanmayı kapatır.
 
 ## EFSANEVİ konser
 
@@ -477,4 +501,4 @@ Henüz eklenmemiş olanlar, önem sırasıyla:
 2. **Plak şirketleri ve radyo:** oyuncuların kurduğu plak şirketleri, radyoda çalınma ile satışa etki.
 3. **Nesiller:** çocukların büyüyüp oynanabilir karakter olması, miras.
 4. **Daha fazla işletme türü:** plak dükkânı, kayıt stüdyosu, konser salonu ruhsatları.
-5. Şöhretin zamanla azalması, turne paketleri.
+5. Turne paketleri.

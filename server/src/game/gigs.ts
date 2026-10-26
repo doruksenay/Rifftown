@@ -43,7 +43,12 @@ import {
   STAGE_EVENT_BY_ID,
   ENCORE_PLANS,
   type EncorePlan,
+  CANCEL_SCANDAL_RATIO,
+  DISASTER_QUALITY,
+  cancelFamePenalty,
+  ticketsSold,
 } from '@rifftown/shared';
+import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
@@ -217,18 +222,29 @@ export async function cancelGig(characterId: number, gigId: number) {
     const venue = LOCATION_BY_ID[gig.location_id].type as VenueType;
     const refund = SESSION_MUSICIAN[venue].fee * gig.session_roles.length;
     if (gig.festival_id) fail('festival_gig');
-    await c.query(`UPDATE gigs SET status = 'cancelled' WHERE id = $1`, [gigId]);
+    // Ceza satılan biletle büyür: rezervasyondan bu yana geçen süreye göre beklenen seyircinin bir kısmı bilet almıştır
+    const fame = await bandFame(c, m!.band_id, gig.city_id);
+    const pop = CITY_BY_ID[gig.city_id].genrePopularity[m!.genre as Genre] ?? 1;
+    const expected = expectedAttendance(venue, fame, pop, () => 0.5);
+    const leadHours = Math.max(0.01, (gig.starts_at.getTime() - gig.created_at.getTime()) / gameHoursToMs(1, config.gameSpeed));
+    const elapsedHours = (Date.now() - gig.created_at.getTime()) / gameHoursToMs(1, config.gameSpeed);
+    const sold = ticketsSold(expected, elapsedHours, leadHours);
+    const penalty = cancelFamePenalty(venue, sold);
+    await c.query(`UPDATE gigs SET status = 'cancelled', result = $2 WHERE id = $1`, [gigId, JSON.stringify({ cancelled: true, ticketsSold: sold, famePenalty: penalty })]);
     await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [characterId, refund]);
     for (const itemId of gig.effects ?? []) {
       await c.query(`INSERT INTO inventory(character_id, item_id, slot) VALUES ($1, $2, 'fx')`, [characterId, itemId]);
     }
-    // Son dakika iptali şöhret kaybettirir
-    await addFame(c, m!.band_id, gig.city_id, -1);
+    // İptal şöhret kaybettirir; biletlerin çoğu satılmışsa skandala dönüşür
+    await addFame(c, m!.band_id, gig.city_id, -penalty);
+    if (sold >= VENUE_RULES[venue].capacity * CANCEL_SCANDAL_RATIO) {
+      await createScandal(c, { bandId: m!.band_id, characterId: null, cityId: gig.city_id, kind: 'cancel' });
+    }
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
       if (mem.character_id !== characterId) await notify(c, mem.character_id, 'gig_cancelled', { gigId, bandName: m!.name });
     }
-    return { ok: true, refund };
+    return { ok: true, refund, ticketsSold: sold, famePenalty: penalty };
   });
 }
 
@@ -403,6 +419,13 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     res.fameDelta = Math.round(res.fameDelta * (1 + media / 400) * 10) / 10;
   }
   await addFame(c, gig.band_id, gig.city_id, res.fameDelta);
+  // Konser verilen şehirde şöhret canlı kalır; sahnede çalınan şarkılar unutulmaz
+  await markFameActive(c, gig.band_id, gig.city_id);
+  await touchFamiliarity(c, presentChars.map((x) => x.id), gig.setlist);
+  // Kulüp ve üstünde felaket bir gece haber olur
+  if (res.presentCount > 0 && venue !== 'bar' && res.quality < DISASTER_QUALITY && !band.npc_key) {
+    await createScandal(c, { bandId: gig.band_id, characterId: null, cityId: gig.city_id, kind: 'disaster' });
+  }
   const fameAfter = await bandFame(c, gig.band_id, gig.city_id);
   const fameUp = tierChange('fame', fame, fameAfter) > 0;
   if (res.fameDelta > 0) {

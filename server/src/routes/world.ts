@@ -26,7 +26,7 @@ export async function worldRoutes(app: FastifyInstance) {
   app.get('/cities/:cityId', async (req) => {
     const { cityId } = parse(z.object({ cityId: z.string() }), req.params);
     if (!CITY_BY_ID[cityId]) fail('not_found', 404);
-    const players = await one(pool, 'SELECT count(*)::int AS n FROM characters WHERE city_id = $1 AND NOT npc', [cityId]);
+    const players = await one(pool, 'SELECT count(*)::int AS n FROM characters WHERE city_id = $1 AND NOT npc AND dead_at IS NULL', [cityId]);
     const gigs = await many(
       pool,
       `SELECT g.*, b.name AS band_name FROM gigs g JOIN bands b ON b.id = g.band_id
@@ -134,7 +134,7 @@ export async function worldRoutes(app: FastifyInstance) {
     const rows = await many(
       pool,
       `SELECT c.id, c.name, c.avatar_color, c.avatar_version, c.main_instrument, c.city_id FROM characters c
-        WHERE lower(c.name) LIKE lower($1) || '%' AND NOT c.npc
+        WHERE lower(c.name) LIKE lower($1) || '%' AND NOT c.npc AND c.dead_at IS NULL
           AND NOT EXISTS (SELECT 1 FROM blocks x WHERE (x.blocker_id = $2 AND x.blocked_id = c.id) OR (x.blocker_id = c.id AND x.blocked_id = $2))
         ORDER BY c.name LIMIT 20`,
       [q.search.replace(/[%_\\]/g, ''), me],

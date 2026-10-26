@@ -143,6 +143,9 @@ const TEMPLATES: Record<string, Tpl> = {
   business_seized: (d, l) => ({ title: T(l, 'İşletmeni kaybettin', 'Business lost'), body: T(l, `${d.name} giderleri ödenemediği için elinden alındı.`, `${d.name} was taken over because of unpaid costs.`) }),
   trade_offer: (d, l) => ({ title: T(l, 'Takas teklifi', 'Trade offer'), body: T(l, `${d.from} sana takas teklif etti.`, `${d.from} offered you a trade.`) }),
   trade_accepted: (d, l) => ({ title: T(l, 'Takas tamam', 'Trade done'), body: T(l, `${d.from} takası kabul etti.`, `${d.from} accepted your trade.`) }),
+  hospitalized: (_d, l) => ({ title: T(l, 'Hastaneye kaldırıldın', 'Taken to hospital'), body: T(l, 'Sağlığın çok düştü; seni hastaneye götürdüler.', 'Your health dropped too low and you were taken to hospital.') }),
+  scandal: (_d, l) => ({ title: T(l, 'Skandal!', 'Scandal!'), body: T(l, 'Grubun kötü bir haberle gazetelerde.', 'Your band is in the papers for the wrong reasons.') }),
+  addicted: (_d, l) => ({ title: T(l, 'Bağımlı oldun', 'You are hooked'), body: T(l, 'Aşırı harcamalar bağımlılık yaptı. Hastanede tedavi olabilirsin.', 'Overindulging got you hooked. The hospital can help.') }),
   festival_selected: (d, l) => ({ title: T(l, 'Festivale seçildiniz!', 'You made the festival!'), body: T(l, `${d.slot}. sıradasınız.`, `You play slot ${d.slot}.`) }),
 };
 

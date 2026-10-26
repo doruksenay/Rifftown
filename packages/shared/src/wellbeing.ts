@@ -119,12 +119,17 @@ export type MoodletId =
   | 'lost_job'
   | 'evicted'
   | 'good_trade'
+  | 'scandal'
+  | 'hospitalized'
+  | 'band_split'
   // Durumdan doğanlar (saklanmaz, her an hesaplanır)
   | 'exhausted'
   | 'tired'
   | 'inspired'
   | 'sick'
-  | 'jailed';
+  | 'jailed'
+  | 'craving'
+  | 'aging';
 
 export interface MoodletDef {
   id: MoodletId;
@@ -163,17 +168,24 @@ export const MOODLETS: MoodletDef[] = [
   M('lost_job', -10, 24, 'İşsiz kaldı', 'Lost a job', 'İşinden oldun.', 'You lost your job.'),
   M('evicted', -15, 48, 'Evsiz', 'Evicted', 'Evinden çıkarıldın.', 'You were evicted.'),
   M('good_trade', 4, 6, 'İyi takas', 'Good trade', 'Bir takası tamamladın.', 'You closed a trade.'),
+  M('scandal', -12, 48, 'Skandal', 'Scandal', 'Adın gazetelerde kötü bir haberle geçiyor.', 'Your name is in the papers for the wrong reasons.'),
+  M('hospitalized', -8, 24, 'Hastanelik oldu', 'Hospitalised', 'Kendini ihmal ettin ve hastaneye kaldırıldın.', 'You neglected yourself and ended up in hospital.'),
+  M('band_split', -8, 24, 'Ayrılık', 'Split', 'Grupla yollar ayrıldı.', 'You parted ways with a band.'),
   M('exhausted', -15, 0, 'Bitkin', 'Exhausted', 'Enerjin tükenmek üzere. Dinlen ya da bir şey ye.', 'You are running on empty. Rest or eat something.'),
   M('tired', -6, 0, 'Yorgun', 'Tired', 'Enerjin azaldı.', 'Your energy is low.'),
   M('inspired', 8, 0, 'İlham dolu', 'Inspired', 'Kafanda melodiler dönüyor.', 'Melodies keep coming to you.'),
   M('sick', -8, 0, 'Hasta', 'Unwell', 'Sağlığın kötü.', 'Your health is poor.'),
   M('jailed', -20, 0, 'Parmaklıklar ardında', 'Behind bars', 'Cezaevindesin.', 'You are in prison.'),
+  M('craving', -12, 0, 'Canı çekiyor', 'Craving', 'Bağımlısın; bir süredir isteğini gideremedin. Hastanede tedavi olabilirsin.', 'You are hooked and haven’t had your fix. Treatment at the hospital helps.'),
+  M('aging', -3, 0, 'Yaş yetmiş', 'Getting on', 'Yıllar kendini hissettiriyor.', 'The years are catching up with you.'),
 ];
 export const MOODLET_BY_ID: Record<string, MoodletDef> = Object.fromEntries(MOODLETS.map((m) => [m.id, m]));
 
 /** Duruma bağlı moodlet'ler */
-export function derivedMoodlets(s: { energy: number; inspiration: number; health: number; jailed: boolean }): MoodletId[] {
+export function derivedMoodlets(s: { energy: number; inspiration: number; health: number; jailed: boolean; craving?: boolean; age?: number }): MoodletId[] {
   const out: MoodletId[] = [];
+  if (s.craving) out.push('craving');
+  if ((s.age ?? 0) >= 70) out.push('aging');
   if (s.energy < 20) out.push('exhausted');
   else if (s.energy < 40) out.push('tired');
   if (s.inspiration >= 70) out.push('inspired');

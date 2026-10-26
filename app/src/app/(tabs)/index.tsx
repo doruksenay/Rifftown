@@ -62,6 +62,11 @@ export default function Home() {
           <Body>{t('lowMoodWarning')}</Body>
         </Card>
       ) : null}
+      {ch.addicted ? (
+        <Card style={{ marginTop: space.lg, borderColor: c.danger }}>
+          <Body color={c.danger}>{t('addictedWarning')}</Body>
+        </Card>
+      ) : null}
 
       {data.pendingInvites > 0 ? (
         <Card style={{ marginTop: space.lg, borderColor: c.pink }}>

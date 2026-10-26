@@ -31,6 +31,7 @@ import { fail } from '../errors';
 import { evaluateMany } from './achievements';
 import { type CharacterRow, isJailed, lockCharacter, membership, notify } from './common';
 import { addFame } from './gigs';
+import { touchFamiliarity } from './consequences';
 
 const weekMs = () => gameHoursToMs(CHART_WEEK_DAYS * 24, config.gameSpeed);
 const dayMs = () => gameHoursToMs(24, config.gameSpeed);
@@ -63,6 +64,7 @@ export async function resolveRecording(c: pg.PoolClient, char: CharacterRow, par
   const avgFam = players.reduce((s, x) => s + Math.min(x.fam ?? 0, familiarityCap(x.skills, song.genre)), 0) / players.length;
   const avgSkill = players.reduce((s, x) => s + roleSkill(x.skills, x.role as Instrument), 0) / players.length;
   const quality = recordingQuality(song.quality, avgFam, avgSkill, lv(skills, 'production'), Math.random);
+  await touchFamiliarity(c, players.map((x) => Number(x.id)), [song.id]);
 
   const prev = await one(c, 'SELECT quality FROM recordings WHERE band_id = $1 AND song_id = $2', [m.band_id, song.id]);
   await c.query(

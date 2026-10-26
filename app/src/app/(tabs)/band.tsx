@@ -154,7 +154,7 @@ function MyBand() {
                 small
                 variant="ghost"
                 onPress={() =>
-                  confirmThen(t('kick'), `${t('kick')}: ${m.name}?`, t('confirm'), t('cancel'), () =>
+                  confirmThen(t('kick'), `${t('kick')}: ${m.name}? ${t('leaveBandFameNote')}`, t('confirm'), t('cancel'), () =>
                     run(() => api.post('/bands/mine/kick', { characterId: m.characterId }), { invalidate: ['band'] }),
                   )
                 }
@@ -308,7 +308,7 @@ function MyBand() {
         variant="ghost"
         style={{ marginTop: space.xxl, alignSelf: 'flex-start', paddingHorizontal: 0 }}
         onPress={() =>
-          confirmThen(t('leaveBand'), t('leaveConfirm'), t('confirm'), t('cancel'), () =>
+          confirmThen(t('leaveBand'), `${t('leaveConfirm')} ${t('leaveBandFameNote')}`, t('confirm'), t('cancel'), () =>
             run(() => api.post('/bands/mine/leave'), { invalidate: ['band', 'me', 'songs'] }),
           )
         }

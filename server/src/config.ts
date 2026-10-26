@@ -43,4 +43,13 @@ export const config = {
   /** Kullanım şartları, gizlilik politikası ve uygulamada gösterilen iletişim adresi */
   contactEmail: process.env.CONTACT_EMAIL ?? 'destek@ornek.com',
   revenuecatSecret: process.env.REVENUECAT_WEBHOOK_SECRET ?? '',
+  /**
+   * HASSAS: kalıcı ölüm. '1' ise ihmal edilen (sağlığı uzun süre kritik kalan) ya da çok yaşlanan karakterler ölür.
+   * Varsayılan kapalı: kapalıyken karakterler yalnızca hastaneye kaldırılır. Açmadan önce GAME_DESIGN.md "Ölüm" bölümünü oku.
+   */
+  permadeath: process.env.PERMADEATH === '1',
+  /** Aşinalık çürümesi ve şöhret azalması (testlerde kapatılır; oyun zamanı çok hızlı aktığı için) */
+  decayEnabled: process.env.DECAY !== '0',
+  /** Karakter yaşlanması (testlerde kapatılır) */
+  agingEnabled: process.env.AGING !== '0',
 };

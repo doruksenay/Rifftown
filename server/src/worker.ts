@@ -15,6 +15,7 @@ import { pool } from './db';
 import { pruneMoodlets } from './game/wellbeing';
 import { sendPendingPushes } from './push';
 import { closeDueElections, ensureElections, payOfficeSalaries } from './game/politics';
+import { processAddiction, processFameDecay, processFamiliarityDecay, processHospitalizations, processMortality } from './game/consequences';
 
 /** Bir aşama hata verirse diğer aşamalar yine çalışır */
 async function stage(name: string, fn: () => Promise<number | void>): Promise<number> {
@@ -45,6 +46,13 @@ export async function tick() {
   await stage('seçim açma', () => ensureElections());
   await stage('maaşlar', () => payOfficeSalaries());
   await stage('moodlet temizliği', () => pruneMoodlets(pool));
+  if (config.decayEnabled) {
+    await stage('aşinalık çürümesi', () => processFamiliarityDecay());
+    await stage('şöhret azalması', () => processFameDecay());
+  }
+  await stage('bağımlılık', () => processAddiction());
+  await stage('hastane', () => processHospitalizations());
+  await stage('ölüm', () => processMortality());
   const pushes = await stage('bildirimler', () => sendPendingPushes());
   return { actions, gigs, pushes, elections, justice, charts };
 }

@@ -37,8 +37,8 @@ export const toPerson = (r: any, prefix = ''): PersonDto => ({
 
 /** Hedef gerçek bir oyuncu mu (yapay karakterlerle sosyal etkileşim yok) */
 export async function requirePlayer(db: Db, id: number) {
-  const r = await one(db, 'SELECT id, name, npc, city_id FROM characters WHERE id = $1', [id]);
-  if (!r) fail('character_not_found', 404);
+  const r = await one(db, 'SELECT id, name, npc, city_id, dead_at FROM characters WHERE id = $1', [id]);
+  if (!r || r.dead_at) fail('character_not_found', 404);
   if (r.npc) fail('npc_target', 403);
   return r as { id: number; name: string; npc: boolean; city_id: string | null };
 }

@@ -139,6 +139,15 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       return t(`n_${n.kind}` as StringKey, { from: d.from ?? '' });
     case 'trade_failed':
       return t('n_trade_failed');
+    case 'scandal':
+      return t('n_scandal', { kind: t(`scandal_${d.kind}` as StringKey), city: CITY_BY_ID[d.cityId] ? p(CITY_BY_ID[d.cityId].name) : '' });
+    case 'addicted':
+    case 'recovered':
+    case 'hospitalized':
+      return t(`n_${n.kind}` as StringKey);
+    case 'member_died':
+    case 'partner_died':
+      return t(`n_${n.kind}` as StringKey, { name: d.name ?? '' });
     case 'festival_selected':
       return t('n_festival_selected', { slot: d.slot ?? '' });
     default:
@@ -167,6 +176,8 @@ export function notificationHref(n: NotificationDto, myId?: number): string | nu
   if (n.kind.startsWith('job_') && d.locationId) return `/location/${d.locationId}`;
   if (n.kind === 'item_sold') return '/me';
   if (n.kind.startsWith('trade_')) return '/trades';
+  if (n.kind === 'hospitalized' && d.cityId) return `/location/${d.cityId}-hospital`;
+  if (n.kind === 'scandal' || n.kind === 'member_died') return '/band';
   if (n.kind === 'festival_selected' && d.cityId) return `/location/${d.cityId}-festival`;
   return null;
 }
