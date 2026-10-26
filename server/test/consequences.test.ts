@@ -155,7 +155,7 @@ describe('grup kayıpları', () => {
 });
 
 describe('bağımlılık, hastane ve ölüm', () => {
-  it('aşırı yemek ve alışveriş bağımlılık yapar; tedavi iyileştirir', async () => {
+  it('aşırı yemek ve alışveriş bağımlılık yapar; tedavi iyileştirir', () => slow(async () => {
     const p = await newPlayer();
     await setMoney(p.character.id, 50000);
     await q(`UPDATE characters SET indulgence = $2, indulgence_at = now() WHERE id = $1`, [p.character.id, ADDICTION_THRESHOLD - 1]);
@@ -167,16 +167,17 @@ describe('bağımlılık, hastane ve ölüm', () => {
     await q(`UPDATE characters SET indulged_at = now() - interval '1 day' WHERE id = $1`, [p.character.id]);
     expect((await me(p.c)).character.moodlets.some((x: any) => x.id === 'craving')).toBe(true);
     // Hastanede tedavi
-    await p.c.post('/api/actions', { kind: 'treat', locationId: 'istanbul-hospital', hours: 4 });
-    await advance(10);
-    await p.c.post('/api/actions', { kind: 'treat', locationId: 'istanbul-hospital', hours: 4 });
-    await advance(10);
+    for (let i = 0; i < 2; i++) {
+      expect((await p.c.post('/api/actions', { kind: 'treat', locationId: 'istanbul-hospital', hours: 4 })).status).toBe(200);
+      await q(`UPDATE actions SET ends_at = now() WHERE character_id = $1 AND status = 'active'`, [p.character.id]);
+      await advance(1);
+    }
     expect((await me(p.c)).character.addicted).toBe(false);
     // Zaman da iyileştirir
     await q(`UPDATE characters SET addicted_since = now(), indulgence = 0 WHERE id = $1`, [p.character.id]);
     await processAddiction();
     expect((await me(p.c)).character.addicted).toBe(false);
-  });
+  }));
 
   it('sağlığı çok düşen boştaki karakter hastaneye kaldırılır; parası yetmese de borçlanmaz', async () => {
     const p = await newPlayer();

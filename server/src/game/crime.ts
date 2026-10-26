@@ -215,7 +215,7 @@ export async function resolveInvestigation(c: pg.PoolClient, officer: CharacterR
 
 // ---------- Mahkeme ----------
 
-async function convict(c: Db, kase: any, sentenceHours: number, judgeId: number | null) {
+export async function convict(c: Db, kase: any, sentenceHours: number, judgeId: number | null) {
   const until = new Date(Date.now() + hoursMs(sentenceHours));
   const crime = await one(c, 'SELECT loot FROM crimes WHERE id = $1', [kase.crime_id]);
   const suspect = await lockCharacter(c, kase.suspect_id);

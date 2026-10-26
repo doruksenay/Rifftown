@@ -39,12 +39,12 @@ export async function closeDueElections(): Promise<number> {
       if (!e) return false;
       const ranked = await many(
         c,
-        `SELECT cand.character_id, count(v.voter_id)::int AS votes, cand.created_at
-           FROM election_candidates cand
+        `SELECT cand.character_id, count(v.voter_id)::int AS votes, cand.created_at, ch.npc
+           FROM election_candidates cand JOIN characters ch ON ch.id = cand.character_id
            LEFT JOIN election_votes v ON v.election_id = cand.election_id AND v.candidate_id = cand.character_id
           WHERE cand.election_id = $1
-          GROUP BY cand.character_id, cand.created_at
-          ORDER BY votes DESC, cand.created_at ASC`,
+          GROUP BY cand.character_id, cand.created_at, ch.npc
+          ORDER BY votes DESC, ch.npc ASC, cand.created_at ASC`,
         [e.id],
       );
       const winner = ranked[0];
@@ -84,11 +84,11 @@ export async function payOfficeSalaries(): Promise<number> {
     // Kilitli satırları atla: aynı anda çalışan başka bir zamanlayıcı aynı maaşı iki kez ödeyemez
     const due = await many(
       c,
-      `SELECT city_id, office, character_id,
-              floor(extract(epoch FROM (now() - last_paid_at)) * 1000 / $1)::int AS days
-         FROM office_holders
-        WHERE last_paid_at <= now() - ($1::double precision * interval '1 millisecond')
-        FOR UPDATE SKIP LOCKED`,
+      `SELECT h.city_id, h.office, h.character_id, ch.npc,
+              floor(extract(epoch FROM (now() - h.last_paid_at)) * 1000 / $1)::int AS days
+         FROM office_holders h JOIN characters ch ON ch.id = h.character_id
+        WHERE h.last_paid_at <= now() - ($1::double precision * interval '1 millisecond')
+        FOR UPDATE OF h SKIP LOCKED`,
       [day],
     );
     for (const h of due) {
@@ -99,7 +99,8 @@ export async function payOfficeSalaries(): Promise<number> {
           WHERE city_id = $1 AND office = $2`,
         [h.city_id, h.office, h.days * day],
       );
-      await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [h.character_id, office.salaryPerDay * h.days]);
+      // Oyunun kendi makam sahipleri maaş almaz (para basılmasın)
+      if (!h.npc) await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [h.character_id, office.salaryPerDay * h.days]);
     }
     return due.length;
   });

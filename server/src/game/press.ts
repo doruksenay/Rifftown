@@ -272,6 +272,8 @@ export const toArticleDto = (r: any) => ({
   cityId: r.city_id,
   title: r.title,
   body: r.body,
+  titleEn: r.title_en ?? null,
+  bodyEn: r.body_en ?? null,
   tone: r.tone,
   npc: !!r.npc,
   author: r.author_id ? { characterId: Number(r.author_id), name: r.author_name } : null,

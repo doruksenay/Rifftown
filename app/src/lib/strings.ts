@@ -1209,6 +1209,10 @@ export const tr = {
   magazineTitle: '{city} haftalık müzik dergisi',
   magazineHint: 'Geçen liste haftasının en çok konuşulan haberleri; gazeteciler ve gazetenin muhabirleri yazar.',
   delete: 'Sil',
+  sellToTrader: 'Pazarın tüccarına sat',
+  soldToTrader: 'Tüccar {money} ödedi.',
+  err_npc_wont_buy: 'Tüccar bunu almıyor; yalnızca atölyede yapılmış eşya alır.',
+  err_npc_daily_limit: 'Tüccar bugün senden yeterince aldı.',
 };
 
 export type StringKey = keyof typeof tr;
@@ -2397,4 +2401,8 @@ export const en: Record<StringKey, string> = {
   magazineTitle: '{city} weekly music magazine',
   magazineHint: 'Last chart week\'s most talked-about stories, by journalists and the paper\'s staff reporters.',
   delete: 'Delete',
+  sellToTrader: 'Sell to the market trader',
+  soldToTrader: 'The trader paid {money}.',
+  err_npc_wont_buy: 'The trader won\'t buy that; only workshop-made items.',
+  err_npc_daily_limit: 'The trader has bought enough from you today.',
 };

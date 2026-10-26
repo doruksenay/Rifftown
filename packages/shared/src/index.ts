@@ -28,3 +28,4 @@ export * from './press';
 export * from './touring';
 export * from './broadcast';
 export * from './community';
+export * from './npc-civic';

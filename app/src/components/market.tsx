@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Body, Button, Choice, Empty, Field, Heading, ListRow, Small, Strong } from '@/components/ui';
+import { useToast } from '@/components/ui';
 import { api } from '@/lib/api';
 import { money } from '@/lib/format';
 import { useInventory, useRun } from '@/lib/hooks';
@@ -27,6 +28,8 @@ export function FleaMarket({ locationId }: { locationId: string }) {
   const inv = useInventory();
   const qc = useQueryClient();
   const { run, pending } = useRun();
+  const toast = useToast();
+  const toastSold = (price: number) => toast(t('soldToTrader', { money: money(price) }));
   const [tab, setTab] = useState<'sale' | 'mine' | 'new'>('sale');
   const [picked, setPicked] = useState<number | null>(null);
   const [price, setPrice] = useState('');
@@ -86,6 +89,23 @@ export function FleaMarket({ locationId }: { locationId: string }) {
             inputMode="numeric"
           />
           {n > 0 ? <Small style={{ marginTop: -space.sm, marginBottom: space.md }}>{t('youWillGet', { money: money(n - Math.ceil(n * MARKET_FEE)) })}</Small> : null}
+          {picked && sellable.find((x) => x.id === picked && ITEM_BY_ID[x.itemId]?.crafted) ? (
+            <Button
+              title={t('sellToTrader')}
+              variant="secondary"
+              small
+              style={{ marginBottom: space.sm, alignSelf: 'flex-start' }}
+              disabled={busy || pending}
+              onPress={async () => {
+                const r = await run(() => api.post<{ price: number }>('/market/npc-sell', { locationId, inventoryId: picked }), { invalidate: ['me', 'inventory'] });
+                if (r) {
+                  toastSold(r.price);
+                  setPicked(null);
+                  refresh();
+                }
+              }}
+            />
+          ) : null}
           <Button
             title={t('listIt')}
             disabled={!picked || n < 1 || (cap !== null && n > cap) || busy || pending}

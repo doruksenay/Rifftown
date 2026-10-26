@@ -20,6 +20,7 @@ import { buyListing, cancelListing, listItem, marketListings, nameItem, paintIte
 import { bankMove, eatMeal, getTattoo, hotelStay, removeTattoo, tattoosOf } from '../game/lifestyle';
 import { claimMission, missionsState } from '../game/missions';
 import { chainsState, claimChainStep } from '../game/chains';
+import { npcOffer, sellToNpc } from '../game/npc-civic';
 import { idParam, parse } from './util';
 
 const loc = z.object({ locationId: z.string() });
@@ -107,6 +108,15 @@ export async function economyRoutes(app: FastifyInstance) {
 
   // ---------- Haftalık görevler ----------
   app.get('/missions', async (req) => missionsState(pool, charId(req)));
+  app.post('/market/npc-sell', async (req) => {
+    const body = parse(z.object({ locationId: z.string(), inventoryId: z.number().int() }), req.body);
+    return sellToNpc(charId(req), body.locationId, body.inventoryId);
+  });
+  app.get('/market/npc-offer/:id', async (req) => {
+    const { id } = parse(idParam, req.params);
+    const inv = await pool.query('SELECT item_id, bonus FROM inventory WHERE id = $1 AND character_id = $2', [id, charId(req)]);
+    return { price: inv.rows[0] ? npcOffer(inv.rows[0].item_id, inv.rows[0].bonus) : 0 };
+  });
   app.get('/chains', async (req) => ({ chains: await chainsState(pool, charId(req)) }));
   app.post('/chains/:id/claim', async (req) => claimChainStep(charId(req), parse(z.object({ id: z.string().max(40) }), req.params).id));
   app.post('/missions/:id/claim', async (req) => claimMission(charId(req), parse(z.object({ id: z.string().max(40) }), req.params).id));

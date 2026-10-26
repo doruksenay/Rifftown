@@ -6,6 +6,7 @@ import { processJustice } from './game/crime';
 import { processDueGigs } from './game/gigs';
 import { processChartWeeks } from './game/music';
 import { npcDirector } from './game/npc';
+import { npcCivicDirector } from './game/npc-civic';
 import { processRent } from './game/homes';
 import { processUpkeep } from './game/business';
 import { processFestivals } from './game/festivals';
@@ -38,6 +39,7 @@ export async function tick() {
     return total;
   });
   if (config.npcEnabled) await stage('oyunun grupları', () => npcDirector());
+  if (config.npcEnabled) await stage('oyunun kadrosu', () => npcCivicDirector());
   const gigs = await stage('konserler', () => processDueGigs(50));
   const justice = await stage('adalet', () => processJustice());
   const charts = await stage('listeler', () => processChartWeeks());

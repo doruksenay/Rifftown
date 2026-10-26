@@ -20,6 +20,8 @@ export interface ArticleDto {
   cityId: string;
   title: string;
   body: string;
+  titleEn?: string | null;
+  bodyEn?: string | null;
   tone: ArticleTone;
   npc: boolean;
   author: { characterId: number; name: string } | null;
@@ -29,15 +31,17 @@ export interface ArticleDto {
 }
 
 export function ArticleCard({ a, onReport }: { a: ArticleDto; onReport?: () => void }) {
-  const { t, locale } = useI18n();
+  const { t, locale, lang } = useI18n();
   const c = useColors();
+  const title = lang === 'en' && a.titleEn ? a.titleEn : a.title;
+  const text = lang === 'en' && a.bodyEn ? a.bodyEn : a.body;
   return (
     <Card style={{ marginBottom: space.sm }}>
-      <Strong>{a.title}</Strong>
+      <Strong>{title}</Strong>
       <Small>
         {[a.npc ? t('npcReporter') : a.author?.name, a.band?.name, dateTime(a.createdAt, locale)].filter(Boolean).join(' · ')}
       </Small>
-      <Body style={{ marginTop: space.sm }}>{a.body}</Body>
+      <Body style={{ marginTop: space.sm }}>{text}</Body>
       <Row style={{ marginTop: space.sm, justifyContent: 'flex-end' }}>
         {a.author && !a.mine ? <Button title={t('profile')} small variant="ghost" onPress={() => router.push(`/character/${a.author!.characterId}`)} /> : null}
         {onReport && !a.mine && !a.npc ? <Button title={t('report')} small variant="ghost" onPress={onReport} /> : null}
