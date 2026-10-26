@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Platform, View } from 'react-native';
+import { GigExplain } from '@/components/progress';
 import { TierText } from '@/components/tier';
 import { fameChangeKey } from '@/lib/fame-text';
 import { Body, Button, Card, ErrorView, Heading, ListRow, Loading, Screen, Small } from '@/components/ui';
@@ -55,7 +56,7 @@ function GigScreenScreen() {
 
   const cancel = () => {
     const go = async () => {
-      const ok = await run(() => api.del(`/gigs/${gig.id}`), { invalidate: ['band', 'me', 'gig', 'city'] });
+      const ok = await run(() => api.del(`/gigs/${gig.id}`), { invalidate: ['band', 'me', 'gig', 'city', 'venueGigs'] });
       if (ok) router.back();
     };
     if (Platform.OS === 'web') {
@@ -89,8 +90,8 @@ function GigScreenScreen() {
       {r ? (
         <>
           <Heading>{t('gigResult')}</Heading>
-          <TierText scale="quality" value={r.quality} size="hero" legendary={!!(r as any).legendary} />
-          {(r as any).legendary ? <Small style={{ marginTop: space.sm }}>{t('legendaryGigLine')}</Small> : null}
+          <TierText scale="quality" value={r.quality} size="hero" legendary={!!r.legendary} />
+          {r.legendary ? <Small style={{ marginTop: space.sm }}>{t('legendaryGigLine')}</Small> : null}
           {r.review ? (
             <Body style={{ marginTop: space.md, fontFamily: fonts.bodyMedium, fontSize: type.lead, lineHeight: type.lead * 1.4 }}>
               {r.review[lang]}
@@ -103,6 +104,7 @@ function GigScreenScreen() {
             <Body color={r.fameDelta >= 0 ? c.blue : c.pink}>{t(fameChangeKey(r.fameDelta))}</Body>
           </View>
           <Small style={{ marginTop: space.sm }}>{t('present', { a: r.presentCount, b: r.memberCount })}</Small>
+          <GigExplain result={r} cityId={gig.cityId} isMember={me.data?.band?.id === gig.bandId} />
           {r.review ? (
             <Button title={t('shareToChat')} variant="secondary" small style={{ alignSelf: 'flex-start', marginTop: space.lg }} loading={sharing} onPress={share} />
           ) : null}

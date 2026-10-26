@@ -31,6 +31,7 @@ import { api } from '@/lib/api';
 import { dateTime, money } from '@/lib/format';
 import { fameChangeKey } from '@/lib/fame-text';
 import { ReleaseRow } from '@/components/records';
+import { VenueProgress } from '@/components/progress';
 import { TierText } from '@/components/tier';
 import { useBand, useInvites, useRun, useSongs } from '@/lib/hooks';
 import { useI18n } from '@/lib/i18n';
@@ -270,7 +271,11 @@ function MyBand() {
       <Heading>{t('fame')}</Heading>
       {fame.length ? (
         fame.map(([cityId, f], i) => (
-          <ListRow key={cityId} title={p(CITY_BY_ID[cityId].name)} right={<TierText scale="fame" value={f} />} last={i === fame.length - 1} />
+          <View key={cityId}>
+            <ListRow title={p(CITY_BY_ID[cityId].name)} right={<TierText scale="fame" value={f} />} last />
+            <VenueProgress fame={f} />
+            {i === fame.length - 1 ? null : <View style={{ height: 1, backgroundColor: c.line }} />}
+          </View>
         ))
       ) : (
         <Empty text={t('noFame')} />

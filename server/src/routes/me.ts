@@ -26,7 +26,7 @@ import { storedMoodlets } from '../game/wellbeing';
 import { charId, requireUser, requireVip } from '../auth';
 import { many, one, pool, tx } from '../db';
 import { fail } from '../errors';
-import { activeAction, getCharacter, isJailed, lockCharacter, membership, notify, officesOf, toActionDto, toCharacterDto } from '../game/common';
+import { activeAction, getCharacter, isJailed, lockCharacter, membership, notify, officesOf, requireEstablished, toActionDto, toCharacterDto } from '../game/common';
 import { achievementPoints, evaluateThrottled } from '../game/achievements';
 import { bailQuote, inCustody } from '../game/crime';
 import { homeOf } from '../game/homes';
@@ -247,6 +247,7 @@ export async function meRoutes(app: FastifyInstance) {
     return tx(async (c) => {
       const from = await lockCharacter(c, id);
       if (isJailed(from)) fail('in_jail', 409);
+      await requireEstablished(c, id);
       const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc', [body.toName]);
       if (!target) fail('character_not_found', 404);
       if (target.id === id) fail('invalid_target');

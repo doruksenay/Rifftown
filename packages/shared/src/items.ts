@@ -210,7 +210,7 @@ export const HOSPITAL_HEAL_PER_HOUR = 20;
 // rezervasyonunda eksik rolleri oyunun kendi müzisyenleriyle doldurabilir.
 
 export const SESSION_MUSICIAN = {
-  bar: { fee: 10, skill: 30, stage: 25 },
+  bar: { fee: 5, skill: 30, stage: 25 },
   club: { fee: 60, skill: 50, stage: 40 },
   hall: { fee: 250, skill: 70, stage: 55 },
   stadium: { fee: 900, skill: 85, stage: 70 },
@@ -222,5 +222,15 @@ export const MAX_FX_BONUS = 12;
 /** İkinci el pazarında satıştan alınan komisyon */
 export const MARKET_FEE = 0.05;
 export const MAX_LISTINGS = 20;
+/** İkinci elde (pazar ve takas parası) bir eşya dükkân fiyatının en fazla bu katına el değiştirebilir.
+ *  Ek hesaplardan ana hesaba para taşınmasını zorlaştırır. EFSANEVİ eşyalar koleksiyonluk olduğundan daha yüksek. */
+export const RESALE_CAP_MULT = 2;
+export const LEGENDARY_RESALE_CAP_MULT = 5;
+export const maxResalePrice = (shopPrice: number, legendary = false) =>
+  Math.max(1, Math.round(shopPrice * (legendary ? LEGENDARY_RESALE_CAP_MULT : RESALE_CAP_MULT)));
+/** Yeni hesaplar bu kadar oyun saati boyunca pazar, takas, hediye ve para gönderme kullanamaz */
+export const NEW_ACCOUNT_TRADE_HOURS = 72;
+/** El değiştiren bir eşya bu kadar oyun saati içinde önceki sahibine geri dönemez (takas, pazar, hediye) */
+export const ITEM_RETURN_COOLDOWN_HOURS = 168;
 /** Kiralık müzisyenler setlisti önceden öğrenir. */
 export const SESSION_FAMILIARITY = 70;

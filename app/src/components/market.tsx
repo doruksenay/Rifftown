@@ -1,6 +1,6 @@
 // İkinci el pazarı: oyuncuların sattığı eşyalar, ilanlarım, ilan verme.
 
-import { ITEM_BY_ID, type ListingDto, MARKET_FEE, PAINT_COLORS } from '@rifftown/shared';
+import { ITEM_BY_ID, type ListingDto, MARKET_FEE, PAINT_COLORS, maxResalePrice } from '@rifftown/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -38,6 +38,8 @@ export function FleaMarket({ locationId }: { locationId: string }) {
   const listings = (q.data ?? []).filter((l) => (tab === 'mine' ? l.mine : !l.mine));
   const sellable = (inv.data ?? []).filter((i) => !i.listed && ITEM_BY_ID[i.itemId]);
   const n = Number.parseInt(price, 10) || 0;
+  const pickedItem = sellable.find((i) => i.id === picked);
+  const cap = pickedItem ? maxResalePrice(ITEM_BY_ID[pickedItem.itemId].price, !!pickedItem.legendary) : null;
 
   return (
     <View style={{ marginTop: space.lg }}>
@@ -74,11 +76,18 @@ export function FleaMarket({ locationId }: { locationId: string }) {
             <Empty text={t('noItems')} />
           )}
           <View style={{ height: space.md }} />
-          <Field label={t('price')} value={price} onChangeText={(v) => setPrice(v.replace(/[^0-9]/g, ''))} keyboardType="number-pad" inputMode="numeric" />
+          <Field
+            label={t('price')}
+            hint={cap ? t('maxPriceHint', { money: money(cap) }) : undefined}
+            value={price}
+            onChangeText={(v) => setPrice(v.replace(/[^0-9]/g, ''))}
+            keyboardType="number-pad"
+            inputMode="numeric"
+          />
           {n > 0 ? <Small style={{ marginTop: -space.sm, marginBottom: space.md }}>{t('youWillGet', { money: money(n - Math.ceil(n * MARKET_FEE)) })}</Small> : null}
           <Button
             title={t('listIt')}
-            disabled={!picked || n < 1 || busy || pending}
+            disabled={!picked || n < 1 || (cap !== null && n > cap) || busy || pending}
             onPress={async () => {
               const r = await run(() => api.post('/market', { locationId, inventoryId: picked, price: n }), { success: t('listed'), invalidate: ['me'] });
               if (r) {

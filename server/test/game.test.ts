@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { SESSION_MUSICIAN } from '@rifftown/shared';
 import { config } from '../src/config';
 import { pool } from '../src/db';
 import { advance, client, me, newPlayer, raw, setMoney, setSkills, setVip, setup, teardown } from './helpers';
@@ -280,20 +281,27 @@ describe('grup ve konser', () => {
       sessionRoles: ['guitar', 'bass', 'drums'],
     });
     expect(gig.status).toBe(200);
-    expect((await me(c)).character.money).toBe(before - 30);
+    const fee = 3 * SESSION_MUSICIAN.bar.fee;
+    expect((await me(c)).character.money).toBe(before - fee);
 
     await advance();
     const after = (await c.get(`/api/gigs/${gig.body.gig.id}`)).body.gig;
     expect(after.status).toBe('done');
     expect(after.result.attendance).toBeGreaterThan(0);
-    expect(after.result.presentCount).toBe(4);
+    // Kiralık müzisyenler üye sayılmaz: sahnede 1 üye, grupta 1 üye
+    expect(after.result.presentCount).toBe(1);
+    expect(after.result.memberCount).toBe(1);
     expect(after.result.quality).toBeGreaterThan(0);
+    // Rapor nedenini açıklar ve sıradaki adımı önerir
+    expect(after.result.factors.setLength).toBeDefined();
+    expect(Array.isArray(after.result.advice)).toBe(true);
+    expect(typeof after.result.fame).toBe('number');
     // Eleştiri konseri bilir: mekânın adı ve gerçek seyirci sayısı geçer
     expect(after.result.review.tr).toContain('Kadıköy Bodrum Bar');
     expect(after.result.review.en).toContain('Kadikoy Basement Bar');
     const notes = (await c.get('/api/notifications')).body.notifications;
     expect(notes.some((n: any) => n.kind === 'gig_done')).toBe(true);
-    expect((await me(c)).character.money).toBe(before - 30 + after.result.perMember);
+    expect((await me(c)).character.money).toBe(before - fee + after.result.perMember);
   });
 
   it('çakışan konser alınamaz; iptal kiralık müzisyen ücretini iade eder', async () => {
@@ -302,6 +310,8 @@ describe('grup ve konser', () => {
     config.gameSpeed = 3600;
     try {
       const { c } = await newPlayer();
+      // Önceki testlerden kalan konserler bu sahneyi meşgul göstermesin
+      await pool.query(`UPDATE gigs SET status = 'cancelled' WHERE location_id = 'istanbul-bar' AND status = 'scheduled'`);
       await pool.query(
         `INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, 'Deneme', 'rock', 40)`,
         [(await me(c)).character.id],
@@ -310,13 +320,20 @@ describe('grup ve konser', () => {
       const ids = band.songs.map((s: any) => s.id);
       const g1 = await c.post('/api/gigs', { locationId: 'istanbul-bar', inHours: 2, setlist: ids, sessionRoles: ['drums'] });
       expect(g1.status).toBe(200);
-      expect((await me(c)).character.money).toBe(490);
+      expect((await me(c)).character.money).toBe(500 - SESSION_MUSICIAN.bar.fee);
       expect((await c.post('/api/gigs', { locationId: 'istanbul-bar', inHours: 2, setlist: ids })).body.error).toBe('gig_clash');
+      // Aynı sahnede aynı saatte başka bir grup çalamaz
+      const other = await newPlayer();
+      await pool.query(`INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, 'Öteki', 'rock', 40)`, [(await me(other.c)).character.id]);
+      const band2 = (await other.c.post('/api/bands', { name: 'Öteki Grup', genre: 'rock', role: 'guitar' })).body.band;
+      const ids2 = band2.songs.map((s: any) => s.id);
+      expect((await other.c.post('/api/gigs', { locationId: 'istanbul-bar', inHours: 2, setlist: ids2 })).body.error).toBe('venue_busy');
+      expect((await other.c.post('/api/gigs', { locationId: 'istanbul-bar', inHours: 24, setlist: ids2 })).status).toBe(200);
       expect((await c.post('/api/gigs', { locationId: 'istanbul-bar', inHours: 12, setlist: ids })).status).toBe(200);
       const cancel = await c.del(`/api/gigs/${g1.body.gig.id}`);
-      expect(cancel.body.refund).toBe(10);
+      expect(cancel.body.refund).toBe(SESSION_MUSICIAN.bar.fee);
       expect((await me(c)).character.money).toBe(500);
-      await pool.query(`UPDATE gigs SET status = 'cancelled' WHERE band_id = $1`, [band.id]);
+      await pool.query(`UPDATE gigs SET status = 'cancelled' WHERE band_id = ANY($1::bigint[])`, [[band.id, band2.id]]);
     } finally {
       config.gameSpeed = prev;
     }

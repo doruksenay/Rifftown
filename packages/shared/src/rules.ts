@@ -111,7 +111,8 @@ export const restMoodGain = (hours: number, artBonus: number) => hours * MOOD_PE
 
 /** songwriting: songwritingScore() ile hesaplanan beste + söz + tür becerisi */
 export function songQuality(songwriting: number, rand: Rand): number {
-  return Math.round(clamp(8 + songwriting * 0.85 + (rand() * 20 - 10), 1, 100));
+  // Taban 15: ilk şarkılar da bir bar gecesini taşıyabilsin
+  return Math.round(clamp(15 + songwriting * 0.8 + (rand() * 20 - 10), 1, 100));
 }
 
 /** improvisation: Doğaçlama becerisi (0–100), provayı hızlandırır */
@@ -163,9 +164,16 @@ export const gameHoursToMs = (hours: number, speed: number) => (hours * 3600 * 1
 // ---------- Konser ----------
 
 /** Bu kalitenin üstündeki konserler şöhret kazandırır, altındakiler kaybettirir. */
-export const GIG_BREAK_EVEN_QUALITY = 30;
+export const GIG_BREAK_EVEN_QUALITY = 20;
+/** Barda bu kaliteye ulaşan konser en az BAR_MIN_FAME kadar şöhret getirir (ilk adımlar boşa gitmesin). */
+export const BAR_FLOOR_QUALITY = 10;
+export const BAR_MIN_FAME = 0.2;
+/** Tam bir setlist: daha kısa setler konser kalitesini düşürür. */
+export const FULL_SETLIST = 4;
 
 export const GIG_LEAD_HOURS = [2, 6, 12, 24] as const;
+/** Bir grubun aynı anda ayarlı en fazla konser sayısı (festival hariç): sahneleri boş rezervasyonla kapatmak olmasın */
+export const MAX_SCHEDULED_GIGS = 2;
 
 export interface GigPerformer {
   /** Kiralık müzisyenler için null */
@@ -214,12 +222,27 @@ export interface GigResult {
   songScores: { id: number; score: number }[];
   /** Çok nadir: DESTANSI bir konser ilham sayesinde EFSANEVİ olabilir */
   legendary?: boolean;
+  /** Raporda "neden böyle geçti" açıklaması için etkenlerin kaba değerlendirmesi (sayı değil) */
+  factors?: GigFactors;
+}
+
+export type GigFactorId = 'songs' | 'familiarity' | 'skill' | 'stage' | 'presence' | 'setLength' | 'energy' | 'mood';
+export type GigFactorRating = 'weak' | 'ok' | 'strong';
+export type GigFactors = Partial<Record<GigFactorId, GigFactorRating>>;
+
+const rate = (v: number, weak: number, strong: number): GigFactorRating => (v < weak ? 'weak' : v >= strong ? 'strong' : 'ok');
+
+/** Konserden sonra ne yapılmalı: en zayıf etkenler önce (en fazla 3). Sırası etkinin büyüklüğüne göredir. */
+export function gigAdvice(factors: GigFactors): GigFactorId[] {
+  const order: GigFactorId[] = ['presence', 'setLength', 'familiarity', 'songs', 'skill', 'energy', 'mood', 'stage'];
+  return order.filter((f) => factors[f] === 'weak').slice(0, 3);
 }
 
 export function expectedAttendance(venue: VenueType, fame: number, genrePop: number, rand: Rand): number {
   const rules = VENUE_RULES[venue];
   const draw = clamp(0.04 + (fame / 100) * 1.1, 0, 1);
-  const friends = 2 + Math.floor(rand() * 7);
+  // Arkadaşlar ve tanıdıklar: küçük sahnede ilk geceleri ayakta tutar
+  const friends = venue === 'bar' ? 4 + Math.floor(rand() * 7) : 2 + Math.floor(rand() * 7);
   const base = rules.capacity * draw * genrePop * (0.85 + rand() * 0.3);
   return Math.round(clamp(base + friends, 0, rules.capacity));
 }
@@ -232,7 +255,10 @@ export function computeGig(input: GigInput): GigResult {
   const genrePop = city.genrePopularity[genre];
   const attendance = expectedAttendance(venue, fame, genrePop, rand);
 
-  if (present.length === 0 || setlist.length === 0) {
+  // Grubun kendi üyelerinden kimse sahnede değilse (sadece kiralık müzisyenler) konser yapılmamış sayılır
+  const hasOwn = performers.some((p) => p.characterId !== null);
+  const ownPresent = present.some((p) => p.characterId !== null);
+  if (present.length === 0 || setlist.length === 0 || (hasOwn && !ownPresent)) {
     // Kimse gelmediyse konser iptal sayılır ve şöhret kaybedilir.
     return {
       quality: 0,
@@ -240,7 +266,7 @@ export function computeGig(input: GigInput): GigResult {
       revenue: 0,
       fameDelta: -round1(2 * rules.fameMult),
       presentCount: 0,
-      memberCount,
+      memberCount: performers.filter((p) => p.characterId !== null).length || memberCount,
       songScores: [],
     };
   }
@@ -261,17 +287,35 @@ export function computeGig(input: GigInput): GigResult {
   });
   const avgSong = songScores.reduce((sum, s) => sum + s.score, 0) / songScores.length;
   const lengthFactor = Math.min(1, 0.6 + 0.1 * setlist.length);
+  // Rapordaki açıklama: kiralık müzisyenler hariç grubun kendisine bakılır (yoksa herkes)
+  const own = present.filter((p) => p.characterId !== null);
+  const judged = own.length ? own : present;
+  const avg = (f: (p: GigPerformer) => number) => judged.reduce((sum, p) => sum + f(p), 0) / judged.length;
+  const avgQuality = setlist.reduce((sum, s) => sum + s.quality, 0) / setlist.length;
+  const avgFam = avg((p) => setlist.reduce((sum, s) => sum + (p.familiarity[s.id] ?? 0), 0) / setlist.length);
+  const factors: GigFactors = {
+    songs: rate(avgQuality, 30, 60),
+    familiarity: rate(avgFam, 40, 75),
+    skill: rate(avg((p) => clamp(roleSkill(p.skills, p.role) + p.instrumentBonus, 0, 110)), 25, 55),
+    stage: rate(avg((p) => clamp(stageScore(p.skills) + p.outfitBonus, 0, 110)), 20, 50),
+    presence: presence < 1 ? 'weak' : 'strong',
+    setLength: setlist.length < FULL_SETLIST ? 'weak' : setlist.length >= 6 ? 'strong' : 'ok',
+    energy: rate(avg((p) => p.energy ?? 100), 40, 70),
+    mood: rate(avg((p) => p.mood), 35, 70),
+  };
   const noise = 0.92 + rand() * 0.16;
   const quality = Math.round(
     clamp(avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0), 0, 100),
   );
 
-  const revenue = Math.round(attendance * rules.ticket * city.costMult * 0.7);
+  const revenue = Math.round(attendance * rules.ticket * city.costMult * rules.bandShare);
 
   let fameDelta = ((quality - GIG_BREAK_EVEN_QUALITY) / 100) * 6 * rules.fameMult;
   if (fameDelta > 0) fameDelta *= Math.max(0.1, 1 - fame / 120);
-  // Kapasitenin çok altında kalan büyük mekân konserleri şöhreti az artırır.
-  fameDelta *= fameDelta > 0 ? 0.5 + 0.5 * (attendance / rules.capacity) : 1;
+  // Kapasitenin çok altında kalan büyük mekân konserleri şöhreti az artırır (bar küçük sahnedir, sayılmaz).
+  if (fameDelta > 0 && venue !== 'bar') fameDelta *= 0.5 + 0.5 * (attendance / rules.capacity);
+  // Bar: makul bir gece hiç değilse biraz tanınırlık getirir
+  if (venue === 'bar' && quality >= BAR_FLOOR_QUALITY) fameDelta = Math.max(fameDelta, BAR_MIN_FAME);
 
   // EFSANEVİ gece: DESTANSI kalitede, grubun ilhamına bağlı küçük bir olasılık
   // Sadece grubun kendi üyeleri sayılır (kiralık müzisyenler ortalamayı düşürmesin)
@@ -283,11 +327,13 @@ export function computeGig(input: GigInput): GigResult {
   return {
     quality,
     legendary,
+    factors,
     attendance,
     revenue,
     fameDelta: round1(fameDelta),
-    presentCount: present.length,
-    memberCount,
+    // Raporda kiralık müzisyenler üye sayılmaz
+    presentCount: own.length,
+    memberCount: performers.filter((p) => p.characterId !== null).length || memberCount,
     songScores: songScores.map((s) => ({ id: s.id, score: Math.round(s.score) })),
   };
 }

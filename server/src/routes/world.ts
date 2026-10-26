@@ -1,4 +1,4 @@
-import { CITY_BY_ID } from '@rifftown/shared';
+import { CITY_BY_ID, LOCATION_BY_ID, isVenue } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireUser } from '../auth';
@@ -48,15 +48,55 @@ export async function worldRoutes(app: FastifyInstance) {
     };
   });
 
+  // Bir sahnenin yaklaşan ve son konserleri (şehir listesi en yakın 20 konserle sınırlı olduğundan ayrı)
+  app.get('/venues/:locationId/gigs', async (req) => {
+    const { locationId } = parse(z.object({ locationId: z.string() }), req.params);
+    const loc = LOCATION_BY_ID[locationId];
+    if (!loc || !isVenue(loc.type)) fail('not_found', 404);
+    const upcoming = await many(
+      pool,
+      `SELECT g.*, b.name AS band_name FROM gigs g JOIN bands b ON b.id = g.band_id
+        WHERE g.location_id = $1 AND g.status = 'scheduled' ORDER BY g.starts_at LIMIT 30`,
+      [locationId],
+    );
+    const recent = await many(
+      pool,
+      `SELECT g.*, b.name AS band_name FROM gigs g JOIN bands b ON b.id = g.band_id
+        WHERE g.location_id = $1 AND g.status = 'done' ORDER BY g.starts_at DESC LIMIT 10`,
+      [locationId],
+    );
+    const isVip = req.user!.isVip;
+    return {
+      upcoming: upcoming.map(toGigDto),
+      recent: recent.map((g) => gateGig(toGigDto(g), isVip, config.gameSpeed)),
+    };
+  });
+
   app.get('/cities/:cityId/people', async (req) => {
     const { cityId } = parse(z.object({ cityId: z.string() }), req.params);
+    // Şehirdeki oyuncular: en son hareket edenler önce; engellediğin ya da seni engelleyenler görünmez
+    const me = req.user!.characterId ?? 0;
     const rows = await many(
       pool,
-      `SELECT id, name, avatar_color, main_instrument FROM characters WHERE city_id = $1 AND NOT npc ORDER BY random() LIMIT 30`,
-      [cityId],
+      `SELECT c.id, c.name, c.avatar_color, c.avatar_version, c.main_instrument, b.name AS band_name
+         FROM characters c
+         LEFT JOIN band_members m ON m.character_id = c.id
+         LEFT JOIN bands b ON b.id = m.band_id
+        WHERE c.city_id = $1 AND NOT c.npc AND c.id <> $2
+          AND NOT EXISTS (SELECT 1 FROM blocks x WHERE (x.blocker_id = $2 AND x.blocked_id = c.id) OR (x.blocker_id = c.id AND x.blocked_id = $2))
+        ORDER BY (SELECT max(a.started_at) FROM actions a WHERE a.character_id = c.id) DESC NULLS LAST, c.name
+        LIMIT 100`,
+      [cityId, me],
     );
     return {
-      people: rows.map((r) => ({ id: r.id, name: r.name, avatarColor: r.avatar_color, mainInstrument: r.main_instrument })),
+      people: rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        avatarColor: r.avatar_color,
+        avatarUrl: avatarUrl(r.id, r.avatar_version),
+        mainInstrument: r.main_instrument,
+        bandName: r.band_name ?? null,
+      })),
     };
   });
 
@@ -73,11 +113,13 @@ export async function worldRoutes(app: FastifyInstance) {
         )
       : await many(
           pool,
-          `SELECT b.id, b.name, b.genre, COALESCE(SUM(f.fame), 0) AS fame, (b.npc_key IS NOT NULL) AS npc,
+          // Dünya sıralaması: en ünlü olunan şehirdeki şöhret (0–100), eşitlikte toplam şöhret
+          // (şehirler toplanınca 100'ü aşıp ölçek anlamsızlaşıyordu)
+          `SELECT b.id, b.name, b.genre, COALESCE(MAX(f.fame), 0) AS fame, COALESCE(SUM(f.fame), 0) AS total, (b.npc_key IS NOT NULL) AS npc,
                   (SELECT count(*)::int FROM band_members m WHERE m.band_id = b.id) AS members
              FROM bands b LEFT JOIN band_fame f ON f.band_id = b.id
             GROUP BY b.id HAVING COALESCE(SUM(f.fame), 0) > 0
-            ORDER BY fame DESC LIMIT 50`,
+            ORDER BY fame DESC, total DESC LIMIT 50`,
         );
     return {
       cityId: q.cityId ?? null,
@@ -87,14 +129,25 @@ export async function worldRoutes(app: FastifyInstance) {
 
   app.get('/characters', async (req) => {
     const q = parse(z.object({ search: z.string().min(1).max(30) }), req.query);
+    const me = req.user!.characterId ?? 0;
+    // Oyunun kendi müzisyenleri ve engelleşilen oyuncular aramada çıkmaz
     const rows = await many(
       pool,
-      `SELECT id, name, avatar_color, main_instrument, city_id FROM characters
-        WHERE lower(name) LIKE lower($1) || '%' ORDER BY name LIMIT 20`,
-      [q.search.replace(/[%_\\]/g, '')],
+      `SELECT c.id, c.name, c.avatar_color, c.avatar_version, c.main_instrument, c.city_id FROM characters c
+        WHERE lower(c.name) LIKE lower($1) || '%' AND NOT c.npc
+          AND NOT EXISTS (SELECT 1 FROM blocks x WHERE (x.blocker_id = $2 AND x.blocked_id = c.id) OR (x.blocker_id = c.id AND x.blocked_id = $2))
+        ORDER BY c.name LIMIT 20`,
+      [q.search.replace(/[%_\\]/g, ''), me],
     );
     return {
-      characters: rows.map((r) => ({ id: r.id, name: r.name, avatarColor: r.avatar_color, mainInstrument: r.main_instrument, cityId: r.city_id })),
+      characters: rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        avatarColor: r.avatar_color,
+        avatarUrl: avatarUrl(r.id, r.avatar_version),
+        mainInstrument: r.main_instrument,
+        cityId: r.city_id,
+      })),
     };
   });
 

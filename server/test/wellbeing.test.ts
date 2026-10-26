@@ -220,6 +220,9 @@ describe('takas', () => {
     expect(am + bm).toBe(5000 * 2 - 900 - 500 - 150); // dükkân alımları düşülmüş toplam değişmez
     // Kapanmış takas yeniden kabul edilemez
     expect((await b.c.post(`/api/trades/${offer.body.id}/accept`)).body.error).toBe('trade_closed');
+    // Aynı eşyalar bir hafta içinde önceki sahibine geri dönemez
+    expect((await b.c.post('/api/trades', { toId: a.character.id, give: [ag.id], want: [bo.id] })).body.error).toBe('item_recently_yours');
+    await q(`UPDATE inventory SET handed_at = now() - interval '30 days' WHERE id = ANY($1::bigint[])`, [[ag.id, bo.id]]);
     // Teklif eden geri çekebilir, alıcı reddedebilir
     const third = await b.c.post('/api/trades', { toId: a.character.id, give: [ag.id], want: [bo.id] });
     expect((await a.c.post(`/api/trades/${third.body.id}/decline`)).status).toBe(200);

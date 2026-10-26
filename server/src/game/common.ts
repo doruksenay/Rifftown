@@ -19,7 +19,8 @@ import {
 } from '@rifftown/shared';
 import type { Db } from '../db';
 import { many, one } from '../db';
-import { fail } from '../errors';
+import { GameError, fail } from '../errors';
+import { config } from '../config';
 import { wellbeingFrom } from './wellbeing';
 
 export interface CharacterRow {
@@ -235,4 +236,14 @@ export async function notifySkillUps(db: Db, characterId: number, before: Skills
       await notify(db, characterId, 'skill_up', { skill, level: after[skill], tier: tierOf('skill', after[skill]).index });
     }
   }
+}
+
+/** Yeni hesaplar ilk günlerde pazar, takas, hediye ve para gönderme kullanamaz (ek hesap önlemi) */
+export async function requireEstablished(db: Db, characterId: number) {
+  const hours = config.tradeMinAccountHours;
+  if (hours <= 0) return;
+  const r = await one(db, 'SELECT u.created_at FROM characters c JOIN users u ON u.id = c.user_id WHERE c.id = $1', [characterId]);
+  if (!r) return;
+  const until = r.created_at.getTime() + gameHoursToMs(hours, config.gameSpeed);
+  if (until > Date.now()) throw new GameError('account_too_new', 403, new Date(until).toISOString());
 }

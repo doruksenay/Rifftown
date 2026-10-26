@@ -28,8 +28,9 @@ export const RELEASE_RULES: Record<
   { minSongs: number; maxSongs: number; pressingCost: number; cooldownDays: number; price: number; weeks: number; decay: number; base: number }
 > = {
   // price: tek kopyanın fiyatı (dolar). base: şöhret %100'de, kalite 70'te bir şehirdeki haftalık satış ölçeği.
-  single: { minSongs: 1, maxSongs: 2, pressingCost: 100, cooldownDays: 7, price: 3.5, weeks: 8, decay: 0.7, base: 320 },
-  album: { minSongs: 6, maxSongs: 12, pressingCost: 500, cooldownDays: 28, price: 15, weeks: 16, decay: 0.82, base: 140 },
+  // Liste haftası 3 oyun günü: süre, düşüş ve haftalık satış 7 günlük haftaya göre ölçeklendi (toplam satış aynı kalsın)
+  single: { minSongs: 1, maxSongs: 2, pressingCost: 100, cooldownDays: 7, price: 3.5, weeks: 19, decay: 0.86, base: 140 },
+  album: { minSongs: 6, maxSongs: 12, pressingCost: 500, cooldownDays: 28, price: 15, weeks: 37, decay: 0.92, base: 60 },
 };
 
 export const RELEASE_NAMES: Record<ReleaseKind, L> = {
@@ -39,8 +40,8 @@ export const RELEASE_NAMES: Record<ReleaseKind, L> = {
 
 /** Satış gelirinin gruba kalan payı (gerisi plak şirketi ve dağıtım). Grup üyeleri arasında eşit bölünür. */
 export const BAND_SHARE = 0.5;
-/** Bir liste haftası kaç oyun günü */
-export const CHART_WEEK_DAYS = 7;
+/** Bir liste haftası kaç oyun günü (kısa tutuldu: listeler ve satışlar sık güncellensin) */
+export const CHART_WEEK_DAYS = 3;
 export const CHART_SIZE = 20;
 
 /** Pazar büyüklüğü: büyük ve pahalı şehirlerde daha çok plak satılır */
@@ -61,7 +62,8 @@ export function weeklyUnits(
 ): number {
   const r = RELEASE_RULES[kind];
   if (weekIndex >= r.weeks) return 0;
-  const fanDraw = Math.pow(clamp(fame, 0, 100) / 100, 1.3);
+  // Biraz tanınan bir şehirde küçük bir taban satış olur (yeni gruplar da listelere girebilsin)
+  const fanDraw = fame > 0 ? 0.04 + 0.96 * Math.pow(clamp(fame, 0, 100) / 100, 1.2) : 0;
   const qualityFactor = 0.3 + clamp(quality, 0, 100) / 100;
   const units = r.base * fanDraw * genrePop * qualityFactor * marketSize(city) * Math.pow(r.decay, weekIndex) * (0.85 + rand() * 0.3);
   // Az da olsa tanınan bir şehirde birkaç sadık dinleyici her zaman alır
@@ -71,7 +73,8 @@ export function weeklyUnits(
 
 /** Şehir listesindeki sıraya göre şöhret ödülü */
 export function chartFameBonus(position: number, fame: number): number {
-  const raw = position === 1 ? 1.5 : position <= 3 ? 1 : position <= 10 ? 0.5 : 0.2;
+  // Liste 3 günde bir çıkar: 7 günlük haftaya göre ~3/7 oranında
+  const raw = position === 1 ? 0.7 : position <= 3 ? 0.45 : position <= 10 ? 0.2 : 0.1;
   return Math.round(raw * Math.max(0.15, 1 - fame / 120) * 10) / 10;
 }
 

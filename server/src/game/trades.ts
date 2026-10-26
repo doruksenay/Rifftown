@@ -7,6 +7,7 @@ import {
   MAX_OPEN_TRADES,
   MAX_TRADE_ITEMS,
   MAX_TRADE_MONEY,
+  maxResalePrice,
   type PersonDto,
   type TradeDto,
   type TradeItemDto,
@@ -15,8 +16,8 @@ import {
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
-import { characterIsVip, lockCharacter, notify } from './common';
-import { inventoryOf, itemBonus, ringPledged } from './items';
+import { characterIsVip, lockCharacter, notify, requireEstablished } from './common';
+import { handOver, inventoryOf, itemBonus, returnsTooSoon, ringPledged } from './items';
 import { cleanText, isBlocked, pair, requirePlayer, toPerson } from './social';
 import { addMoodlet } from './wellbeing';
 
@@ -95,6 +96,7 @@ export async function proposeTrade(
   return tx(async (c) => {
     const me = await lockCharacter(c, fromId);
     await requirePlayer(c, body.toId);
+    await requireEstablished(c, fromId);
     if (await isBlocked(c, fromId, body.toId)) fail('blocked', 403);
     const open = await one(c, `SELECT count(*)::int AS n FROM trades WHERE from_id = $1 AND status = 'open'`, [fromId]);
     if (open!.n >= MAX_OPEN_TRADES) fail('too_many_trades');
@@ -109,9 +111,15 @@ export async function proposeTrade(
         if (!r) fail('item_not_found', 404);
         if (r.listed) fail('item_listed', 409);
         if (await ringPledged(c, r.id)) fail('ring_pledged', 409);
+        // Kısa süre önce karşı taraftan gelen eşya ona geri gidemez
+        if (returnsTooSoon(r, side === 'give' ? body.toId : fromId)) fail('item_recently_yours', 409);
         rows.push({ side, r });
       }
     }
+    // Para tavanı: para, karşılığında alınan eşyaların dükkân değerinin en fazla iki katı olabilir
+    const value = (side: 'give' | 'want') =>
+      rows.filter((x) => x.side === side).reduce((sum, x) => sum + maxResalePrice(ITEM_BY_ID[x.r.item_id]?.price ?? 0, !!x.r.legendary_at), 0);
+    if (body.giveMoney > value('want') || body.wantMoney > value('give')) fail('trade_money_too_high');
     const t = await one(
       c,
       'INSERT INTO trades(from_id, to_id, give_money, want_money, note) VALUES ($1, $2, $3, $4, $5) RETURNING id',
@@ -146,6 +154,7 @@ export async function acceptTrade(viewer: number, tradeId: number) {
     if (!t || Number(t.to_id) !== viewer) fail('not_found', 404);
     if (t.status !== 'open') fail('trade_closed', 409);
     if (await isBlocked(c, fromId, viewer)) fail('blocked', 403);
+    await requireEstablished(c, viewer);
     const items = await many(c, 'SELECT * FROM trade_items WHERE trade_id = $1 ORDER BY inventory_id', [tradeId]);
     const vip = new Map<number, boolean>([
       [fromId, await characterIsVip(c, fromId)],
@@ -153,7 +162,7 @@ export async function acceptTrade(viewer: number, tradeId: number) {
     ]);
     // Bir şey değişmişse (eşya satıldı, hediye edildi, pazara kondu, para yetmiyor) takas düşer
     let broken: string | null = null;
-    const locked: { id: number; to: number }[] = [];
+    const locked: { id: number; from: number; to: number }[] = [];
     for (const it of items) {
       const owner = it.side === 'give' ? fromId : viewer;
       const to = it.side === 'give' ? viewer : fromId;
@@ -169,7 +178,8 @@ export async function acceptTrade(viewer: number, tradeId: number) {
       )
         broken = 'trade_items_changed';
       else if (ITEM_BY_ID[r.item_id]?.vip && !vip.get(to)) broken = 'vip_required';
-      else locked.push({ id: Number(r.id), to });
+      else if (returnsTooSoon(r, to)) broken = 'item_recently_yours';
+      else locked.push({ id: Number(r.id), from: owner, to });
     }
     if (!broken && chars.get(fromId).money < t.give_money) broken = 'trade_money_missing';
     if (!broken && chars.get(viewer).money < t.want_money) broken = 'trade_money_missing';
@@ -178,7 +188,7 @@ export async function acceptTrade(viewer: number, tradeId: number) {
       await notify(c, fromId, 'trade_failed', { tradeId, reason: broken });
       return { ok: false as const, reason: broken };
     }
-    for (const it of locked) await c.query('UPDATE inventory SET character_id = $2, equipped = FALSE WHERE id = $1', [it.id, it.to]);
+    for (const it of locked) await handOver(c, it.id, it.from, it.to);
     const net = t.give_money - t.want_money; // gönderenden alıcıya
     if (net) {
       await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [fromId, net]);

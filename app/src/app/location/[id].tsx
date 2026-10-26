@@ -16,6 +16,7 @@ import {
   STUDIO_PRICE_PER_HOUR,
   type ShopType,
   CITY_BY_ID,
+  type GigDto,
   type Genre,
   familiarityCap,
   knows,
@@ -53,7 +54,9 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { HoursAction } from '@/components/action-form';
 import { Body, Button, Card, Choice, Empty, Heading, ListRow, Row, Screen, Small, Strong } from '@/components/ui';
+import { VenueProgress } from '@/components/progress';
 import { useGate } from '@/components/gate';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { dateTime, money } from '@/lib/format';
 import { TierText } from '@/components/tier';
@@ -213,12 +216,17 @@ function Venue({ locationId, venue }: { locationId: string; venue: VenueType }) 
   const me = useMe();
   const band = useBand();
   const loc = LOCATION_BY_ID[locationId];
-  const info = useCity(loc.cityId);
   const rules = VENUE_RULES[venue];
   const fame = band.data?.fame[loc.cityId] ?? 0;
   const isLeader = !!me.data?.band?.isLeader;
   const famous = fame >= rules.minFame;
-  const gigsHere = info.data?.upcomingGigs.filter((g) => g.locationId === locationId) ?? [];
+  const venueGigs = useQuery({
+    queryKey: ['venueGigs', locationId],
+    queryFn: () => api.get<{ upcoming: GigDto[]; recent: GigDto[] }>(`/venues/${locationId}/gigs`),
+    refetchInterval: 60000,
+  });
+  const gigsHere = venueGigs.data?.upcoming ?? [];
+  const recentHere = venueGigs.data?.recent ?? [];
   return (
     <View style={{ marginTop: space.lg }}>
       <Card>
@@ -226,6 +234,7 @@ function Venue({ locationId, venue }: { locationId: string; venue: VenueType }) 
         <Body>{t('ticket', { price: money(rules.ticket * CITY_BY_ID[loc.cityId].costMult) })}</Body>
         <Body>{t('minFame', { tier: tierName('fame', rules.minFame, lang) })}</Body>
         {band.data ? <Body color={c.blue}>{t('yourFame', { tier: tierName('fame', fame, lang) })}</Body> : null}
+        {band.data ? <VenueProgress fame={fame} /> : null}
       </Card>
       <View style={{ marginTop: space.lg, gap: space.sm }}>
         {!isLeader ? <Small>{t('needBandLeader')}</Small> : !famous ? <Small>{t('needFame')}</Small> : null}
@@ -239,6 +248,20 @@ function Venue({ locationId, venue }: { locationId: string; venue: VenueType }) 
       ) : (
         <Empty text={t('noUpcomingGigs')} />
       )}
+      {recentHere.length ? (
+        <>
+          <Heading>{t('recentGigsHere')}</Heading>
+          {recentHere.map((g, i) => (
+            <ListRow
+              key={g.id}
+              title={g.bandName}
+              subtitle={`${dateTime(g.startsAt, locale)}${g.result ? `, ${tierName('quality', g.result.quality, lang)}` : ''}`}
+              onPress={() => router.push(`/gig/${g.id}`)}
+              last={i === recentHere.length - 1}
+            />
+          ))}
+        </>
+      ) : null}
     </View>
   );
 }

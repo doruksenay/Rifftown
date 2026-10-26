@@ -1,6 +1,6 @@
 // Rehber görevler: adımların tamamlanma durumu ve ödüller.
 
-import { TUTORIAL, TUTORIAL_BY_ID, type TutorialResponse } from '@rifftown/shared';
+import { type NextGoal, TUTORIAL, TUTORIAL_BY_ID, type TutorialResponse, nextGoal } from '@rifftown/shared';
 import { type Db, many, one, tx } from '../db';
 import { fail } from '../errors';
 import { evaluateAchievements } from './achievements';
@@ -36,7 +36,28 @@ export async function tutorialState(db: Db, characterId: number): Promise<Tutori
   const done = await doneSteps(db, characterId);
   const claimed = new Set((await many(db, 'SELECT step_id FROM tutorial_claims WHERE character_id = $1', [characterId])).map((r) => r.step_id));
   const steps = TUTORIAL.map((s) => ({ id: s.id, done: done.has(s.id), claimed: claimed.has(s.id) }));
-  return { steps, current: steps.find((s) => !s.claimed)?.id ?? null };
+  // Sırayla gitmek zorunda değil: ödülü hazır bir adım varsa önce o gösterilir
+  const current = steps.find((s) => s.done && !s.claimed) ?? steps.find((s) => !s.claimed);
+  // Hedef her zaman hesaplanır: rehberi gizleyen ya da bir adımı atlayan oyuncu da görür
+  return { steps, current: current?.id ?? null, next: await goalFor(db, characterId) };
+}
+
+/** Rehber bittikten sonraki hedef: grubun şarkı sayısı ve şehirlerdeki şöhreti */
+export async function goalFor(db: Db, characterId: number): Promise<NextGoal | null> {
+  const ch = await one(db, 'SELECT city_id FROM characters WHERE id = $1', [characterId]);
+  if (!ch) return null;
+  const m = await one(db, 'SELECT band_id FROM band_members WHERE character_id = $1', [characterId]);
+  if (!m) return nextGoal({ hasBand: false, songs: 0, cityId: ch.city_id, fame: {} });
+  const songs = await one(
+    db,
+    // Setliste konabilen şarkılar: grubun repertuvarı
+    'SELECT count(*)::int AS n FROM band_songs WHERE band_id = $1',
+    [m.band_id],
+  );
+  const fame = Object.fromEntries(
+    (await many(db, 'SELECT city_id, fame FROM band_fame WHERE band_id = $1', [m.band_id])).map((r) => [r.city_id, Number(r.fame)]),
+  );
+  return nextGoal({ hasBand: true, songs: songs?.n ?? 0, cityId: ch.city_id, fame });
 }
 
 export async function claimStep(characterId: number, stepId: string) {

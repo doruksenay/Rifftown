@@ -150,7 +150,7 @@ Enstrüman, kıyafet ve araçlar sprey boyayla 10 renge boyanabilir (sprey harca
 
 ### İkinci el pazarı
 
-Her şehrin bit pazarında oyuncular eşyalarını istedikleri fiyattan ilana koyar. Satıştan %5 komisyon kesilir, kalan satıcıya gider ve satıcıya bildirim düşer. İlandaki eşya kullanılamaz, kuşanılamaz, hediye edilemez ya da dükkâna satılamaz; ilan geri çekilebilir. Kişi başı en fazla 20 ilan. VIP eşyaları sadece VIP üyeler satın alabilir. Boya, isim ve atölyede üretilen eşyaların özel bonusu satışta korunur.
+Her şehrin bit pazarında oyuncular eşyalarını ilana koyar; fiyat en fazla dükkân fiyatının iki katı olabilir (EFSANEVİ eşyada beş katı). Satıştan %5 komisyon kesilir, kalan satıcıya gider ve satıcıya bildirim düşer. İlandaki eşya kullanılamaz, kuşanılamaz, hediye edilemez ya da dükkâna satılamaz; ilan geri çekilebilir. Kişi başı en fazla 20 ilan. VIP eşyaları sadece VIP üyeler satın alabilir. Boya, isim ve atölyede üretilen eşyaların özel bonusu satışta korunur.
 
 ### Atölye (zanaat)
 
@@ -228,11 +228,11 @@ Satın alma akışı: uygulama RevenueCat ile satın almayı başlatır → Reve
 | Baskı ücreti | $100 | $500 |
 | Aynı türde iki yayın arası | 7 oyun günü | 28 oyun günü |
 | Fiyat | $3,5 | $15 |
-| Satış süresi | 8 hafta | 16 hafta |
+| Satış süresi | 19 liste haftası (~8 hafta) | 37 liste haftası (~16 hafta) |
 
-- **Haftalık satış:** Liste haftası 7 oyun günüdür. Hafta kapanınca her yayının her şehirdeki satışı hesaplanır: temel × (şöhret/100)^1,3 × tür popülerliği × (0,3 + kalite/100) × pazar büyüklüğü × düşüş^hafta, ±%15. Pazar büyüklüğü pahalı ve büyük şehirlerde yüksektir. Satışlar haftadan haftaya azalır (single'da %30, albümde %18).
+- **Haftalık satış:** Liste haftası 3 oyun günüdür (listeler sık değişsin). Hafta kapanınca her yayının her şehirdeki satışı hesaplanır: temel × (0,04 + 0,96 × (şöhret/100)^1,2) × tür popülerliği × (0,3 + kalite/100) × pazar büyüklüğü × düşüş^hafta, ±%15. Grubun hiç tanınmadığı şehirde satış olmaz; az tanındığı yerde küçük bir taban satış olur, böylece yeni gruplar da listelere girebilir. Pazar büyüklüğü pahalı ve büyük şehirlerde yüksektir. Satışlar haftadan haftaya azalır (her liste haftası single'da %14, albümde %8).
 - **Gelir:** Satış gelirinin yarısı gruba kalır (gerisi plak şirketi ve dağıtım), grup üyeleri arasında eşit bölünür.
-- **Listeler:** Her şehrin ve dünyanın single ve albüm listeleri ayrı çıkar (ilk 20). Şehir listesinde 1. olmak +1,5, ilk 3 +1, ilk 10 +0,5, ilk 20 +0,2 şöhret getirir; şöhret yükseldikçe bu bonus küçülür. Listede önceki haftaya göre yükselme ve düşme gösterilir.
+- **Listeler:** Her şehrin ve dünyanın single ve albüm listeleri ayrı çıkar (ilk 20). Şehir listesinde 1. olmak +0,7, ilk 3 +0,45, ilk 10 +0,2, ilk 20 +0,1 şöhret getirir (liste 3 günde bir çıktığı için); şöhret yükseldikçe bu bonus küçülür. Listede önceki haftaya göre yükselme ve düşme gösterilir.
 - 1.000 satışta altın, 10.000 satışta platin plak.
 - Son haftanın listesini herkes görür; geçmiş haftaların listeleri VIP avantajıdır.
 
@@ -291,19 +291,21 @@ Evi olmayan oyuncu arkadaşının kanepesinde kalır (ücretsiz, bonussuz). Her 
 
 ## Rehber görevler
 
-Yeni oyuncunun ana ekranında "sıradaki adım" kartı görünür. Dokuz adım, toplam $610 ödül:
+Yeni oyuncunun ana ekranında "sıradaki adım" kartı görünür. Dokuz adım, toplam $305 ödül (ek hesaplarla para toplamaya değmesin diye küçük):
 
-1. İlk şarkını yaz ($50)
-2. Bir mesai yap ($40)
-3. Kitapçıdan yeni bir beceri öğren ($40)
-4. Grubunu kur ($50)
-5. Prova yap ($50)
-6. İlk konserini ver ($100)
-7. Bir şarkı kaydet ($100)
-8. İlk single'ını yayınla ($150)
-9. Kendine bir ev tut ($30)
+1. İlk şarkını yaz ($25)
+2. Bir mesai yap ($20)
+3. Kitapçıdan yeni bir beceri öğren ($20)
+4. Grubunu kur ($25)
+5. Prova yap ($25)
+6. İlk konserini ver ($50)
+7. Bir şarkı kaydet ($50)
+8. İlk single'ını yayınla ($75)
+9. Kendine bir ev tut ($15)
 
-Adımların tamamlanıp tamamlanmadığı oyuncunun yaptıklarından hesaplanır (başarımlarla aynı istatistikler); sırası gelmeden yapılan adımın ödülü de alınabilir, her ödül bir kez. Kartta "Git" düğmesi ilgili ekranı açar; kart gizlenebilir.
+Adımların tamamlanıp tamamlanmadığı oyuncunun yaptıklarından hesaplanır (başarımlarla aynı istatistikler); sırası gelmeden yapılan adımın ödülü de alınabilir ve kart önce ödülü hazır olan adımı gösterir, her ödül bir kez. Kartta "Git" düğmesi ilgili ekranı açar; kart gizlenebilir.
+
+Rehber bitince kartın yerini **sıradaki hedef** alır; her zaman tek, somut bir hedef ve ilerleme çubuğu: grup kur → grubun en az 4 şarkısı olsun (tam setlist) → kulüp şöhretine ulaş → konser salonu → 3 şehirde kulüp seviyesi (turne) → stadyum → efsane ol. Hedefin "Git" düğmesi ilgili sahneyi ya da ekranı açar.
 
 ## Oyuncu profili
 
@@ -333,7 +335,7 @@ Hiç oyuncu olmasa da oyun oynanabilir. Lider konser ayarlarken gruptaki boş ro
 
 | Mekân | Kişi başı ücret | Beceri | Sahne |
 |---|---|---|---|
-| Bar | $10 | 30 | 25 |
+| Bar | $5 | 30 | 25 |
 | Kulüp | $60 | 50 | 40 |
 | Konser salonu | $250 | 70 | 55 |
 
@@ -341,18 +343,23 @@ Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr 
 
 ### Konser hesabı
 
-- Seyirci = kapasite × (0,04 + şöhret / 100 × 1,1) × tür popülerliği × (0,85–1,15) + 2–8 arkadaş (kapasiteyi aşmaz)
+- Seyirci = kapasite × (0,04 + şöhret / 100 × 1,1) × tür popülerliği × (0,85–1,15) + arkadaşlar (barda 4–10, diğer sahnelerde 2–8; kapasiteyi aşmaz)
 - Grup becerisi = sahnedekilerin (rol becerisi + enstrüman bonusu) × ruh hâli × sağlık ortalaması
 - Şarkı puanı = 0,4 × şarkı kalitesi + 0,35 × ortalama aşinalık + 0,25 × grup becerisi
 - Kalite = şarkı puanı ortalaması × (0,85 + 0,15 × sahne / 100) × (0,5 + 0,5 × gelen üye oranı) × setlist uzunluğu çarpanı (1 şarkı 0,7, 4+ şarkı 1,0) × (0,92–1,08) × 1,15
-- Gelir = seyirci × bilet × şehir çarpanı × 0,7 (mekân %30 alır). Sahnedeki gerçek üyeler arasında eşit bölünür.
-- Şöhret değişimi = (kalite − 30) / 100 × 6 × mekân çarpanı. Artışlar şöhret yükseldikçe ve salon boş kaldıkça küçülür.
+- Gelir = seyirci × bilet × şehir çarpanı × grubun payı. Pay sahne büyüdükçe küçülür (mekân, prodüksiyon, organizatör): bar %70, kulüp %45, salon %12, stadyum %4, festival %12. Böylece salon konseri $6–8 bin, stadyum $30 bin civarı getirir. Sahnedeki gerçek üyeler arasında eşit bölünür.
+- Şöhret değişimi = (kalite − 20) / 100 × 6 × mekân çarpanı. Artışlar şöhret yükseldikçe küçülür; bar dışındaki sahnelerde salon boş kaldıkça da küçülür. Barda kalitesi 10'u geçen her konser en az +0,2 şöhret getirir: ilk adımlar boşa gitmez. Orta düzey bir grup 10–17 iyi bar konseriyle kulübe çıkar.
+- Raporda kiralık müzisyenler üye sayılmaz ("sahnede 1/1").
+- Aynı sahnede aynı saatlerde (±3 oyun saati) iki grup çalamaz; oyunun kendi grupları da boş saat arar. Bir grubun aynı anda en fazla 2 ayarlı konseri olabilir (sahneler boş rezervasyonla kapatılamasın).
+- Grubun kendi üyelerinden kimse sahneye çıkmazsa konser sadece kiralık müzisyenlerle yapılmaz: gelir yok, şöhret düşer.
 - Olumlu şöhretin %25'i aynı ülkedeki diğer şehirlere yayılır.
 - Konseri iptal etmek o şehirde 1 şöhret puanı kaybettirir. Hiç kimse gelmezse konser gelirsiz biter ve şöhret düşer.
 
 ### Konser eleştirisi
 
 Her konser bittiğinde sunucu, o konsere özel iki cümlelik bir eleştiri üretip sonuçla birlikte saklar (Türkçe ve İngilizce). Eleştiri konseri bilir: mekânın adı, şehir, gerçek seyirci sayısı, gecenin en iyi şarkısı ve sahneye çıkmayan üye sayısı. Örnek: "Kadıköy Bodrum Bar tıklım tıklımdı. 72 seyirci bis istedi; Kadıköy Bodrum Bar yerinden oynadı." Oyuncu eleştiriyi tek dokunuşla grup ya da şehir sohbetinde paylaşabilir.
+
+Raporun altında **"Neden böyle geçti?"** bölümü her etkeni zayıf / idare eder / güçlü diye değerlendirir (şarkı kalitesi, şarkıları bilme, çalım becerisi, sahne şovu, setlist uzunluğu, kadro, enerji, ruh hâli; sayı yok). Grubun üyeleri en zayıf üç etken için "Sıradaki konser için" önerileri ve ilgili ekrana giden düğmeleri görür (prova, şarkı yaz, okul, dinlen), ayrıca o şehirde sıradaki sahneye ne kaldığını gösteren çubuğu. Aynı çubuk grup sekmesinde her şehir için ve sahne sayfasında da var.
 
 ## Enerji, ilham ve moodlet'ler
 
@@ -412,7 +419,7 @@ Her şehirde 2 bar ve 2 restoran ruhsatı oyunculara satılıktır (bar $20.000,
 
 ## Haftalık görevler
 
-Her liste haftası her oyuncuya 12 görevlik havuzdan 3 görev düşer (konser ver, şarkı yaz, prova yap, mesai yap, antrenman, yemek, takıl, üret, kayıt…). İlerleme o hafta yapılanlardan hesaplanır, ödül ($100 – $300) bir kez alınır. Görev kartı ana sayfada.
+Her liste haftası her oyuncuya 12 görevlik havuzdan 3 görev düşer (konser ver, şarkı yaz, prova yap, mesai yap, antrenman, yemek, takıl, üret, kayıt…). İlerleme o hafta yapılanlardan hesaplanır, ödül ($20 – $60) bir kez alınır. Liste haftası 3 oyun günü olduğundan görevler sık yenilenir; ödüller bu yüzden küçük, para asıl müzikten ve meslekten gelmeli. Görev kartı ana sayfada.
 
 ## Yeni beceri alanları
 
@@ -429,6 +436,18 @@ Her liste haftası her oyuncuya 12 görevlik havuzdan 3 görev düşer (konser v
 - Uygulama içinden hesap silme (şifreyle onay): karakter, mesajlar, fotoğraf ve tüm oyun verisi silinir; grup liderliği bir üyeye geçer ya da grup dağılır.
 - Türkçe ve İngilizce küfür filtresi: sohbet, mesaj, defter, biyografi ve başlıkta küfürler yıldızlanır; karakter, grup, işletme, eşya ve çocuk isimlerinde küfür reddedilir.
 - Engelleme ve şikâyet her sosyal alanda var (mesaja basılı tutarak, defter notunun ve profilin altındaki düğmeyle). Yönetim panelindeki şikâyet listesinden içerik tek tıkla kaldırılır ya da yazan banlanır.
+
+## Ek hesaplara karşı önlemler
+
+- Yeni hesaplar ilk 72 oyun saati pazar, takas, hediye, para gönderme, işletme kasasına para koyma ve iş teklifi kullanamaz.
+- El değiştiren bir eşya (pazar, takas, hediye) bir oyun haftası içinde önceki sahibine geri dönemez: aynı eşyayla para döngüsü kurulamaz.
+- Pazarda fiyat tavanı dükkân fiyatının iki katıdır; takasta eklenen para, karşılığında alınan eşyaların bu tavan değerini geçemez (en fazla $5.000).
+- Aynı adresten 24 saatte en fazla 3 hesap açılır (`REGISTER_PER_IP_DAY`). Adres Cloudflare'in yazdığı başlıktan alınır, IPv6'da /64 bloğu tek adres sayılır.
+- Rehber ve görev ödülleri küçüktür; API'de dakikada 300 istek sınırı vardır.
+
+## Oyuncular
+
+Şehir sekmesinden "Oyuncular" ekranı açılır: şehirde en son hareket eden oyuncular önce, isimle arama da var. Sohbette isme ya da fotoğrafa dokunmak profili açar. Engellediğin ya da seni engelleyen oyuncular listede görünmez.
 
 ## Sosyal
 

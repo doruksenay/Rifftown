@@ -211,7 +211,20 @@ async function bookNpcGig(c: pg.PoolClient, b: any, def: NpcBandDef, rand: () =>
     [b.id, Math.min(MAX_SETLIST, 8)],
   );
   if (!songs.length) return;
-  const startsAt = new Date(Date.now() + hoursMs(6 + Math.floor(rand() * 18)));
+  // Oyuncuların ve diğer grupların konserleriyle çakışmasın: sahne doluysa başka bir saat dener
+  await c.query('SELECT pg_advisory_xact_lock(hashtext($1))', [`venue:${venue.id}`]);
+  let startsAt: Date | null = null;
+  const first = 6 + Math.floor(rand() * 18);
+  for (let i = 0; i < 8 && !startsAt; i++) {
+    const at = new Date(Date.now() + hoursMs(first + i * 7));
+    const busy = await one(
+      c,
+      `SELECT 1 FROM gigs WHERE location_id = $1 AND status = 'scheduled' AND starts_at BETWEEN $2 AND $3`,
+      [venue.id, new Date(at.getTime() - hoursMs(3)), new Date(at.getTime() + hoursMs(3))],
+    );
+    if (!busy) startsAt = at;
+  }
+  if (!startsAt) return;
   const session = INSTRUMENTS.filter((r) => r !== def.role) as Instrument[];
   await c.query(
     `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles) VALUES ($1, $2, $3, $4, $5, $6)`,

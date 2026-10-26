@@ -19,3 +19,4 @@ export * from './missions';
 export * from './festivals';
 export * from './moderation';
 export * from './wellbeing';
+export * from './progression';

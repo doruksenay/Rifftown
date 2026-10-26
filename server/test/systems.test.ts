@@ -259,7 +259,7 @@ describe('suç ve adalet', () => {
     );
     await tick();
     const g = (await p.c.get(`/api/gigs/${gig.rows[0].id}`)).body.gig;
-    expect(g.result.presentCount).toBe(1); // yalnızca kiralık müzisyen
+    expect(g.result.presentCount).toBe(0); // üye cezaevinde; kiralık müzisyen üye sayılmaz
     const n = (await p.c.get('/api/notifications')).body.notifications.find((x: any) => x.kind === 'gig_done');
     expect(n.data).toMatchObject({ present: false, jailed: true });
 
@@ -308,8 +308,10 @@ describe('suç ve adalet', () => {
     const before = await vipChance();
     expect(before.policeOnDuty).toBe(0);
     const plain = (await thief.c.get('/api/crime/options?locationId=berlin-park')).body.options[0].chance;
-    expect(plain).toBe(Math.round(before.options[0].chance * 10) / 10);
-    expect(plain).not.toBe(before.options[0].chance);
+    // VIP olmayan sadece düşük / orta / yüksek görür
+    const v = before.options[0].chance;
+    expect(plain).toBe(v < 0.35 ? 0.2 : v < 0.65 ? 0.5 : 0.8);
+    expect(plain).not.toBe(v);
 
     await q(`UPDATE characters SET profession = 'police' WHERE id = $1`, [cop.character.id]);
     await cop.c.post('/api/actions', { kind: 'work', locationId: 'berlin-police', hours: 2 });

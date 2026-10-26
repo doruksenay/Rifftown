@@ -41,8 +41,8 @@ function blurNode(node: unknown, depth = 0): unknown {
         ? Object.fromEntries(Object.entries(v as Record<string, unknown>).map(([id, n]) => [id, typeof n === 'number' ? blurValue(r.scale, n) : n]))
         : blurNode(v, depth + 1);
     } else if (k === 'chance' && typeof v === 'number') {
-      // Suç başarı şansı: VIP olmayanlara onda bir adımlarla
-      out[k] = Math.round(v * 10) / 10;
+      // Suç başarı şansı: VIP olmayanlara sadece düşük / orta / yüksek (uygulamadaki eşiklerle aynı)
+      out[k] = v < 0.35 ? 0.2 : v < 0.65 ? 0.5 : 0.8;
     } else if (k === 'totalFame' && typeof v === 'number') {
       out[k] = Math.round(v);
     } else {

@@ -67,7 +67,7 @@ function BookGigScreen() {
   const book = async () => {
     const r = await run(() => api.post('/gigs', { locationId, inHours, setlist, sessionRoles: session, effects }), {
       success: t('booked'),
-      invalidate: ['band', 'me', 'city', 'inventory'],
+      invalidate: ['band', 'me', 'city', 'inventory', 'venueGigs'],
     });
     if (r) router.back();
   };

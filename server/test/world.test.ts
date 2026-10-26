@@ -143,8 +143,8 @@ describe('rehber görevler', () => {
     const before = (await raw(p.character.id)).money;
     const claim = await p.c.post('/api/tutorial/write_song/claim');
     expect(claim.status).toBe(200);
-    expect(claim.body.reward).toBe(50);
-    expect((await raw(p.character.id)).money).toBe(before + 50);
+    expect(claim.body.reward).toBe(25);
+    expect((await raw(p.character.id)).money).toBe(before + 25);
     expect(claim.body.state.current).toBe('work_shift');
     expect((await p.c.post('/api/tutorial/write_song/claim')).body.error).toBe('already_claimed');
     expect((await p.c.post('/api/tutorial/nope/claim')).status).toBe(404);

@@ -50,6 +50,14 @@ export default function CityTab() {
 
       <MayorAnnouncement cityId={city.id} />
 
+      <ListRow
+        title={t('seePlayers')}
+        subtitle={info.data ? t('players', { n: info.data.playersHere }) : undefined}
+        right="›"
+        onPress={() => router.push({ pathname: '/people', params: { city: city.id } })}
+        last
+      />
+
       {GROUPS.map((g) => {
         const locs = city.locations.filter((l) => g.types.includes(l.type) && !l.business);
         return (

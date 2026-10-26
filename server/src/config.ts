@@ -33,6 +33,10 @@ export const config = {
   logLevel: process.env.LOG_LEVEL ?? 'info',
   /** İstek sınırlaması (testlerde kapatılır) */
   rateLimit: process.env.RATE_LIMIT !== '0',
+  /** Aynı IP adresinden 24 saatte açılabilecek hesap sayısı (0 = sınırsız; testlerde kapalı) */
+  registerPerIpDay: num(process.env.REGISTER_PER_IP_DAY, 3),
+  /** Yeni hesapların pazar/takas/hediye kapısı (oyun saati). Boşsa NEW_ACCOUNT_TRADE_HOURS. */
+  tradeMinAccountHours: num(process.env.TRADE_MIN_ACCOUNT_HOURS, 72),
   /** RevenueCat webhook'u için gizli anahtar (boşsa mağaza bağlantısı kapalıdır) */
   /** Oyunun kendi grupları (testlerde kapatılır) */
   npcEnabled: process.env.NPC !== '0',

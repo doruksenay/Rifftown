@@ -9,6 +9,8 @@ export default defineConfig({
       PUSH_ENABLED: '0',
       NPC: '0',
       RATE_LIMIT: '0',
+      REGISTER_PER_IP_DAY: '0',
+      TRADE_MIN_ACCOUNT_HOURS: '0',
       LOG_LEVEL: 'silent',
     },
     fileParallelism: false,

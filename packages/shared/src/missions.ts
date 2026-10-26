@@ -1,4 +1,5 @@
-// Haftalık görevler: her liste haftası her oyuncuya havuzdan 3 görev düşer.
+// Haftalık görevler: her liste haftası (3 oyun günü) her oyuncuya havuzdan 3 görev düşer.
+// Ödüller küçük tutuldu: liste haftası kısa olduğundan sık yenilenirler; para asıl müzikten ve meslekten gelmeli.
 // İlerleme oyuncunun o hafta yaptıklarından hesaplanır; ödül bir kez alınır.
 
 import type { L } from './world';
@@ -34,18 +35,18 @@ const M = (id: string, kind: MissionKind, target: number, reward: number, tr: st
 });
 
 export const MISSIONS: MissionDef[] = [
-  M('gigs_2', 'gigs', 2, 300, 'Bu hafta 2 konserde sahneye çık', 'Play 2 gigs this week'),
-  M('songs_2', 'songs', 2, 150, 'Bu hafta 2 şarkı yaz', 'Write 2 songs this week'),
-  M('rehearse_6', 'rehearse_hours', 6, 150, 'Bu hafta 6 saat prova yap', 'Rehearse for 6 hours this week'),
-  M('work_12', 'work_hours', 12, 120, 'Bu hafta 12 saat mesai yap', 'Work 12 hours this week'),
-  M('study_8', 'study_hours', 8, 150, 'Bu hafta 8 saat çalış', 'Practise for 8 hours this week'),
-  M('busk_100', 'busk_earnings', 100, 100, 'Sokak müziğinden 100 $ topla', 'Collect $100 busking'),
-  M('workout_4', 'workout_hours', 4, 100, 'Spor salonunda 4 saat antrenman yap', 'Work out at the gym for 4 hours'),
-  M('travel_2', 'travel', 2, 150, 'Bu hafta 2 kez başka şehre git', 'Travel to another city twice'),
-  M('meals_3', 'meals', 3, 80, 'Restoranda 3 kez yemek ye', 'Eat at a restaurant 3 times'),
-  M('hangout_3', 'hangouts', 3, 120, 'Bu hafta 3 kez biriyle takıl', 'Hang out with someone 3 times'),
-  M('craft_1', 'crafts', 1, 150, 'Atölyede bir şey üret', 'Make something in the workshop'),
-  M('record_1', 'records', 1, 200, 'Bir şarkı kaydet', 'Record a song'),
+  M('gigs_2', 'gigs', 2, 60, 'Bu hafta 2 konserde sahneye çık', 'Play 2 gigs this week'),
+  M('songs_2', 'songs', 2, 40, 'Bu hafta 2 şarkı yaz', 'Write 2 songs this week'),
+  M('rehearse_6', 'rehearse_hours', 6, 35, 'Bu hafta 6 saat prova yap', 'Rehearse for 6 hours this week'),
+  M('work_12', 'work_hours', 12, 30, 'Bu hafta 12 saat işte mesai yap', 'Work 12 hours at a job this week'),
+  M('study_8', 'study_hours', 8, 30, 'Bu hafta 8 saat ders al ya da pratik yap (okul, üniversite, ev)', 'Study or practise skills for 8 hours this week'),
+  M('busk_100', 'busk_earnings', 100, 25, 'Sokak müziğinden 100 $ topla', 'Collect $100 busking'),
+  M('workout_4', 'workout_hours', 4, 25, 'Spor salonunda 4 saat antrenman yap', 'Work out at the gym for 4 hours'),
+  M('travel_2', 'travel', 2, 40, 'Bu hafta 2 kez başka şehre git', 'Travel to another city twice'),
+  M('meals_3', 'meals', 3, 20, 'Restoranda 3 kez yemek ye', 'Eat at a restaurant 3 times'),
+  M('hangout_3', 'hangouts', 3, 30, 'Bu hafta 3 kez biriyle takıl', 'Hang out with someone 3 times'),
+  M('craft_1', 'crafts', 1, 40, 'Atölyede bir şey üret', 'Make something in the workshop'),
+  M('record_1', 'records', 1, 50, 'Bir şarkı kaydet', 'Record a song'),
 ];
 export const MISSION_BY_ID: Record<string, MissionDef> = Object.fromEntries(MISSIONS.map((m) => [m.id, m]));
 export const MISSIONS_PER_WEEK = 3;

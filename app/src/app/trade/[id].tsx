@@ -1,6 +1,6 @@
 // Yeni takas teklifi: karşı tarafın ve kendi eşyalarından seç, istersen üstüne para ekle.
 
-import { type InventoryItemDto, ITEM_BY_ID, MAX_TRADE_ITEMS, MAX_TRADE_MONEY, type PublicCharacterDto } from '@rifftown/shared';
+import { type InventoryItemDto, ITEM_BY_ID, MAX_TRADE_ITEMS, MAX_TRADE_MONEY, type PublicCharacterDto, maxResalePrice } from '@rifftown/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -50,7 +50,11 @@ function NewTradeScreen() {
 
   if (them.isLoading || theirItems.isLoading || myItems.isLoading) return <Loading />;
   const name = them.data?.name ?? '';
-  const n = Math.min(MAX_TRADE_MONEY, Number.parseInt(amount, 10) || 0);
+  // Para tavanı: karşılığında alınan eşyaların dükkân değerinin iki katı (sunucudaki kuralın aynısı)
+  const worth = (list: InventoryItemDto[] | undefined, ids: number[]) =>
+    (list ?? []).filter((x) => ids.includes(x.id)).reduce((sum, x) => sum + maxResalePrice(ITEM_BY_ID[x.itemId]?.price ?? 0, !!x.legendary), 0);
+  const moneyCap = Math.min(MAX_TRADE_MONEY, moneyDir === 'give' ? worth(theirItems.data, want) : worth(myItems.data, give));
+  const n = Math.min(moneyCap, Number.parseInt(amount, 10) || 0);
   const toggle = (list: number[], set: (v: number[]) => void, itemId: number) =>
     set(list.includes(itemId) ? list.filter((x) => x !== itemId) : list.length >= MAX_TRADE_ITEMS ? list : [...list, itemId]);
 
@@ -96,7 +100,7 @@ function NewTradeScreen() {
       />
       {moneyDir !== 'none' ? (
         <View style={{ marginTop: space.md }}>
-          <Field label={t('amountLabel')} value={amount} onChangeText={(v) => setAmount(v.replace(/[^0-9]/g, ''))} keyboardType="number-pad" inputMode="numeric" />
+          <Field label={t('amountLabel')} hint={t('maxPriceHint', { money: money(moneyCap) })} value={amount} onChangeText={(v) => setAmount(v.replace(/[^0-9]/g, ''))} keyboardType="number-pad" inputMode="numeric" />
         </View>
       ) : null}
       <View style={{ height: space.md }} />

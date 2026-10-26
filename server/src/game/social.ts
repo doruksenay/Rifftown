@@ -12,10 +12,10 @@ import {
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
-import { ringPledged } from './items';
+import { handOver, returnsTooSoon, ringPledged } from './items';
 import { addMoodlet } from './wellbeing';
 import { fail } from '../errors';
-import { avatarUrl, lockCharacter, notify } from './common';
+import { avatarUrl, lockCharacter, notify, requireEstablished } from './common';
 
 export const pair = (x: number, y: number): [number, number] => (x < y ? [x, y] : [y, x]);
 
@@ -283,18 +283,20 @@ export async function giveGift(fromId: number, toId: number, inventoryId: number
     for (const id of pair(fromId, toId)) await lockCharacter(c, id);
     const target = await requirePlayer(c, toId);
     if (await isBlocked(c, fromId, toId)) fail('blocked', 403);
+    await requireEstablished(c, fromId);
     const me = await one(c, 'SELECT name, city_id FROM characters WHERE id = $1', [fromId]);
     if (!me.city_id || me.city_id !== target.city_id) fail('not_in_same_city');
     const inv = await one(c, 'SELECT * FROM inventory WHERE id = $1 AND character_id = $2 FOR UPDATE', [inventoryId, fromId]);
     if (!inv) fail('not_found', 404);
     if (inv.listed) fail('item_listed', 409);
     if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
+    if (returnsTooSoon(inv, toId)) fail('item_recently_yours', 409);
     // VIP eşyası sadece VIP üyeye verilebilir (pazardaki kuralın aynısı)
     if (ITEM_BY_ID[inv.item_id]?.vip) {
       const vip = await one(c, 'SELECT u.vip_until FROM characters ch JOIN users u ON u.id = ch.user_id WHERE ch.id = $1', [toId]);
       if (!vip?.vip_until || vip.vip_until.getTime() < Date.now()) fail('vip_required', 403);
     }
-    await c.query('UPDATE inventory SET character_id = $2, equipped = FALSE WHERE id = $1', [inv.id, toId]);
+    await handOver(c, inv.id, fromId, toId);
     await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'gift')`, [fromId, toId]);
     await addMoodlet(c, toId, 'gift');
     await notify(c, toId, 'gift', { fromId, from: me.name, itemId: inv.item_id, name: ITEM_BY_ID[inv.item_id]?.name ?? null });

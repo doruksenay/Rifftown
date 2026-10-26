@@ -96,12 +96,14 @@ export const isShop = (t: LocationType): t is ShopType => SHOP_TYPES.includes(t)
 
 /** Konser verilebilen mekân türleri ve kuralları. */
 export const VENUE_RULES = {
-  bar: { capacity: 80, ticket: 10, minFame: 0, fameMult: 1.0 },
-  club: { capacity: 350, ticket: 20, minFame: 15, fameMult: 1.6 },
-  hall: { capacity: 2000, ticket: 40, minFame: 45, fameMult: 2.5 },
-  stadium: { capacity: 20000, ticket: 40, minFame: 75, fameMult: 3.5 },
+  // bandShare: bilet gelirinden gruba kalan pay (kalanı mekân, prodüksiyon, organizatör).
+  // Büyük sahnelerde masraf çok olduğundan pay küçülür; gelir yine de basamak basamak artar.
+  bar: { capacity: 80, ticket: 10, minFame: 0, fameMult: 1.0, bandShare: 0.7 },
+  club: { capacity: 350, ticket: 20, minFame: 15, fameMult: 1.6, bandShare: 0.45 },
+  hall: { capacity: 2000, ticket: 40, minFame: 45, fameMult: 2.5, bandShare: 0.12 },
+  stadium: { capacity: 20000, ticket: 40, minFame: 75, fameMult: 3.5, bandShare: 0.04 },
   /** Festival sahnesine sadece festival programıyla çıkılır (elle konser ayarlanamaz) */
-  festival: { capacity: 12000, ticket: 8, minFame: 0, fameMult: 3.0 },
+  festival: { capacity: 12000, ticket: 8, minFame: 0, fameMult: 3.0, bandShare: 0.12 },
 } as const;
 export type VenueType = keyof typeof VENUE_RULES;
 export const isVenue = (t: LocationType): t is VenueType => t in VENUE_RULES;

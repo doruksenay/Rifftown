@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { GoalCard } from '@/components/progress';
 import { Body, Button, Card, Row, Small, Strong } from '@/components/ui';
 import { api } from '@/lib/api';
 import { money } from '@/lib/format';
@@ -31,14 +32,21 @@ export function GuideCard() {
   }, []);
 
   const current = q.data?.current ? TUTORIAL_BY_ID[q.data.current] : null;
-  if (!current || hidden === null) return null;
+  // Rehber bitti: sıradaki büyük hedef
+  const goal = q.data?.next ? <GoalCard goal={q.data.next} cityId={me.data?.character?.cityId ?? 'istanbul'} /> : null;
+  if (!current) return goal;
+  if (hidden === null) return null;
   const n = q.data!.steps.filter((s) => s.claimed).length;
   if (hidden) {
+    // Rehber gizliyse hedef kartı gösterilir; rehberi geri açma düğmesi altında
     return (
-      <Button title={t('guideShow')} variant="ghost" small style={{ alignSelf: 'flex-start', marginTop: space.md, paddingHorizontal: 0 }} onPress={() => {
+      <>
+        {goal}
+        <Button title={t('guideShow')} variant="ghost" small style={{ alignSelf: 'flex-start', marginTop: space.md, paddingHorizontal: 0 }} onPress={() => {
         setHidden(false);
         storage.set('guideHidden', null);
       }} />
+      </>
     );
   }
   const state = q.data!.steps.find((s) => s.id === current.id)!;
@@ -48,7 +56,7 @@ export function GuideCard() {
   return (
     <Card style={{ marginTop: space.lg, borderColor: c.blue, borderWidth: 1.5 }}>
       <Row style={{ justifyContent: 'space-between' }}>
-        <Small color={c.blue}>{`${t('guideTitle')} · ${t('guideProgress', { n: n + 1, total: TUTORIAL.length })}`}</Small>
+        <Small color={c.blue}>{`${t('guideTitle')} · ${t('guideProgress', { n: Math.min(n + 1, TUTORIAL.length), total: TUTORIAL.length })}`}</Small>
         <Button title={t('guideHide')} variant="ghost" small style={{ paddingHorizontal: 0, paddingVertical: 0 }} onPress={() => {
           setHidden(true);
           storage.set('guideHidden', '1');

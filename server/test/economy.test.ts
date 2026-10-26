@@ -408,8 +408,8 @@ describe('haftalık görevler', () => {
         await finishNow(p.character.id);
       }
       const before = (await raw(p.character.id)).money;
-      expect((await p.c.post('/api/missions/songs_2/claim')).body.reward).toBe(150);
-      expect((await raw(p.character.id)).money).toBe(before + 150);
+      expect((await p.c.post('/api/missions/songs_2/claim')).body.reward).toBe(40);
+      expect((await raw(p.character.id)).money).toBe(before + 40);
       expect((await p.c.post('/api/missions/songs_2/claim')).body.error).toBe('already_claimed');
     }
   });

@@ -11,6 +11,7 @@ import {
   INSTRUMENTS,
   LOCATION_BY_ID,
   MAX_SETLIST,
+  MAX_SCHEDULED_GIGS,
   MAX_FX_BONUS,
   ITEM_BY_ID,
   SESSION_FAMILIARITY,
@@ -34,6 +35,7 @@ import {
   isVenue,
   tierChange,
   GIG_BREAK_EVEN_QUALITY,
+  gigAdvice,
   GIG_ENERGY_COST,
   INSPIRATION_GAIN,
 } from '@rifftown/shared';
@@ -108,6 +110,12 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     const fee = SESSION_MUSICIAN[venue].fee * sessionRoles.length;
     if (char.money < fee) fail('not_enough_money');
 
+    const scheduled = await one(
+      c,
+      `SELECT count(*)::int AS n FROM gigs WHERE band_id = $1 AND status = 'scheduled' AND festival_id IS NULL`,
+      [m!.band_id],
+    );
+    if (scheduled.n >= MAX_SCHEDULED_GIGS) fail('too_many_gigs', 409);
     const startsAt = new Date(Date.now() + gameHoursToMs(req.inHours, config.gameSpeed));
     const blockMs = gameHoursToMs(GIG_BLOCK_HOURS, config.gameSpeed);
     const clash = await one(
@@ -117,6 +125,14 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
       [m!.band_id, new Date(startsAt.getTime() - blockMs), new Date(startsAt.getTime() + blockMs)],
     );
     if (clash) fail('gig_clash', 409);
+    // Aynı sahnede aynı saatlerde başka bir grup çalamaz (eşzamanlı iki rezervasyonu sırala)
+    await c.query('SELECT pg_advisory_xact_lock(hashtext($1))', [`venue:${loc!.id}`]);
+    const busy = await one(
+      c,
+      `SELECT 1 FROM gigs WHERE location_id = $1 AND status = 'scheduled' AND starts_at BETWEEN $2 AND $3`,
+      [loc!.id, new Date(startsAt.getTime() - blockMs), new Date(startsAt.getTime() + blockMs)],
+    );
+    if (busy) fail('venue_busy', 409);
 
     // Sahne efektleri: liderin envanterinden ayrılır, konserde tüketilir (iptalde geri verilir)
     const fxIds = [...new Set((req.effects ?? []).map(Number))];
@@ -384,6 +400,9 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     memberCount: res.memberCount,
     perMember,
     songScores: res.songScores,
+    factors: res.factors,
+    advice: res.factors ? gigAdvice(res.factors) : [],
+    fame: fameAfter,
     effects: gig.effects ?? [],
     ownerShare,
     festivalId: gig.festival_id ?? null,

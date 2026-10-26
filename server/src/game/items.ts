@@ -18,11 +18,15 @@ import {
   knows,
   lv,
   LEGENDARY_ITEM_BONUS,
+  ITEM_RETURN_COOLDOWN_HOURS,
+  gameHoursToMs,
+  maxResalePrice,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
-import { type CharacterRow, activeAction, isJailed, lockCharacter, notify } from './common';
+import { config } from '../config';
+import { type CharacterRow, activeAction, isJailed, lockCharacter, notify, requireEstablished } from './common';
 import { cleanText, pair } from './social';
 
 export const toInventoryDto = (r: any): InventoryItemDto => ({
@@ -106,6 +110,20 @@ export async function ringPledged(db: Db, inventoryId: number) {
   return !!(await one(db, 'SELECT 1 FROM relationships WHERE proposal_ring = $1', [inventoryId]));
 }
 
+/** Eşya kısa süre önce bu kişiden gelmişse ona geri dönemez (aynı eşyayla para döngüsü kurulmasın) */
+export function returnsTooSoon(inv: { prev_owner?: unknown; handed_at?: Date | null }, to: number) {
+  if (inv.prev_owner == null || Number(inv.prev_owner) !== to || !inv.handed_at) return false;
+  return inv.handed_at.getTime() > Date.now() - gameHoursToMs(ITEM_RETURN_COOLDOWN_HOURS, config.gameSpeed);
+}
+
+/** Eşya el değiştirir; önceki sahibi ve zamanı not edilir */
+export async function handOver(c: Db, inventoryId: number, from: number, to: number) {
+  await c.query(
+    'UPDATE inventory SET character_id = $2, listed = FALSE, equipped = FALSE, prev_owner = $3, handed_at = now() WHERE id = $1',
+    [inventoryId, to, from],
+  );
+}
+
 export async function listItem(characterId: number, locationId: string, inventoryId: number, price: number) {
   if (!Number.isInteger(price) || price < 1 || price > 1_000_000) fail('invalid_price');
   return tx(async (c) => {
@@ -115,6 +133,9 @@ export async function listItem(characterId: number, locationId: string, inventor
     if (inv.listed) fail('item_listed', 409);
     if (!ITEM_BY_ID[inv.item_id]) fail('invalid_item');
     if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
+    await requireEstablished(c, characterId);
+    // Fiyat tavanı: dükkân fiyatının iki katı (EFSANEVİ eşyada beş katı)
+    if (price > maxResalePrice(ITEM_BY_ID[inv.item_id].price, !!inv.legendary_at)) fail('price_too_high');
     const n = await one(c, `SELECT count(*)::int AS n FROM listings WHERE seller_id = $1 AND status = 'active'`, [characterId]);
     if (n.n >= MAX_LISTINGS) fail('too_many_listings');
     await c.query('UPDATE inventory SET listed = TRUE, equipped = FALSE WHERE id = $1', [inv.id]);
@@ -147,6 +168,7 @@ export async function buyListing(buyerId: number, locationId: string, listingId:
     for (const id of pair(buyerId, Number(l.seller_id))) chars[id] = await lockCharacter(c, id);
     const buyer = chars[buyerId];
     requireMarket(buyer, locationId);
+    await requireEstablished(c, buyerId);
     if (await activeAction(c, buyerId)) fail('busy', 409);
     const def = ITEM_BY_ID[l.item_id];
     if (def?.vip) {
@@ -155,12 +177,15 @@ export async function buyListing(buyerId: number, locationId: string, listingId:
     }
     if (buyer.money < l.price) fail('not_enough_money');
     // Eşya hâlâ satıcıda ve ilanda olmalı (başka yoldan el değiştirmişse ilan geçersizdir)
-    const still = await one(c, 'SELECT 1 FROM inventory WHERE id = $1 AND character_id = $2 AND listed FOR UPDATE', [l.inventory_id, l.seller_id]);
+    const still = await one(c, 'SELECT * FROM inventory WHERE id = $1 AND character_id = $2 AND listed FOR UPDATE', [l.inventory_id, l.seller_id]);
     if (!still) fail('listing_gone', 409);
+    // Tavan alışta da geçerli (kural gelmeden önce açılmış ilanlar)
+    if (def && l.price > maxResalePrice(def.price, !!still.legendary_at)) fail('price_too_high');
+    if (returnsTooSoon(still, buyerId)) fail('item_recently_yours', 409);
     const fee = Math.ceil(l.price * MARKET_FEE);
     await c.query('UPDATE characters SET money = money - $2, location_id = $3 WHERE id = $1', [buyerId, l.price, locationId]);
     await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [l.seller_id, l.price - fee]);
-    await c.query('UPDATE inventory SET character_id = $2, listed = FALSE, equipped = FALSE WHERE id = $1', [l.inventory_id, buyerId]);
+    await handOver(c, l.inventory_id, Number(l.seller_id), buyerId);
     await c.query(`UPDATE listings SET status = 'sold', buyer_id = $2, closed_at = now() WHERE id = $1`, [l.id, buyerId]);
     await notify(c, Number(l.seller_id), 'item_sold', { itemId: l.item_id, price: l.price, earned: l.price - fee, buyer: buyer.name });
     return { ok: true, price: l.price };

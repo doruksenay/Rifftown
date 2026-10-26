@@ -4,7 +4,8 @@ import type { HomeId } from './homes';
 import type { PaintColor } from './items';
 import type { RelationStage } from './relations';
 import type { BusinessType } from './world';
-import type { ActionKind, TravelMode } from './rules';
+import type { ActionKind, GigFactorId, GigFactors, TravelMode } from './rules';
+import type { NextGoal } from './progression';
 import type { Skills } from './skills';
 import type { Genre, Instrument, Lang } from './world';
 
@@ -166,6 +167,13 @@ export interface GigDto {
     review?: { tr: string; en: string };
     bestSongId?: number;
     songScores?: { id: number; score: number }[];
+    legendary?: boolean;
+    /** Neden böyle geçti: etkenlerin kaba değerlendirmesi */
+    factors?: GigFactors;
+    /** Sıradaki adım önerileri (en zayıf etkenler) */
+    advice?: GigFactorId[];
+    /** Konserden sonra o şehirdeki şöhret (sıradaki sahneye ne kaldığını göstermek için; VIP değilse kaba) */
+    fame?: number;
   } | null;
   /** Normal üyelerde rapor süresi dolduysa true (VIP'te hiç dolmaz) */
   reportExpired?: boolean;
@@ -437,8 +445,10 @@ export interface JusticeResponse {
 
 export interface TutorialResponse {
   steps: { id: string; done: boolean; claimed: boolean }[];
-  /** Sıradaki (ödülü alınmamış ilk) adım; hepsi bittiyse null */
+  /** Sıradaki adım: ödülü hazır olan ilk adım, yoksa ödülü alınmamış ilk adım; hepsi bittiyse null */
   current: string | null;
+  /** Sıradaki büyük hedef (rehber bitince ya da gizlenince gösterilir) */
+  next: NextGoal | null;
 }
 
 // ---------- Başarımlar ----------

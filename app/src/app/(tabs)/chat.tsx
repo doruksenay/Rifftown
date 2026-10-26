@@ -2,7 +2,7 @@ import { CHAT_MAX, CITY_BY_ID, type ChatMessageDto, type ConversationDto } from 
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, TextInput, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, Pressable, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Avatar, Body, Button, Choice, Empty, ListRow, Small, Strong, useToast } from '@/components/ui';
 import { api } from '@/lib/api';
@@ -109,12 +109,16 @@ export default function ChatTab() {
                 const mine = item.characterId === ch.id;
                 return (
                   <View style={{ flexDirection: 'row', gap: space.sm, paddingVertical: space.sm, alignItems: 'flex-start' }}>
-                    <Avatar name={item.name} color={item.avatarColor} uri={item.avatarUrl} size={32} />
+                    <Pressable onPress={() => router.push(`/character/${item.characterId}`)} accessibilityRole="link" accessibilityLabel={item.name}>
+                      <Avatar name={item.name} color={item.avatarColor} uri={item.avatarUrl} size={32} />
+                    </Pressable>
                     <View style={{ flex: 1 }}>
                       <View style={{ flexDirection: 'row', gap: space.sm, alignItems: 'baseline' }}>
-                        <Strong color={mine ? c.pink : c.ink} style={{ fontSize: type.small }} >
-                          {item.name}
-                        </Strong>
+                        <Pressable onPress={() => router.push(`/character/${item.characterId}`)} accessibilityRole="link" hitSlop={6}>
+                          <Strong color={mine ? c.pink : c.ink} style={{ fontSize: type.small }}>
+                            {item.name}
+                          </Strong>
+                        </Pressable>
                         <Small style={{ fontSize: type.caption }}>
                           {new Date(item.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}
                         </Small>

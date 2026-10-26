@@ -22,7 +22,7 @@ import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
-import { type CharacterRow, isJailed, lockCharacter, notify } from './common';
+import { type CharacterRow, isJailed, lockCharacter, notify, requireEstablished } from './common';
 import { cleanText, isBlocked, requirePlayer } from './social';
 import { addMoodlet } from './wellbeing';
 
@@ -154,6 +154,8 @@ export async function moveTill(characterId: number, locationId: string, amount: 
     const b = await lockOwned(c, locationId, characterId);
     if (amount > 0 && b.till < amount) fail('not_enough_money');
     if (amount < 0 && ch.money < -amount) fail('not_enough_money');
+    // Kasaya para koyup bir başkasını maaşla ödemek: yeni hesaplara kapalı (ek hesap önlemi)
+    if (amount < 0) await requireEstablished(c, characterId);
     await c.query('UPDATE businesses SET till = till - $2 WHERE location_id = $1', [locationId, amount]);
     await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [characterId, amount]);
     await c.query(`INSERT INTO business_log(location_id, kind, amount, character_id) VALUES ($1, $2, $3, $4)`, [
@@ -174,6 +176,7 @@ export async function offerJob(ownerId: number, locationId: string, targetId: nu
   return tx(async (c) => {
     const b = await lockOwned(c, locationId, ownerId);
     await requirePlayer(c, targetId);
+    await requireEstablished(c, ownerId);
     if (await isBlocked(c, ownerId, targetId)) fail('blocked', 403);
     const n = await one(c, 'SELECT count(*)::int AS n FROM business_staff WHERE location_id = $1', [locationId]);
     if (n.n >= MAX_EMPLOYEES) fail('staff_full');
