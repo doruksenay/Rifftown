@@ -116,9 +116,9 @@
   },
   "summary": {
     "total": 323,
-    "valid": 15,
+    "valid": 16,
     "invalid": 0,
-    "missing": 308
+    "missing": 307
   },
   "assets": [
     {
@@ -3227,7 +3227,7 @@
       "height": 512,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B0",
       "label": "Avatar 02",
       "gameRefs": [],

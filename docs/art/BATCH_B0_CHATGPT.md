@@ -14,7 +14,7 @@
 | `item/guitar_1` | Oyunda (ikinci deneme) | Özgün sap ucu, gerçek şeffaflık; maske otomatik |
 | `item/guitar_1.mask` | Otomatik | ChatGPT maskesi hizasızdı; artık `art:automask` ile çıkarılıyor |
 | `item/outfit_2` | Oyunda (ikinci deneme) | Deri açık gri; maske otomatik |
-| `avatar/02` | Bekleniyor | İlk deneme reddedildi (çizilmiş dama deseni); ikinci deneme gelmedi |
+| `avatar/02` | Oyunda (ikinci deneme) | Düz Midnight Indigo arka plan |
 
 Genel gözlem: eşyalar 3B ürün fotoğrafı gibi, avatarlar resimsi. Set tek elden çıkmış gibi durmuyor. Eşyalarda stil panosundaki "stilize, hafif idealize" görünüşe yaklaşmak için isteğe "painted game illustration, not a photo or 3D product render" vurgusu eklendi.
 

@@ -25,18 +25,7 @@ Generate exactly one image per message, at the size I ask for. Do not add text, 
 
 ## B0 — Proof of concept (style check)
 
-### avatar/02
-
-```text
-Asset ID: avatar/02
-File name: avatar-02.png
-Size and format: 1024×1024 square, PNG (the game resizes it to 512×512 WEBP)
-Subject: a young man punk drummer with a green mohawk, sleeveless denim vest, freckles.
-Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
-Camera and composition: Head-and-shoulders portrait of a fictional musician facing the camera, friendly confident expression; the face is large and centred inside the middle 70% of the frame because the image is cropped to a circle and shown as small as 32 px. Plain Midnight Indigo #1A0E4B background with a very soft gradient.
-Background: Solid Midnight Indigo background (no transparency).
-Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
-```
+Bu partideki bütün dosyalar geçerli.
 
 ## B1 — Cities
 

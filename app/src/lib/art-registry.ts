@@ -18,6 +18,7 @@ export const ART: Record<string, number> = {
   'item/kanun_3': require('../../assets/art/item/kanun_3.png'),
   'item/trombone_2': require('../../assets/art/item/trombone_2.png'),
   'avatar/01': require('../../assets/art/avatar/01.webp'),
+  'avatar/02': require('../../assets/art/avatar/02.webp'),
 };
 
 /** Boyanabilen eşyalar: maskenin kimliği ve boyanmamış hâlinin fabrika rengi */
