@@ -116,9 +116,9 @@
   },
   "summary": {
     "total": 323,
-    "valid": 16,
+    "valid": 30,
     "invalid": 0,
-    "missing": 307
+    "missing": 293
   },
   "assets": [
     {
@@ -147,7 +147,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Ankara",
       "gameRefs": [
@@ -164,7 +164,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Izmir",
       "gameRefs": [
@@ -181,7 +181,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Berlin",
       "gameRefs": [
@@ -198,7 +198,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Hamburg",
       "gameRefs": [
@@ -215,7 +215,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Munich",
       "gameRefs": [
@@ -232,7 +232,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "London",
       "gameRefs": [
@@ -249,7 +249,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Manchester",
       "gameRefs": [
@@ -266,7 +266,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Liverpool",
       "gameRefs": [
@@ -283,7 +283,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Paris",
       "gameRefs": [
@@ -300,7 +300,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Lyon",
       "gameRefs": [
@@ -317,7 +317,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Marseille",
       "gameRefs": [
@@ -334,7 +334,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "New York",
       "gameRefs": [
@@ -351,7 +351,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Los Angeles",
       "gameRefs": [
@@ -368,7 +368,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B1",
       "label": "Nashville",
       "gameRefs": [
