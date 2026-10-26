@@ -4,6 +4,7 @@
 
 import type { City, L } from './world';
 import { clamp } from './rules';
+import { CHART_FAME_WEEK_SCALE, PACING, SALES_PACE } from './pacing';
 
 export type ReleaseKind = 'single' | 'album';
 
@@ -28,9 +29,9 @@ export const RELEASE_RULES: Record<
   { minSongs: number; maxSongs: number; pressingCost: number; cooldownDays: number; price: number; weeks: number; decay: number; base: number }
 > = {
   // price: tek kopyanın fiyatı (dolar). base: şöhret %100'de, kalite 70'te bir şehirdeki haftalık satış ölçeği.
-  // Liste haftası 3 oyun günü: süre, düşüş ve haftalık satış 7 günlük haftaya göre ölçeklendi (toplam satış aynı kalsın)
-  single: { minSongs: 1, maxSongs: 2, pressingCost: 100, cooldownDays: 7, price: 3.5, weeks: 19, decay: 0.86, base: 140 },
-  album: { minSongs: 6, maxSongs: 12, pressingCost: 500, cooldownDays: 28, price: 15, weeks: 37, decay: 0.92, base: 60 },
+  // Bekleme, satış süresi, düşüş ve haftalık satış tempo dosyasından (pacing.ts) gelir; liste haftasının uzunluğu değişirse kendiliğinden ölçeklenir.
+  single: { minSongs: 1, maxSongs: 2, pressingCost: 100, cooldownDays: PACING.singleCooldownDays, price: 3.5, ...SALES_PACE.single },
+  album: { minSongs: 6, maxSongs: 12, pressingCost: 500, cooldownDays: PACING.albumCooldownDays, price: 15, ...SALES_PACE.album },
 };
 
 export const RELEASE_NAMES: Record<ReleaseKind, L> = {
@@ -40,8 +41,8 @@ export const RELEASE_NAMES: Record<ReleaseKind, L> = {
 
 /** Satış gelirinin gruba kalan payı (gerisi plak şirketi ve dağıtım). Grup üyeleri arasında eşit bölünür. */
 export const BAND_SHARE = 0.5;
-/** Bir liste haftası kaç oyun günü (kısa tutuldu: listeler ve satışlar sık güncellensin) */
-export const CHART_WEEK_DAYS = 3;
+/** Bir liste haftası kaç oyun günü (pacing.ts) */
+export const CHART_WEEK_DAYS = PACING.chartWeekDays;
 export const CHART_SIZE = 20;
 
 /** Pazar büyüklüğü: büyük ve pahalı şehirlerde daha çok plak satılır */
@@ -73,8 +74,8 @@ export function weeklyUnits(
 
 /** Şehir listesindeki sıraya göre şöhret ödülü */
 export function chartFameBonus(position: number, fame: number): number {
-  // Liste 3 günde bir çıkar: 7 günlük haftaya göre ~3/7 oranında
-  const raw = position === 1 ? 0.7 : position <= 3 ? 0.45 : position <= 10 ? 0.2 : 0.1;
+  // 7 günlük haftaya göre tanımlı; liste haftası kısalırsa orantılı küçülür
+  const raw = (position === 1 ? 1.6 : position <= 3 ? 1.05 : position <= 10 ? 0.47 : 0.23) * CHART_FAME_WEEK_SCALE;
   return Math.round(raw * Math.max(0.15, 1 - fame / 120) * 10) / 10;
 }
 

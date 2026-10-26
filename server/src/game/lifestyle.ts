@@ -17,6 +17,7 @@ import {
   MEAL_ENERGY,
   gameHoursToMs,
   INDULGENCE_PER_MEAL,
+  PACING,
 } from '@rifftown/shared';
 import { indulge } from './consequences';
 import type pg from 'pg';
@@ -128,7 +129,7 @@ export async function bankMove(characterId: number, locationId: string, amount: 
                 bank_interest_at = CASE WHEN bank = 0 OR bank_interest_at IS NULL OR bank_interest_at <= now() THEN $4 ELSE bank_interest_at END,
                 bank_min = CASE WHEN bank = 0 THEN 0 ELSE bank_min END
           WHERE id = $1`,
-        [ch.id, amount, locationId, new Date(Date.now() + hoursMs(7 * 24))],
+        [ch.id, amount, locationId, new Date(Date.now() + hoursMs(PACING.interestPeriodDays * 24))],
       );
     } else {
       if (ch.bank < amount) fail('not_enough_money');
@@ -149,7 +150,7 @@ export async function processBankInterest(): Promise<number> {
     `UPDATE characters SET bank = bank + floor(LEAST(bank_min, bank, $1::int) * $2::real)::int,
             bank_min = bank + floor(LEAST(bank_min, bank, $1::int) * $2::real)::int, bank_interest_at = $3
       WHERE bank > 0 AND bank_interest_at IS NOT NULL AND bank_interest_at <= now()`,
-    [BANK_INTEREST_CAP, BANK_WEEKLY_INTEREST, new Date(Date.now() + hoursMs(7 * 24))],
+    [BANK_INTEREST_CAP, BANK_WEEKLY_INTEREST, new Date(Date.now() + hoursMs(PACING.interestPeriodDays * 24))],
   );
   return r.rowCount ?? 0;
 }

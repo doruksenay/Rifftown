@@ -203,3 +203,23 @@ describe('kayıt, satış ve suç dengesi', () => {
     expect(bailCost(10, 1)).toBe(400);
   });
 });
+
+describe('tempo', () => {
+  it('takvim tek yerde: single 28, albüm 112 gün; liste haftası 7 gün; şöhret ödülü günlük aynı', async () => {
+    const { PACING, RELEASE_RULES: R, CHART_WEEK_DAYS, chartFameBonus: bonus } = await import('@rifftown/shared');
+    expect(R.single.cooldownDays).toBe(PACING.singleCooldownDays);
+    expect(R.album.cooldownDays).toBe(112);
+    expect(CHART_WEEK_DAYS).toBe(7);
+    // Satış süresi liste haftası cinsinden ve bekleme süresinden uzun
+    expect(R.single.weeks * CHART_WEEK_DAYS).toBeGreaterThanOrEqual(R.single.cooldownDays);
+    expect(R.album.weeks * CHART_WEEK_DAYS).toBeGreaterThanOrEqual(R.album.cooldownDays);
+    // Liste birinciliğinin günlük şöhret değeri eski 3 günlük haftayla aynı (0,7 / 3 ≈ 1,6 / 7)
+    expect(bonus(1, 0) / CHART_WEEK_DAYS).toBeCloseTo(0.7 / 3, 1);
+    // Yayın başına toplam satış artar ama zaman başına yayın geliri azalır (enflasyon freni)
+    const total = (k: 'single' | 'album') => R[k].base * (1 - R[k].decay ** R[k].weeks) / (1 - R[k].decay);
+    const perDayNew = total('single') / R.single.cooldownDays;
+    const perDayOld = (140 * (1 - 0.86 ** 19)) / (1 - 0.86) / 7;
+    expect(perDayNew).toBeLessThan(perDayOld);
+    expect(total('single')).toBeGreaterThan(1000);
+  });
+});

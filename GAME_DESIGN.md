@@ -226,13 +226,13 @@ Satın alma akışı: uygulama RevenueCat ile satın almayı başlatır → Reve
 |---|---|---|
 | Şarkı | 1–2 | 6–12 |
 | Baskı ücreti | $100 | $500 |
-| Aynı türde iki yayın arası | 7 oyun günü | 28 oyun günü |
+| Aynı türde iki yayın arası | 28 oyun günü | 112 oyun günü |
 | Fiyat | $3,5 | $15 |
-| Satış süresi | 19 liste haftası (~8 hafta) | 37 liste haftası (~16 hafta) |
+| Satış süresi | 16 liste haftası (112 gün) | 32 liste haftası (224 gün) |
 
-- **Haftalık satış:** Liste haftası 3 oyun günüdür (listeler sık değişsin). Hafta kapanınca her yayının her şehirdeki satışı hesaplanır: temel × (0,04 + 0,96 × (şöhret/100)^1,2) × tür popülerliği × (0,3 + kalite/100) × pazar büyüklüğü × düşüş^hafta, ±%15. Grubun hiç tanınmadığı şehirde satış olmaz; az tanındığı yerde küçük bir taban satış olur, böylece yeni gruplar da listelere girebilir. Pazar büyüklüğü pahalı ve büyük şehirlerde yüksektir. Satışlar haftadan haftaya azalır (her liste haftası single'da %14, albümde %8).
+- **Haftalık satış:** Liste haftası 7 oyun günüdür (bkz. "Tempo"). Hafta kapanınca her yayının her şehirdeki satışı hesaplanır: temel × (0,04 + 0,96 × (şöhret/100)^1,2) × tür popülerliği × (0,3 + kalite/100) × pazar büyüklüğü × düşüş^hafta, ±%15. Grubun hiç tanınmadığı şehirde satış olmaz; az tanındığı yerde küçük bir taban satış olur, böylece yeni gruplar da listelere girebilir. Pazar büyüklüğü pahalı ve büyük şehirlerde yüksektir. Satışlar haftadan haftaya azalır (her liste haftası single'da ~%16, albümde ~%9; günlük düşüş pacing.ts içinde).
 - **Gelir:** Satış gelirinin yarısı gruba kalır (gerisi plak şirketi ve dağıtım), grup üyeleri arasında eşit bölünür.
-- **Listeler:** Her şehrin ve dünyanın single ve albüm listeleri ayrı çıkar (ilk 20). Şehir listesinde 1. olmak +0,7, ilk 3 +0,45, ilk 10 +0,2, ilk 20 +0,1 şöhret getirir (liste 3 günde bir çıktığı için); şöhret yükseldikçe bu bonus küçülür. Listede önceki haftaya göre yükselme ve düşme gösterilir.
+- **Listeler:** Her şehrin ve dünyanın single ve albüm listeleri ayrı çıkar (ilk 20). Şehir listesinde 1. olmak +1,6, ilk 3 +1,05, ilk 10 +0,47, ilk 20 +0,23 şöhret getirir (7 günlük haftaya göre; hafta kısalırsa orantılı küçülür, günlük ödül aynı kalır); şöhret yükseldikçe bu bonus küçülür. Listede önceki haftaya göre yükselme ve düşme gösterilir.
 - 1.000 satışta altın, 10.000 satışta platin plak.
 - Son haftanın listesini herkes görür; geçmiş haftaların listeleri VIP avantajıdır.
 
@@ -288,6 +288,24 @@ Evi olmayan oyuncu arkadaşının kanepesinde kalır (ücretsiz, bonussuz). Her 
 - Kira şehir çarpanıyla çarpılır. İlk haftanın kirası peşin ödenir; sonra her 7 oyun gününde bir kendiliğinden kesilir. Para yetmezse oyuncu evden çıkarılır ve bildirim alır.
 - Bonus yalnızca evin bulunduğu şehirde dinlenirken geçerlidir (cezaevinde geçmez). Sanat eserlerinin bonusuyla toplanır, en fazla %100.
 - Aynı anda tek ev tutulur; başka bir ev tutmak eskisini bırakır (iade yok). Ev para için sürekli bir harcama kalemidir ve enflasyonu frenler.
+
+## Tempo
+
+Oyunun takvimi tek dosyadadır: `packages/shared/src/pacing.ts` (`PACING`). Bütün süreler oyun günüdür ve gerçek süreye `GAME_SPEED` ile çevrilir; `GAME_SPEED`'in anlamı değişmedi (1 = gerçek zaman, 60 = bir oyun saati bir dakika).
+
+| Sabit | Eski | Yeni | Gerekçe |
+|---|---|---|---|
+| Liste haftası | 3 gün | **7 gün** | Popmundo'daki gibi haftalık. Listeler, satış raporları ve haftalık görevler bir haftada bir döner; oyuncu bir haftayı planlayabilir. |
+| Single beklemesi | 7 gün | **28 gün** | Popmundo rehberlerinin önerdiği tempo (~28). Bir grubun şarkı yazma, prova, kayıt döngüsü (şarkı yazma hız sınırıyla 3 günde bir iyi şarkı) bir single'ı doldurmaya yeter. |
+| Albüm beklemesi | 28 gün | **112 gün** | Popmundo (~112). 6–12 kayıtlı şarkı ve şarkı yazma hız sınırı albümü zaten 1–2 aylık iş yapıyor. |
+| Single satış süresi | 57 gün | **112 gün** (16 hafta) | Bekleme süresinin 4 katı: dört single aynı anda listede kalabilir, katalog birikir. |
+| Albüm satış süresi | 111 gün | **224 gün** (32 hafta) | Bekleme süresinin 2 katı. |
+| Satış düşüşü | haftada %14 / %8 | günde %2,45 / %1,37 | Haftalık satış günlük eğriden hesaplanır, hafta uzunluğu değişince eğri bozulmaz. |
+| Yayın başına toplam satış | ~940 / ~720 | ~2.350 / ~1.790 | Yayın başına satış ~2,5 katına çıktı ama aynı sürede 4 kat daha az yayın çıkıyor: yayınlardan zaman başına gelir ~%60'a indi. Rifftown'da para sürekli birikiyordu (Popmundo karşılaştırması, madde 2); bu da enflasyonu frenler. |
+| Liste şöhret ödülü | 3 günde bir 0,7 | 7 günde bir 1,6 | Günlük şöhret kazancı aynı kaldı (gün başına ~0,23). |
+| Festival, seçim, kira, işletme gideri, faiz | 14 / 7 / 7 / 7 / 7 gün | aynı | Zaten haftalık ritimdeydiler; aynı dosyaya taşındı. |
+
+İçeriğin tüketilme hızı: eskiden bir grup 112 günde 16 single ve 4 albüm çıkarabilirdi, şimdi 4 single ve 1 albüm. Yani yayın içeriği 4 kat yavaş tükenir. Oyunun kendi grupları yayınlarını bu beklemelerin 1,5 katında bir çıkardığından onlar da kendiliğinden yavaşladı.
 
 ## Rehber görevler
 
@@ -456,7 +474,7 @@ Her şehirde 2 bar ve 2 restoran ruhsatı oyunculara satılıktır (bar $20.000,
 
 ## Haftalık görevler
 
-Her liste haftası her oyuncuya 12 görevlik havuzdan 3 görev düşer (konser ver, şarkı yaz, prova yap, mesai yap, antrenman, yemek, takıl, üret, kayıt…). İlerleme o hafta yapılanlardan hesaplanır, ödül ($20 – $60) bir kez alınır. Liste haftası 3 oyun günü olduğundan görevler sık yenilenir; ödüller bu yüzden küçük, para asıl müzikten ve meslekten gelmeli. Görev kartı ana sayfada.
+Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düşer (konser ver, şarkı yaz, prova yap, mesai yap, antrenman, yemek, takıl, üret, kayıt…). İlerleme o hafta yapılanlardan hesaplanır, ödül ($20 – $60) bir kez alınır. Ödüller küçük; para asıl müzikten ve meslekten gelmeli. Görev kartı ana sayfada.
 
 ## Yeni beceri alanları
 

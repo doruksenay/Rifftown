@@ -22,3 +22,4 @@ export * from './wellbeing';
 export * from './progression';
 export * from './performance';
 export * from './consequences';
+export * from './pacing';

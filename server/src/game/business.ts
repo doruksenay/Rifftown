@@ -17,6 +17,7 @@ import {
   gameHoursToMs,
   lv,
   staffedRevenue,
+  PACING,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -26,7 +27,7 @@ import { type CharacterRow, isJailed, lockCharacter, notify, requireEstablished 
 import { cleanText, isBlocked, requirePlayer } from './social';
 import { addMoodlet } from './wellbeing';
 
-const weekMs = () => gameHoursToMs(7 * 24, config.gameSpeed);
+const weekMs = () => gameHoursToMs(PACING.upkeepPeriodDays * 24, config.gameSpeed);
 
 function lot(locationId: string) {
   const loc = LOCATION_BY_ID[locationId];
