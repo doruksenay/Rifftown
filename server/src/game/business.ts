@@ -292,11 +292,18 @@ export async function barGigShare(c: pg.PoolClient, locationId: string, revenue:
 
 export async function processUpkeep(): Promise<number> {
   let n = 0;
+  // Bir turda her işletme en fazla bir kez işlenir
+  const seen: string[] = [];
   for (;;) {
     const done = await tx(async (c) => {
       // Önce sahibi kilitlenir, sonra işletme (diğer işlemlerle aynı sıra; kilitlenme olmasın)
-      const cand = await one(c, 'SELECT location_id, owner_id FROM businesses WHERE upkeep_due <= now() ORDER BY upkeep_due LIMIT 1');
+      const cand = await one(
+        c,
+        'SELECT location_id, owner_id FROM businesses WHERE upkeep_due <= now() AND NOT (location_id = ANY($1::text[])) ORDER BY upkeep_due LIMIT 1',
+        [seen],
+      );
       if (!cand) return false;
+      seen.push(cand.location_id);
       const owner = await lockCharacter(c, Number(cand.owner_id));
       const b = await one(c, 'SELECT * FROM businesses WHERE location_id = $1 AND owner_id = $2 AND upkeep_due <= now() FOR UPDATE', [cand.location_id, owner.id]);
       if (!b) return true; // bu arada el değiştirdi ya da ödendi: döngü yeniden bakar

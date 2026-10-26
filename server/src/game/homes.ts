@@ -62,10 +62,17 @@ export async function leaveHome(characterId: number) {
 /** Zamanlayıcı: vadesi gelen kiraları tahsil eder; parası yetmeyeni evden çıkarır. */
 export async function processRent(): Promise<number> {
   let n = 0;
+  // Bir turda her ev en fazla bir kez işlenir (hızlandırılmış oyunda yeni vade aynı turda gelip evden çıkarmasın)
+  const seen: number[] = [];
   for (;;) {
     const done = await tx(async (c) => {
-      const h = await one(c, 'SELECT * FROM homes WHERE paid_until <= now() ORDER BY paid_until LIMIT 1 FOR UPDATE SKIP LOCKED');
+      const h = await one(
+        c,
+        'SELECT * FROM homes WHERE paid_until <= now() AND NOT (character_id = ANY($1::bigint[])) ORDER BY paid_until LIMIT 1 FOR UPDATE SKIP LOCKED',
+        [seen],
+      );
       if (!h) return false;
+      seen.push(Number(h.character_id));
       const ch = await lockCharacter(c, h.character_id);
       const home = HOME_BY_ID[h.home_id];
       const rent = home ? rentFor(home, CITY_BY_ID[h.city_id]?.costMult ?? 1) : 0;
