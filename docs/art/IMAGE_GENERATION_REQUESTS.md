@@ -25,40 +25,6 @@ Generate exactly one image per message, at the size I ask for. Do not add text, 
 
 ## B0 — Proof of concept (style check)
 
-### item/guitar_1
-
-```text
-Asset ID: item/guitar_1
-File name: guitar_1.png
-Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
-Subject: a cheap beginner electric guitar, simple double-cut body, basic hardware.
-Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
-Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
-Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
-Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
-Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
-Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
-```
-
-Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_1` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
-
-### item/outfit_2
-
-```text
-Asset ID: item/outfit_2
-File name: outfit_2.png
-Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
-Subject: a rock leather biker jacket with zips and studs on a hanger.
-Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
-Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
-Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
-Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
-Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
-Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
-```
-
-Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_2` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
-
 ### avatar/02
 
 ```text

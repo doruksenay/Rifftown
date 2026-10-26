@@ -10,11 +10,11 @@
 | `item/keys_3` | Oyunda | Maske otomatik (gövde boyanıyor, tuşlar boyanmıyor) |
 | `item/car_2` | Oyunda | Maske otomatik. Fotoğraf gibi; stil panosuna göre fazla gerçekçi |
 | `item/kanun_3`, `item/trombone_2` | Oyunda (görsel deneme) | Trombonun kenar kırıntıları temizlendi |
-| `avatar/01` | Oyunda | Boydan çekim; baş-omuz bölgesi kırpıldı. Yeniden üretilmesi önerilir |
-| `item/guitar_1` | Reddedildi | Arka plan şeffaf değil: dama deseni resme çizilmiş |
-| `item/guitar_1.mask` | Reddedildi | Gitarın değil bas gitarın biçimi; hizasız. Maskeler artık ChatGPT'den istenmiyor |
-| `item/outfit_2` | Reddedildi | Ceket siyah çizilmiş; boyanabilmesi için deri açık gri olmalı |
-| `avatar/02` | Reddedildi | Arka plana dama deseni çizilmiş |
+| `avatar/01` | Oyunda | İkinci denemede baş-omuz portresi olarak yeniden üretildi |
+| `item/guitar_1` | Oyunda (ikinci deneme) | Özgün sap ucu, gerçek şeffaflık; maske otomatik |
+| `item/guitar_1.mask` | Otomatik | ChatGPT maskesi hizasızdı; artık `art:automask` ile çıkarılıyor |
+| `item/outfit_2` | Oyunda (ikinci deneme) | Deri açık gri; maske otomatik |
+| `avatar/02` | Bekleniyor | İlk deneme reddedildi (çizilmiş dama deseni); ikinci deneme gelmedi |
 
 Genel gözlem: eşyalar 3B ürün fotoğrafı gibi, avatarlar resimsi. Set tek elden çıkmış gibi durmuyor. Eşyalarda stil panosundaki "stilize, hafif idealize" görünüşe yaklaşmak için isteğe "painted game illustration, not a photo or 3D product render" vurgusu eklendi.
 
