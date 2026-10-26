@@ -19,8 +19,20 @@ export const ROLE_NAMES: Record<Instrument, L> = {
   keys: { tr: 'Klavye', en: 'Keyboards' },
 };
 
-export const GENRES = ['pop', 'rock', 'hiphop', 'electronic', 'metal', 'jazz', 'anatolian'] as const;
+/** İlk yedi tür şehir tablolarında elle ayarlandı; sonrakiler EXTRA_GENRE_POPULARITY ile (veri odaklı) eklenir */
+export const GENRES = ['pop', 'rock', 'hiphop', 'electronic', 'metal', 'jazz', 'anatolian', 'blues', 'folk', 'punk', 'soul', 'reggae', 'country', 'classical'] as const;
 export type Genre = (typeof GENRES)[number];
+
+/** Yeni türlerin şehirlerdeki popülerliği: ülke tabanı ve şehir istisnaları */
+const EXTRA_GENRE_POPULARITY: Partial<Record<Genre, { base: Record<string, number>; city?: Record<string, number> }>> = {
+  blues: { base: { TR: 0.8, DE: 0.9, GB: 1.1, FR: 0.9, US: 1.2 }, city: { nashville: 1.3, liverpool: 1.2 } },
+  folk: { base: { TR: 1.1, DE: 0.9, GB: 1.1, FR: 1.0, US: 1.0 }, city: { izmir: 1.2, nashville: 1.2 } },
+  punk: { base: { TR: 0.8, DE: 1.2, GB: 1.3, FR: 1.0, US: 1.1 }, city: { london: 1.4, berlin: 1.3, hamburg: 1.3 } },
+  soul: { base: { TR: 0.8, DE: 0.9, GB: 1.1, FR: 1.0, US: 1.3 }, city: { newyork: 1.3, paris: 1.1 } },
+  reggae: { base: { TR: 0.8, DE: 1.0, GB: 1.1, FR: 1.1, US: 1.0 }, city: { marseille: 1.3, london: 1.2 } },
+  country: { base: { TR: 0.6, DE: 0.7, GB: 0.8, FR: 0.7, US: 1.2 }, city: { nashville: 1.4 } },
+  classical: { base: { TR: 0.9, DE: 1.2, GB: 1.0, FR: 1.1, US: 0.9 }, city: { munich: 1.3, paris: 1.2 } },
+};
 
 export const GENRE_NAMES: Record<Genre, L> = {
   pop: { tr: 'Pop', en: 'Pop' },
@@ -30,6 +42,13 @@ export const GENRE_NAMES: Record<Genre, L> = {
   metal: { tr: 'Metal', en: 'Metal' },
   jazz: { tr: 'Caz', en: 'Jazz' },
   anatolian: { tr: 'Anadolu rock', en: 'Anatolian rock' },
+  blues: { tr: 'Blues', en: 'Blues' },
+  folk: { tr: 'Folk', en: 'Folk' },
+  punk: { tr: 'Punk', en: 'Punk' },
+  soul: { tr: 'Soul', en: 'Soul' },
+  reggae: { tr: 'Reggae', en: 'Reggae' },
+  country: { tr: 'Country', en: 'Country' },
+  classical: { tr: 'Klasik', en: 'Classical' },
 };
 
 export type ShopType = 'music_store' | 'boutique' | 'gallery' | 'bookstore' | 'car_dealer' | 'pet_shop' | 'hardware' | 'stage_shop';
@@ -179,9 +198,8 @@ function makeLocations(cityId: string, s: CitySpec): Location[] {
 }
 
 type GP = Record<Genre, number>;
-const gp = (pop: number, rock: number, hiphop: number, electronic: number, metal: number, jazz: number, anatolian: number): GP => ({
-  pop, rock, hiphop, electronic, metal, jazz, anatolian,
-});
+const gp = (pop: number, rock: number, hiphop: number, electronic: number, metal: number, jazz: number, anatolian: number): GP =>
+  ({ pop, rock, hiphop, electronic, metal, jazz, anatolian }) as GP;
 
 const TR = { country: { tr: 'Türkiye', en: 'Türkiye' }, countryCode: 'TR', continent: 'europe' as const };
 const DE = { country: { tr: 'Almanya', en: 'Germany' }, countryCode: 'DE', continent: 'europe' as const };
@@ -444,6 +462,13 @@ for (const city of CITIES) {
   push('biz4', 'restaurant', `${d.tr} Meyhanesi`, `${d.en} Tavern`, { business: 'restaurant' });
   const fest = FESTIVAL_CITIES[city.countryCode];
   if (fest?.cityId === city.id) push('festival', 'festival', fest.name.tr, fest.name.en);
+}
+
+// Yeni türlerin popülerliği veri tablosundan doldurulur
+for (const city of CITIES) {
+  for (const [g, rule] of Object.entries(EXTRA_GENRE_POPULARITY) as [Genre, { base: Record<string, number>; city?: Record<string, number> }][]) {
+    city.genrePopularity[g] = rule.city?.[city.id] ?? rule.base[city.countryCode] ?? 1;
+  }
 }
 
 export const CITY_BY_ID: Record<string, City> = Object.fromEntries(CITIES.map((c) => [c.id, c]));

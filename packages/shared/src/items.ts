@@ -1,6 +1,7 @@
 // Oyunun kendi dükkânlarında satılan eşyalar. Fiyatlar her şehirde aynıdır.
 
 import { INSTRUMENTS, type Instrument, type L, type ShopType } from './world';
+import { EXTRA_ITEMS } from './content/items';
 
 export type ItemSlot = Instrument | 'outfit' | 'art' | 'vehicle' | 'pet' | 'fx' | 'material' | 'spray' | 'ring';
 
@@ -196,6 +197,9 @@ export const ITEMS: ItemDef[] = [
   })),
   { id: 'outfit_crafted', shop: 'hardware', slot: 'outfit', tier: 2, price: 300, bonus: 0, crafted: true, name: { tr: 'El yapımı sahne kostümü', en: 'Handmade stage costume' } },
 ];
+
+// Veri dosyasındaki ek eşyalar (packages/shared/src/content/items.ts)
+ITEMS.push(...EXTRA_ITEMS);
 
 export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
 export const itemsForShop = (shop: ShopType) => ITEMS.filter((i) => i.shop === shop && !i.crafted);

@@ -4,6 +4,7 @@ import { RefreshControl, View } from 'react-native';
 import { GuideCard } from '@/components/guide';
 import { JailBanner } from '@/components/justice';
 import { MissionsCard } from '@/components/missions';
+import { ChainsCard } from '@/components/chains';
 import { MoodletList } from '@/components/moodlets';
 import { ActionTicket } from '@/components/ticket';
 import { TierMeter } from '@/components/tier';
@@ -101,6 +102,7 @@ export default function Home() {
       </View>
 
       <MissionsCard />
+      <ChainsCard />
 
       <Row style={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
         <Heading>{t('recent')}</Heading>

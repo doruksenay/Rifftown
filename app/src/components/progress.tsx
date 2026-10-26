@@ -6,6 +6,7 @@ import {
   type GigFactorId,
   type GigFactorRating,
   LOCATION_TYPE_NAMES,
+  LEGACY_GOALS,
   type NextGoal,
   nextVenue,
   tierName,
@@ -134,7 +135,9 @@ export function GoalCard({ goal, cityId }: { goal: NextGoal; cityId: string }) {
   const { t, p, lang } = useI18n();
   const c = useColors();
   const city = goal.cityId && CITY_BY_ID[goal.cityId] ? p(CITY_BY_ID[goal.cityId].name) : '';
-  const about = t(`goal_${goal.id}_about` as StringKey, {
+  const legacy = goal.legacyId ? LEGACY_GOALS.find((g) => g.id === goal.legacyId) : undefined;
+  const title = legacy ? p(legacy.title) : t(`goal_${goal.id}_title` as StringKey);
+  const about = legacy ? `${p(legacy.about)} (${goal.n ?? 0}/${goal.total ?? 0})` : t(`goal_${goal.id}_about` as StringKey, {
     n: goal.n ?? 0,
     total: goal.total ?? 0,
     city,
@@ -149,7 +152,7 @@ export function GoalCard({ goal, cityId }: { goal: NextGoal; cityId: string }) {
   return (
     <Card style={{ marginTop: space.lg, borderColor: c.purple, borderWidth: 1.5 }}>
       <Small color={c.purple}>{t('goalTitle')}</Small>
-      <Strong style={{ marginTop: space.xs }}>{t(`goal_${goal.id}_title` as StringKey)}</Strong>
+      <Strong style={{ marginTop: space.xs }}>{title}</Strong>
       <Body color={c.inkSoft} style={{ marginTop: space.xs }}>
         {about}
       </Body>

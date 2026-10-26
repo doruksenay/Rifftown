@@ -19,6 +19,7 @@ import { applyToFestival, festivalView, festivalsList } from '../game/festivals'
 import { buyListing, cancelListing, listItem, marketListings, nameItem, paintItem } from '../game/items';
 import { bankMove, eatMeal, getTattoo, hotelStay, removeTattoo, tattoosOf } from '../game/lifestyle';
 import { claimMission, missionsState } from '../game/missions';
+import { chainsState, claimChainStep } from '../game/chains';
 import { idParam, parse } from './util';
 
 const loc = z.object({ locationId: z.string() });
@@ -106,5 +107,7 @@ export async function economyRoutes(app: FastifyInstance) {
 
   // ---------- Haftalık görevler ----------
   app.get('/missions', async (req) => missionsState(pool, charId(req)));
+  app.get('/chains', async (req) => ({ chains: await chainsState(pool, charId(req)) }));
+  app.post('/chains/:id/claim', async (req) => claimChainStep(charId(req), parse(z.object({ id: z.string().max(40) }), req.params).id));
   app.post('/missions/:id/claim', async (req) => claimMission(charId(req), parse(z.object({ id: z.string().max(40) }), req.params).id));
 }

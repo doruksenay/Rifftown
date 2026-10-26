@@ -21,6 +21,7 @@ import {
   ITEM_RETURN_COOLDOWN_HOURS,
   gameHoursToMs,
   maxResalePrice,
+  skillBonus,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
@@ -253,7 +254,7 @@ export async function resolveCraft(c: pg.PoolClient, ch: CharacterRow, params: R
     }
     return { cancelled: true, refunded: true };
   }
-  const bonus = craftBonus(recipe, lv(skills, 'craftsmanship'), rand);
+  const bonus = craftBonus(recipe, Math.min(100, lv(skills, 'craftsmanship') + skillBonus(skills, 'crafting')), rand);
   const def = ITEM_BY_ID[recipe.itemId];
   const r = await one(c, 'INSERT INTO inventory(character_id, item_id, slot, bonus, crafted_by) VALUES ($1, $2, $3, $4, $1) RETURNING id', [
     ch.id,

@@ -1069,6 +1069,11 @@ export const tr = {
   deathInheritance: 'Yeni karakterine {money} miras kalacak.',
   cancelGigConfirmTickets: 'Biletler satıldıkça iptalin şöhret cezası büyür; çoğu satılmışsa skandal olur.',
   leaveBandFameNote: 'Ayrılan ya da çıkarılan üye grubun şöhretinden bir parça götürür.',
+  chainsTitle: 'Görev zincirleri',
+  goal_hall_of_fame_title: 'Onur Listesi',
+  goal_hall_of_fame_about: 'Bütün uzun vadeli hedefleri tamamladın. Adın Rifftown tarihine yazıldı.',
+  goal_legacy_title: 'Efsaneden sonra',
+  goal_legacy_about: 'Sıradaki büyük hedef ({n}/{total}).',
 };
 
 export type StringKey = keyof typeof tr;
@@ -2117,4 +2122,9 @@ export const en: Record<StringKey, string> = {
   deathInheritance: 'Your new character inherits {money}.',
   cancelGigConfirmTickets: 'The more tickets have sold, the bigger the fame penalty; cancel a mostly sold show and it becomes a scandal.',
   leaveBandFameNote: 'A member who leaves or is removed takes a slice of the band\'s fame with them.',
+  chainsTitle: 'Quest chains',
+  goal_hall_of_fame_title: 'Hall of Fame',
+  goal_hall_of_fame_about: 'You finished every long-term goal. Your name is part of Rifftown history.',
+  goal_legacy_title: 'Beyond legend',
+  goal_legacy_about: 'Your next big goal ({n}/{total}).',
 };

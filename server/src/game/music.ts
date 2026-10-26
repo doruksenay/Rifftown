@@ -23,6 +23,7 @@ import {
   recordingQuality,
   roleSkill,
   weeklyUnits,
+  skillBonus,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -63,7 +64,7 @@ export async function resolveRecording(c: pg.PoolClient, char: CharacterRow, par
   const players = here.length ? here : members.filter((x) => x.id === char.id);
   const avgFam = players.reduce((s, x) => s + Math.min(x.fam ?? 0, familiarityCap(x.skills, song.genre)), 0) / players.length;
   const avgSkill = players.reduce((s, x) => s + roleSkill(x.skills, x.role as Instrument), 0) / players.length;
-  const quality = recordingQuality(song.quality, avgFam, avgSkill, lv(skills, 'production'), Math.random);
+  const quality = recordingQuality(song.quality, avgFam, avgSkill, lv(skills, 'production') + skillBonus(skills, 'recording') * 2, Math.random);
   await touchFamiliarity(c, players.map((x) => Number(x.id)), [song.id]);
 
   const prev = await one(c, 'SELECT quality FROM recordings WHERE band_id = $1 AND song_id = $2', [m.band_id, song.id]);

@@ -2,8 +2,9 @@
 // Puanlar profilde toplanır. Gizli başarımların adı ve açıklaması kazanılana kadar görünmez.
 
 import type { L } from './world';
+import { STAT_ACHIEVEMENTS, type StatRule } from './content/progress';
 
-export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social';
+export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social' | 'media' | 'legacy';
 
 export const ACHIEVEMENT_CATEGORY_NAMES: Record<AchievementCategory, L> = {
   start: { tr: 'İlk adımlar', en: 'First steps' },
@@ -13,6 +14,8 @@ export const ACHIEVEMENT_CATEGORY_NAMES: Record<AchievementCategory, L> = {
   career: { tr: 'Kariyer ve siyaset', en: 'Career and politics' },
   crime: { tr: 'Suç ve adalet', en: 'Crime and justice' },
   social: { tr: 'Sosyal', en: 'Social' },
+  media: { tr: 'Basın ve medya', en: 'Press and media' },
+  legacy: { tr: 'Efsaneden sonra', en: 'Beyond legend' },
 };
 
 export interface AchievementDef {
@@ -22,6 +25,8 @@ export interface AchievementDef {
   name: L;
   about: L;
   secret?: boolean;
+  /** Veri odaklı başarımlar: istatistik eşiği (sunucu server/src/game/stats.ts ile hesaplar) */
+  rule?: StatRule;
 }
 
 const A = (id: string, category: AchievementCategory, points: number, tr: [string, string], en: [string, string], secret = false): AchievementDef => ({
@@ -81,6 +86,9 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   A('generous', 'social', 10, ['Eli açık', 'Başka bir oyuncuya para gönder.'], ['Open-handed', 'Send money to another player.']),
   A('vip', 'social', 10, ['VIP', 'VIP üye ol.'], ['VIP', 'Become a VIP member.']),
 ];
+
+// Veri dosyasındaki istatistik kurallı başarımlar
+ACHIEVEMENTS.push(...STAT_ACHIEVEMENTS);
 
 export const ACHIEVEMENT_BY_ID: Record<string, AchievementDef> = Object.fromEntries(ACHIEVEMENTS.map((a) => [a.id, a]));
 export const TOTAL_ACHIEVEMENT_POINTS = ACHIEVEMENTS.reduce((s, a) => s + a.points, 0);

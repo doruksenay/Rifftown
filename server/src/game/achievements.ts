@@ -3,10 +3,11 @@
 // Eylem, konser ve liste sonuçlarından hemen sonra; diğer olaylar (oy, para gönderme, VIP) için /me çağrısında
 // en fazla dakikada bir kontrol edilir.
 
-import { ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, PLATINUM_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
+import { STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, PLATINUM_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
 import { addMoodlet } from './wellbeing';
 import { type Db, many, one } from '../db';
 import { notify } from './common';
+import { lifetimeStats } from './stats';
 
 /** Karakter oluştururken verilen beceri sayısı (bunun üstü "yeni beceri" demektir) */
 const STARTING_SKILL_COUNT = 6;
@@ -106,6 +107,10 @@ export async function evaluateAchievements(db: Db, characterId: number): Promise
     generous: s.transfers >= 1,
     vip: !!s.vip_until,
   };
+
+  // Veri odaklı başarımlar: istatistik eşiği (content/progress.ts)
+  const stats = await lifetimeStats(db, characterId);
+  for (const a of STAT_ACHIEVEMENTS) earned[a.id] = stats[a.rule.stat] >= a.rule.min;
 
   const ids = Object.keys(earned).filter((id) => earned[id] && ACHIEVEMENT_BY_ID[id]);
   if (!ids.length) return [];

@@ -1,22 +1,11 @@
-// Haftalık görevler: her liste haftası (3 oyun günü) her oyuncuya havuzdan 3 görev düşer.
-// Ödüller küçük tutuldu: liste haftası kısa olduğundan sık yenilenirler; para asıl müzikten ve meslekten gelmeli.
+// Haftalık görevler: her liste haftası her oyuncuya havuzdan 3 görev düşer (ek görevler content/progress.ts içinde).
+// Ödüller küçük tutuldu; para asıl müzikten ve meslekten gelmeli.
 // İlerleme oyuncunun o hafta yaptıklarından hesaplanır; ödül bir kez alınır.
 
 import type { L } from './world';
+import { EXTRA_MISSIONS, type WeeklyKind } from './content/progress';
 
-export type MissionKind =
-  | 'gigs'
-  | 'songs'
-  | 'rehearse_hours'
-  | 'work_hours'
-  | 'study_hours'
-  | 'busk_earnings'
-  | 'workout_hours'
-  | 'travel'
-  | 'meals'
-  | 'hangouts'
-  | 'crafts'
-  | 'records';
+export type MissionKind = WeeklyKind;
 
 export interface MissionDef {
   id: string;
@@ -48,6 +37,8 @@ export const MISSIONS: MissionDef[] = [
   M('craft_1', 'crafts', 1, 40, 'Atölyede bir şey üret', 'Make something in the workshop'),
   M('record_1', 'records', 1, 50, 'Bir şarkı kaydet', 'Record a song'),
 ];
+// Veri dosyasındaki ek görevler
+MISSIONS.push(...EXTRA_MISSIONS);
 export const MISSION_BY_ID: Record<string, MissionDef> = Object.fromEntries(MISSIONS.map((m) => [m.id, m]));
 export const MISSIONS_PER_WEEK = 3;
 

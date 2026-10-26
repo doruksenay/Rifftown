@@ -1,6 +1,7 @@
 // Rehber görevler: adımların tamamlanma durumu ve ödüller.
 
-import { type NextGoal, TUTORIAL, TUTORIAL_BY_ID, type TutorialResponse, nextGoal } from '@rifftown/shared';
+import { type NextGoal, TUTORIAL, TUTORIAL_BY_ID, type TutorialResponse, nextGoal, nextLegacyGoal } from '@rifftown/shared';
+import { lifetimeStats } from './stats';
 import { type Db, many, one, tx } from '../db';
 import { fail } from '../errors';
 import { evaluateAchievements } from './achievements';
@@ -57,7 +58,12 @@ export async function goalFor(db: Db, characterId: number): Promise<NextGoal | n
   const fame = Object.fromEntries(
     (await many(db, 'SELECT city_id, fame FROM band_fame WHERE band_id = $1', [m.band_id])).map((r) => [r.city_id, Number(r.fame)]),
   );
-  return nextGoal({ hasBand: true, songs: songs?.n ?? 0, cityId: ch.city_id, fame });
+  const g = nextGoal({ hasBand: true, songs: songs?.n ?? 0, cityId: ch.city_id, fame });
+  if (g.id !== 'legend') return g;
+  // Bütün sahneler açık: uzun vadeli hedefler sırayla gelir, hepsi bitince Onur Listesi
+  const next = nextLegacyGoal(await lifetimeStats(db, characterId));
+  if (!next) return { id: 'hall_of_fame' };
+  return { id: 'legacy', legacyId: next.goal.id, n: next.n, total: next.goal.rule.min };
 }
 
 export async function claimStep(characterId: number, stepId: string) {

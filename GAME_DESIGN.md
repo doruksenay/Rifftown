@@ -255,7 +255,7 @@ Polis, ajan, özel harekât ve yargıç meslekleri bu sistemle gerçek bir oynan
 
 ## Başarımlar
 
-39 başarım, 7 kategoride: ilk adımlar, sahnede, kayıt ve listeler, ustalık, kariyer ve siyaset, suç ve adalet, sosyal. Her başarımın puanı vardır (toplam 770); puanlar profilde görünür. Üç başarım gizlidir (kötü yola düştü, eller yukarı, müdavim) ve kazanılana kadar adı görünmez.
+80 başarım, 9 kategoride: ilk adımlar, sahnede, kayıt ve listeler, ustalık, kariyer ve siyaset, suç ve adalet, sosyal, basın ve medya, efsaneden sonra. Her başarımın puanı vardır (toplam 2.280); puanlar profilde görünür. İlk 39 başarım koddaki kurallarla, sonrakiler veri dosyasındaki istatistik eşikleriyle açılır (bkz. "İçerik hacmi"). Üç başarım gizlidir (kötü yola düştü, eller yukarı, müdavim) ve kazanılana kadar adı görünmez.
 
 Başarımlar olaylardan değil oyuncunun istatistiklerinden hesaplanır, bu yüzden geriye dönük çalışır: sistem eklenmeden önce oynayan oyuncular da hak ettiklerini ilk girişte alır. Eylem, konser, liste haftası, yayın, tutuklama ve mahkeme kararından hemen sonra; oy verme, para gönderme ve VIP gibi diğer olaylar için en fazla dakikada bir kontrol edilir. Her yeni başarım bildirim ve kutlama ekranıyla gelir.
 
@@ -306,6 +306,28 @@ Oyunun takvimi tek dosyadadır: `packages/shared/src/pacing.ts` (`PACING`). Büt
 | Festival, seçim, kira, işletme gideri, faiz | 14 / 7 / 7 / 7 / 7 gün | aynı | Zaten haftalık ritimdeydiler; aynı dosyaya taşındı. |
 
 İçeriğin tüketilme hızı: eskiden bir grup 112 günde 16 single ve 4 albüm çıkarabilirdi, şimdi 4 single ve 1 albüm. Yani yayın içeriği 4 kat yavaş tükenir. Oyunun kendi grupları yayınlarını bu beklemelerin 1,5 katında bir çıkardığından onlar da kendiliğinden yavaşladı.
+
+## İçerik hacmi (veri dosyaları)
+
+İçerik `packages/shared/src/content/` altında veri olarak durur; yeni bir beceri, eşya, tarif, başarım, görev ya da zincir eklemek bir satırdır, ekranlar ve sunucu kendiliğinden tanır.
+
+| İçerik | Önce | Şimdi | Dosya |
+|---|---|---|---|
+| Beceri | 41 | 99 | `content/skills.ts` (+ 7 yeni tür becerisi) |
+| Dükkân ve atölye eşyası | ~70 | 118 | `content/items.ts` |
+| Atölye tarifi | 6 | 16 | `content/items.ts` |
+| Tür / alt tür | 7 / 0 | 14 / 35 | `world.ts` (popülerlik tablosu veriyle), `performance.ts` |
+| Başarım | 39 | 80 | `content/progress.ts` (istatistik eşikli) |
+| Haftalık görev havuzu | 12 | 28 | `content/progress.ts` |
+| Görev zinciri | 0 | 6 zincir, 24 adım | `content/progress.ts` |
+| Efsane sonrası hedef | 0 | 7 + Onur Listesi | `content/progress.ts` |
+
+- **Yeni beceriler** genel etki ağırlıklarıyla çalışır (`effects`): şarkı yazma, prova hızı, kayıt kalitesi, sokak müziği bahşişi, sahne, atölye, arkadaşlık, romantizm, kondisyon. Etkiler toplanır ama tavanlıdır: şarkı yazma ve sahne puanına en fazla +10, çarpanlarda en fazla ×1,5. Böylece "her şeyi öğren" stratejisi sınırlı kalır.
+- **Yeni türler** (blues, folk, punk, soul, reggae, country, klasik) şehir popülerliğini ülke tabanı + şehir istisnalarından alır (ör. country Nashville'de 1,4).
+- **Eşya dengesi:** yeni enstrüman ve kıyafetler var olan fiyat/bonus merdiveninin ara basamaklarıdır; her yuvada tek eşya kuşanıldığı için ucuz eşyayla bonus biriktirilemez. Atölye ürünleri dükkâna satılmaz (eski kural), tamir kiti tarifinin malzemesi dükkân fiyatının en az yarısıdır (atölye-dükkân döngüsüyle para basılamaz).
+- **Görev zincirleri** (Yolun hikâyesi, Stüdyo günlükleri, Manşetlere doğru, Usta çırak, Kalbin sesi, Sahnenin efendisi) ömür boyu istatistiklere bakar ve sırayla açılır; adım ödülleri $20–$120, her adım bir kez. Ana sayfada kart.
+- **Efsane sonrası:** "Efsane ol" hedefine ulaşan grup sırayla şu hedefleri görür: EFSANEVİ bir gece, 3 şehirde süperstar, platin plak, 5 festival, 8 şehirde süperstar, elmas plak (50.000), 15 şehrin hepsinde süperstar. Hepsi bitince Onur Listesi. Şöhret artık zamanla azaldığı için (bkz. "Kayıp ve sonuç") süperstar şehirlerini korumak da kendi başına bir uğraştır.
+- İstatistikler tek fonksiyonda hesaplanır: `server/src/game/stats.ts` (`lifetimeStats`).
 
 ## Rehber görevler
 

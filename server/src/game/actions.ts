@@ -70,6 +70,8 @@ import {
   styleBonus,
   ADDICTION_TREAT_PER_HOUR,
   ageLearnFactor,
+  skillBonus,
+  skillMult,
 } from '@rifftown/shared';
 import { characterAge, treatIndulgence } from './consequences';
 import type pg from 'pg';
@@ -422,7 +424,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   } else mood += MOOD_PER_HOUR[a.kind as keyof typeof MOOD_PER_HOUR] * hours;
   let healthChange = HEALTH_PER_HOUR[a.kind as keyof typeof HEALTH_PER_HOUR] * hours;
   // Kondisyon yorucu işlerdeki sağlık kaybını azaltır
-  if (healthChange < 0) healthChange *= 1 - fitnessShield(lv(char.skills, 'fitness'));
+  if (healthChange < 0) healthChange *= 1 - fitnessShield(lv(char.skills, 'fitness') + skillBonus(char.skills, 'fitness'));
   health += healthChange;
   if (a.kind === 'rest' && params.homeHealth) health += (params.homeHealth as number) * hours;
   if (a.kind === 'rest') {
@@ -484,7 +486,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
     case 'busk': {
       const role = params.role as Instrument;
       const base = buskPayPerHour(roleSkill(skills, role), stageScore(skills), (params.costMult as number) ?? 1);
-      const pay = Math.floor(base * hours * (0.7 + Math.random() * 0.6));
+      const pay = Math.floor(base * skillMult(skills, 'busking') * hours * (0.7 + Math.random() * 0.6));
       money += pay;
       result.pay = pay;
       inspirationDelta += INSPIRATION_GAIN.buskPerHour * hours;
@@ -539,7 +541,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
         ]);
         const fam = famRow?.value ?? 0;
         const cap = familiarityCap(skills, params.songGenre as Genre);
-        const gain = rehearsalGain(fam, hours, well.mood, lv(skills, 'improvisation')) * efficiency;
+        const gain = rehearsalGain(fam, hours, well.mood, lv(skills, 'improvisation')) * efficiency * skillMult(skills, 'rehearsal');
         // Tür becerisi düşükse şarkı belli bir noktadan sonra öğrenilemez (Popmundo'daki gibi)
         const next = fam >= cap ? fam : Math.min(cap, fam + gain);
         result.capped = next >= cap;

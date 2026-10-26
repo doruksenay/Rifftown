@@ -11,6 +11,7 @@ import {
   styleBonus,
 } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { config } from '../src/config';
 import { pool } from '../src/db';
 import { advance, newPlayer, setSkills, setVip, setup, teardown } from './helpers';
 
@@ -119,10 +120,16 @@ describe('alt tür, tempo ve yazma hızı', () => {
     await advance(10);
     const songs = (await p.c.get('/api/songs/mine')).body.songs;
     expect(songs[0]).toMatchObject({ subgenre: 'hard_rock', tempo: 'fast' });
-    for (let i = 0; i < 3; i++) {
-      await q(`UPDATE characters SET energy = 100, energy_at = now() WHERE id = $1`, [p.character.id]);
-      await p.c.post('/api/actions', { kind: 'write_song', title: `Hızlı ${i}`, genre: 'rock' });
-      await advance(10);
+    // Yazma penceresi oyun zamanıyla ölçülür: testte zaman çok hızlı aktığından, önceki iki şarkıyı az önce yazılmış gibi işaretle
+    for (let i = 0; i < 2; i++) await q(`INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, $2, 'rock', 40)`, [p.character.id, `Önceki ${i}`]);
+    const prev = config.gameSpeed;
+    config.gameSpeed = 3600; // 3 oyun günü = 72 gerçek saniye: pencere test sırasında kapanmasın
+    try {
+      await p.c.post('/api/actions', { kind: 'write_song', title: 'Hızlı', genre: 'rock' });
+      await q(`UPDATE actions SET ends_at = now() WHERE character_id = $1 AND status = 'active'`, [p.character.id]);
+      await advance(1);
+    } finally {
+      config.gameSpeed = prev;
     }
     const last = (await p.c.get('/api/actions/history')).body.actions.find((a: any) => a.kind === 'write_song');
     expect(last.result.fatigued).toBe(true);
