@@ -2,14 +2,15 @@
 // Düşük seviyeler soluk, orta seviyeler koyu, üst seviyeler pembe.
 // En üst kalite seviyesi (DESTANSI / EPIC) logodaki gibi neon iki renkle (cyan gölge + pembe) yazılır.
 
-import { type ScaleName, tierOf } from '@rifftown/shared';
+import { LEGENDARY_NAME, type ScaleName, tierOf } from '@rifftown/shared';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Text, type TextStyle, View } from 'react-native';
 import { useI18n } from '@/lib/i18n';
 import { useIsVip } from '@/lib/session';
-import { brand, fonts, type Palette, space, type, useColors } from '@/theme';
+import { brand, fonts, gradients, type Palette, space, type, useColors } from '@/theme';
 
 /** Ruh hâli ve sağlıkta düşük seviye "soluk" değil "tehlikeli" demektir. */
-const ALARM_SCALES: ScaleName[] = ['mood', 'health'];
+const ALARM_SCALES: ScaleName[] = ['mood', 'health', 'energy'];
 
 export function tierColor(scale: ScaleName, value: number, c: Palette): string {
   const t = tierOf(scale, value);
@@ -39,15 +40,19 @@ export function TierText({
   value,
   size = 'small',
   style,
+  legendary = false,
 }: {
   scale: ScaleName;
   value: number;
   size?: Size;
   style?: TextStyle;
+  /** EFSANEVİ konser: DESTANSI'nın üstünde, çok nadir */
+  legendary?: boolean;
 }) {
   const c = useColors();
   const { lang } = useI18n();
   const vip = useIsVip();
+  if (legendary) return <LegendaryBadge size={size} />;
   const t = tierOf(scale, value);
   const label = t.name[lang];
   // VIP üyeler kelimenin yanında kesin sayıyı da görür
@@ -112,6 +117,31 @@ export function TierMeter({
       <View style={{ height: 6, backgroundColor: c.line, borderRadius: 3, overflow: 'hidden' }}>
         <View style={{ width: `${pct * 100}%`, height: '100%', backgroundColor: barColor(scale, value, c) }} />
       </View>
+    </View>
+  );
+}
+
+/** EFSANEVİ: logodaki "town" degradesiyle zeminli rozet */
+export function LegendaryBadge({ size = 'small' }: { size?: Size }) {
+  const { lang } = useI18n();
+  const s = SIZE[size];
+  const big = size === 'hero' || size === 'title';
+  return (
+    <View
+      accessible
+      accessibilityLabel={LEGENDARY_NAME[lang]}
+      style={{ alignSelf: 'flex-start', borderRadius: big ? 14 : 8, overflow: 'hidden' }}
+    >
+      <LinearGradient
+        colors={gradients.epic}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ paddingHorizontal: big ? space.md : space.sm, paddingVertical: big ? 2 : 1 }}
+      >
+        <Text style={{ fontFamily: fonts.display, fontSize: s.size, lineHeight: s.size * 1.2, color: '#FFFFFF', letterSpacing: 0.5 }}>
+          {LEGENDARY_NAME[lang]}
+        </Text>
+      </LinearGradient>
     </View>
   );
 }

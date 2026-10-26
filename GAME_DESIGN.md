@@ -354,6 +354,22 @@ Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr 
 
 Her konser bittiğinde sunucu, o konsere özel iki cümlelik bir eleştiri üretip sonuçla birlikte saklar (Türkçe ve İngilizce). Eleştiri konseri bilir: mekânın adı, şehir, gerçek seyirci sayısı, gecenin en iyi şarkısı ve sahneye çıkmayan üye sayısı. Örnek: "Kadıköy Bodrum Bar tıklım tıklımdı. 72 seyirci bis istedi; Kadıköy Bodrum Bar yerinden oynadı." Oyuncu eleştiriyi tek dokunuşla grup ya da şehir sohbetinde paylaşabilir.
 
+## Enerji, ilham ve moodlet'ler
+
+- **Enerji (0–100):** Yorucu işler saat başına enerji harcar (çalışma 8, prova ve kayıt 7, antrenman 12, ders 6, şarkı yazma 5). Zamanla saatte 2 dolar; dinlenmek saatte 14 (evde ya da otelde 20), yemek anında 10 / 20 / 35 doldurur. İş bitince enerji sıfırın altına düşecekse iş başlamaz; dinlenme, tedavi ve yolculuk her zaman serbest. Düşük enerji ders, prova ve konser verimini %30'a kadar azaltır. Her konser sahnedekilere 20 enerjiye mal olur.
+- **İlham (0–100):** Zamanla saatte 0,5 söner. Konser (+6 ve iyi geçtiyse fazlası), başka şehre varmak (+8), randevu (+8), takılmak (+3), düğün (+20), sokak müziği (saatte +2), sanat eserleriyle dinlenmek ve yeni beceri öğrenmek ilham verir. Şarkı yazarken kaliteye en fazla +15 ekler ve yarısı harcanır.
+- **Moodlet'ler:** Olaylardan doğan, süresi dolunca kaybolan ruh hâli etkileri: Harika konser (+12, 1 gün), Efsanevi gece (+25, 3 gün), Kötü konser (−10), Ziyafet, Karnı tok, Yeni şehir heyecanı, İyi sohbet, Romantik akşam, Nişanlı, Yeni evli (+25, 1 hafta), Kalp kırıklığı (−20), Boşanma (−25), Hediye, Başarı, Endorfin, İşsiz kaldı, Evsiz, İyi takas. Durumdan doğanlar: Bitkin (enerji 20'nin altı, −15), Yorgun (−6), İlham dolu (+8), Hasta (−8), Parmaklıklar ardında (−20). Görünen ruh hâli = temel ruh hâli + moodlet'ler (toplam en fazla ±30) ve oyundaki tüm hesaplarda bu kullanılır. VIP olmayanlar etkiyi okla (▲▲) görür.
+
+## EFSANEVİ konser
+
+DESTANSI'nın da üstünde, çok nadir bir seviye. DESTANSI kalitede (90+) biten bir konser %1 + grubun ortalama ilhamına göre %6'ya kadar olasılıkla EFSANEVİ olur. O gece:
+- Şöhret artışı 1,5 katı, sahnedekilere "Efsanevi gece" moodlet'i ve +25 ilham, özel konser eleştirisi.
+- Sahnedeki her üyenin o gece çaldığı (kuşandığı) enstrüman efsaneleşir: adı "Efsanevi …" olur, kalıcı +3 bonus alır ve hangi grubun gecesinde çalındığı yazar. İkinci el pazarında ve takasta bu ünvanıyla el değiştirir.
+
+## Takas
+
+Oyuncular birbirine takas teklif eder: her taraf en az bir, en fazla 6 eşya koyar; isteyen üstüne en fazla $5.000 ekleyebilir (para gönderme VIP'e özel olduğu için takas eşyasız olamaz). Aynı şehirde olmak gerekmez. Teklif sırasında eşyalar kilitlenmez; kabul anında her şey yeniden kontrol edilir (eşya hâlâ sahibinde mi, pazarda mı, evlilik teklifindeki yüzük mü, VIP eşyası VIP olmayana mı gidiyor, para yetiyor mu) ve tek işlemde el değiştirir. Bir şey değiştiyse takas düşer. Kişi başı en fazla 5 açık teklif. Enstrüman, kıyafet, araç, evcil hayvan ve sanat eserine isim verilebilir; isim ve renk takasta korunur.
+
 ## Yaşam mekânları
 
 | Mekân | Ne yapılır |

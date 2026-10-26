@@ -16,8 +16,7 @@ import {
   TATTOO_BY_ID,
   TATTOO_REMOVAL_PRICE,
   priceFor,
-  tierName,
-} from '@rifftown/shared';
+  tierName, MEAL_ENERGY } from '@rifftown/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -57,7 +56,7 @@ export function Restaurant({ locationId, menuMult = 1 }: { locationId: string; m
           <ListRow
             key={m.id}
             title={p(m.name)}
-            subtitle={t('mealEffect', { m: m.mood, h: m.health })}
+            subtitle={`${t('mealEffect', { m: m.mood, h: m.health })}, ${t('mealEnergy', { n: MEAL_ENERGY[m.id] ?? 0 })}`}
             right={
               <View style={{ alignItems: 'flex-end', gap: 2 }}>
                 <Strong>{money(price)}</Strong>

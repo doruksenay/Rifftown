@@ -11,6 +11,8 @@ import { processUpkeep } from './game/business';
 import { processFestivals } from './game/festivals';
 import { processBankInterest } from './game/lifestyle';
 import { config } from './config';
+import { pool } from './db';
+import { pruneMoodlets } from './game/wellbeing';
 import { sendPendingPushes } from './push';
 import { closeDueElections, ensureElections, payOfficeSalaries } from './game/politics';
 
@@ -42,6 +44,7 @@ export async function tick() {
   const elections = await stage('seçimler', () => closeDueElections());
   await stage('seçim açma', () => ensureElections());
   await stage('maaşlar', () => payOfficeSalaries());
+  await stage('moodlet temizliği', () => pruneMoodlets(pool));
   const pushes = await stage('bildirimler', () => sendPendingPushes());
   return { actions, gigs, pushes, elections, justice, charts };
 }

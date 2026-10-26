@@ -4,6 +4,7 @@ import { RefreshControl, View } from 'react-native';
 import { GuideCard } from '@/components/guide';
 import { JailBanner } from '@/components/justice';
 import { MissionsCard } from '@/components/missions';
+import { MoodletList } from '@/components/moodlets';
 import { ActionTicket } from '@/components/ticket';
 import { TierMeter } from '@/components/tier';
 import { Body, Button, Card, Display, Heading, ListRow, Meter, Row, Screen, Small } from '@/components/ui';
@@ -73,7 +74,10 @@ export default function Home() {
       </Row>
       <View style={{ marginTop: space.lg }}>
         <TierMeter label={t('mood')} scale="mood" value={ch.mood} whole />
+        <MoodletList moodlets={ch.moodlets ?? []} />
         <TierMeter label={t('health')} scale="health" value={ch.health} whole />
+        <TierMeter label={t('energy')} scale="energy" value={ch.energy ?? 100} whole />
+        <TierMeter label={t('inspiration')} scale="inspiration" value={ch.inspiration ?? 0} whole />
       </View>
 
       <Heading>{t('quickActions')}</Heading>

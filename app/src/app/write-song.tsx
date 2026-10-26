@@ -1,6 +1,8 @@
-import { GENRES, GENRE_NAMES, type Genre, WRITE_SONG_HOURS } from '@rifftown/shared';
+import { GENRES, GENRE_NAMES, type Genre, WRITE_SONG_HOURS, energyAfter } from '@rifftown/shared';
 import { Stack, router } from 'expo-router';
 import { useState } from 'react';
+import { View } from 'react-native';
+import { TierMeter } from '@/components/tier';
 import { Body, Button, Choice, Field, Heading, Screen, Small } from '@/components/ui';
 import { useGate } from '@/components/gate';
 import { api } from '@/lib/api';
@@ -25,6 +27,7 @@ function WriteSongScreen() {
   const [title, setTitle] = useState('');
   const [genre, setGenre] = useState<Genre>((me.data?.band?.genre as Genre) ?? 'rock');
 
+  const tooTired = energyAfter('write_song', WRITE_SONG_HOURS, me.data?.character?.energy ?? 100) < 0;
   const submit = async () => {
     const r = await run(() => api.post('/actions', { kind: 'write_song', title: title.trim(), genre }));
     if (r) router.navigate('/');
@@ -39,8 +42,13 @@ function WriteSongScreen() {
       <Field label={t('songTitle')} value={title} onChangeText={setTitle} maxLength={40} />
       <Heading style={{ marginTop: 0 }}>{t('genre')}</Heading>
       <Choice options={GENRES.map((g) => ({ value: g, label: p(GENRE_NAMES[g]) }))} value={genre} onChange={setGenre} />
-      <Small style={{ marginTop: space.lg }}>{t('takesRealTime', { time: realDuration(WRITE_SONG_HOURS, speed, lang) })}</Small>
-      <Button title={t('writeSong')} onPress={submit} loading={pending} disabled={!title.trim() || !!me.data?.action} style={{ marginTop: space.lg }} />
+      <View style={{ marginTop: space.lg }}>
+        <TierMeter label={t('inspiration')} scale="inspiration" value={me.data?.character?.inspiration ?? 0} whole />
+        <Small>{t('inspirationHint')}</Small>
+      </View>
+      <Small style={{ marginTop: space.md }}>{t('takesRealTime', { time: realDuration(WRITE_SONG_HOURS, speed, lang) })}</Small>
+      {tooTired ? <Small color={c.danger}>{t('tooTiredHint')}</Small> : null}
+      <Button title={t('writeSong')} onPress={submit} loading={pending} disabled={!title.trim() || !!me.data?.action || tooTired} style={{ marginTop: space.lg }} />
     </Screen>
   );
 }

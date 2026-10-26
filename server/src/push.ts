@@ -90,7 +90,7 @@ const TEMPLATES: Record<string, Tpl> = {
   }),
   gig_cancelled: (d, l) => ({ title: T(l, 'Konser iptal', 'Gig cancelled'), body: d.bandName }),
   gig_done: (d, l) => ({
-    title: T(l, 'Konser bitti', 'Gig finished'),
+    title: d.legendary ? T(l, 'EFSANEVİ bir gece!', 'A LEGENDARY night!') : T(l, 'Konser bitti', 'Gig finished'),
     body: d.present
       ? d.review?.[l] ?? T(l, `${d.attendance} kişi, ${tierName('quality', d.quality, l)} bir konser.`, `${d.attendance} people, a ${tierName('quality', d.quality, l)} show.`)
       : T(l, 'Konsere katılamadın!', 'You missed the gig!'),
@@ -141,6 +141,8 @@ const TEMPLATES: Record<string, Tpl> = {
   item_sold: (d, l) => ({ title: T(l, 'Eşyan satıldı', 'Item sold'), body: T(l, `Pazarda sattığın eşya için ${d.earned} $ aldın.`, `You received $${d.earned} for your market item.`) }),
   job_offer: (d, l) => ({ title: T(l, 'İş teklifi', 'Job offer'), body: T(l, `${d.name}: saati ${d.wage} $`, `${d.name}: $${d.wage} an hour`) }),
   business_seized: (d, l) => ({ title: T(l, 'İşletmeni kaybettin', 'Business lost'), body: T(l, `${d.name} giderleri ödenemediği için elinden alındı.`, `${d.name} was taken over because of unpaid costs.`) }),
+  trade_offer: (d, l) => ({ title: T(l, 'Takas teklifi', 'Trade offer'), body: T(l, `${d.from} sana takas teklif etti.`, `${d.from} offered you a trade.`) }),
+  trade_accepted: (d, l) => ({ title: T(l, 'Takas tamam', 'Trade done'), body: T(l, `${d.from} takası kabul etti.`, `${d.from} accepted your trade.`) }),
   festival_selected: (d, l) => ({ title: T(l, 'Festivale seçildiniz!', 'You made the festival!'), body: T(l, `${d.slot}. sıradasınız.`, `You play slot ${d.slot}.`) }),
 };
 

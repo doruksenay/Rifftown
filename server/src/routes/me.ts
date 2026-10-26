@@ -22,6 +22,7 @@ import {
 } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
+import { storedMoodlets } from '../game/wellbeing';
 import { charId, requireUser, requireVip } from '../auth';
 import { many, one, pool, tx } from '../db';
 import { fail } from '../errors';
@@ -83,6 +84,7 @@ export async function meRoutes(app: FastifyInstance) {
         home: await homeOf(pool, ch.id),
         hotel: await hotelOf(pool, ch.id),
         business: await businessOf(pool, ch.id),
+        moodlets: await storedMoodlets(pool, ch.id),
       }),
       action: action ? toActionDto(action) : null,
       band: m ? { id: m.band_id, name: m.name, genre: m.genre, role: m.role, isLeader: m.leader_id === ch.id } : null,
@@ -90,6 +92,7 @@ export async function meRoutes(app: FastifyInstance) {
       pendingInvites: invites!.n,
       bailCost: await bailQuote(ch),
       unreadMessages: await unreadMessages(pool, ch.id),
+      pendingTrades: (await one(pool, `SELECT count(*)::int AS n FROM trades WHERE to_id = $1 AND status = 'open'`, [ch.id]))!.n,
     };
   });
 

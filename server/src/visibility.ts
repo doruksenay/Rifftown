@@ -14,6 +14,9 @@ const KEY_RULES: Record<string, Rule[]> = {
   level: [{ scale: 'skill' }],
   skill: [{ scale: 'skill' }], // grup üyesinin rol becerisi (sayıysa); beceri kimliği metindir, dokunulmaz
   mood: [{ scale: 'mood' }],
+  baseMood: [{ scale: 'mood' }],
+  energy: [{ scale: 'energy' }],
+  inspiration: [{ scale: 'inspiration' }],
   health: [{ scale: 'health' }],
   quality: [{ scale: 'quality' }],
   recordingQuality: [{ scale: 'quality' }],

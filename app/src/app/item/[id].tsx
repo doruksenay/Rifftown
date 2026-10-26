@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useGate } from '@/components/gate';
 import { ColorDot } from '@/components/market';
+import { LegendaryBadge } from '@/components/tier';
 import { Avatar, Body, Button, Card, Empty, Field, Heading, ListRow, Loading, Row, Screen, Small, Strong, Title } from '@/components/ui';
 import { api } from '@/lib/api';
 import { useInventory, useRun } from '@/lib/hooks';
@@ -61,6 +62,12 @@ function ItemScreen() {
         </Row>
         <Body color={c.inkSoft}>{itemBonusText(def, t, p, item.bonus)}</Body>
         {item.craftedBy ? <Small>{t('craftedByName', { name: item.craftedBy })}</Small> : null}
+        {item.legendary ? (
+          <Row style={{ marginTop: space.xs }}>
+            <LegendaryBadge />
+            <Small style={{ flex: 1 }}>{t('legendaryItemLine', { band: item.legendary.bandName ?? '' })}</Small>
+          </Row>
+        ) : null}
         {item.listed ? <Small color={c.pink}>{t('listedBadge')}</Small> : null}
       </View>
 

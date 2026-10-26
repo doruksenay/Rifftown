@@ -14,6 +14,7 @@ import {
   type MealDef,
   TATTOO_BY_ID,
   TATTOO_REMOVAL_PRICE,
+  MEAL_ENERGY,
   gameHoursToMs,
 } from '@rifftown/shared';
 import type pg from 'pg';
@@ -21,6 +22,7 @@ import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { type CharacterRow, activeAction, isJailed, lockCharacter } from './common';
+import { addMoodlet, changeWellbeing } from './wellbeing';
 
 const hoursMs = (h: number) => gameHoursToMs(h, config.gameSpeed);
 
@@ -74,7 +76,10 @@ export async function eatMeal(characterId: number, locationId: string, mealId: s
     );
     await c.query('INSERT INTO meals(character_id, location_id, meal_id, price) VALUES ($1, $2, $3, $4)', [ch.id, locationId, meal!.id, price]);
     await payBusinessForMeal(c, locationId, price, ch.id);
-    return { price, mood: meal!.mood, health: meal!.health };
+    const energy = MEAL_ENERGY[meal!.id] ?? 0;
+    await changeWellbeing(c, ch, { energy });
+    await addMoodlet(c, ch.id, meal!.id === 'chef' ? 'feast' : 'good_meal');
+    return { price, mood: meal!.mood, health: meal!.health, energy };
   });
 }
 

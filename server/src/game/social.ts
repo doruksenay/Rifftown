@@ -13,6 +13,7 @@ import {
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
 import { ringPledged } from './items';
+import { addMoodlet } from './wellbeing';
 import { fail } from '../errors';
 import { avatarUrl, lockCharacter, notify } from './common';
 
@@ -295,6 +296,7 @@ export async function giveGift(fromId: number, toId: number, inventoryId: number
     }
     await c.query('UPDATE inventory SET character_id = $2, equipped = FALSE WHERE id = $1', [inv.id, toId]);
     await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'gift')`, [fromId, toId]);
+    await addMoodlet(c, toId, 'gift');
     await notify(c, toId, 'gift', { fromId, from: me.name, itemId: inv.item_id, name: ITEM_BY_ID[inv.item_id]?.name ?? null });
     return { ok: true };
   });

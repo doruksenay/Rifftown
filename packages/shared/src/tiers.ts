@@ -10,7 +10,7 @@ export interface Tier {
   name: L;
 }
 
-export type ScaleName = 'quality' | 'skill' | 'familiarity' | 'fame' | 'mood' | 'health' | 'friendship' | 'romance';
+export type ScaleName = 'quality' | 'skill' | 'familiarity' | 'fame' | 'mood' | 'health' | 'friendship' | 'romance' | 'energy' | 'inspiration';
 
 const t = (min: number, tr: string, en: string): Tier => ({ min, name: { tr, en } });
 
@@ -71,6 +71,22 @@ export const SCALES: Record<ScaleName, Tier[]> = {
     t(40, 'yorgun', 'worn out'),
     t(70, 'iyi', 'healthy'),
     t(90, 'zinde', 'in top shape'),
+  ],
+  /** Enerji. 20'nin altında bitkin (ruh hâli düşer), işler zor başlar. */
+  energy: [
+    t(0, 'bitkin', 'exhausted'),
+    t(20, 'yorgun', 'tired'),
+    t(40, 'idare eder', 'okay'),
+    t(65, 'dinç', 'fresh'),
+    t(90, 'enerji dolu', 'full of energy'),
+  ],
+  /** İlham. Şarkı yazarken harcanır; yüksekken konser EFSANEVİ olabilir. */
+  inspiration: [
+    t(0, 'ilhamsız', 'uninspired'),
+    t(20, 'bir kıvılcım var', 'a spark'),
+    t(45, 'ilhamlı', 'inspired'),
+    t(70, 'coşkun', 'brimming'),
+    t(90, 'ilham perisi yanında', 'touched by the muse'),
   ],
   /** İki oyuncu arasındaki arkadaşlık. Flört 30'da açılır. */
   friendship: [
@@ -174,6 +190,21 @@ const REVIEWS: { minQuality: number; lines: L[] }[] = [
   },
 ];
 
+/** EFSANEVİ geceler için (çok nadir) */
+const LEGENDARY_REVIEWS = {
+  minQuality: 100,
+  lines: [
+    {
+      tr: 'EFSANEVİ bir gece. {n} kişi aynı anda sustu, sonra {song} ile birlikte bütün {city} şarkı söyledi.',
+      en: 'A LEGENDARY night. {n} people fell silent at once, then all of {city} sang along to {song}.',
+    },
+    {
+      tr: 'Bu EFSANEVİ konserin kaydı yıllarca elden ele dolaşacak. {song} sırasında sahnede bir şey oldu ve herkes bunu hissetti.',
+      en: 'Bootlegs of this LEGENDARY show will circulate for years. Something happened on stage during {song}, and everyone felt it.',
+    },
+  ],
+};
+
 const fill = (s: string, v: ReviewVars) =>
   s.replace(/\{n\}/g, String(v.n)).replace(/\{venue\}/g, v.venue).replace(/\{city\}/g, v.city).replace(/\{song\}/g, v.song);
 
@@ -188,6 +219,8 @@ export interface GigReviewInput {
   /** Gecenin en iyi şarkısının adı */
   bestSong: string;
   seed: number;
+  /** EFSANEVİ gece */
+  legendary?: boolean;
 }
 
 /** Konser eleştirisi; iki dilde birden üretilir ve konserle birlikte saklanır. */
@@ -201,6 +234,7 @@ export function gigReview(r: GigReviewInput): L {
     }
     let band = REVIEWS[0];
     for (const b of REVIEWS) if (r.quality >= b.minQuality) band = b;
+    if (r.legendary) band = LEGENDARY_REVIEWS;
     const line = fill(band.lines[Math.abs(r.seed) % band.lines.length][lang], v);
     const ratio = r.capacity > 0 ? r.attendance / r.capacity : 0;
     const crowd =

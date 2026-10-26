@@ -61,6 +61,7 @@ export function ProfileActions({ id, name }: { id: number; name: string }) {
           }} />
         ) : null}
         {r.friendRequest === 'outgoing' ? <Button title={t('requestSent')} small variant="secondary" disabled onPress={() => {}} /> : null}
+        {!blockedSomehow ? <Button title={t('proposeTrade')} small variant="secondary" onPress={() => router.push(`/trade/${id}`)} /> : null}
         {r.friendRequest === 'incoming' ? (
           <Button title={t('acceptFriend')} small variant="secondary" disabled={pending} onPress={async () => {
             if (await run(() => api.post(`/friends/${id}/answer`, { accept: true }), { invalidate: [] })) refresh();

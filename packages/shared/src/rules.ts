@@ -2,6 +2,7 @@
 // uygulama aynı fonksiyonları sadece önizleme (tahmini süre, ücret) için kullanır.
 
 import { type Skills, roleSkill, stageScore } from './skills';
+import { energyFactor, legendaryChance } from './wellbeing';
 import { CITY_BY_ID, type City, type Genre, INSTRUMENTS, type Instrument, VENUE_RULES, type VenueType } from './world';
 
 export type Rand = () => number;
@@ -180,6 +181,10 @@ export interface GigPerformer {
   outfitBonus: number;
   /** şarkı id → aşinalık (0–100) */
   familiarity: Record<number, number>;
+  /** Enerji (0–100); yoksa dolu sayılır. Düşük enerji çalımı zayıflatır. */
+  energy?: number;
+  /** İlham (0–100); EFSANEVİ gece olasılığını artırır */
+  inspiration?: number;
 }
 
 export interface GigSong {
@@ -207,6 +212,8 @@ export interface GigResult {
   presentCount: number;
   memberCount: number;
   songScores: { id: number; score: number }[];
+  /** Çok nadir: DESTANSI bir konser ilham sayesinde EFSANEVİ olabilir */
+  legendary?: boolean;
 }
 
 export function expectedAttendance(venue: VenueType, fame: number, genrePop: number, rand: Rand): number {
@@ -240,7 +247,9 @@ export function computeGig(input: GigInput): GigResult {
 
   const bandSkill =
     present.reduce(
-      (sum, p) => sum + clamp(roleSkill(p.skills, p.role) + p.instrumentBonus, 0, 110) * moodFactor(p.mood) * healthFactor(p.health),
+      (sum, p) =>
+        sum +
+        clamp(roleSkill(p.skills, p.role) + p.instrumentBonus, 0, 110) * moodFactor(p.mood) * healthFactor(p.health) * energyFactor(p.energy ?? 100),
       0,
     ) / present.length;
   const stage = present.reduce((sum, p) => sum + clamp(stageScore(p.skills) + p.outfitBonus, 0, 110), 0) / present.length;
@@ -264,8 +273,16 @@ export function computeGig(input: GigInput): GigResult {
   // Kapasitenin çok altında kalan büyük mekân konserleri şöhreti az artırır.
   fameDelta *= fameDelta > 0 ? 0.5 + 0.5 * (attendance / rules.capacity) : 1;
 
+  // EFSANEVİ gece: DESTANSI kalitede, grubun ilhamına bağlı küçük bir olasılık
+  // Sadece grubun kendi üyeleri sayılır (kiralık müzisyenler ortalamayı düşürmesin)
+  const players = present.filter((p) => p.characterId !== null);
+  const avgInspiration = players.length ? players.reduce((sum, p) => sum + (p.inspiration ?? 0), 0) / players.length : 0;
+  const legendary = rand() < legendaryChance(quality, avgInspiration);
+  if (legendary) fameDelta *= 1.5;
+
   return {
     quality,
+    legendary,
     attendance,
     revenue,
     fameDelta: round1(fameDelta),

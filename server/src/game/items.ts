@@ -17,6 +17,7 @@ import {
   isPaintable,
   knows,
   lv,
+  LEGENDARY_ITEM_BONUS,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
@@ -31,10 +32,17 @@ export const toInventoryDto = (r: any): InventoryItemDto => ({
   acquiredAt: r.acquired_at.toISOString(),
   color: r.color ?? null,
   nickname: r.nickname ?? null,
-  bonus: r.bonus ?? ITEM_BY_ID[r.item_id]?.bonus ?? 0,
+  bonus: itemBonus(r),
   listed: !!r.listed,
   craftedBy: r.crafted_by_name ?? null,
+  legendary: r.legendary_at
+    ? { gigId: r.legendary_gig ? Number(r.legendary_gig) : null, bandName: r.legendary_band ?? null, at: r.legendary_at.toISOString() }
+    : null,
 });
+
+/** Eşyanın geçerli bonusu: üretimdeki ya da tanımdaki bonus, EFSANEVİ ise üstüne kalıcı bonus */
+export const itemBonus = (r: { item_id: string; bonus: number | null; legendary_at?: Date | null }) =>
+  (r.bonus ?? ITEM_BY_ID[r.item_id]?.bonus ?? 0) + (r.legendary_at ? LEGENDARY_ITEM_BONUS : 0);
 
 export async function inventoryOf(db: Db, characterId: number) {
   const rows = await many(
@@ -162,7 +170,7 @@ export async function buyListing(buyerId: number, locationId: string, listingId:
 export async function marketListings(viewer: number, opts: { slot?: string; mine?: boolean } = {}): Promise<ListingDto[]> {
   const rows = await many(
     pool,
-    `SELECT l.*, s.name AS seller_name, i.color, i.nickname, i.bonus, cb.name AS crafted_by_name, i.slot
+    `SELECT l.*, s.name AS seller_name, i.color, i.nickname, i.bonus, i.legendary_at, cb.name AS crafted_by_name, i.slot
        FROM listings l JOIN characters s ON s.id = l.seller_id JOIN inventory i ON i.id = l.inventory_id
        LEFT JOIN characters cb ON cb.id = i.crafted_by
       WHERE l.status = 'active' AND ($2::text IS NULL OR i.slot = $2) AND (NOT $3 OR l.seller_id = $1)
@@ -176,8 +184,9 @@ export async function marketListings(viewer: number, opts: { slot?: string; mine
     seller: { characterId: Number(r.seller_id), name: r.seller_name },
     color: r.color ?? null,
     nickname: r.nickname ?? null,
-    bonus: r.bonus ?? ITEM_BY_ID[r.item_id]?.bonus ?? 0,
+    bonus: itemBonus(r),
     craftedBy: r.crafted_by_name ?? null,
+    legendary: !!r.legendary_at,
     createdAt: r.created_at.toISOString(),
     mine: Number(r.seller_id) === viewer,
   }));

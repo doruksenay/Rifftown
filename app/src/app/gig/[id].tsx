@@ -89,7 +89,8 @@ function GigScreenScreen() {
       {r ? (
         <>
           <Heading>{t('gigResult')}</Heading>
-          <TierText scale="quality" value={r.quality} size="hero" />
+          <TierText scale="quality" value={r.quality} size="hero" legendary={!!(r as any).legendary} />
+          {(r as any).legendary ? <Small style={{ marginTop: space.sm }}>{t('legendaryGigLine')}</Small> : null}
           {r.review ? (
             <Body style={{ marginTop: space.md, fontFamily: fonts.bodyMedium, fontSize: type.lead, lineHeight: type.lead * 1.4 }}>
               {r.review[lang]}

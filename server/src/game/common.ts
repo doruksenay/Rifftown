@@ -3,11 +3,13 @@ import {
   type CharacterDto,
   type GigDto,
   type HomeDto,
+  type MoodletDto,
   ITEM_BY_ID,
   INSTRUMENTS,
   type Instrument,
   MAX_TATTOO_BONUS,
   MAX_ART_BONUS,
+  LEGENDARY_ITEM_BONUS,
   SKILLS,
   type Skills,
   VIP,
@@ -18,6 +20,7 @@ import {
 import type { Db } from '../db';
 import { many, one } from '../db';
 import { fail } from '../errors';
+import { wellbeingFrom } from './wellbeing';
 
 export interface CharacterRow {
   id: number;
@@ -43,6 +46,10 @@ export interface CharacterRow {
   avatar_version: number;
   bank: number;
   last_meal: Date | null;
+  energy: number;
+  energy_at: Date;
+  inspiration: number;
+  inspiration_at: Date;
 }
 
 /** Profil fotoğrafının adresi (/api'ye göre); fotoğraf yoksa null */
@@ -60,15 +67,23 @@ export const toCharacterDto = (
     home?: HomeDto | null;
     hotel?: { cityId: string; until: string } | null;
     business?: { locationId: string; role: 'owner' | 'staff' } | null;
+    /** Saklanan moodlet'ler (verilmezse sadece durumdan doğanlar) */
+    moodlets?: MoodletDto[];
   } = {},
-): CharacterDto => ({
+): CharacterDto => {
+  const well = wellbeingFrom(r, extra.moodlets ?? []);
+  return {
   id: r.id,
   name: r.name,
   avatarColor: r.avatar_color,
   mainInstrument: r.main_instrument,
   money: r.money,
-  mood: Math.round(r.mood * 10) / 10,
+  mood: Math.round(well.mood * 10) / 10,
+  baseMood: Math.round(r.mood * 10) / 10,
   health: Math.round(r.health * 10) / 10,
+  energy: Math.round(well.energy * 10) / 10,
+  inspiration: Math.round(well.inspiration * 10) / 10,
+  moodlets: well.moodlets,
   cityId: r.city_id,
   locationId: r.location_id,
   skills: Object.fromEntries(Object.entries(r.skills).map(([k, v]) => [k, Math.round(v * 100) / 100])) as Skills,
@@ -86,7 +101,8 @@ export const toCharacterDto = (
   bank: r.bank ?? 0,
   hotel: extra.hotel ?? null,
   business: extra.business ?? null,
-});
+  };
+};
 
 /** Normal üyeler eski konser raporlarını göremez (Popmundo'daki gibi); VIP'te rapor süresizdir. */
 export function gateGig(dto: GigDto, isVip: boolean, gameSpeed: number): GigDto {
@@ -185,14 +201,15 @@ export async function gearBonuses(db: Db, characterIds: number[]): Promise<Map<n
   if (characterIds.length === 0) return out;
   const rows = await many(
     db,
-    `SELECT character_id, item_id, slot, equipped, bonus FROM inventory WHERE character_id = ANY($1::bigint[]) AND NOT listed`,
+    `SELECT character_id, item_id, slot, equipped, bonus, legendary_at FROM inventory WHERE character_id = ANY($1::bigint[]) AND NOT listed`,
     [characterIds],
   );
   for (const r of rows) {
     const def = ITEM_BY_ID[r.item_id];
     const g = out.get(r.character_id);
     if (!def || !g) continue;
-    const bonus = r.bonus ?? def.bonus;
+    // EFSANEVİ bir gecede çalınmış enstrüman kalıcı bonus alır
+    const bonus = (r.bonus ?? def.bonus) + (r.legendary_at ? LEGENDARY_ITEM_BONUS : 0);
     if (def.slot === 'art') g.art += bonus;
     else if (!r.equipped) continue;
     else if (def.slot === 'outfit') g.outfit = bonus;

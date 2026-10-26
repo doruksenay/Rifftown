@@ -4,6 +4,7 @@ import { CITY_BY_ID, HOME_BY_ID, type HomeDto, LOCATION_BY_ID, RENT_PERIOD_DAYS,
 import { config } from '../config';
 import { type Db, one, tx } from '../db';
 import { fail } from '../errors';
+import { addMoodlet } from './wellbeing';
 import { activeAction, characterIsVip, isJailed, lockCharacter, notify } from './common';
 
 const periodMs = () => gameHoursToMs(RENT_PERIOD_DAYS * 24, config.gameSpeed);
@@ -78,6 +79,7 @@ export async function processRent(): Promise<number> {
         await notify(c, ch.id, 'rent_paid', { homeId: h.home_id, cityId: h.city_id, rent });
       } else {
         await c.query('DELETE FROM homes WHERE character_id = $1', [ch.id]);
+        await addMoodlet(c, ch.id, 'evicted');
         await notify(c, ch.id, 'evicted', { homeId: h.home_id, cityId: h.city_id, rent, vipExpired: !allowed });
       }
       return true;

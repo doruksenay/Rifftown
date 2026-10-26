@@ -1,4 +1,4 @@
-import type { StartActionRequest } from '@rifftown/shared';
+import { ENERGY_FREE_KINDS, type StartActionRequest, energyAfter, tierName } from '@rifftown/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -39,6 +39,11 @@ export function HoursAction({
   const jailed = !!me.data?.character?.jailedUntil && build(hours).kind !== 'rest';
   const busy = !!me.data?.action;
   const broke = (me.data?.character?.money ?? 0) < cost;
+  // Bitince enerji ne olur; yetmiyorsa iş başlamaz (dinlenme, tedavi, yolculuk serbest)
+  const kind = build(hours).kind;
+  const free = ENERGY_FREE_KINDS.includes(kind);
+  const energyLeft = energyAfter(kind, hours, me.data?.character?.energy ?? 100);
+  const tooTired = !free && energyLeft < 0;
 
   const start = async () => {
     const r = await run(() => api.post('/actions', build(hours)), { invalidate: ['me'] });
@@ -59,9 +64,14 @@ export function HoursAction({
         </Body>
         <Small>{t('takesRealTime', { time: realDuration(hours, speed, lang) })}</Small>
       </Row>
+      {!free ? (
+        <Small color={tooTired ? c.danger : c.inkSoft}>
+          {tooTired ? t('tooTiredHint') : t('energyAfter', { tier: tierName('energy', energyLeft, lang) })}
+        </Small>
+      ) : null}
       {broke ? <Small color={c.danger}>{t('err_not_enough_money')}</Small> : null}
       {busy ? <Small color={c.inkSoft}>{t('err_busy')}</Small> : jailed ? <Small color={c.danger}>{t('err_in_jail')}</Small> : null}
-      <Button title={label} onPress={start} loading={pending} disabled={disabled || busy || broke || jailed} />
+      <Button title={label} onPress={start} loading={pending} disabled={disabled || busy || broke || jailed || tooTired} />
     </View>
   );
 }

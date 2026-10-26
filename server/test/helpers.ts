@@ -100,11 +100,11 @@ export async function raw(characterId: number) {
 }
 
 /** Ham istek: yanıt gövdesi JSON olmayabilir (ör. resim) */
-export async function inject(method: string, url: string, opts: { token?: string; payload?: unknown } = {}) {
+export async function inject(method: string, url: string, opts: { token?: string; payload?: unknown; headers?: Record<string, string> } = {}) {
   return app.inject({
     method: method as any,
     url,
-    headers: opts.token ? { authorization: `Bearer ${opts.token}` } : {},
+    headers: { ...(opts.token ? { authorization: `Bearer ${opts.token}` } : {}), ...(opts.headers ?? {}) },
     ...(opts.payload !== undefined ? { payload: opts.payload as any } : {}),
   });
 }

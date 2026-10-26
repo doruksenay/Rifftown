@@ -4,6 +4,7 @@
 // en fazla dakikada bir kontrol edilir.
 
 import { ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, PLATINUM_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
+import { addMoodlet } from './wellbeing';
 import { type Db, many, one } from '../db';
 import { notify } from './common';
 
@@ -115,6 +116,7 @@ export async function evaluateAchievements(db: Db, characterId: number): Promise
     [characterId, ids],
   );
   for (const r of inserted) await notify(db, characterId, 'achievement', { id: r.achievement_id });
+  if (inserted.length) await addMoodlet(db, characterId, 'achievement');
   return inserted.map((r) => r.achievement_id as string);
 }
 

@@ -1,4 +1,4 @@
-import { INSTRUMENTS, type ItemDef, type L, PAINT_COLORS, type PaintColor, ROLE_NAMES, type Instrument } from '@rifftown/shared';
+import { INSTRUMENTS, type ItemDef, type L, LEGENDARY_ITEM_PREFIX, PAINT_COLORS, type PaintColor, ROLE_NAMES, type Instrument } from '@rifftown/shared';
 import type { StringKey } from './strings';
 
 type T = (k: StringKey, v?: Record<string, string | number>) => string;
@@ -30,8 +30,14 @@ export function itemBonusText(item: ItemDef, t: T, p: (l: L) => string, bonus = 
 }
 
 /** Eşyanın görünen adı: oyuncunun verdiği ad, yoksa renk + katalog adı */
-export function itemDisplayName(item: ItemDef, p: (l: L) => string, opts: { nickname?: string | null; color?: PaintColor | null } = {}) {
-  const base = p(item.name);
+export function itemDisplayName(
+  item: ItemDef,
+  p: (l: L) => string,
+  opts: { nickname?: string | null; color?: PaintColor | null; legendary?: unknown } = {},
+) {
+  // EFSANEVİ bir gecede çalınmış enstrüman: "Efsanevi" ünvanı
+  const name = p(item.name);
+  const base = opts.legendary ? `${p(LEGENDARY_ITEM_PREFIX)} ${name.charAt(0).toLowerCase()}${name.slice(1)}` : name;
   if (opts.nickname) return `${opts.nickname} (${base})`;
   if (opts.color && PAINT_COLORS[opts.color]) return `${base}, ${p(PAINT_COLORS[opts.color].name)}`;
   return base;

@@ -24,6 +24,7 @@ import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { type CharacterRow, isJailed, lockCharacter, notify } from './common';
 import { cleanText, isBlocked, requirePlayer } from './social';
+import { addMoodlet } from './wellbeing';
 
 const weekMs = () => gameHoursToMs(7 * 24, config.gameSpeed);
 
@@ -211,7 +212,10 @@ export async function endJob(actor: number, locationId: string, staffId: number)
     if (actor !== staffId && Number(b.owner_id) !== actor) fail('forbidden', 403);
     const r = await c.query('DELETE FROM business_staff WHERE location_id = $1 AND character_id = $2', [locationId, staffId]);
     if (!r.rowCount) fail('not_found', 404);
-    if (actor !== staffId) await notify(c, staffId, 'job_lost', { locationId, reason: 'fired' });
+    if (actor !== staffId) {
+      await notify(c, staffId, 'job_lost', { locationId, reason: 'fired' });
+      await addMoodlet(c, staffId, 'lost_job');
+    }
     return { ok: true };
   });
 }

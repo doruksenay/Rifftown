@@ -2,6 +2,7 @@
 
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
+import { fail } from '../errors';
 import { charId, requireUser } from '../auth';
 import { answerAdoption, answerProposal, breakUp, cancelProposal, date, flirt, hangout, propose, relationship, requestAdoption, wedding } from '../game/relations';
 import {
@@ -12,6 +13,8 @@ import {
   friendRequest,
   friends,
   giveGift,
+  isBlocked,
+  requirePlayer,
   guestbook,
   report,
   sendMessage,
@@ -21,6 +24,8 @@ import {
   unfriend,
 } from '../game/social';
 import { idParam, parse } from './util';
+import { acceptTrade, cancelTrade, declineTrade, proposeTrade, tradeableItems, tradesOf } from '../game/trades';
+import { pool } from '../db';
 
 const other = z.object({ id: z.coerce.number().int().positive() });
 
@@ -70,6 +75,32 @@ export async function communityRoutes(app: FastifyInstance) {
     const body = parse(z.object({ toId: z.number().int(), inventoryId: z.number().int() }), req.body);
     return giveGift(charId(req), body.toId, body.inventoryId);
   });
+
+  // ---------- Takas ----------
+  app.get('/trades', async (req) => tradesOf(charId(req)));
+  app.get('/characters/:id/items', async (req) => {
+    const { id } = parse(other, req.params);
+    await requirePlayer(pool, id);
+    if (id !== charId(req) && (await isBlocked(pool, charId(req), id))) fail('blocked', 403);
+    return { items: await tradeableItems(pool, id) };
+  });
+  app.post('/trades', async (req) => {
+    const body = parse(
+      z.object({
+        toId: z.number().int(),
+        give: z.array(z.number().int()).max(20),
+        want: z.array(z.number().int()).max(20),
+        giveMoney: z.number().int().min(0).default(0),
+        wantMoney: z.number().int().min(0).default(0),
+        note: z.string().max(200).default(''),
+      }),
+      req.body,
+    );
+    return proposeTrade(charId(req), body);
+  });
+  app.post('/trades/:id/accept', async (req) => acceptTrade(charId(req), parse(idParam, req.params).id));
+  app.post('/trades/:id/decline', async (req) => declineTrade(charId(req), parse(idParam, req.params).id));
+  app.delete('/trades/:id', async (req) => cancelTrade(charId(req), parse(idParam, req.params).id));
 
   // ---------- İlişkiler ----------
   app.get('/characters/:id/relationship', async (req) => relationship(charId(req), parse(other, req.params).id));

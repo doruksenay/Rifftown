@@ -28,6 +28,7 @@ import {
   hangoutGain,
   knows,
   lv,
+  INSPIRATION_GAIN,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -36,6 +37,7 @@ import { fail } from '../errors';
 import { evaluateAchievements } from './achievements';
 import { type CharacterRow, activeAction, isJailed, lockCharacter, notify } from './common';
 import { mealPrice, payBusinessForMeal } from './lifestyle';
+import { addMoodlet, nudgeWellbeing } from './wellbeing';
 import { cleanText, isBlocked, lockRel, pair, requirePlayer } from './social';
 
 const hoursMs = (h: number) => gameHoursToMs(h, config.gameSpeed);
@@ -118,6 +120,10 @@ export async function hangout(actor: number, other: number) {
     await c.query('UPDATE characters SET mood = LEAST(100, mood + 3) WHERE id = $1', [them.id]);
     await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'hangout')`, [actor, other]);
     await notify(c, other, 'hangout', { fromId: actor, from: me.name });
+    for (const id of [actor, other]) {
+      await addMoodlet(c, id, 'good_company');
+      await nudgeWellbeing(c, id, { inspiration: INSPIRATION_GAIN.hangout });
+    }
     return { friendship: Math.round(friendship), gain };
   });
 }
@@ -184,6 +190,10 @@ export async function date(actor: number, other: number, locationId: string) {
     await c.query('UPDATE characters SET skills = $2 WHERE id = $1', [me.id, JSON.stringify(skills)]);
     await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'date')`, [actor, other]);
     await notify(c, other, 'date', { fromId: actor, from: me.name, locationId });
+    for (const id of [actor, other]) {
+      await addMoodlet(c, id, 'romantic_evening');
+      await nudgeWellbeing(c, id, { inspiration: INSPIRATION_GAIN.date });
+    }
     return { romance: Math.round(romance), cost };
   });
 }
@@ -227,6 +237,7 @@ export async function answerProposal(viewer: number, other: number, accept: bool
       ]);
       await c.query('INSERT INTO partners(character_id, partner_id) VALUES ($1, $2), ($2, $1)', [viewer, other]);
       await notify(c, other, 'proposal_accepted', { fromId: viewer, from: me.name });
+      for (const id of [viewer, other]) await addMoodlet(c, id, 'engaged');
     } else {
       await c.query('UPDATE relationships SET proposal_by = NULL, proposal_ring = NULL, updated_at = now() WHERE a_id = $1 AND b_id = $2', [rel.a_id, rel.b_id]);
       await notify(c, other, 'proposal_declined', { fromId: viewer, from: me.name });
@@ -258,6 +269,10 @@ export async function wedding(actor: number, other: number, locationId: string) 
     await c.query('UPDATE characters SET mood = 100 WHERE id = ANY($1::bigint[])', [[actor, other]]);
     await notify(c, other, 'wedding', { fromId: actor, from: me.name, locationId });
     await notify(c, actor, 'wedding', { fromId: other, locationId });
+    for (const id of [actor, other]) {
+      await addMoodlet(c, id, 'newlywed');
+      await nudgeWellbeing(c, id, { inspiration: INSPIRATION_GAIN.wedding });
+    }
     await evaluateAchievements(c, actor);
     await evaluateAchievements(c, other);
     return { ok: true, fee };
@@ -286,6 +301,7 @@ export async function breakUp(actor: number, other: number, locationId?: string)
     );
     await c.query('DELETE FROM partners WHERE character_id IN ($1, $2)', [actor, other]);
     await notify(c, other, rel.stage === 'married' ? 'divorced' : 'broke_up', { fromId: actor, from: me.name });
+    for (const id of [actor, other]) await addMoodlet(c, id, rel.stage === 'married' ? 'divorce' : 'heartbreak');
     return { ok: true };
   });
 }

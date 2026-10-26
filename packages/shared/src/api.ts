@@ -50,8 +50,17 @@ export interface CharacterDto {
   avatarColor: string;
   mainInstrument: Instrument;
   money: number;
+  /** Görünen ruh hâli (temel + moodlet'ler) */
   mood: number;
+  /** Moodlet'ler hariç temel ruh hâli */
+  baseMood: number;
   health: number;
+  /** Enerji (0–100): yorucu işler harcar, dinlenmek ve yemek doldurur */
+  energy: number;
+  /** İlham (0–100): şarkı yazarken harcanır, EFSANEVİ geceyi mümkün kılar */
+  inspiration: number;
+  /** Etkin moodlet'ler; süresi olmayanlar durumdan doğar */
+  moodlets: MoodletDto[];
   cityId: string | null; // seyahatteyken null
   locationId: string | null;
   skills: Skills;
@@ -106,6 +115,8 @@ export interface MeResponse {
   /** Hüküm giymiş mahkûmun ödeyebileceği kefalet (cezaevinde değilse ya da tutukluysa null) */
   bailCost: number | null;
   unreadMessages: number;
+  /** Bekleyen gelen takas teklifleri */
+  pendingTrades: number;
 }
 
 export interface SongDto {
@@ -328,6 +339,8 @@ export interface InventoryItemDto {
   /** İkinci el pazarında satışta */
   listed: boolean;
   craftedBy: string | null;
+  /** EFSANEVİ bir gecede çalındı: kalıcı bonus ve "Efsanevi" ünvanı */
+  legendary: { gigId: number | null; bandName: string | null; at: string } | null;
 }
 
 export interface GigEstimateResponse {
@@ -512,6 +525,7 @@ export interface ListingDto {
   nickname: string | null;
   bonus: number;
   craftedBy: string | null;
+  legendary: boolean;
   createdAt: string;
   mine: boolean;
 }
@@ -560,4 +574,48 @@ export interface MissionsResponse {
   weekId: number | null;
   endsAt: string | null;
   missions: { id: string; progress: number; target: number; reward: number; claimed: boolean }[];
+}
+
+// ---------- Moodlet'ler ----------
+
+export interface MoodletDto {
+  id: string;
+  /** Ruh hâline etkisi */
+  effect: number;
+  /** Bitiş zamanı; durumdan doğanlarda null */
+  endsAt: string | null;
+}
+
+// ---------- Takas ----------
+
+export interface TradeItemDto {
+  id: number;
+  itemId: string;
+  color: PaintColor | null;
+  nickname: string | null;
+  bonus: number;
+  legendary: boolean;
+}
+
+export interface TradeDto {
+  id: number;
+  /** Teklifi yapan ve alan */
+  from: PersonDto;
+  to: PersonDto;
+  /** Bakan kişi teklifi yapan mı */
+  mine: boolean;
+  give: TradeItemDto[];
+  want: TradeItemDto[];
+  giveMoney: number;
+  wantMoney: number;
+  note: string;
+  status: 'open' | 'accepted' | 'declined' | 'cancelled' | 'failed';
+  createdAt: string;
+  closedAt: string | null;
+}
+
+export interface TradesResponse {
+  incoming: TradeDto[];
+  outgoing: TradeDto[];
+  history: TradeDto[];
 }

@@ -33,11 +33,15 @@ import {
   gameHoursToMs,
   isVenue,
   tierChange,
+  GIG_BREAK_EVEN_QUALITY,
+  GIG_ENERGY_COST,
+  INSPIRATION_GAIN,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
+import { type Wellbeing, addMoodlet, changeWellbeing, wellbeingOf } from './wellbeing';
 import { evaluateMany } from './achievements';
 import { barGigShare } from './business';
 import { type CharacterRow, gearBonuses, isJailed, lockCharacter, membership, notify, notifySkillUps, toGigDto } from './common';
@@ -222,6 +226,9 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   );
   const songs = await many(c, 'SELECT id, title, genre, quality FROM songs WHERE id = ANY($1::bigint[])', [gig.setlist]);
   const fame = await bandFame(c, gig.band_id, gig.city_id);
+  // Görünen ruh hâli (moodlet'lerle), enerji ve ilham
+  const wells = new Map<number, Wellbeing>();
+  for (const ch of chars) wells.set(ch.id, await wellbeingOf(c, ch));
 
   const performers: GigPerformer[] = chars.map((ch, i) => {
     const g = gear.get(ch.id)!;
@@ -237,8 +244,10 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       characterId: ch.id,
       role,
       skills: ch.skills,
-      mood: ch.mood,
+      mood: wells.get(ch.id)!.mood,
       health: ch.health,
+      energy: wells.get(ch.id)!.energy,
+      inspiration: wells.get(ch.id)!.inspiration,
       present: onStage(ch),
       instrumentBonus: g.instruments[role] ?? 0,
       outfitBonus: g.outfit + g.tattoos,
@@ -307,6 +316,28 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       [ch.id, perMember, JSON.stringify(skills)],
     );
     await notifySkillUps(c, ch.id, ch.skills, skills);
+    // Sahne yorar ama ilham verir; iyi ya da kötü bir gece ruh hâlinde iz bırakır
+    const inspiration = res.legendary ? INSPIRATION_GAIN.legendaryGig : INSPIRATION_GAIN.gig + Math.max(0, (res.quality - 50) / 8);
+    await changeWellbeing(c, ch, { energy: -GIG_ENERGY_COST, inspiration });
+    if (res.legendary) await addMoodlet(c, ch.id, 'legendary_gig');
+    else if (res.quality >= 70) await addMoodlet(c, ch.id, 'great_gig');
+    else if (res.quality < GIG_BREAK_EVEN_QUALITY) await addMoodlet(c, ch.id, 'bad_gig');
+  }
+
+  // EFSANEVİ gece: sahnedeki üyelerin o gece çaldığı enstrüman efsaneleşir
+  const legendaryItems: { characterId: number; inventoryId: number; itemId: string; nickname: string | null }[] = [];
+  if (res.legendary) {
+    for (const ch of presentChars) {
+      const role = memberRows[chars.indexOf(ch)].role as Instrument;
+      const item = await one(
+        c,
+        `UPDATE inventory SET legendary_at = COALESCE(legendary_at, now()), legendary_gig = COALESCE(legendary_gig, $3), legendary_band = COALESCE(legendary_band, $4)
+          WHERE id = (SELECT id FROM inventory WHERE character_id = $1 AND slot = $2 AND equipped AND NOT listed ORDER BY id LIMIT 1)
+          RETURNING id, item_id, nickname`,
+        [ch.id, role, gig.id, band.name],
+      );
+      if (item) legendaryItems.push({ characterId: ch.id, inventoryId: Number(item.id), itemId: item.item_id, nickname: item.nickname });
+    }
   }
 
   // Medya ilişkileri becerisi, sahnedeki üyelerin en iyisine göre şöhret artışını en fazla %25 büyütür
@@ -337,12 +368,15 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     city: city.name,
     bestSong: bestSong?.title ?? '',
     seed: gig.id,
+    legendary: !!res.legendary,
   });
 
   const result = {
     review,
     bestSongId: bestSong?.id,
     quality: res.quality,
+    legendary: !!res.legendary,
+    legendaryItems,
     attendance: res.attendance,
     revenue: res.revenue,
     fameDelta: res.fameDelta,
@@ -354,7 +388,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     ownerShare,
     festivalId: gig.festival_id ?? null,
   };
-  await c.query(`UPDATE gigs SET status = 'done', result = $2 WHERE id = $1`, [gig.id, JSON.stringify(result)]);
+  await c.query(`UPDATE gigs SET status = 'done', result = $2, legendary = $3 WHERE id = $1`, [gig.id, JSON.stringify(result), !!res.legendary]);
   for (const ch of chars) {
     await c.query('INSERT INTO gig_performers(gig_id, character_id, present) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING', [
       gig.id,
@@ -370,6 +404,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       present: onStage(ch),
       jailed: isJailed(ch),
       quality: res.quality,
+      legendary: !!res.legendary,
+      legendaryItem: legendaryItems.find((x) => x.characterId === ch.id) ?? null,
       attendance: res.attendance,
       perMember: onStage(ch) ? perMember : 0,
       fameDelta: res.fameDelta,

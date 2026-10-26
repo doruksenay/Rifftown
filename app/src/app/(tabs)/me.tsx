@@ -77,6 +77,12 @@ export default function MeTab() {
           onPress={() => router.push({ pathname: '/chat', params: { channel: 'dm' } })}
         />
         <Button title={t('friendsAndMessages')} small variant="secondary" onPress={() => router.push('/friends')} />
+        <Button
+          title={me.data!.pendingTrades ? t('tradesN', { n: me.data!.pendingTrades }) : t('trades')}
+          small
+          variant={me.data!.pendingTrades ? 'primary' : 'secondary'}
+          onPress={() => router.push('/trades')}
+        />
         <Button title={t('leaderboard')} small variant="secondary" onPress={() => router.push('/leaderboard')} />
         <Button
           title={`${t('achievements')} · ${t('achievementPointsN', { n: ch.achievementPoints })}`}

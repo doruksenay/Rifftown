@@ -28,7 +28,8 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
         return d.learned ? t('learnedSkill', { skill: skillName(d.skill) }) : t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
       }
       if (d.kind === 'write_song' && d.title) {
-        return `${t('n_action_done', { action: t('action_write_song') })}: "${d.title}", ${tierName('quality', d.quality, lang)}`;
+        const base = `${t('n_action_done', { action: t('action_write_song') })}: "${d.title}", ${tierName('quality', d.quality, lang)}`;
+        return d.inspirationBonus ? `${base}. ${t('n_song_inspired', { n: d.inspirationBonus })}` : base;
       }
       if (d.kind === 'record' && d.title) return t('n_record', { title: d.title, q: tierName('quality', d.quality, lang) });
       if (d.kind === 'crime' && d.success) return t('n_crime_ok', { money: `$${Number(d.loot).toLocaleString('en-US')}` });
@@ -45,6 +46,7 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       return t('n_gig_cancelled', { band: d.bandName });
     case 'gig_done':
       if (!d.present) return t('n_gig_missed', { band: d.bandName });
+      if (d.legendary) return t('n_gig_legendary', { band: d.bandName });
       return d.review?.[lang] ? `${d.bandName}: ${d.review[lang]}` : t('n_gig_done', { band: d.bandName, n: d.attendance, q: tierName('quality', d.quality, lang) });
     case 'skill_up':
       return levelUpText(d.skill, d.level, lang);
@@ -130,6 +132,12 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       return t('n_job_lost');
     case 'business_seized':
       return t('n_business_seized', { name: d.name ?? '' });
+    case 'trade_offer':
+    case 'trade_accepted':
+    case 'trade_declined':
+      return t(`n_${n.kind}` as StringKey, { from: d.from ?? '' });
+    case 'trade_failed':
+      return t('n_trade_failed');
     case 'festival_selected':
       return t('n_festival_selected', { slot: d.slot ?? '' });
     default:
@@ -157,6 +165,7 @@ export function notificationHref(n: NotificationDto, myId?: number): string | nu
     return `/character/${d.fromId}`;
   if (n.kind.startsWith('job_') && d.locationId) return `/location/${d.locationId}`;
   if (n.kind === 'item_sold') return '/me';
+  if (n.kind.startsWith('trade_')) return '/trades';
   if (n.kind === 'festival_selected' && d.cityId) return `/location/${d.cityId}-festival`;
   return null;
 }

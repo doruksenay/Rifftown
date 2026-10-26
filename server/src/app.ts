@@ -26,7 +26,8 @@ export async function buildApp(opts: { logger?: boolean } = {}) {
     bodyLimit: 64 * 1024,
   });
 
-  await app.register(cors, { origin: true });
+  // Web sürümü DELETE ve PATCH de gönderir (ön kontrol isteğinde izin verilmeli)
+  await app.register(cors, { origin: true, methods: ['GET', 'HEAD', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'] });
   if (config.rateLimit) await app.register(rateLimit, { max: 300, timeWindow: '1 minute' });
 
   app.setErrorHandler((err, req, reply) => {

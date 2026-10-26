@@ -53,6 +53,16 @@ import {
   RECORD_HOURS,
   RECORDING_PRICE_PER_HOUR,
   INVESTIGATE_HOURS,
+  type ActionKind,
+  ENERGY_FREE_KINDS,
+  ENERGY_PER_HOUR,
+  HOME_REST_ENERGY_BONUS,
+  INSPIRATION_GAIN,
+  type MoodletId,
+  SONG_INSPIRATION_SPEND,
+  energyAfter,
+  energyFactor,
+  songInspirationBonus,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -62,6 +72,7 @@ import { evaluateAchievements } from './achievements';
 import { prepareCrime, prepareInvestigation, prisonOf, resolveCrime, resolveInvestigation } from './crime';
 import { prepareBusinessShift, resolveBusinessShift } from './business';
 import { homeRestBonus } from './homes';
+import { addMoodlet, changeWellbeing, currentEnergy, wellbeingOf } from './wellbeing';
 import { prepareCraft, resolveCraft } from './items';
 import { hotelOf } from './lifestyle';
 import { spouseInCity } from './relations';
@@ -289,6 +300,8 @@ export async function startAction(characterId: number, req: StartActionRequest, 
     }
 
     if (char.money < cost) fail('not_enough_money');
+    // Enerji yetmiyorsa yorucu iş başlamaz (dinlenmek, tedavi ve yolculuk her zaman serbest)
+    if (!ENERGY_FREE_KINDS.includes(req.kind) && energyAfter(req.kind, hours, currentEnergy(char)) < 0) fail('too_tired', 409);
     params.hours = hours;
     params.cost = cost;
 
@@ -380,6 +393,13 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   const skills = { ...char.skills };
   const result: Record<string, unknown> = { fraction: Math.round(fraction * 100) / 100 };
   const gear = (await gearBonuses(c, [char.id])).get(char.id)!;
+  // Görünen ruh hâli (moodlet'lerle), enerji ve ilham
+  const well = await wellbeingOf(c, char);
+  const efficiency = energyFactor(well.energy);
+  let energyDelta = ENERGY_PER_HOUR[a.kind as ActionKind] * hours + (a.kind === 'rest' && (params.home || params.hotel) ? HOME_REST_ENERGY_BONUS * hours : 0);
+  let inspirationDelta = 0;
+  let setInspiration: number | undefined;
+  const moodlets: MoodletId[] = [];
 
   // Ruh hâli ve sağlık
   let mood = char.mood;
@@ -392,7 +412,11 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   if (healthChange < 0) healthChange *= 1 - fitnessShield(lv(char.skills, 'fitness'));
   health += healthChange;
   if (a.kind === 'rest' && params.homeHealth) health += (params.homeHealth as number) * hours;
-  if (a.kind !== 'rest' && a.kind !== 'treat' && Math.min(char.mood, mood) < LOW_MOOD_THRESHOLD) {
+  if (a.kind === 'rest') {
+    // Sanat eserleriyle dinlenmek ilham verir
+    inspirationDelta += INSPIRATION_GAIN.artRestPerHourPer10 * (gear.art / 10) * hours;
+  }
+  if (a.kind !== 'rest' && a.kind !== 'treat' && Math.min(well.mood, well.mood + (mood - char.mood)) < LOW_MOOD_THRESHOLD) {
     health += LOW_MOOD_HEALTH_PER_HOUR * hours;
   }
   mood = clamp(mood, 0, 100);
@@ -416,7 +440,8 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
         result.learned = true;
       }
       const instBonus = Math.max(0, ...rolesForSkill(skill).map((r) => gear.instruments[r] ?? 0));
-      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, char.mood, char.health, instBonus);
+      if (result.learned) inspirationDelta += INSPIRATION_GAIN.learnSkill;
+      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency;
       skills[skill] = clamp(lv(skills, skill) + gain, 0, 100);
       result.skill = skill;
       result.gain = Math.round(gain * 100) / 100;
@@ -448,6 +473,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       const pay = Math.floor(base * hours * (0.7 + Math.random() * 0.6));
       money += pay;
       result.pay = pay;
+      inspirationDelta += INSPIRATION_GAIN.buskPerHour * hours;
       for (const [id, amount] of [[ROLE_SKILLS[role].specific, 0.2], ['showmanship', 0.3]] as const) {
         if (knows(skills, id)) skills[id] = clamp(skills[id] + amount * hours * diminishing(skills[id]), 0, 100);
       }
@@ -459,7 +485,11 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
         break;
       }
       const genre = params.genre as Genre;
-      const quality = songQuality(songwritingScore(skills, genre), Math.random);
+      // İlham şarkıyı güçlendirir ve yarısı harcanır
+      const inspirationBonus = songInspirationBonus(well.inspiration);
+      const quality = clamp(songQuality(songwritingScore(skills, genre), Math.random) + inspirationBonus, 0, 100);
+      setInspiration = well.inspiration * (1 - SONG_INSPIRATION_SPEND);
+      result.inspirationBonus = inspirationBonus;
       const song = await one(
         c,
         'INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, $2, $3, $4) RETURNING id',
@@ -485,7 +515,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
         ]);
         const fam = famRow?.value ?? 0;
         const cap = familiarityCap(skills, params.songGenre as Genre);
-        const gain = rehearsalGain(fam, hours, char.mood, lv(skills, 'improvisation'));
+        const gain = rehearsalGain(fam, hours, well.mood, lv(skills, 'improvisation')) * efficiency;
         // Tür becerisi düşükse şarkı belli bir noktadan sonra öğrenilemez (Popmundo'daki gibi)
         const next = fam >= cap ? fam : Math.min(cap, fam + gain);
         result.capped = next >= cap;
@@ -547,6 +577,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       }
       const gain = workoutGain(skills.fitness, hours);
       skills.fitness = clamp(skills.fitness + gain, 0, 100);
+      if (fraction >= 1) moodlets.push('endorphins');
       result.gain = Math.round(gain * 100) / 100;
       break;
     }
@@ -558,6 +589,11 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       cityId = params.to;
       locationId = null;
       result.to = params.to;
+      // Yeni bir şehir: heyecan ve ilham
+      if (params.to !== params.from) {
+        inspirationDelta += INSPIRATION_GAIN.travel;
+        moodlets.push('new_city');
+      }
       break;
     }
   }
@@ -571,6 +607,12 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
     await c.query('UPDATE characters SET jailed_until = $2 WHERE id = $1', [char.id, jailUntil]);
     await notify(c, char.id, 'arrested', { caseId: result.caseId, crime: result.crime, caught: true, cityId: char.city_id });
   }
+  // Enerji ve ilham (eylemin harcadığı/verdiği; zamanla dolan kısım ayrıca hesaplanır)
+  const afterWell = await changeWellbeing(c, char, { energy: energyDelta, inspiration: inspirationDelta, setInspiration });
+  result.energyDelta = Math.round(energyDelta * 10) / 10;
+  result.energy = Math.round(afterWell.energy);
+  if (inspirationDelta) result.inspirationDelta = Math.round(inspirationDelta * 10) / 10;
+  for (const m of moodlets) await addMoodlet(c, char.id, m);
   await notifySkillUps(c, char.id, char.skills, skills);
   return result;
 }
