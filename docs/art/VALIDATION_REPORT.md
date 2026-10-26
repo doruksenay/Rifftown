@@ -1,6 +1,6 @@
 # Görsel doğrulama raporu
 
-Toplam 323 varlık: 0 geçerli, 0 hatalı, 323 eksik. Bu dosya `npm run art:validate` ile üretilir; elle düzenlenmez.
+Toplam 323 varlık: 11 geçerli, 0 hatalı, 312 eksik. Bu dosya `npm run art:validate` ile üretilir; elle düzenlenmez.
 
 ## Hatalı dosyalar
 
@@ -16,7 +16,7 @@ Yok.
 
 ## Eksikler (partiye göre)
 
-- **B0 Proof of concept (style check):** 16 eksik
+- **B0 Proof of concept (style check):** 5 eksik
 - **B1 Cities:** 14 eksik
 - **B2 Places and venues:** 33 eksik
 - **B3 Instruments and paint masks:** 44 eksik

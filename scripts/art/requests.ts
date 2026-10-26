@@ -4,7 +4,7 @@ import { type AssetDef, BATCHES, type Category, SPECS } from './catalog';
 
 /** Rifftown Visual Language v1: her isteme giren ortak stil kuralı (Art Bible ile aynı) */
 export const VISUAL_LANGUAGE =
-  'Rifftown Visual Language v1: modern stylized semi-realistic game illustration with a polished, contemporary mobile-game finish; premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image.';
+  'Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.';
 
 const TIER_LOOK: Record<string, string> = {
   basic: 'Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware.',
@@ -69,7 +69,8 @@ function prompt(a: AssetDef, fileName: string, mask?: AssetDef): string {
   return lines.filter(Boolean).join('\n');
 }
 
-function maskPrompt(item: AssetDef, mask: AssetDef, fileName: string): string {
+// Kullanılmıyor: ChatGPT maske hizasını tutturamadı (B0). Gerekirse yeniden açılabilir.
+export function maskPrompt(item: AssetDef, mask: AssetDef, fileName: string): string {
   return [
     `Asset ID: ${mask.id}`,
     `File name: ${fileName}`,
@@ -88,7 +89,7 @@ export const SESSION_OPENER = [
   `- ${VISUAL_LANGUAGE}`,
   '- Individual objects: three-quarter view from slightly above, centred, ~10% padding, transparent background, the same camera and lighting for every object.',
   '- Tiers are shown through design and materials: Basic (entry-level), Stage (solid professional), Professional (premium craftsmanship), Iconic (legendary collectible), Crafted (handmade one-off).',
-  '- Repaintable surfaces are rendered in neutral light grey (#DADADA) with full shading; a separate white-on-transparent mask marks them.',
+  '- Repaintable surfaces are rendered in neutral light grey (#DADADA) with full shading and highlights; everything else keeps its natural material and colour, clearly different from that grey.',
   '- The attached style board is the primary reference. Match its finish, detail density and lighting.',
   '',
   'Generate exactly one image per message, at the size I ask for. Do not add text, labels or logos. Reply "Ready" and wait for the first request.',
@@ -105,7 +106,7 @@ export function renderRequests(catalog: AssetDef[], checked: { id: string; statu
     '## Akış',
     '',
     '1. ChatGPT\'de her parti için yeni bir sohbet aç. Stil panosunu ekle ve aşağıdaki **açılış mesajını** gönder.',
-    '2. Partideki her isteği sırayla, **tek tek** gönder. Boyanabilen eşyalarda resim gelince hemen ardından maskesinin isteğini aynı sohbette gönder.',
+    '2. Partideki her isteği sırayla, **tek tek** gönder. Boyanabilen eşyaların maskesini ChatGPT\'den isteme; `npm run art:automask` gri yüzeyden çıkarır.',
     '3. Her resmi istekteki **File name** adıyla indir ve projedeki `art-incoming/` klasörüne koy.',
     '4. `npm run art:sync` çalıştır: dosyalar boyutlandırılır, doğrulanır, uygulamaya eklenir ve `docs/art/gallery.html` güncellenir. Hatalı olanlar `docs/art/VALIDATION_REPORT.md` içinde nedeniyle listelenir; onları yeniden üret.',
     '',
@@ -128,7 +129,8 @@ export function renderRequests(catalog: AssetDef[], checked: { id: string; statu
       const mask = a.paintable ? catalog.find((m) => m.id === `${a.id}.mask`) : undefined;
       out.push(`### ${a.id}${a.visualTestOnly ? ' (görsel dil denemesi)' : ''}`, '');
       if (open(a)) out.push('```text', prompt(a, names.get(a.id)!, mask), '```', '');
-      if (mask && open(mask)) out.push('Ardından aynı sohbette maske:', '', '```text', maskPrompt(a, mask, names.get(mask.id)!), '```', '');
+      // Maskeyi ChatGPT'den istemiyoruz: piksel hizasını tutturamıyor. Gri yüzeyden otomatik çıkarılır.
+      if (mask && open(mask)) out.push(`Maske ChatGPT'den istenmez. Görsel geçerli olunca: \`npm run art:automask -- ${a.id}\` (sonra \`npm run art:sync\`, galeride boya örneklerini kontrol et).`, '');
     }
   }
   return out.join('\n');

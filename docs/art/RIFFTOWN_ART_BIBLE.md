@@ -55,6 +55,7 @@ Oyuncular enstrüman, kıyafet, araç ve sprey boyayı 10 renge boyayabilir.
 
 - **Asıl görselde** boyanabilen yüzey **nötr açık gri (`#DADADA`)** çizilir, gölge ve parlamalar eksiksiz kalır. Geri kalan her parça kendi doğal malzemesindedir.
 - **Maske** aynı boyutta ayrı bir PNG'dir: boyanabilen yüzey saf beyaz ve opak, geri kalan her şey şeffaftır. Metal, tel, cam, ahşap sap, lastik ve ışıklar maskeye girmez.
+- Maske ChatGPT'den **istenmez**: ilk partide ayrı üretilen maske eşyayla hizalanmadı. `npm run art:automask -- item/<kimlik>` hazırlanmış görseldeki en büyük nötr gri bölgeyi bulup maskeyi çıkarır. Bu yüzden gri yüzey başka hiçbir parçayla (krom, fildişi tuş, cam) karışmamalı; galerideki boya örnekleriyle gözle onaylanır.
 - Oyun boyayı maskeye göre **çarpma (multiply)** karışımıyla basar. Böylece gri yüzeyin gölgesi ve parlaması korunur.
 - Boyanmamış eşya, manifestteki `defaultPaint` fabrika rengiyle görünür. Örneğin başlangıç gitarı mavi, 1959 gitar altın.
 - Doğrulama maskenin boyutunu, beyazlığını ve eşyayla hizasını denetler: maskenin en çok %2'si eşyanın dışına taşabilir. Maskesi geçerli olmayan boyanabilir eşya oyuna girmez; eski görünüm kullanılır.

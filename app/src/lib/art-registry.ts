@@ -3,6 +3,17 @@
 
 /* eslint-disable */
 export const ART: Record<string, number> = {
+  'city/istanbul': require('../../assets/art/city/istanbul.webp'),
+  'place/bar': require('../../assets/art/place/bar.webp'),
+  'item/keys_3': require('../../assets/art/item/keys_3.png'),
+  'item/keys_3.mask': require('../../assets/art/item/keys_3.mask.png'),
+  'item/guitar_4': require('../../assets/art/item/guitar_4.png'),
+  'item/guitar_4.mask': require('../../assets/art/item/guitar_4.mask.png'),
+  'item/car_2': require('../../assets/art/item/car_2.png'),
+  'item/car_2.mask': require('../../assets/art/item/car_2.mask.png'),
+  'item/kanun_3': require('../../assets/art/item/kanun_3.png'),
+  'item/trombone_2': require('../../assets/art/item/trombone_2.png'),
+  'avatar/01': require('../../assets/art/avatar/01.webp'),
 };
 
 /** Boyanabilen eşyalar: maskenin kimliği ve boyanmamış hâlinin fabrika rengi */

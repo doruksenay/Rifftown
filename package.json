@@ -18,7 +18,8 @@
     "art:manifest": "tsx scripts/art/cli.ts manifest",
     "art:prepare": "tsx scripts/art/cli.ts prepare",
     "art:validate": "tsx scripts/art/cli.ts validate",
-    "art:sync": "tsx scripts/art/cli.ts sync"
+    "art:sync": "tsx scripts/art/cli.ts sync",
+    "art:automask": "tsx scripts/art/cli.ts automask"
   },
   "dependencies": {
     "@neon/config": "^1.9.3",
