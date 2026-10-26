@@ -140,3 +140,26 @@ export function Newspaper({ locationId }: { locationId: string }) {
     </View>
   );
 }
+
+/** Profilde oyuncunun blog yazıları */
+export function BlogList({ id }: { id: number }) {
+  const { t } = useI18n();
+  const { run } = useRun();
+  const q = useQuery({ queryKey: ['blog', id], queryFn: () => api.get<{ posts: ArticleDto[] }>(`/characters/${id}/blog`).then((r) => r.posts) });
+  if (!q.data?.length) return null;
+  return (
+    <View>
+      <Heading>{t('blogTitle')}</Heading>
+      {q.data.map((a) =>
+        a.mine ? (
+          <View key={a.id}>
+            <ArticleCard a={a} />
+            <Button title={t('delete')} small variant="ghost" onPress={() => run(() => api.del(`/posts/${a.id}`), { invalidate: ['blog'] })} />
+          </View>
+        ) : (
+          <ArticleCard key={a.id} a={a} onReport={() => run(() => api.post('/reports', { kind: 'article', targetId: a.id, text: '' }), { success: t('reported'), invalidate: [] })} />
+        ),
+      )}
+    </View>
+  );
+}

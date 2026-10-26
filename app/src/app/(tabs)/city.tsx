@@ -61,8 +61,8 @@ export default function CityTab() {
         subtitle={info.data ? t('players', { n: info.data.playersHere }) : undefined}
         right="›"
         onPress={() => router.push({ pathname: '/people', params: { city: city.id } })}
-        last
       />
+      <ListRow title={t('communityTitle')} subtitle={t('communitySub')} right="›" onPress={() => router.push('/community')} last />
 
       {GROUPS.map((g) => {
         const locs = city.locations.filter((l) => g.types.includes(l.type) && !l.business);

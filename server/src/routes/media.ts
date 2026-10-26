@@ -12,6 +12,7 @@ import { fail } from '../errors';
 import { fireCrew, hireCrew, repairGear, startTour, tourView } from '../game/touring';
 import { answerContract, foundLabel, labelView, labelsList, moveLabelTill, offerContract } from '../game/labels';
 import { videoChart } from '../game/media';
+import { blogOf, deletePost, magazine, postBlog, postBoard } from '../game/community';
 
 const terms = z.object({ bandShare: z.number().min(0).max(1), advance: z.number().int().min(0), weeks: z.number().int() });
 
@@ -59,6 +60,16 @@ export async function mediaRoutes(app: FastifyInstance) {
     const body = p.answer === 'counter' ? parse(terms, req.body) : undefined;
     return answerContract(charId(req), p.id, p.answer, body);
   });
+
+  // ---------- Topluluk: blog, pano, dergi ----------
+  app.post('/blog', async (req) => postBlog(charId(req), parse(z.object({ title: z.string().max(200), body: z.string().max(6000) }), req.body)));
+  app.get('/characters/:id/blog', async (req) => ({ posts: await blogOf(parse(z.object({ id: z.coerce.number().int() }), req.params).id, charId(req)) }));
+  app.post('/cities/:cityId/board', async (req) => {
+    const p = parse(z.object({ cityId: z.string().max(30) }), req.params);
+    return postBoard(charId(req), p.cityId, parse(z.object({ text: z.string().max(600) }), req.body).text);
+  });
+  app.delete('/posts/:id', async (req) => deletePost(charId(req), parse(z.object({ id: z.coerce.number().int() }), req.params).id, req.user!.isAdmin));
+  app.get('/cities/:cityId/magazine', async (req) => magazine(parse(z.object({ cityId: z.string().max(30) }), req.params).cityId, charId(req)));
 
   app.get('/press/mine', async (req) => {
     const id = charId(req);

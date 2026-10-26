@@ -27,3 +27,4 @@ export * from './content/progress';
 export * from './press';
 export * from './touring';
 export * from './broadcast';
+export * from './community';

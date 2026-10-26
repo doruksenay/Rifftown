@@ -1,5 +1,6 @@
 import { ACHIEVEMENT_BY_ID, CITY_BY_ID, HOME_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, type PublicCharacterDto, ROLE_NAMES, SKILL_BY_ID, TATTOO_BY_ID, VIP } from '@rifftown/shared';
 import { Guestbook, ProfileActions, RelationshipPanel } from '@/components/social';
+import { BlogList } from '@/components/newspaper';
 import { useState } from 'react';
 import { TierText } from '@/components/tier';
 import { useQuery } from '@tanstack/react-query';
@@ -148,6 +149,7 @@ function CharacterProfileScreen() {
         />
       ))}
       {!isMe && !ch.npc ? <SendMoney name={ch.name} /> : null}
+      {!ch.npc ? <BlogList id={ch.id} /> : null}
       {!ch.npc ? <Guestbook id={ch.id} canSign={!isMe} /> : null}
     </Screen>
   );

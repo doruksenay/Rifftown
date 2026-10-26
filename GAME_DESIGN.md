@@ -567,12 +567,21 @@ Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düş
 | Zanaat | El işçiliği | Kitapçı, atölyede gelişir |
 | Kariyer (ek) | İşletmecilik (işletme gelirini artırır, ekonomi ister) | Üniversite |
 
+## Topluluk: pano, bloglar ve dergi
+
+Şehir sekmesinden "Topluluk" ekranı açılır. Kurallar `packages/shared/src/community.ts`, sunucu `server/src/game/community.ts`; yazılar haberlerle aynı `articles` tablosunda (tür: news, blog, board).
+
+- **Şehir panosu:** o şehirdeki oyuncu 280 karakterlik not bırakır (oyun saatinde bir; cezaevinden yazılamaz). Notlar 7 oyun günü akışta kalır.
+- **Blog:** herkes yazabilir (başlık 3–80, metin 20–3.000 karakter, 12 oyun saatinde bir); yazı yazarın bulunduğu şehrin blog akışında ve profilinde görünür. Yazar kendi blog ve pano yazısını silebilir; haberler basın etkisi taşıdığı için yalnızca yönetici kaldırır.
+- **Haftalık dergi:** son kapanan liste haftasında o şehirde yayınlanan haberlerden etkisi en büyük 10 tanesi (gazeteci oyuncular ve gazetenin kendi muhabirleri).
+- **Moderasyon:** bütün metinler kontrol ve görünmez karakterlerden temizlenir, küfürler yıldızlanır. Engellenen ya da engelleyen kişinin yazıları akışlarda ve profilde görünmez. Her yazı şikâyet edilebilir (aynı kişi aynı yazıyı bir kez); şikâyetler yönetim panelindeki kuyruğa "Haber / yazı" türüyle düşer, panelde ayrıca "Son haberler ve yazılar" listesi ve tek tıkla kaldırma ve banlama var.
+
 ## Mağaza uyumu ve moderasyon
 
 - Kayıtta kullanım şartları ve gizlilik politikası onayı zorunlu; ikisi de `/legal/terms` ve `/legal/privacy` adreslerinde yayınlanır (`server/legal/*.md`, iletişim adresi `CONTACT_EMAIL`).
 - Uygulama içinden hesap silme (şifreyle onay): karakter, mesajlar, fotoğraf ve tüm oyun verisi silinir; grup liderliği bir üyeye geçer ya da grup dağılır.
 - Türkçe ve İngilizce küfür filtresi: sohbet, mesaj, defter, biyografi ve başlıkta küfürler yıldızlanır; karakter, grup, işletme, eşya ve çocuk isimlerinde küfür reddedilir.
-- Engelleme ve şikâyet her sosyal alanda var (mesaja basılı tutarak, defter notunun ve profilin altındaki düğmeyle). Yönetim panelindeki şikâyet listesinden içerik tek tıkla kaldırılır ya da yazan banlanır.
+- Engelleme ve şikâyet her sosyal alanda var (mesaja basılı tutarak, defter notunun, profilin, haberin ve topluluk yazısının altındaki düğmeyle). Yönetim panelindeki şikâyet listesinden içerik tek tıkla kaldırılır ya da yazan banlanır.
 
 ## Ek hesaplara karşı önlemler
 

@@ -258,9 +258,10 @@ export async function cityNews(cityId: string, viewer: number, opts: { kind?: 'n
     `SELECT a.*, c.name AS author_name, c.avatar_color, c.avatar_version, b.name AS band_name
        FROM articles a LEFT JOIN characters c ON c.id = a.author_id LEFT JOIN bands b ON b.id = a.band_id
       WHERE a.city_id = $1 AND NOT a.removed AND a.kind = $2 AND ($3::bigint IS NULL OR a.id < $3)
+        AND (a.kind <> 'board' OR a.created_at > $5)
         AND (a.author_id IS NULL OR NOT EXISTS (SELECT 1 FROM blocks x WHERE (x.blocker_id = $4 AND x.blocked_id = a.author_id) OR (x.blocker_id = a.author_id AND x.blocked_id = $4)))
       ORDER BY a.id DESC LIMIT 30`,
-    [cityId, opts.kind ?? 'news', opts.before ?? null, viewer],
+    [cityId, opts.kind ?? 'news', opts.before ?? null, viewer, new Date(Date.now() - gameHoursToMs(7 * 24, config.gameSpeed))],
   );
   return rows.map(toArticleDto);
 }
