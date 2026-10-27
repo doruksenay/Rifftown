@@ -25,6 +25,8 @@ const KEY_RULES: Record<string, Rule[]> = {
   familiarity: [{ scale: 'familiarity' }, { scale: 'familiarity', map: true }],
   fame: [{ scale: 'fame' }, { scale: 'fame', map: true }],
   press: [{ scale: 'press' }, { scale: 'press', map: true }],
+  // Profesörün götürebileceği en yüksek seviye bir beceri değeridir
+  maxLevel: [{ scale: 'skill' }],
 };
 
 /** Bu anahtarlarda VIP olmayanlara 10'luk adımlarla */
@@ -55,6 +57,9 @@ function blurNode(node: unknown, depth = 0): unknown {
     } else if (SIGN_ONLY.has(k) && typeof v === 'number') {
       // Etkinin yalnızca yönü gösterilir (setlist sırası, basın etkisi vb.)
       out[k] = Math.sign(v);
+    } else if (k === 'lessonRate' && typeof v === 'number') {
+      // Ders verimi: VIP olmayanlara yarımlık adımlarla (öğretmenin rütbesi ve ilişki seviyesi tam okunamasın)
+      out[k] = Math.floor(v * 2) / 2;
     } else if (k === 'maxBandShare' && typeof v === 'number') {
       // Liderin sözleşme hukukunu ele vermesin: yüzde puanına aşağı yuvarlanır
       out[k] = Math.floor(v * 100 + 1e-6) / 100;

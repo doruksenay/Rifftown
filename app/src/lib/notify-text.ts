@@ -25,6 +25,7 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
     case 'welcome':
       return t('n_welcome');
     case 'action_done':
+      if (d.kind === 'lesson' && d.skill) return t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
       if (d.kind === 'study') {
         return d.learned ? t('learnedSkill', { skill: skillName(d.skill) }) : t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
       }
@@ -89,6 +90,10 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       const a = ACHIEVEMENT_BY_ID[d.id];
       return a ? t('n_achievement', { name: p(a.name), points: a.points }) : n.kind;
     }
+    case 'lesson_given':
+      return t('n_lesson_given', { student: d.student ?? '', skill: skillName(d.skill) });
+    case 'lesson_invite':
+      return t('n_lesson_invite', { from: d.from ?? '', skill: skillName(d.skill) });
     case 'title_earned': {
       const ti = TITLE_BY_ID[d.titleId];
       return ti ? t('n_title_earned', { name: p(ti.name) }) : n.kind;
@@ -190,6 +195,7 @@ export function notificationHref(n: NotificationDto, myId?: number): string | nu
   if ((n.kind === 'election_won' || n.kind === 'election_lost' || n.kind === 'office_lost') && d.cityId) return `/location/${d.cityId}-city_hall`;
   if (n.kind === 'action_done' && d.kind === 'write_song') return '/me';
   if (n.kind === 'achievement') return '/achievements';
+  if (n.kind === 'lesson_invite' && d.fromId) return `/character/${d.fromId}`;
   if ((n.kind === 'evicted' || n.kind === 'rent_paid') && d.cityId) return `/location/${d.cityId}-real_estate`;
   if (n.kind === 'release_out' || n.kind === 'sales_report' || (n.kind === 'action_done' && d.kind === 'record')) return '/releases';
   if (n.kind === 'arrested' || n.kind === 'convicted' || n.kind === 'acquitted') return '/';

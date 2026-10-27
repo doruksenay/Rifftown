@@ -83,6 +83,8 @@ import { config } from '../config';
 import { one, tx } from '../db';
 import { fail } from '../errors';
 import { evaluateAchievements } from './achievements';
+import { prepareLesson } from './lessons';
+import { pair } from './social';
 import { prepareCrime, prepareInvestigation, prisonOf, resolveCrime, resolveInvestigation } from './crime';
 import { prepareBusinessShift, resolveBusinessShift } from './business';
 import { homeRestBonus } from './homes';
@@ -121,6 +123,10 @@ function requireLocation(char: CharacterRow, locationId: unknown, type: Location
 export async function startAction(characterId: number, req: StartActionRequest, opts: { isVip?: boolean } = {}) {
   const isVip = !!opts.isVip;
   return tx(async (c) => {
+    // Özel derste karşı taraf da değişir (ücret, pekiştirme): iki karakter id sırasıyla kilitlenir
+    if (req.kind === 'lesson' && req.tutorId && Number(req.tutorId) !== characterId) {
+      for (const id of pair(characterId, Number(req.tutorId))) await lockCharacter(c, id);
+    }
     const char = await lockCharacter(c, characterId);
     if (await activeAction(c, characterId)) fail('busy', 409);
     if (!char.city_id) fail('traveling', 409);
@@ -352,6 +358,14 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         locationId = null;
         break;
       }
+      case 'lesson': {
+        const l = await prepareLesson(c, char, req);
+        hours = l.hours;
+        cost = l.cost;
+        locationId = l.locationId;
+        Object.assign(params, l.params);
+        break;
+      }
       default:
         fail('invalid_action');
     }
@@ -503,6 +517,20 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       skills[skill] = clamp(lv(skills, skill) + gain, 0, 100);
       result.skill = skill;
       result.gain = Math.round(gain * 100) / 100;
+      break;
+    }
+    case 'lesson': {
+      // Özel ders: verim çarpanı derse göre; öğrenci öğretmenin (profesörün) seviyesini geçemez
+      const skill = params.skill as string;
+      if (!knows(skills, skill)) break;
+      const instBonus = Math.max(0, ...rolesForSkill(skill).map((r) => gear.instruments[r] ?? 0));
+      const before = lv(skills, skill);
+      const gain0 = studyGain(before, hours, true, well.mood, char.health, instBonus, Number(params.rate)) * efficiency * ageLearnFactor(characterAge(char.created_at));
+      const capped = Math.max(before, Math.min(before + gain0, Number(params.cap ?? 100)));
+      skills[skill] = clamp(capped, 0, 100);
+      result.skill = skill;
+      result.gain = Math.round((skills[skill] - before) * 100) / 100;
+      result.tutor = params.tutor;
       break;
     }
     case 'work': {

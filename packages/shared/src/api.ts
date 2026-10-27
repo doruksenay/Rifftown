@@ -306,6 +306,8 @@ export interface LeaderboardResponse {
 
 export type StartActionRequest =
   | { kind: 'study'; skill: string; hours: number; locationId?: string }
+  /** Özel ders: profesör (okul/üniversite mekânında), oyuncu öğretmen (tutorId, okulda) ya da arkadaş/sevgili (tutorId) */
+  | { kind: 'lesson'; skill: string; hours: number; tutor: 'professor' | 'teacher' | 'friend'; locationId?: string; tutorId?: number }
   | { kind: 'work'; locationId: string; hours: number }
   | { kind: 'rest'; hours: number }
   | { kind: 'write_song'; title: string; genre: Genre; subgenre?: string | null; tempo?: Tempo }

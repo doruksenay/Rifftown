@@ -38,7 +38,7 @@ export const MAX_SKILL = 100;
 
 // ---------- Eylemler ----------
 
-export const ACTION_KINDS = ['study', 'work', 'rest', 'write_song', 'rehearse', 'travel', 'treat', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article', 'video'] as const;
+export const ACTION_KINDS = ['study', 'work', 'rest', 'write_song', 'rehearse', 'travel', 'treat', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article', 'video', 'lesson'] as const;
 export type ActionKind = (typeof ACTION_KINDS)[number];
 
 /** Seçilebilir süreler (oyun saati). */
@@ -50,6 +50,7 @@ export const HOUR_OPTIONS = {
   treat: [1, 2, 4],
   busk: [1, 2, 4],
   workout: [1, 2, 4],
+  lesson: [1, 2, 4],
 } as const;
 
 export const WRITE_SONG_HOURS = 2;
@@ -72,6 +73,7 @@ export const MOOD_PER_HOUR: Record<ActionKind, number> = {
   press: -2,
   write_article: -2,
   video: -2,
+  lesson: -3,
 };
 
 /** Saat başına sağlık değişimi. Ruh hâli 25'in altındayken her saat fazladan -2 uygulanır. */
@@ -92,6 +94,7 @@ export const HEALTH_PER_HOUR: Record<ActionKind, number> = {
   press: -0.5,
   write_article: -0.5,
   video: -0.5,
+  lesson: -0.5,
 };
 export const LOW_MOOD_THRESHOLD = 25;
 export const LOW_MOOD_HEALTH_PER_HOUR = -2;
@@ -119,10 +122,12 @@ export function studyGain(
   mood: number,
   health = 100,
   instrumentBonus = 0,
+  /** Verim çarpanı (özel derste profesör/öğretmen/arkadaş; verilmezse okul 2,2, ev 1,0) */
+  rate?: number,
 ): number {
   const gear = 1 + (instrumentBonus * 2) / 100;
   return (
-    Math.round(hours * (atSchool ? 2.2 : 1.0) * diminishing(level) * moodFactor(mood) * healthFactor(health) * gear * 100) /
+    Math.round(hours * (rate ?? (atSchool ? 2.2 : 1.0)) * diminishing(level) * moodFactor(mood) * healthFactor(health) * gear * 100) /
     100
   );
 }

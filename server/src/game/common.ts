@@ -46,6 +46,8 @@ export interface CharacterRow {
   profession: string | null;
   career_hours: number;
   career_rank: number;
+  /** Müzik öğretmeninin saatlik ders ücreti (NULL: ders vermiyor) */
+  lesson_price?: number | null;
   jailed_until: Date | null;
   convictions: number;
   npc: boolean;

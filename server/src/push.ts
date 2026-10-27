@@ -20,6 +20,7 @@ const ACTION_TEXT: Record<string, Tpl> = {
   }),
   work: (d, l) => ({ title: T(l, 'Mesai bitti', 'Shift finished'), body: T(l, `${d.pay} $ kazandın`, `You earned $${d.pay}`) }),
   rest: (_d, l) => ({ title: T(l, 'Dinlendin', 'Rested'), body: T(l, 'Ruh hâlin yerine geldi.', 'Your mood is back up.') }),
+  lesson: (d, l) => (d.skill ? { title: T(l, 'Ders bitti', 'Lesson finished'), body: `${skillName(d.skill, l)}: ${gainText(d.gain, l)}.` } : null),
   busk: (d, l) => ({
     title: T(l, 'Sokak müziği bitti', 'Busking finished'),
     body: T(l, `Şapkada ${d.pay} $ birikti.`, `You collected $${d.pay} in tips.`),
@@ -59,6 +60,8 @@ const TEMPLATES: Record<string, Tpl> = {
     const a = ACHIEVEMENT_BY_ID[d.id];
     return a ? { title: T(l, 'Başarım açıldı!', 'Achievement unlocked!'), body: `${pick(a.name, l)} · +${a.points}` } : null;
   },
+  lesson_given: (d, l) => ({ title: T(l, 'Ders verdin', 'You gave a lesson'), body: T(l, `${d.student} senden ders aldı: ${skillName(d.skill, l)}.`, `${d.student} took a lesson from you: ${skillName(d.skill, l)}.`) }),
+  lesson_invite: (d, l) => ({ title: T(l, 'Ders teklifi', 'Lesson offer'), body: T(l, `${d.from} sana ${skillName(d.skill, l)} öğretmek istiyor.`, `${d.from} wants to teach you ${skillName(d.skill, l)}.`) }),
   title_earned: (d, l) => {
     const t = TITLE_BY_ID[d.titleId];
     return t ? { title: T(l, 'Yeni ünvan!', 'New title!'), body: pick(t.name, l) } : null;

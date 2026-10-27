@@ -9,6 +9,14 @@ import { parse } from './util';
 
 const startSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('study'), skill: z.string(), hours: z.number(), locationId: z.string().optional() }),
+  z.object({
+    kind: z.literal('lesson'),
+    skill: z.string().max(40),
+    hours: z.number(),
+    tutor: z.enum(['professor', 'teacher', 'friend']),
+    locationId: z.string().max(40).optional(),
+    tutorId: z.number().int().optional(),
+  }),
   z.object({ kind: z.literal('work'), locationId: z.string(), hours: z.number() }),
   z.object({ kind: z.literal('rest'), hours: z.number() }),
   z.object({ kind: z.literal('treat'), locationId: z.string(), hours: z.number() }),

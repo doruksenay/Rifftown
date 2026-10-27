@@ -1,5 +1,6 @@
 import { ACHIEVEMENT_BY_ID, TITLE_BY_ID, CITY_BY_ID, HOME_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, type PublicCharacterDto, ROLE_NAMES, SKILL_BY_ID, TATTOO_BY_ID, VIP } from '@rifftown/shared';
 import { Guestbook, ProfileActions, RelationshipPanel } from '@/components/social';
+import { FriendLessons } from '@/components/lessons';
 import { BlogList } from '@/components/newspaper';
 import { useState } from 'react';
 import { TierText } from '@/components/tier';
@@ -95,6 +96,7 @@ function CharacterProfileScreen() {
       ) : null}
 
       {!isMe && !ch.npc ? <RelationshipPanel id={ch.id} name={ch.name} /> : null}
+      {!isMe && !ch.npc ? <FriendLessons otherId={ch.id} sameCity={!!ch.cityId && ch.cityId === me.data?.character?.cityId} /> : null}
 
       {ch.band ? (
         <>

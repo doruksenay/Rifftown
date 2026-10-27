@@ -617,6 +617,23 @@ Kurallar `packages/shared/src/perks.ts`. Etkiler küçük ve tavanlıdır (becer
 
 VIP olmayanlara sözleşmedeki azami pay yüzde puanına yuvarlanarak gider.
 
+## Özel ders ve birlikte çalışmak
+
+Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. Ders süreli `lesson` eylemidir (1, 2 ya da 4 oyun saati). **Özel ders bir beceriyi açmaz**, yalnızca bilinen beceriyi geliştirir: kitap, ilk grup dersi, öncül ve VIP kilitleri aynen geçerli. Öğrenci hocasının seviyesini geçemez (kazanç o seviyede kesilir).
+
+| Öğretmen | Nerede | Ücret | Verim (çalışma çarpanı) | Sınırlar |
+|---|---|---|---|---|
+| Kendi kendine | her yerde | yok | ×1,0 | |
+| Grup dersi | okul / üniversite | $30 / $40 saatlik × şehir | ×2,2 | |
+| Profesör (oyunun kadrosu) | okulda enstrüman, müzik, sahne, tür; üniversitede kariyer | $90 / $120 saatlik × şehir | ×3,2 | Her şehirde her alanın bir profesörü (75 profesör, adlı); profesörün tavanı 60–85 (alan ve şehrin müzik geleneğine göre). Ücretli özel ders günde en fazla 4 saat. |
+| Oyuncu öğretmen | müzik okulu, öğretmen de okulda olmalı | öğretmen belirler: $10–$120 saatlik | ×2,6 + rütbe başına 0,15 (en fazla ×3,05) | Yalnızca müzik öğretmeni mesleği; okulda öğretilen kategoriler; öğretmen öğrenciden en az 10 iyi olmalı. Ücretin %20'si okula (oyundan çıkar), kalanı öğretmene; öğretmen günde en fazla $400 kazanır; iki taraf da yeni hesap olamaz. Öğretmen ders başına küçük beceri pekiştirmesi ve yarım saat meslek ilerlemesi alır. |
+| Arkadaş ya da sevgili | aynı şehir | ücretsiz | tanıdık ×1,2 · arkadaş ×1,4 · yakın arkadaş ×1,6 · can dostu ×1,8; sevgili/nişanlı +0,2, evli +0,3; en fazla ×1,9 | Yabancıdan ders yok; öğreten en az 5 iyi olmalı; öğrenci günde en fazla 4 saat; aynı ikili 6 oyun saatinde bir; sokak (suç) becerileri arkadaştan öğrenilmez. Öğreten küçük pekiştirme ve +1 arkadaşlık alır. |
+
+- **Ona öğret:** profilde arkadaşına ders teklif edilir (bildirim; ikili başına 6 oyun saatinde bir). Ders öğrenci "Ondan öğren"e dokununca başlar; karşı tarafın vakti harcanmaz.
+- **Sömürü önlemleri:** kendine ders yok; engelleme her yönde geçerli; iki karakter id sırasıyla kilitlenir ve ücret, öğretmen payı, pekiştirme ve kayıt aynı veritabanı işleminde yazılır (`lesson_log`, migration 017); kontenjan, bekleme ve kazanç tavanı bu kayıttan hesaplanır. Öğretmenin payı ödenenin altında kaldığı için para çoğalmaz; ek hesaptan ana hesaba ders üzerinden taşınabilecek para günde en fazla $400 ve yalnızca müzik öğretmeni mesleğinde (beceri şartı 45) mümkündür.
+- **Görünürlük:** VIP olmayanlara ders verimi yarımlık adımlarla, profesörün tavanı beceri ölçeğinde bulanık gider.
+- Arayüz: okul ve üniversite sayfasında "Özel ders" bölümü (profesör, okuldaki öğretmenler, ücret, bugün kalan saat; müzik öğretmeni burada ücretini belirler); profilde "Birlikte çalışın" (Ondan öğren, Ona öğretmeyi öner); bildirimler: ders verdin, ders teklifi.
+
 ## Topluluk: pano, bloglar ve dergi
 
 Şehir sekmesinden "Topluluk" ekranı açılır. Kurallar `packages/shared/src/community.ts`, sunucu `server/src/game/community.ts`; yazılar haberlerle aynı `articles` tablosunda (tür: news, blog, board).

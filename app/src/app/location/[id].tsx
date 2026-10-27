@@ -55,6 +55,7 @@ import { useGameSpeed, useIsVip } from '@/lib/session';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { HoursAction } from '@/components/action-form';
+import { PrivateLessons } from '@/components/lessons';
 import { Body, Button, Card, Choice, Empty, Heading, ListRow, Row, Screen, Small, Strong } from '@/components/ui';
 import { VenueProgress } from '@/components/progress';
 import { useGate } from '@/components/gate';
@@ -330,6 +331,7 @@ function School({ locationId, cityMult, university = false }: { locationId: stri
         label={t('studyHere')}
         disabled={!skill}
       />
+      <PrivateLessons locationId={locationId} skill={skill} />
     </View>
   );
 }

@@ -3,6 +3,7 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { setTitle, titlesOf } from '../game/titles';
+import { friendLessonInfo, inviteLesson, lessonsAt, setLessonPrice } from '../game/lessons';
 import { charId, requireUser } from '../auth';
 import { pool } from '../db';
 import {
@@ -127,6 +128,14 @@ export async function economyRoutes(app: FastifyInstance) {
     ),
   );
   app.get('/titles', async (req) => titlesOf(pool, charId(req)));
+  // Özel ders: mekândaki profesörler ve öğretmenler, öğretmenin ücreti, arkadaşa ders daveti
+  app.get('/lessons', async (req) => lessonsAt(pool, charId(req), parse(z.object({ locationId: z.string().max(40) }), req.query).locationId));
+  app.post('/lessons/price', async (req) => setLessonPrice(charId(req), parse(z.object({ price: z.number().int().nullable() }), req.body).price));
+  app.post('/lessons/invite', async (req) => {
+    const b = parse(z.object({ toId: z.number().int(), skill: z.string().max(40) }), req.body);
+    return inviteLesson(charId(req), b.toId, b.skill);
+  });
+  app.get('/characters/:id/lesson', async (req) => friendLessonInfo(pool, charId(req), parse(z.object({ id: z.coerce.number().int() }), req.params).id));
   app.post('/titles', async (req) => setTitle(charId(req), parse(z.object({ titleId: z.string().max(40).nullable() }), req.body).titleId));
   app.post('/missions/:id/claim', async (req) => claimMission(charId(req), parse(z.object({ id: z.string().max(40) }), req.params).id));
 }
