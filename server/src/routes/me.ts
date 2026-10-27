@@ -327,6 +327,8 @@ export async function meRoutes(app: FastifyInstance) {
       if (loc!.cityId !== ch.city_id) fail('not_in_city');
       // Atölyede üretilen eşyalar dükkâna satılmaz (malzemeden ucuza üretip satarak para basılmasın); ikinci el pazarında satılabilir
       if (item!.crafted) fail('crafted_not_sellable');
+      // Ödül eşyaları kişiye bağlıdır: dükkâna satılıp paraya çevrilemez
+      if (item!.bound) fail('item_bound', 409);
       if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
       const price = Math.floor(item!.price * SELL_BACK_RATE);
       await c.query('DELETE FROM inventory WHERE id = $1', [inv.id]);

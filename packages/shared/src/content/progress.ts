@@ -172,17 +172,44 @@ export const EXTRA_MISSIONS: WeeklyDef[] = [
 // ---------- Görev zincirleri ----------
 // Sırayla açılan, ömür boyu istatistiklere bakan kısa hikâyeler. Her adımın ödülü bir kez alınır.
 
+/** Seçimli adımın seçenekleri: ödül ve hikâyenin devamı (dal) seçime göre değişir */
+export interface ChainChoice {
+  id: string;
+  label: L;
+  /** Seçimden sonra anlatılan sonuç */
+  result: L;
+  reward: number;
+  /** Kişiye bağlı ödül eşyası (satılamaz, takas edilemez) */
+  item?: string;
+  /** Kazanılan ünvan (content/rewards.ts TITLES) */
+  titleId?: string;
+}
 export interface ChainStep {
-  rule: StatRule;
+  /** İstatistik koşulu; seçimli adımda yoktur (seçim yapılınca tamamlanır) */
+  rule?: StatRule;
   reward: number;
   title: L;
+  /** Hikâye cümlesi (adı geçen karakterle) */
+  story?: L;
+  /** Bu adım yalnızca zincirde bu seçenek seçildiyse gelir */
+  branch?: string;
+  choice?: ChainChoice[];
+  item?: string;
+  titleId?: string;
 }
 export interface ChainDef {
   id: string;
   name: L;
+  /** Zincirin karakteri: adı ve kim olduğu */
+  npc?: { name: string; role: L };
   steps: ChainStep[];
 }
 const St = (stat: StatId, min: number, reward: number, tr: string, en: string): ChainStep => ({ rule: { stat, min }, reward, title: { tr, en } });
+
+/** Bir zincirin, yapılan seçimlere göre geçerli adımları (dal dışındakiler atlanır) */
+export function chainApplies(step: ChainStep, chosen: Set<string>): boolean {
+  return !step.branch || chosen.has(step.branch);
+}
 
 export const CHAINS: ChainDef[] = [
   {
@@ -246,6 +273,87 @@ export const CHAINS: ChainDef[] = [
     ],
   },
 ];
+// ---------- Karakterli zincirler: adı geçen karakter, seçim ve sonuç ----------
+// Ödüller küçük (adım başına en fazla $80); eşya ödülleri kişiye bağlıdır (satılamaz, takas ve hediye edilemez),
+// ünvanlar kozmetiktir. Böylece ek hesaplarla zincir koşturup para ya da eşya taşınamaz.
+CHAINS.push(
+  {
+    id: 'kingmaker',
+    name: { tr: 'Vedat Karahan\'ın teklifi', en: 'The Kingmaker\'s offer' },
+    npc: { name: 'Vedat Karahan', role: { tr: 'efsanevi prodüktör', en: 'legendary producer' } },
+    steps: [
+      {
+        rule: { stat: 'recordings', min: 1 },
+        reward: 20,
+        title: { tr: 'Bir kayıt yap: Vedat Karahan dinlesin', en: 'Make a recording for Vedat Karahan to hear' },
+        story: { tr: 'Stüdyonun koridorunda gri saçlı bir adam kaydını dinliyor. "Bu sesi tanıyorum," diyor. "Gel, konuşalım."', en: 'A grey-haired man in the studio corridor is listening to your take. "I know that sound," he says. "Come, let\'s talk."' },
+      },
+      {
+        reward: 0,
+        title: { tr: 'Vedat şarkını kendi bildiği gibi mikslemek istiyor', en: 'Vedat wants to mix your song his way' },
+        story: { tr: 'Vedat Karahan otuz yıldır hit yapıyor. "Bana güvenirsen bu şarkı radyoya girer. Ama artık benim sesim olur."', en: 'Vedat Karahan has made hits for thirty years. "Trust me and this song goes on the radio. But it becomes my sound."' },
+        choice: [
+          { id: 'trust', label: { tr: 'Vedat\'a güven', en: 'Trust Vedat' }, result: { tr: 'Vedat sana eski stüdyo mikrofonunu hediye etti: "Bununla söyle."', en: 'Vedat gave you his old studio mic: "Sing into this."' }, reward: 0, item: 'reward_vedat_mic' },
+          { id: 'own', label: { tr: 'Kendi sesinde ısrar et', en: 'Keep your own sound' }, result: { tr: 'Vedat güldü: "İnatçısın. İyi." Kapıdan çıkarken bir zarf bıraktı.', en: 'Vedat laughed: "Stubborn. Good." He left an envelope on his way out.' }, reward: 40 },
+        ],
+      },
+      { branch: 'trust', rule: { stat: 'singles', min: 1 }, reward: 60, title: { tr: 'Vedat\'ın miksiyle single çıkar', en: 'Release a single with Vedat\'s mix' }, story: { tr: 'Vedat telefonda: "Radyocular arıyor. Söylemiştim."', en: 'Vedat on the phone: "The DJs are calling. Told you."' } },
+      { branch: 'trust', rule: { stat: 'radio_plays', min: 50 }, reward: 60, titleId: 'kingmaker_protege', title: { tr: 'Radyoda 50 kez çalın', en: 'Get 50 radio plays' }, story: { tr: 'Vedat Karahan seni bir röportajda "keşfim" diye anıyor.', en: 'Vedat Karahan calls you "my discovery" in an interview.' } },
+      { branch: 'own', rule: { stat: 'singles', min: 1 }, reward: 60, title: { tr: 'Kendi sesinle single çıkar', en: 'Release a single in your own sound' }, story: { tr: 'Vedat\'tan kısa bir mesaj: "Fena değil. Hiç fena değil."', en: 'A short text from Vedat: "Not bad. Not bad at all."' } },
+      { branch: 'own', rule: { stat: 'best_units', min: 1000 }, reward: 80, titleId: 'independent', title: { tr: 'Prodüktörsüz altın plak', en: 'Go gold without him' }, story: { tr: 'Vedat altın plağını kutlayan ilk kişi oldu: "Haklıydın."', en: 'Vedat was the first to congratulate your gold record: "You were right."' } },
+    ],
+  },
+  {
+    id: 'red_foxes',
+    name: { tr: 'Rakip: Kızıl Tilkiler', en: 'Rivals: The Red Foxes' },
+    npc: { name: 'Cansu Tilki', role: { tr: 'Kızıl Tilkiler grubunun solisti', en: 'singer of The Red Foxes' } },
+    steps: [
+      {
+        rule: { stat: 'gigs', min: 5 },
+        reward: 20,
+        title: { tr: '5 konser ver: biri seni izliyor', en: 'Play 5 gigs: someone is watching' },
+        story: { tr: 'Arka sırada kızıl saçlı biri kollarını kavuşturmuş duruyor: Kızıl Tilkiler\'in solisti Cansu Tilki.', en: 'Someone with red hair stands at the back, arms crossed: Cansu Tilki, singer of The Red Foxes.' },
+      },
+      {
+        reward: 0,
+        title: { tr: 'Cansu sahne arkasına geldi', en: 'Cansu came backstage' },
+        story: { tr: '"Bu şehirde iki iyi grup var," diyor Cansu. "Biri fazla mı, yoksa birlikte mi daha iyiyiz?"', en: '"There are two good bands in this town," says Cansu. "Is one too many, or are we better together?"' },
+        choice: [
+          { id: 'challenge', label: { tr: 'Meydan oku', en: 'Challenge her' }, result: { tr: 'Cansu gülümsedi: "Sahnede görüşürüz." Tilkiler afişlerinizin üstüne kendi afişlerini yapıştırmaya başladı.', en: 'Cansu smiled: "See you on stage." The Foxes started pasting their posters over yours.' }, reward: 30 },
+          { id: 'collab', label: { tr: 'Birlikte çalalım de', en: 'Suggest playing together' }, result: { tr: 'Cansu elini uzattı. Ertesi gün kapına bir paket bıraktı: Tilkilerin sahne ceketlerinden biri.', en: 'Cansu shook your hand. Next day a parcel was at your door: one of the Foxes\' stage jackets.' }, reward: 0, item: 'reward_fox_jacket' },
+        ],
+      },
+      { branch: 'challenge', rule: { stat: 'epic_gigs', min: 1 }, reward: 80, titleId: 'fox_hunter', title: { tr: 'DESTANSI bir konserle Tilkileri sustur', en: 'Silence the Foxes with an EPIC gig' }, story: { tr: 'Cansu ertesi gün kısa bir not yolladı: "Tamam. Bu seferlik."', en: 'Cansu sent a short note the next day: "Fine. This time."' } },
+      { branch: 'collab', rule: { stat: 'hangouts', min: 5 }, reward: 40, title: { tr: 'Şehrin müzisyenleriyle 5 kez takıl', en: 'Hang out with the city\'s musicians 5 times' }, story: { tr: 'Tilkilerle aynı masada oturanlar sizi artık "kardeş gruplar" diye anıyor.', en: 'People at the Foxes\' table now call you "sister bands".' } },
+      { branch: 'collab', rule: { stat: 'festival_gigs', min: 1 }, reward: 60, titleId: 'fox_friend', title: { tr: 'Tilkilerle aynı festivalde çal', en: 'Play the same festival as the Foxes' }, story: { tr: 'Festivalde Cansu sahneye çıkıp sizinle bir nakarat söyledi.', en: 'At the festival Cansu jumped on stage and sang a chorus with you.' } },
+    ],
+  },
+  {
+    id: 'mentor',
+    name: { tr: 'Melek Hanım\'ın dersleri', en: 'Lessons from Melek' },
+    npc: { name: 'Melek Aksoy', role: { tr: 'İzmir\'de emekli bir caz şarkıcısı', en: 'a retired jazz singer in Izmir' } },
+    steps: [
+      {
+        rule: { stat: 'skills_known', min: 10 },
+        reward: 20,
+        title: { tr: '10 beceri öğren: Melek Aksoy seni fark etsin', en: 'Learn 10 skills to catch Melek Aksoy\'s eye' },
+        story: { tr: 'Kordon\'da bir bankta yaşlı bir kadın notalarını okuyor. "Çok şey biliyorsun," diyor, "ama neyi derinleştireceksin?"', en: 'An old woman on a bench by the Kordon reads your sheet music. "You know a lot," she says, "but what will you go deep on?"' },
+      },
+      {
+        reward: 0,
+        title: { tr: 'Melek bir yol seçmeni istiyor', en: 'Melek asks you to choose a path' },
+        story: { tr: '"Şarkı yazmak mı, sahneye sahip olmak mı? İkisini birden öğretemem; ömrüm yetmez."', en: '"Writing songs, or owning the stage? I can\'t teach you both; I haven\'t the years."' },
+        choice: [
+          { id: 'pen', label: { tr: 'Şarkı yazmayı öğret', en: 'Teach me to write' }, result: { tr: 'Melek eski nota defterini verdi: "Sayfaların yarısı boş. Doldur."', en: 'Melek handed you her old notebook: "Half the pages are empty. Fill them."' }, reward: 0, item: 'reward_melek_notebook' },
+          { id: 'stage', label: { tr: 'Sahneyi öğret', en: 'Teach me the stage' }, result: { tr: 'Melek ayağa kalktı: "Önce nefes. Sonra bakış. Şarkı en son."', en: 'Melek stood up: "Breath first. Then the gaze. The song comes last."' }, reward: 30 },
+        ],
+      },
+      { branch: 'pen', rule: { stat: 'best_song', min: 60 }, reward: 60, titleId: 'melek_pen', title: { tr: 'Harika bir şarkı yaz', en: 'Write a great song' }, story: { tr: 'Melek şarkını dinleyip gözlerini kapadı: "İşte bu."', en: 'Melek listened with her eyes closed: "That\'s it."' } },
+      { branch: 'stage', rule: { stat: 'stage_events', min: 5 }, reward: 60, titleId: 'melek_stage', title: { tr: '5 sahne olayını başar', en: 'Land 5 stage moments' }, story: { tr: 'Melek ön sırada oturuyordu; bis isteyen ilk o oldu.', en: 'Melek sat in the front row; she was the first to call for an encore.' } },
+    ],
+  },
+);
+
 export const CHAIN_BY_ID: Record<string, ChainDef> = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
 
 // ---------- Efsane sonrası hedefler ----------

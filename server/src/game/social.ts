@@ -9,6 +9,7 @@ import {
   ITEM_BY_ID,
   type PersonDto,
   maskProfanity,
+  isBoundItem,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
@@ -296,6 +297,7 @@ export async function giveGift(fromId: number, toId: number, inventoryId: number
     if (!inv) fail('not_found', 404);
     if (inv.listed) fail('item_listed', 409);
     if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
+    if (isBoundItem(inv.item_id)) fail('item_bound', 409);
     if (returnsTooSoon(inv, toId)) fail('item_recently_yours', 409);
     // VIP eşyası sadece VIP üyeye verilebilir (pazardaki kuralın aynısı)
     if (ITEM_BY_ID[inv.item_id]?.vip) {

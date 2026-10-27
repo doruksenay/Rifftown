@@ -4,7 +4,7 @@
 import type { L } from './world';
 import { STAT_ACHIEVEMENTS, type StatRule } from './content/progress';
 
-export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social' | 'media' | 'legacy';
+export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social' | 'media' | 'legacy' | 'discovery';
 
 export const ACHIEVEMENT_CATEGORY_NAMES: Record<AchievementCategory, L> = {
   start: { tr: 'İlk adımlar', en: 'First steps' },
@@ -16,6 +16,7 @@ export const ACHIEVEMENT_CATEGORY_NAMES: Record<AchievementCategory, L> = {
   social: { tr: 'Sosyal', en: 'Social' },
   media: { tr: 'Basın ve medya', en: 'Press and media' },
   legacy: { tr: 'Efsaneden sonra', en: 'Beyond legend' },
+  discovery: { tr: 'Keşifler', en: 'Discoveries' },
 };
 
 export interface AchievementDef {
@@ -84,6 +85,22 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   // Sosyal
   A('generous', 'social', 10, ['Eli açık', 'Başka bir oyuncuya para gönder.'], ['Open-handed', 'Send money to another player.']),
   A('vip', 'social', 10, ['VIP', 'VIP üye ol.'], ['VIP', 'Become a VIP member.']),
+  // Keşifler: sayaç değil, bir anı ya da tuhaf bir durumu ödüllendirir; hepsi gizli (kazanılana kadar adı görünmez).
+  // Sunucu kuralları: server/src/game/achievements.ts (discovery bölümü)
+  A('empty_room', 'discovery', 10, ['Boş salonların şairi', 'En fazla 3 kişinin geldiği bir konserde sahneye çık.'], ['Poet of empty rooms', 'Play a gig to 3 people or fewer.'], true),
+  A('pogo', 'discovery', 10, ['Kıyamet koptu', 'Bir konserde pogo çağrısını başar.'], ['All hell broke loose', 'Land a mosh pit call at a gig.'], true),
+  A('hard_landing', 'discovery', 10, ['Sert iniş', 'Seyircinin üstüne atlayıp yere çakıl.'], ['Hard landing', 'Stage-dive and hit the floor.'], true),
+  A('encore_flop', 'discovery', 5, ['Kimse istemedi', 'Cesur bir bise çık ve tutmasın.'], ['Nobody asked', 'Go for a bold encore and have it flop.'], true),
+  A('fx_party', 'discovery', 10, ['Havai fişek fabrikası', 'Bir konserde üç ya da daha fazla sahne efekti kullan.'], ['Fireworks factory', 'Use three or more stage effects at one gig.'], true),
+  A('one_man_band', 'discovery', 15, ['Tek kişilik orkestra', 'Gruptan tek başına sahneye çık, en az üç kiralık müzisyenle.'], ['One-person orchestra', 'Be the only band member on stage, with at least three session players.'], true),
+  A('genre_hopper', 'discovery', 15, ['Tür avcısı', 'Altı farklı türde şarkı yaz.'], ['Genre hopper', 'Write songs in six different genres.'], true),
+  A('legendary_owner', 'discovery', 20, ['Kutsal emanet', 'Efsanevi bir enstrümana sahip ol.'], ['Holy relic', 'Own a legendary instrument.'], true),
+  A('rainbow', 'discovery', 10, ['Gökkuşağı', 'Beş farklı renge boyanmış eşyan olsun.'], ['Rainbow', 'Own items painted in five different colours.'], true),
+  A('pet_named', 'discovery', 5, ['Adı Rock', 'Evcil hayvanına bir isim ver.'], ['Named it Rock', 'Give your pet a name.'], true),
+  A('all_roles', 'discovery', 25, ['Çok sazlı', 'Sekiz grup rolünün hepsinin asıl becerisini öğren.'], ['Multi-instrumentalist', 'Learn the main skill of all eight band roles.'], true),
+  A('broke', 'discovery', 5, ['Meteliksiz', 'Cebinde ve bankada hiç paran kalmasın.'], ['Flat broke', 'End up with no money in pocket or bank.'], true),
+  A('front_page', 'discovery', 10, ['Gazete manşeti', 'Şehir gazetesinin muhabiri grubun hakkında haber yazsın.'], ['Front page', 'Have the city reporter write a story about your band.'], true),
+  A('scene_hit', 'discovery', 15, ['Doğru yer, doğru şarkı', 'Alt türlerin o şehrin sahnesinde çok tuttuğu bir konser ver.'], ['Right place, right song', 'Play a gig where your subgenres really land in that city\'s scene.'], true),
 ];
 
 // Veri dosyasındaki istatistik kurallı başarımlar

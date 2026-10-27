@@ -1,7 +1,7 @@
 // Oyunun kendi dükkânlarında satılan eşyalar. Fiyatlar her şehirde aynıdır.
 
 import { INSTRUMENTS, type Instrument, type L, type ShopType } from './world';
-import { EXTRA_ITEMS } from './content/items';
+import { EXTRA_ITEMS, REWARD_ITEMS } from './content/items';
 
 export type ItemSlot = Instrument | 'outfit' | 'art' | 'vehicle' | 'pet' | 'fx' | 'material' | 'spray' | 'ring';
 
@@ -33,6 +33,10 @@ export interface ItemDef {
   color?: PaintColor;
   /** Tek seferde birden çok alınabilir (malzeme, boya, efekt) */
   stackable?: boolean;
+  /** Ödül eşyası: dükkânda satılmaz (zincir, başarım, şehir ödülü) */
+  reward?: boolean;
+  /** Kişiye bağlı: dükkâna satılamaz, pazara konamaz, takas ve hediye edilemez */
+  bound?: boolean;
 }
 
 // ---------- Boya renkleri ----------
@@ -220,10 +224,12 @@ export const ITEMS: ItemDef[] = [
 ];
 
 // Veri dosyasındaki ek eşyalar (packages/shared/src/content/items.ts)
-ITEMS.push(...EXTRA_ITEMS);
+ITEMS.push(...EXTRA_ITEMS, ...REWARD_ITEMS);
 
 export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
-export const itemsForShop = (shop: ShopType) => ITEMS.filter((i) => i.shop === shop && !i.crafted);
+export const itemsForShop = (shop: ShopType) => ITEMS.filter((i) => i.shop === shop && !i.crafted && !i.reward);
+/** Kişiye bağlı eşya el değiştiremez (satış, pazar, takas, hediye) */
+export const isBoundItem = (itemId: string) => !!ITEM_BY_ID[itemId]?.bound;
 
 // ---------- Hastane ----------
 

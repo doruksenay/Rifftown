@@ -233,7 +233,7 @@ export async function sellToNpc(characterId: number, locationId: string, invento
 
 /** NPC tüccar bit pazarına ilan koyar: dükkân eşyaları, dükkân fiyatının %85'i (VIP eşyaları hariç). Satış parası oyundan çıkar. */
 export async function npcStockMarkets(rand: () => number = Math.random): Promise<number> {
-  const pool_ = ITEMS.filter((i) => !i.crafted && !i.vip && !i.stackable && i.price >= 100 && i.slot !== 'ring');
+  const pool_ = ITEMS.filter((i) => !i.crafted && !i.vip && !i.reward && !i.bound && !i.stackable && i.price >= 100 && i.slot !== 'ring');
   let n = 0;
   for (const city of CITIES) {
     const trader = await npcId(pool, 'trader', city.id);

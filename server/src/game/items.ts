@@ -22,6 +22,7 @@ import {
   gameHoursToMs,
   maxResalePrice,
   skillBonus,
+  isBoundItem,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
@@ -134,6 +135,7 @@ export async function listItem(characterId: number, locationId: string, inventor
     const inv = await lockOwnItem(c, characterId, inventoryId);
     if (inv.listed) fail('item_listed', 409);
     if (!ITEM_BY_ID[inv.item_id]) fail('invalid_item');
+    if (isBoundItem(inv.item_id)) fail('item_bound', 409);
     if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
     await requireEstablished(c, characterId);
     // Fiyat tavanı: dükkân fiyatının iki katı (EFSANEVİ eşyada beş katı)

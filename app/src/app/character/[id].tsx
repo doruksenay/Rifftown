@@ -1,4 +1,4 @@
-import { ACHIEVEMENT_BY_ID, CITY_BY_ID, HOME_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, type PublicCharacterDto, ROLE_NAMES, SKILL_BY_ID, TATTOO_BY_ID, VIP } from '@rifftown/shared';
+import { ACHIEVEMENT_BY_ID, TITLE_BY_ID, CITY_BY_ID, HOME_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, type PublicCharacterDto, ROLE_NAMES, SKILL_BY_ID, TATTOO_BY_ID, VIP } from '@rifftown/shared';
 import { Guestbook, ProfileActions, RelationshipPanel } from '@/components/social';
 import { BlogList } from '@/components/newspaper';
 import { useState } from 'react';
@@ -55,6 +55,7 @@ function CharacterProfileScreen() {
           <Avatar name={ch.name} color={ch.avatarColor} uri={ch.avatarUrl} size={112} />
         </View>
         <Title style={{ textAlign: 'center', marginTop: space.md }}>{ch.name}</Title>
+        {ch.titleId && TITLE_BY_ID[ch.titleId] ? <Small color={c.purple} style={{ textAlign: 'center' }}>{p(TITLE_BY_ID[ch.titleId].name)}</Small> : null}
         {ch.headline ? <Body style={{ textAlign: 'center' }}>{ch.headline}</Body> : null}
         <Row style={{ flexWrap: 'wrap', justifyContent: 'center', marginTop: space.xs }}>
           {ch.isVip ? <Badge text={t('vipMember')} color={c.pink} /> : null}

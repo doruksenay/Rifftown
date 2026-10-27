@@ -172,6 +172,7 @@ export async function worldRoutes(app: FastifyInstance) {
         mainInstrument: ch.main_instrument,
         cityId: ch.city_id,
         bio: ch.bio,
+        titleId: ch.title_id ?? null,
         createdAt: ch.created_at.toISOString(),
         band: band ? { id: band.id, name: band.name, role: band.role } : null,
         topSkills,

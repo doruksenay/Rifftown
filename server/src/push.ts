@@ -1,6 +1,7 @@
 // Bildirimleri Expo push servisi üzerinden telefonlara gönderir.
 
-import { ACHIEVEMENT_BY_ID, CITY_BY_ID, CRIME_BY_ID, LOCATION_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, SKILL_BY_ID, type Lang, gainText, levelUpText, pick, tierName } from '@rifftown/shared';
+import { ACHIEVEMENT_BY_ID,
+  TITLE_BY_ID, CITY_BY_ID, CRIME_BY_ID, LOCATION_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, SKILL_BY_ID, type Lang, gainText, levelUpText, pick, tierName } from '@rifftown/shared';
 
 const skillName = (id: string, l: Lang) => (SKILL_BY_ID[id] ? pick(SKILL_BY_ID[id].name, l) : id);
 import { config } from './config';
@@ -57,6 +58,10 @@ const TEMPLATES: Record<string, Tpl> = {
   achievement: (d, l) => {
     const a = ACHIEVEMENT_BY_ID[d.id];
     return a ? { title: T(l, 'Başarım açıldı!', 'Achievement unlocked!'), body: `${pick(a.name, l)} · +${a.points}` } : null;
+  },
+  title_earned: (d, l) => {
+    const t = TITLE_BY_ID[d.titleId];
+    return t ? { title: T(l, 'Yeni ünvan!', 'New title!'), body: pick(t.name, l) } : null;
   },
   release_out: (d, l) => ({ title: T(l, 'Yeni yayın!', 'New release!'), body: `${d.bandName} · "${d.title}"` }),
   sales_report: (d, l) => ({

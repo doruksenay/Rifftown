@@ -2,6 +2,7 @@
 
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
+import { setTitle, titlesOf } from '../game/titles';
 import { charId, requireUser } from '../auth';
 import { pool } from '../db';
 import {
@@ -118,6 +119,14 @@ export async function economyRoutes(app: FastifyInstance) {
     return { price: inv.rows[0] ? npcOffer(inv.rows[0].item_id, inv.rows[0].bonus) : 0 };
   });
   app.get('/chains', async (req) => ({ chains: await chainsState(pool, charId(req)) }));
-  app.post('/chains/:id/claim', async (req) => claimChainStep(charId(req), parse(z.object({ id: z.string().max(40) }), req.params).id));
+  app.post('/chains/:id/claim', async (req) =>
+    claimChainStep(
+      charId(req),
+      parse(z.object({ id: z.string().max(40) }), req.params).id,
+      parse(z.object({ choice: z.string().max(40).optional() }), req.body ?? {}).choice,
+    ),
+  );
+  app.get('/titles', async (req) => titlesOf(pool, charId(req)));
+  app.post('/titles', async (req) => setTitle(charId(req), parse(z.object({ titleId: z.string().max(40).nullable() }), req.body).titleId));
   app.post('/missions/:id/claim', async (req) => claimMission(charId(req), parse(z.object({ id: z.string().max(40) }), req.params).id));
 }

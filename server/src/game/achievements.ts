@@ -3,7 +3,7 @@
 // Eylem, konser ve liste sonuçlarından hemen sonra; diğer olaylar (oy, para gönderme, VIP) için /me çağrısında
 // en fazla dakikada bir kontrol edilir.
 
-import { STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
+import { INSTRUMENTS, ROLE_SKILLS, STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
 import { addMoodlet } from './wellbeing';
 import { type Db, many, one } from '../db';
 import { notify } from './common';
@@ -107,6 +107,47 @@ export async function evaluateAchievements(db: Db, characterId: number): Promise
     generous: s.transfers >= 1,
     vip: !!s.vip_until,
   };
+
+  // Keşifler (gizli): bir anı ya da tuhaf bir durumu ödüllendirir
+  const d = await one(
+    db,
+    `WITH g AS (
+       SELECT g.* FROM gig_performers gp JOIN gigs g ON g.id = gp.gig_id
+        WHERE gp.character_id = $1 AND gp.present AND g.status = 'done' AND (g.result->>'presentCount')::int > 0
+     ), band AS (SELECT band_id FROM band_members WHERE character_id = $1)
+     SELECT
+       EXISTS (SELECT 1 FROM g WHERE (g.result->>'attendance')::int <= 3) AS empty_room,
+       EXISTS (SELECT 1 FROM g, jsonb_array_elements(COALESCE(g.result->'events', '[]'::jsonb)) e WHERE e->>'id' = 'mosh_pit' AND e->>'outcome' = 'success') AS pogo,
+       EXISTS (SELECT 1 FROM g, jsonb_array_elements(COALESCE(g.result->'events', '[]'::jsonb)) e WHERE e->>'id' = 'stage_dive' AND e->>'outcome' = 'fail') AS hard_landing,
+       EXISTS (SELECT 1 FROM g WHERE g.result->>'encore' = 'flop') AS encore_flop,
+       EXISTS (SELECT 1 FROM g WHERE cardinality(g.effects) >= 3) AS fx_party,
+       EXISTS (SELECT 1 FROM g WHERE (g.result->>'presentCount')::int = 1 AND (g.result->>'memberCount')::int = 1 AND cardinality(g.session_roles) >= 3) AS one_man_band,
+       EXISTS (SELECT 1 FROM g WHERE g.result->'factors'->>'style' = 'strong') AS scene_hit,
+       (SELECT count(DISTINCT genre)::int FROM songs WHERE author_id = $1) AS genres,
+       EXISTS (SELECT 1 FROM inventory WHERE character_id = $1 AND legendary_at IS NOT NULL) AS legendary_owner,
+       (SELECT count(DISTINCT color)::int FROM inventory WHERE character_id = $1 AND color IS NOT NULL) AS colors,
+       EXISTS (SELECT 1 FROM inventory WHERE character_id = $1 AND slot = 'pet' AND nickname IS NOT NULL) AS pet_named,
+       (SELECT money = 0 AND bank = 0 FROM characters WHERE id = $1) AS broke,
+       EXISTS (SELECT 1 FROM articles WHERE npc AND NOT removed AND band_id IN (SELECT band_id FROM band)) AS front_page`,
+    [characterId],
+  );
+  const known = (s.skills ?? {}) as Record<string, number>;
+  Object.assign(earned, {
+    empty_room: !!d?.empty_room,
+    pogo: !!d?.pogo,
+    hard_landing: !!d?.hard_landing,
+    encore_flop: !!d?.encore_flop,
+    fx_party: !!d?.fx_party,
+    one_man_band: !!d?.one_man_band,
+    scene_hit: !!d?.scene_hit,
+    genre_hopper: Number(d?.genres ?? 0) >= 6,
+    legendary_owner: !!d?.legendary_owner,
+    rainbow: Number(d?.colors ?? 0) >= 5,
+    pet_named: !!d?.pet_named,
+    broke: !!d?.broke,
+    front_page: !!d?.front_page,
+    all_roles: INSTRUMENTS.every((r) => typeof known[ROLE_SKILLS[r].specific] === 'number'),
+  });
 
   // Veri odaklı başarımlar: istatistik eşiği (content/progress.ts)
   const stats = await lifetimeStats(db, characterId);

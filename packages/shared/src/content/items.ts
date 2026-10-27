@@ -82,6 +82,14 @@ export const EXTRA_ITEMS: ItemDef[] = [
   I('outfit_led_crafted', 'hardware', 'outfit', 3, 900, 0, 'El yapımı ışıklı kostüm', 'Handmade light-up costume', { crafted: true }),
 ];
 
+// Ödül eşyaları: dükkânda satılmaz, kişiye bağlıdır (satılamaz, pazara konamaz, takas ve hediye edilemez).
+// Bonusları aynı yuvadaki dükkân eşyalarının ara basamağındadır; para karşılığı olmadığı için ekonomiye para sokmaz.
+export const REWARD_ITEMS: ItemDef[] = [
+  I('reward_vedat_mic', 'boutique', 'vocals', 2, 900, 8, 'Vedat Karahan\'ın stüdyo mikrofonu', 'Vedat Karahan\'s studio mic', { reward: true, bound: true }),
+  I('reward_fox_jacket', 'boutique', 'outfit', 2, 900, 6, 'Kızıl Tilki sahne ceketi', 'Red Fox stage jacket', { reward: true, bound: true }),
+  I('reward_melek_notebook', 'gallery', 'art', 2, 900, 12, 'Melek Aksoy\'un nota defteri', 'Melek Aksoy\'s notebook', { reward: true, bound: true }),
+];
+
 export const EXTRA_RECIPES: RecipeDef[] = [
   { id: 'leather_jacket', itemId: 'outfit_leather_crafted', name: { tr: 'Deri ceket', en: 'Leather jacket' }, materials: { mat_leather: 2, mat_metal: 1 }, bonus: [3, 9] },
   { id: 'led_costume', itemId: 'outfit_led_crafted', name: { tr: 'Işıklı kostüm', en: 'Light-up costume' }, materials: { mat_fabric: 2, mat_led: 2, mat_circuit: 1 }, bonus: [5, 14] },

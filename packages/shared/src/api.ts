@@ -236,6 +236,8 @@ export interface PublicCharacterDto {
   mainInstrument: Instrument;
   cityId: string | null;
   bio: string;
+  /** Seçili ünvan (content/rewards.ts TITLES) */
+  titleId?: string | null;
   createdAt: string;
   band: { id: number; name: string; role: Instrument } | null;
   topSkills: { skill: string; level: number }[];

@@ -64,6 +64,7 @@ function ItemScreen() {
           <Title style={{ flex: 1 }}>{itemDisplayName(def, p, item)}</Title>
         </Row>
         <Body color={c.inkSoft}>{itemBonusText(def, t, p, item.bonus)}</Body>
+        {def.bound ? <Small color={c.purple}>{t('boundItem')}</Small> : null}
         {item.craftedBy ? <Small>{t('craftedByName', { name: item.craftedBy })}</Small> : null}
         {item.legendary ? (
           <Row style={{ marginTop: space.xs }}>

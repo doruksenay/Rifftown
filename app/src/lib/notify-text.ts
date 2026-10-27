@@ -1,5 +1,6 @@
 import {
   ACHIEVEMENT_BY_ID,
+  TITLE_BY_ID,
   CITY_BY_ID,
   OFFICE_BY_ID,
   PROFESSION_BY_ID,
@@ -87,6 +88,10 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
     case 'achievement': {
       const a = ACHIEVEMENT_BY_ID[d.id];
       return a ? t('n_achievement', { name: p(a.name), points: a.points }) : n.kind;
+    }
+    case 'title_earned': {
+      const ti = TITLE_BY_ID[d.titleId];
+      return ti ? t('n_title_earned', { name: p(ti.name) }) : n.kind;
     }
     case 'release_out':
       return t('n_release_out', { band: d.bandName, title: d.title });
