@@ -35,3 +35,4 @@ export * from './content/rewards';
 export * from './content/cities';
 export * from './lessons';
 export * from './attributes';
+export * from './generations';

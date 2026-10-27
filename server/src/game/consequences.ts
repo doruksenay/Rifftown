@@ -20,8 +20,6 @@ import {
   HOSPITAL_PRICE_PER_HOUR,
   HOSPITALIZE_HEALTH,
   HOSPITALIZE_HOURS,
-  INHERITANCE_CAP,
-  INHERITANCE_SHARE,
   MEMBER_LEAVE_FAME_LOSS,
   MEMBER_LEAVE_GRACE_HOURS,
   NEGLECT_DEATH_HOURS,
@@ -30,6 +28,7 @@ import {
   SCANDAL_SPILLOVER,
   type ScandalKind,
   ageOf,
+  estateInheritance,
   gameHoursToMs,
   indulgenceNow,
   oldAgeDeathChancePerDay,
@@ -37,7 +36,7 @@ import {
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
-import { type CharacterRow, lockCharacter, notify } from './common';
+import { type CharacterRow, ageRef, lockCharacter, notify } from './common';
 import { addMoodlet } from './wellbeing';
 import { scandalPress } from './press';
 
@@ -261,28 +260,39 @@ export async function processHospitalizations(): Promise<number> {
   return n;
 }
 
-// ---------- Ölüm (yalnızca PERMADEATH=1) ----------
+// ---------- Karakterin oyundan ayrılması: ölüm (yalnızca PERMADEATH=1) ve emeklilik (nesiller) ----------
+
+export type ReleaseMode = 'death' | 'retire';
 
 /**
- * Karakteri öldürür: gruptan, işletmeden, makamdan, ilişkiden ayrılır; kullanıcıdan koparılır (kullanıcı yeni karakter açar).
- * Paranın ve banka hesabının yarısı (en fazla $10.000) yeni karaktere miras kalır; para basılmaz, yalnızca taşınır.
+ * Karakteri oyundan ayırır: süren eylemleri biter, gruptan (liderlik devredilir ya da grup dağılır), işletmeden,
+ * makamdan ve adaylıktan, evden, açık takas ve ilanlardan, ilişkiden ayrılır; kullanıcıdan koparılır (kullanıcı yeni
+ * karakter ya da mirasçıyla devam eder). Kayıtlar ve geçmiş korunur. Ölüm ve emeklilik aynı ayrılma mantığını kullanır.
+ * Cep, banka ve işletme kasasının yarısı (en fazla $10.000) mirasa ayrılır; para basılmaz, yalnızca taşınır, kalanı
+ * oyundan çıkar. Karakter satırı bu işlemde kilitlenir. Ayrılan karakterin mirası döner (zaten ayrılmışsa null).
+ * Emeklilikte gruptan ayrılmak isteyerek ayrılmak sayılır: üye ayrılma şöhret cezası uygulanır.
  */
-export async function killCharacter(c: pg.PoolClient, characterId: number, cause: 'neglect' | 'old_age') {
+export async function releaseCharacter(c: pg.PoolClient, characterId: number, mode: ReleaseMode, cause: string): Promise<number | null> {
   const ch = await lockCharacter(c, characterId);
-  if (ch.dead_at || ch.npc) return false;
-  await c.query(`UPDATE actions SET status = 'cancelled', result = '{"died":true}' WHERE character_id = $1 AND status = 'active'`, [ch.id]);
+  if (ch.dead_at || ch.retired_at || ch.npc) return null;
+  await c.query(`UPDATE actions SET status = 'cancelled', result = $2 WHERE character_id = $1 AND status = 'active'`, [
+    ch.id,
+    JSON.stringify(mode === 'death' ? { died: true } : { retired: true }),
+  ]);
+  const left = mode === 'death' ? 'member_died' : 'member_retired';
   // Grup: liderlik devredilir ya da grup dağılır
-  const m = await one(c, 'SELECT m.band_id, b.leader_id FROM band_members m JOIN bands b ON b.id = m.band_id WHERE m.character_id = $1', [ch.id]);
+  const m = await one(c, 'SELECT m.band_id, m.joined_at, b.leader_id FROM band_members m JOIN bands b ON b.id = m.band_id WHERE m.character_id = $1', [ch.id]);
   if (m) {
     await c.query('DELETE FROM band_members WHERE character_id = $1', [ch.id]);
     const rest = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1 ORDER BY joined_at', [m.band_id]);
     if (!rest.length) await c.query('DELETE FROM bands WHERE id = $1', [m.band_id]);
     else {
+      if (mode === 'retire') await memberLeaveFameLoss(c, Number(m.band_id), m.joined_at);
       if (Number(m.leader_id) === ch.id) await c.query('UPDATE bands SET leader_id = $2 WHERE id = $1', [m.band_id, rest[0].character_id]);
-      for (const r of rest) await notify(c, Number(r.character_id), 'member_died', { name: ch.name });
+      for (const r of rest) await notify(c, Number(r.character_id), left, { name: ch.name });
     }
   }
-  // İşletme: kasadaki para mirasa girer, çalışanlar işsiz kalır
+  // İşletme: kasadaki para mal varlığına girer, çalışanlar işsiz kalır
   const biz = await one(c, 'SELECT location_id, till FROM businesses WHERE owner_id = $1 FOR UPDATE', [ch.id]);
   let estate = ch.money + (ch.bank ?? 0);
   if (biz) {
@@ -295,6 +305,8 @@ export async function killCharacter(c: pg.PoolClient, characterId: number, cause
   await c.query('DELETE FROM business_staff WHERE character_id = $1', [ch.id]);
   await c.query(`UPDATE trades SET status = 'cancelled', closed_at = now() WHERE (from_id = $1 OR to_id = $1) AND status = 'open'`, [ch.id]);
   await c.query(`UPDATE listings SET status = 'cancelled', closed_at = now() WHERE seller_id = $1 AND status = 'active'`, [ch.id]);
+  // İlandan inen eşyalar envanterde serbest kalır (yadigâr seçilebilsin, kayıtta "ilanda" görünmesin)
+  await c.query('UPDATE inventory SET listed = FALSE WHERE character_id = $1 AND listed', [ch.id]);
   await c.query('DELETE FROM homes WHERE character_id = $1', [ch.id]);
   await c.query('DELETE FROM office_holders WHERE character_id = $1', [ch.id]);
   await c.query(`DELETE FROM election_candidates WHERE character_id = $1`, [ch.id]);
@@ -302,28 +314,52 @@ export async function killCharacter(c: pg.PoolClient, characterId: number, cause
   if (partner) {
     await c.query('DELETE FROM partners WHERE character_id = ANY($1::bigint[])', [[ch.id, Number(partner.partner_id)]]);
     await addMoodlet(c, Number(partner.partner_id), 'heartbreak');
-    await notify(c, Number(partner.partner_id), 'partner_died', { name: ch.name });
+    await notify(c, Number(partner.partner_id), mode === 'death' ? 'partner_died' : 'partner_retired', { name: ch.name });
   }
-  await c.query(`UPDATE gigs SET status = 'cancelled' WHERE status = 'scheduled' AND band_id IN (SELECT id FROM bands WHERE leader_id = $1)`, [ch.id]);
-  const inherited = Math.min(INHERITANCE_CAP, Math.floor(estate * INHERITANCE_SHARE));
+  // Bekleyen evlilik teklifi, tek gecelik ve aile teklifleri düşer
   await c.query(
-    `UPDATE characters SET dead_at = now(), death_cause = $2, former_user_id = user_id, user_id = NULL, money = 0, bank = 0,
-            city_id = NULL, location_id = NULL, jailed_until = NULL, inherited = $3 WHERE id = $1`,
-    [ch.id, cause, inherited],
+    `UPDATE relationships SET proposal_by = NULL, proposal_ring = NULL, adoption_by = NULL, adoption_name = NULL
+      WHERE (a_id = $1 OR b_id = $1) AND (proposal_by IS NOT NULL OR adoption_by IS NOT NULL)`,
+    [ch.id],
   );
-  return true;
+  await c.query('DELETE FROM fling_offers WHERE from_id = $1 OR to_id = $1', [ch.id]);
+  await c.query('DELETE FROM family_try_offers WHERE from_id = $1 OR to_id = $1', [ch.id]);
+  const inherited = estateInheritance(estate);
+  await c.query(
+    `UPDATE characters SET dead_at = CASE WHEN $4 THEN now() END, retired_at = CASE WHEN $4 THEN NULL ELSE now() END,
+            death_cause = $2::text, former_user_id = user_id, user_id = NULL, money = 0, bank = 0,
+            city_id = NULL, location_id = NULL, jailed_until = NULL, inherited = $3 WHERE id = $1`,
+    [ch.id, mode === 'death' ? cause : null, inherited, mode === 'death'],
+  );
+  return inherited;
+}
+
+/** Ölüm (yalnızca PERMADEATH=1): ayrılma mantığı releaseCharacter'da, emeklilikle ortak */
+export async function killCharacter(c: pg.PoolClient, characterId: number, cause: 'neglect' | 'old_age') {
+  return (await releaseCharacter(c, characterId, 'death', cause)) !== null;
+}
+
+/**
+ * Önceki karakterlerin bekleyen mirası yeni karaktere bir kez geçer (para yalnızca taşınır, basılmaz). Aynı işlemde
+ * sıfırlanır: yeni karakterin kaydı başarısız olursa miras kaybolmaz, iki kez de alınamaz. Her karakterin payı ayrılırken tavanlanır.
+ */
+export async function claimInheritance(c: pg.PoolClient, userId: number): Promise<number> {
+  const heirs = await many(c, 'SELECT id, inherited FROM characters WHERE former_user_id = $1 AND inherited > 0 ORDER BY id FOR UPDATE', [userId]);
+  if (!heirs.length) return 0;
+  await c.query('UPDATE characters SET inherited = 0 WHERE id = ANY($1::bigint[])', [heirs.map((h) => h.id)]);
+  return heirs.reduce((s, h) => s + Number(h.inherited), 0);
 }
 
 /** Zamanlayıcı: kritik sağlıkta uzun süre kalan ve çok yaşlı karakterler (yalnızca PERMADEATH=1) */
 export async function processMortality(rand: () => number = Math.random): Promise<number> {
   // Kritik sağlık sayacı her zaman tutulur (bayrak kapalıyken yalnızca bilgi içindir)
-  await pool.query(`UPDATE characters SET critical_since = now() WHERE critical_since IS NULL AND health < $1 AND dead_at IS NULL AND NOT npc`, [CRITICAL_HEALTH]);
+  await pool.query(`UPDATE characters SET critical_since = now() WHERE critical_since IS NULL AND health < $1 AND dead_at IS NULL AND retired_at IS NULL AND NOT npc`, [CRITICAL_HEALTH]);
   await pool.query(`UPDATE characters SET critical_since = NULL WHERE critical_since IS NOT NULL AND health >= $1`, [CRITICAL_HEALTH]);
   if (!config.permadeath) return 0;
   let n = 0;
   const neglected = await many(
     pool,
-    `SELECT id FROM characters WHERE dead_at IS NULL AND NOT npc AND critical_since IS NOT NULL AND critical_since < $1 LIMIT 20`,
+    `SELECT id FROM characters WHERE dead_at IS NULL AND retired_at IS NULL AND NOT npc AND critical_since IS NOT NULL AND critical_since < $1 LIMIT 20`,
     [new Date(Date.now() - hoursMs(NEGLECT_DEATH_HOURS))],
   );
   for (const r of neglected) {
@@ -337,13 +373,13 @@ export async function processMortality(rand: () => number = Math.random): Promis
   if (!config.agingEnabled) return n;
   const old = await many(
     pool,
-    `SELECT id, created_at FROM characters
-      WHERE dead_at IS NULL AND NOT npc AND user_id IS NOT NULL AND created_at < $1 AND (life_checked_at IS NULL OR life_checked_at < $2) LIMIT 200`,
+    `SELECT id, created_at, adult_at FROM characters
+      WHERE dead_at IS NULL AND NOT npc AND user_id IS NOT NULL AND COALESCE(adult_at, created_at) < $1 AND (life_checked_at IS NULL OR life_checked_at < $2) LIMIT 200`,
     [new Date(Date.now() - (OLD_AGE_START - START_AGE) * GAME_YEAR_DAYS * dayMs()), new Date(Date.now() - dayMs())],
   );
   for (const r of old) {
     await pool.query('UPDATE characters SET life_checked_at = now() WHERE id = $1', [r.id]);
-    if (rand() >= oldAgeDeathChancePerDay(characterAge(r.created_at))) continue;
+    if (rand() >= oldAgeDeathChancePerDay(characterAge(ageRef(r)))) continue;
     try {
       if (await tx((c) => killCharacter(c, r.id, 'old_age'))) n++;
     } catch (e) {
@@ -357,7 +393,7 @@ export async function processMortality(rand: () => number = Math.random): Promis
 export async function lastDeath(db: Db, userId: number) {
   const r = await one(
     db,
-    'SELECT id, name, death_cause, dead_at, inherited FROM characters WHERE former_user_id = $1 ORDER BY dead_at DESC LIMIT 1',
+    'SELECT id, name, death_cause, dead_at, inherited FROM characters WHERE former_user_id = $1 AND dead_at IS NOT NULL ORDER BY dead_at DESC LIMIT 1',
     [userId],
   );
   return r ? { characterId: Number(r.id), name: r.name as string, cause: r.death_cause as string, at: r.dead_at.toISOString() as string, inheritance: r.inherited as number } : null;

@@ -42,7 +42,7 @@ import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, tx } from '../db';
 import { fail } from '../errors';
-import { type CharacterRow, activeAction, isJailed, lockCharacter, membership, notify, requireEstablished } from './common';
+import { type CharacterRow, activeAction, ageRef, isJailed, lockCharacter, membership, notify, requireEstablished } from './common';
 import { createScandal } from './consequences';
 import { isBlocked, pair, requirePlayer } from './social';
 import { addMoodlet, changeWellbeing, currentEnergy } from './wellbeing';
@@ -62,7 +62,7 @@ async function checkPair(c: pg.PoolClient, me: CharacterRow, them: CharacterRow)
   await requireEstablished(c, me.id);
   await requireEstablished(c, them.id);
   for (const ch of [me, them]) {
-    if (ageOf(ch.created_at, config.gameSpeed) < ADULT_AGE) fail('not_adult', 403);
+    if (ageOf(ageRef(ch), config.gameSpeed) < ADULT_AGE) fail('not_adult', 403);
     if (isJailed(ch)) fail('in_jail', 409);
   }
   const loc = me.location_id ? LOCATION_BY_ID[me.location_id] : undefined;
@@ -216,12 +216,19 @@ export async function flingState(db: Db, viewer: number, other: number) {
 
 // ---------- Aile ----------
 
-/** Profil için çocuklar: ad, yaş ve yaş basamağı */
+/** Profil için çocuklar: ad, yaş, yaş basamağı ve (mirasçı olduysa) oynanabilir karakteri */
 export async function childrenOf(db: Db, characterId: number) {
-  const rows = await many(db, 'SELECT id, name, born_at FROM children WHERE parent_a = $1 OR parent_b = $1 ORDER BY born_at', [characterId]);
+  const rows = await many(db, 'SELECT id, name, born_at, heir_id FROM children WHERE parent_a = $1 OR parent_b = $1 ORDER BY born_at', [characterId]);
   return rows.map((r) => {
     const age = childAge(r.born_at, config.gameSpeed);
-    return { name: r.name as string, bornAt: r.born_at.toISOString(), age: Math.floor(age), stage: childStage(age) };
+    return {
+      id: Number(r.id),
+      name: r.name as string,
+      bornAt: r.born_at.toISOString(),
+      age: Math.floor(age),
+      stage: childStage(age),
+      characterId: r.heir_id != null ? Number(r.heir_id) : null,
+    };
   });
 }
 
@@ -243,7 +250,8 @@ export async function processChildren(): Promise<number> {
       const parents = [kid.parent_a, kid.parent_b].filter((x) => x != null).map(Number).sort((x, y) => x - y);
       for (const pid of parents) {
         const p = await lockCharacter(c, pid);
-        if (p.dead_at) continue;
+        // Ölen ya da mirasını devredip emekliye ayrılan ebeveyn ödemez (payı oyundan düşer, borç yazılmaz)
+        if (p.dead_at || p.retired_at) continue;
         const share = Math.round((CHILD_WEEKLY_UPKEEP * (CITY_BY_ID[p.city_id ?? '']?.costMult ?? 1)) / 2);
         if (p.money >= share) {
           await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [pid, share]);
@@ -331,7 +339,7 @@ async function checkCouple(c: pg.PoolClient, me: CharacterRow, them: CharacterRo
   if (await isBlocked(c, me.id, them.id)) fail('blocked', 403);
   await requireEstablished(c, me.id);
   await requireEstablished(c, them.id);
-  for (const ch of [me, them]) if (ageOf(ch.created_at, config.gameSpeed) < ADULT_AGE) fail('not_adult', 403);
+  for (const ch of [me, them]) if (ageOf(ageRef(ch), config.gameSpeed) < ADULT_AGE) fail('not_adult', 403);
   if (!me.city_id || me.city_id !== them.city_id) fail('not_in_same_city');
   const [a, b] = pair(me.id, them.id);
   const rel = await one(c, 'SELECT romance, stage FROM relationships WHERE a_id = $1 AND b_id = $2', [a, b]);

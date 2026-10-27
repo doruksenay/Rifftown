@@ -115,7 +115,7 @@ async function loadUsers() {
   const tb = $('users'); tb.replaceChildren();
   for (const u of users) {
     const tr = el('tr');
-    tr.append(el('td', u.id), el('td', u.email), el('td', u.name || '—'), el('td', u.city_id || (u.name ? 'yolda' : '—')), el('td', u.money ?? '—'),
+    tr.append(el('td', u.id), el('td', u.email), el('td', u.name ? u.name + (u.generation > 1 ? ' (' + u.generation + '. kuşak)' : '') : (u.former_count ? '— (önceki: ' + u.former_count + ')' : '—')), el('td', u.city_id || (u.name ? 'yolda' : '—')), el('td', u.money ?? '—'),
       el('td', u.vip_until && new Date(u.vip_until) > new Date() ? new Date(u.vip_until).toLocaleDateString('tr-TR') : '—'),
       el('td', u.last_seen ? new Date(u.last_seen).toLocaleString('tr-TR') : '—'),
       el('td', u.banned ? 'Banlı' : (u.is_admin ? 'Yönetici' : 'Aktif')));
@@ -180,7 +180,7 @@ const numOrNull = (s) => (s === '' ? null : Number(s));
 async function openEditor(userId) {
   try {
     if (!META) META = await api('/admin/meta');
-    const { user, character: ch } = await api('/admin/players/' + userId);
+    const { user, character: ch, formerCharacters, successions } = await api('/admin/players/' + userId);
     editUserId = userId; edFields = [];
     $('edMsg').textContent = '';
     $('edTitle').textContent = 'Düzenle: ' + (ch ? ch.name + ' · ' : '') + user.email + (user.is_admin ? ' (yönetici)' : '');
@@ -195,6 +195,37 @@ async function openEditor(userId) {
       (i) => (i.value ? new Date(i.value).toISOString() : null), user.vip_until && new Date(user.vip_until) > new Date() ? new Date(toLocalInput(user.vip_until)).toISOString() : null);
     g1.append(wrap('Kayıt tarihi', mk('input', { value: new Date(user.created_at).toLocaleString('tr-TR'), disabled: true })));
     g1.append(wrap('Kayıt IP', mk('input', { value: user.register_ip || '—', disabled: true })));
+
+    // Nesiller: önceki (ölen ya da emekli) karakterler ve devir kayıtları; salt okunur
+    if ((formerCharacters && formerCharacters.length) || (ch && ch.generation > 1)) {
+      body.append(el('h3', 'Soy ve devirler'));
+      if (ch) body.append(el('p', 'Aile adı: ' + (ch.familyName || '—') + ' · ' + ch.generation + '. kuşak' + (ch.predecessorId ? ' · devraldığı karakter #' + ch.predecessorId : ''), 'muted'));
+      const STATUS = { dead: 'Öldü', retired: 'Emekli (devretti)', active: 'Oynanıyor' };
+      if (formerCharacters && formerCharacters.length) {
+        const tbl = el('table'); const th = el('tr');
+        for (const h of ['#', 'Ad', 'Durum', 'Zaman', 'Bekleyen miras', 'Kuşak', 'Eşyaları devredildi']) th.append(el('th', h));
+        tbl.append(th);
+        for (const f of formerCharacters) {
+          const tr = el('tr');
+          tr.append(el('td', f.id), el('td', f.name), el('td', STATUS[f.status] || f.status), el('td', f.at ? new Date(f.at).toLocaleString('tr-TR') : '—'),
+            el('td', f.pendingInheritance), el('td', f.generation), el('td', f.estateClaimed ? 'Evet' : 'Hayır'));
+          tbl.append(tr);
+        }
+        body.append(tbl);
+      }
+      if (successions && successions.length) {
+        const tbl = el('table'); const th = el('tr');
+        for (const h of ['Zaman', 'Neden', 'Devreden', 'Mirasçı', 'Para', 'Yadigâr']) th.append(el('th', h));
+        tbl.append(th);
+        for (const s of successions) {
+          const tr = el('tr');
+          tr.append(el('td', new Date(s.at).toLocaleString('tr-TR')), el('td', s.cause === 'death' ? 'Ölüm' : 'İsteyerek'),
+            el('td', s.from ? s.from.name + ' #' + s.from.id : '—'), el('td', s.to ? s.to.name + ' #' + s.to.id : '—'), el('td', s.money), el('td', s.items));
+          tbl.append(tr);
+        }
+        body.append(tbl);
+      }
+    }
 
     if (!ch) { body.append(el('p', 'Bu hesabın henüz karakteri yok.', 'muted')); $('editor').hidden = false; return; }
 

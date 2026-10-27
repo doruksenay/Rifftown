@@ -104,6 +104,7 @@ import { resolveRecording } from './music';
 import {
   type CharacterRow,
   activeAction,
+  ageRef,
   isJailed,
   gearBonuses,
   lockCharacter,
@@ -526,7 +527,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       // Yaş öğrenmeyi yavaşlatır (35 yaştan sonra)
       // Zekâ niteliği öğrenmeyi hızlandırır (en fazla ×1,12)
       const gain =
-        studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency * ageLearnFactor(characterAge(char.created_at)) * learningAttrMult(char.attributes);
+        studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency * ageLearnFactor(characterAge(ageRef(char))) * learningAttrMult(char.attributes);
       skills[skill] = clamp(lv(skills, skill) + gain, 0, 100);
       result.skill = skill;
       result.gain = Math.round(gain * 100) / 100;
@@ -539,7 +540,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       const instBonus = Math.max(0, ...rolesForSkill(skill).map((r) => gear.instruments[r] ?? 0));
       const before = lv(skills, skill);
       const gain0 =
-        studyGain(before, hours, true, well.mood, char.health, instBonus, Number(params.rate)) * efficiency * ageLearnFactor(characterAge(char.created_at)) * learningAttrMult(char.attributes);
+        studyGain(before, hours, true, well.mood, char.health, instBonus, Number(params.rate)) * efficiency * ageLearnFactor(characterAge(ageRef(char))) * learningAttrMult(char.attributes);
       const capped = Math.max(before, Math.min(before + gain0, Number(params.cap ?? 100)));
       skills[skill] = clamp(capped, 0, 100);
       result.skill = skill;

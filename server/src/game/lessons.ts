@@ -191,7 +191,7 @@ export async function lessonsAt(db: Db, viewer: number, locationId: string) {
           await many(
             db,
             `SELECT c.id, c.name, c.lesson_price, c.career_rank FROM characters c
-              WHERE c.location_id = $1 AND c.profession = 'music_teacher' AND c.lesson_price IS NOT NULL AND NOT c.npc AND c.dead_at IS NULL AND c.id <> $2
+              WHERE c.location_id = $1 AND c.profession = 'music_teacher' AND c.lesson_price IS NOT NULL AND NOT c.npc AND c.dead_at IS NULL AND c.retired_at IS NULL AND c.id <> $2
                 AND NOT EXISTS (SELECT 1 FROM blocks x WHERE (x.blocker_id = $2 AND x.blocked_id = c.id) OR (x.blocker_id = c.id AND x.blocked_id = $2))
               ORDER BY c.lesson_price LIMIT 20`,
             [locationId, viewer],

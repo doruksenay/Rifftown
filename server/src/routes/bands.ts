@@ -167,7 +167,7 @@ export async function bandRoutes(app: FastifyInstance) {
     const body = parse(z.object({ name: z.string().trim(), role: z.enum(INSTRUMENTS) }), req.body);
     return tx(async (c) => {
       const m = await requireBand(c, id, true);
-      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL', [body.name]);
+      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL AND retired_at IS NULL', [body.name]);
       if (!target) fail('character_not_found', 404);
       if (target.id === id) fail('invalid_target');
       if (await membership(c, target.id)) fail('target_in_band', 409);

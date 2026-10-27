@@ -84,6 +84,12 @@ export default function CreateCharacter() {
           <Body>{t('deathTitle', { name: me.data.death.name })}</Body>
           <Small>{t(me.data.death.cause === 'old_age' ? 'deathCause_old_age' : 'deathCause_neglect')}</Small>
           {me.data.death.inheritance > 0 ? <Small>{t('deathInheritance', { money: money(me.data.death.inheritance) })}</Small> : null}
+          {me.data.heirsAvailable ? (
+            <>
+              <Small style={{ marginTop: space.sm }}>{t('heirsAvailableDeath')}</Small>
+              <Button title={t('continueAsHeir')} small variant="secondary" style={{ alignSelf: 'flex-start', marginTop: space.sm }} onPress={() => router.push('/succession')} />
+            </>
+          ) : null}
         </Card>
       ) : null}
       <Body color={c.inkSoft} style={{ marginBottom: space.xl }}>

@@ -43,7 +43,8 @@ import { inventoryOf, toInventoryDto, ringPledged } from '../game/items';
 import { hotelOf, useItem } from '../game/lifestyle';
 import { unreadMessages } from '../game/social';
 import { idParam, parse } from './util';
-import { indulge, lastDeath } from '../game/consequences';
+import { claimInheritance, indulge, lastDeath } from '../game/consequences';
+import { answerHeirConsent, heirsInfo, requestHeirConsent, succeed } from '../game/generations';
 
 /** Kontrol karakterlerini atar; tek satırlık alanlarda satır sonlarını da */
 const clean = (v: string | undefined, singleLine = false) => {
@@ -74,9 +75,12 @@ export async function meRoutes(app: FastifyInstance) {
     };
     if (!u.characterId) {
       // Karakteri öldüyse (yalnızca PERMADEATH açıkken) yeni karakter ekranında anılır
+      const death = await lastDeath(pool, u.id);
       return {
         ...base, character: null, action: null, band: null, unreadNotifications: 0, pendingInvites: 0, bailCost: null, unreadMessages: 0,
-        death: await lastDeath(pool, u.id),
+        death,
+        // Nesiller: ölen karakterin mirasçı olabilecek yetişkin çocukları (yeni karakter yerine)
+        heirsAvailable: death ? await heirsInfo(u.id, u.isVip, pool).then((h) => h.children.filter((k) => !k.blocker).length).catch(() => 0) : 0,
       };
     }
     await evaluateThrottled(pool, u.characterId);
@@ -143,10 +147,8 @@ export async function meRoutes(app: FastifyInstance) {
     const color = body.avatarColor ?? AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
     return tx(async (c) => {
       // Ölen karakterin mirası bir kez, yeni karaktere geçer (para yalnızca taşınır, basılmaz). Aynı işlemde: kayıt
-      // başarısız olursa miras kaybolmaz.
-      const heirs = await many(c, 'SELECT id, inherited FROM characters WHERE former_user_id = $1 AND inherited > 0 FOR UPDATE', [req.user!.id]);
-      const inheritance = heirs.reduce((s, h) => s + Number(h.inherited), 0);
-      if (heirs.length) await c.query('UPDATE characters SET inherited = 0 WHERE id = ANY($1::bigint[])', [heirs.map((h) => h.id)]);
+      // başarısız olursa miras kaybolmaz. Mirasçıyla devamda da aynı kod kullanılır (generations.ts).
+      const inheritance = await claimInheritance(c, req.user!.id);
       const ch = await one(
         c,
         `INSERT INTO characters(user_id, name, avatar_color, main_instrument, money, mood, health, city_id, skills, attributes)
@@ -162,6 +164,42 @@ export async function meRoutes(app: FastifyInstance) {
   });
 
   app.get('/character/avatar-colors', async () => ({ colors: AVATAR_COLORS }));
+
+  // ---------- Nesiller: mirasçıyla devam ----------
+
+  /** Devredebilecek karakter (yaşayan ya da ölen), olası mirasçılar, tahmini miras ve yadigâr adayları */
+  app.get('/family/heirs', async (req) => heirsInfo(req.user!.id, req.user!.isVip, pool));
+
+  /** Çocuğun diğer ebeveyni başka hesaptaysa onay iste */
+  app.post('/family/children/:id/heir-request', async (req) => requestHeirConsent(req.user!.id, parse(idParam, req.params).id));
+
+  /** Diğer ebeveyn olarak onay ver ya da reddet */
+  app.post('/family/children/:id/heir-consent', async (req) =>
+    answerHeirConsent(charId(req), parse(idParam, req.params).id, parse(z.object({ accept: z.boolean() }), req.body).accept),
+  );
+
+  /** Mirası devret: yetişkin çocuk mirasçı karakter olur; yaşayan ebeveyn emekliye ayrılır (tek işlem) */
+  app.post('/succession', async (req) => {
+    const body = parse(
+      z.object({
+        childId: z.number().int().positive(),
+        name: z.string().trim().max(24).optional(),
+        cityId: z.string().refine((id) => !!CITY_BY_ID[id]),
+        mainInstrument: z.enum(INSTRUMENTS),
+        favoriteGenre: z.enum(GENRES).default('rock'),
+        avatarColor: z.string().refine((c) => AVATAR_COLORS.includes(c)).optional(),
+        startAttributes: z.record(z.string().max(20), z.number()).optional(),
+        heirlooms: z.array(z.number().int().positive()).max(10).optional(),
+      }),
+      req.body,
+    );
+    if (body.startAttributes) {
+      const bad = startAllocationError(body.startAttributes);
+      if (bad) fail(bad);
+    }
+    const color = body.avatarColor ?? AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
+    return succeed(req.user!.id, req.user!.isVip, { ...body, avatarColor: color });
+  });
 
   app.patch('/character', async (req) => {
     const id = charId(req);
@@ -286,7 +324,7 @@ export async function meRoutes(app: FastifyInstance) {
       const from = await lockCharacter(c, id);
       if (isJailed(from)) fail('in_jail', 409);
       await requireEstablished(c, id);
-      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL', [body.toName]);
+      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL AND retired_at IS NULL', [body.toName]);
       if (!target) fail('character_not_found', 404);
       if (target.id === id) fail('invalid_target');
       if (from.money < body.amount) fail('not_enough_money');

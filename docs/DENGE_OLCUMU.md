@@ -214,6 +214,17 @@ Karakter nitelikleri ve XP (`packages/shared/src/attributes.ts`, GAME_DESIGN.md 
 - **Para:** nitelikler para üretmez; sokak müziğinde rol becerisi +4 saatlik bahşişe ~$1,4 ekler (×0,35). Atölye bonusu +6 el işçiliği, tüccarın alış tavanı (malzemenin 1,25 katı) değişmediği için atölye-tüccar döngüsü para basmaz.
 - **Risk:** zekâ ×1,12 bütün öğrenmeyi hızlandırır; yaş çarpanı (35'ten sonra yavaşlama) ile birlikte çarpılır. Gerçek oyuncu verisiyle bakılmalı.
 
+## Ek ölçüm: nesiller (27 Ekim 2026, 4. iş)
+
+Mirasçı (GAME_DESIGN.md "Nesiller") yeni bir gelir ya da ilerleme kaynağı değildir; denge betiği değişmedi, yukarıdaki tablolar aynı. Hesap (formülden):
+
+| Ne | Değer | Kıyas |
+|---|---|---|
+| Para | Mal varlığının yarısı, en fazla $10.000, bir kez; + her yeni karakterin $500'ü | Stadyumdaki oyuncunun haftalık netinin (~$46 bin) altında; servetin geri kalanı oyundan çıkar (para yutağı). |
+| Beceri tohumu | En iyi 5 beceri, ebeveynin %15'i, en fazla 10 | Okulda (×2,2) 0'dan 10'a birkaç saat; yan beceri etkisine en fazla 10 × 0,05 = +0,5. Çekirdek becerilerin başlangıcı (enstrüman 12, temel 20) bundan yüksek. |
+| Nitelik tohumu | Toplam en fazla +4 (nitelik başına 2) | Haftalık XP tavanının (50) onda biri kadar; etkisi her nitelikte en fazla +0,08 rol becerisi. |
+| Tempo | Çocuk 18 oyun yılında (~1.000 oyun günü, `GAME_SPEED=1` iken ~2,8 yıl) yetişir | Devir zinciriyle hızlı ilerleme yok; kullanıcı başına 56 oyun gününde bir. |
+
 ## Ek: betik çıktısı
 
 Aşağıdaki bölüm `npx tsx scripts/balance/measure.ts` çıktısının kendisidir.

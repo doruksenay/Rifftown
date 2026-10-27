@@ -144,6 +144,8 @@ export default function MeTab() {
           last
         />
       ))}
+      {/* Nesiller: yetişkin bir çocukla devam (mirası devret) */}
+      <ListRow title={t('successionTitle')} subtitle={t('successionSub')} right="›" onPress={() => router.push('/succession')} last />
 
       {/* Nitelikler: kim olduğun (attributes.ts). Ayrıntı ve XP harcama /attributes ekranında. */}
       <Heading>{t('attributes')}</Heading>

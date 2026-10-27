@@ -27,6 +27,7 @@ import { config } from '../config';
 import { many, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { idParam, parse } from './util';
+import { adminLineage } from '../game/generations';
 
 /** Panelde "online" sayılma süresi: son istekten bu yana geçen süre */
 const ONLINE_MINUTES = 5;
@@ -270,7 +271,14 @@ async function loadPlayer(userId: number) {
         xp: ch.xp,
         xpTotal: ch.xp_total,
         createdAt: ch.created_at,
+        // Nesiller: soy bilgisi (salt okunur)
+        familyName: ch.family_name ?? null,
+        generation: ch.generation,
+        predecessorId: ch.predecessor_id ?? null,
+        childId: ch.child_id ?? null,
+        adultAt: ch.adult_at ?? null,
       }
     : null;
-  return { user, character };
+  // Önceki (ölen ya da mirasını devredip emekliye ayrılan) karakterler ve devir kayıtları
+  return { user, character, ...(await adminLineage(pool, userId)) };
 }
