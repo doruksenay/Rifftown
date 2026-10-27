@@ -89,7 +89,7 @@ Bir eylem erken bitirilebilir (seyahat hariç). Sonuç geçen süreyle orantıl�
 ### Formüller
 
 - Çalışma artışı = saat × (okulda 2,2, değilse 1) × (1 − beceri / 110) × ruh hâli çarpanı × sağlık çarpanı × (1 + enstrüman bonusu × 2 / 100)
-- Şarkı kalitesi = 8 + şarkı yazma puanı × 0,85 ± 10 (1–100 arası)
+- Şarkı kalitesi = 15 + şarkı yazma puanı × 0,8 ± 10 (1–100 arası; `rules.ts` `songQuality`)
 - Prova aşinalık artışı = saat × 12 × (1 − aşinalık / 105) × ruh hâli çarpanı × (1 + doğaçlama / 200), tür sınırına kadar
 
 ## Dünya
@@ -334,8 +334,18 @@ Oyunun takvimi tek dosyadadır: `packages/shared/src/pacing.ts` (`PACING`). Büt
 | Yayın başına toplam satış | ~940 / ~720 | ~2.350 / ~1.790 | Yayın başına satış ~2,5 katına çıktı ama aynı sürede 4 kat daha az yayın çıkıyor: yayınlardan zaman başına gelir ~%60'a indi. Rifftown'da para sürekli birikiyordu (Popmundo karşılaştırması, madde 2); bu da enflasyonu frenler. |
 | Liste şöhret ödülü | 3 günde bir 0,7 | 7 günde bir 1,6 | Günlük şöhret kazancı aynı kaldı (gün başına ~0,23). |
 | Festival, seçim, kira, işletme gideri, faiz | 14 / 7 / 7 / 7 / 7 gün | aynı | Zaten haftalık ritimdeydiler; aynı dosyaya taşındı. |
+| Şehir doygunluğu penceresi | yok | **60 saat** | Konser sıklığına sınır yoktu; bkz. "Konser hesabı" ve aşağıdaki ölçüm. |
 
 İçeriğin tüketilme hızı: eskiden bir grup 112 günde 16 single ve 4 albüm çıkarabilirdi, şimdi 4 single ve 1 albüm. Yani yayın içeriği 4 kat yavaş tükenir. Oyunun kendi grupları yayınlarını bu beklemelerin 1,5 katında bir çıkardığından onlar da kendiliğinden yavaşladı.
+
+### Denge ölçümü (Ekim 2026)
+
+Ayrıntı, varsayımlar ve bütün tablolar: [docs/DENGE_OLCUMU.md](docs/DENGE_OLCUMU.md) (betik `scripts/balance/measure.ts`, yalnızca bu paylaşılan formülleri çağırır). Özet, `GAME_SPEED=1` ile, 4 kişilik grup, oyuncu başına:
+
+- **Yayın temposu** zaten Popmundo'daki gibi (7 / 28 / 112 gün); değişmedi.
+- **Asıl hızlı döngü konserlerdi:** günlük konser sınırı yok. Eski kuralla tek şehirde günde 1 konserle stadyum 8., günde 3 konserle 4. haftada. Şehir doygunluğuyla 11. ve 9. hafta; üç şehri sırayla dolaşan turne 11. haftada (değişmedi, bilinçli).
+- **Para:** stadyum seviyesinde haftada net ~$45–55 bin. Dükkânların ve ruhsatların bütün tek seferlik kalemleri (VIP hariç) $105.840; günde 1 konser veren oyuncu bunu 9.–13. haftada geçer. Bu bir ayar sorunu değil, harcama yeri eksikliği: sahne paylarını 4'te 1'e indirmek bile kalemleri birkaç haftada bitirir. Sürekli harcama yerleri (büyük sahnede prodüksiyon gideri, zorunlu ekip, bakım, vergi ya da yeni pahalı ruhsatlar) sonraki adım olarak önerildi; gelir oranları değiştirilmedi.
+- **İçerik:** kodla açılan 13 başarımdan 11'i ilk 12 haftada açılır; uzun soluklu içerik süperstar şehirleri, platin/elmas ve efsane sonrası hedeflerdedir. Haftalık görev havuzunun 29 görevinin hepsini görmek ortalama 46 hafta sürer.
 
 ## İçerik hacmi (veri dosyaları)
 
@@ -352,7 +362,7 @@ Oyunun takvimi tek dosyadadır: `packages/shared/src/pacing.ts` (`PACING`). Büt
 | Görev zinciri | 0 | 9 zincir (3 karakterli, seçimli), 39 adım | `content/progress.ts` |
 | Efsane sonrası hedef | 0 | 7 + Onur Listesi | `content/progress.ts` |
 
-- **Yeni beceriler** genel etki ağırlıklarıyla çalışır (`effects`): şarkı yazma, prova hızı, kayıt kalitesi, sokak müziği bahşişi, sahne, atölye, arkadaşlık, romantizm, kondisyon. Etkiler toplanır ama tavanlıdır: şarkı yazma ve sahne puanına en fazla +10, çarpanlarda en fazla ×1,5. Böylece "her şeyi öğren" stratejisi sınırlı kalır.
+- **Yeni beceriler** genel etki ağırlıklarıyla çalışır (`effects`): şarkı yazma, prova hızı, kayıt kalitesi, sokak müziği bahşişi, sahne, atölye, arkadaşlık, romantizm, kondisyon. Etkiler toplanır ama tavanlıdır: şarkı yazma ve sahne puanına en fazla +10, çarpanlarda en fazla ×1,5. Böylece "her şeyi öğren" stratejisi sınırlı kalır. **Uzmanlık payı** (`skills.ts` `masteryBonus`): her yan becerinin usta (60) seviyesini aşan kısmı × ağırlık, +10 tavanının dışında bir kez daha eklenir, en fazla +5 (toplam en fazla +15). Ölçümde geniş dağılım tavana derin dağılımdan ucuza varıyordu ve ikisi +10'da eşit kalıyordu; artık aynı çalışma saatiyle (240 saat) derin uzman şarkı yazmada 13,9'a, sahnede 12,4'e çıkar, geniş oyuncu 10'da kalır. 60'ın altındaki becerilerde etki eskisiyle aynıdır, kimsenin etkisi azalmaz (bkz. [docs/DENGE_OLCUMU.md](docs/DENGE_OLCUMU.md)).
 - **Yeni türler** (blues, folk, punk, soul, reggae, country, klasik) şehir popülerliğini ülke tabanı + şehir istisnalarından alır (ör. country Nashville'de 1,4).
 - **Tür uyumu:** bazı enstrüman ve kıyafetler bir türe yatkındır (yarı gövde caz gitarı caz, blues ve soul'da; yedi telli gitar metalde; rezonatör gitar blues ve country'de; fiddle country ve folk'ta; kovboy şapkası country'de). Grubun türü uyuyorsa konserde bonusa +1 / +2 eklenir (tavan +3, yıpranmadan etkilenmez). Merdiven korunur: bir eşya, kendi türünde bile, en az iki katı fiyatlı aynı yuvadaki eşyanın taban bonusuna yetişemez (test denetler).
 - **Set bonusları** (4 set): her gruptan bir eşya kuşanılınca sahne performansına eklenir, yalnızca en iyi set sayılır (en fazla +3): *Caz kulübü* (caz enstrümanı + smokin, +2), *Ağır zırh* (metal gitarı ya da beş telli bas + deri pantolon, +2), *Honky tonk* (rezonatör gitar ya da fiddle + kovboy şapkası + turne minibüsü ya da kamyonet, +3), *Neon gece* (modüler synth ya da elektronik pad + ışıklı kostüm, +2).
@@ -427,6 +437,7 @@ Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr 
 - Aynı sahnede aynı saatlerde (±3 oyun saati) iki grup çalamaz; oyunun kendi grupları da boş saat arar ve oyuncuya her zaman yer açar (oyuncu rezervasyonu çakışan oyun grubu konserini iptal eder). Bir grubun aynı anda en fazla 2 ayarlı konseri olabilir (sahneler boş rezervasyonla kapatılamasın).
 - Grubun kendi üyelerinden kimse sahneye çıkmazsa konser sadece kiralık müzisyenlerle yapılmaz: gelir yok, şöhret düşer.
 - Olumlu şöhretin %25'i aynı ülkedeki diğer şehirlere yayılır.
+- **Şehir doygunluğu** (`rules.ts` `CITY_SATURATION`): grubun aynı şehirde son 60 oyun saatinde verdiği her önceki konser (k) şöhret kazancını 1 ÷ (1 + 0,5 × k), seyirciyi 1 − 0,1 × k (en az ×0,6) ile çarpar. Her gün aynı şehirde çalan grubun şöhret kazancı yarıya iner; her şehre 3 günde bir dönen turne etkilenmez. Bar, festival ve oyunun kendi grupları muaftır; şöhret kayıpları küçülmez. Pencere `pacing.ts` `citySaturationHours`, sunucuda `GIG_SATURATION_HOURS` ile değiştirilir (0 kapatır). Gerekçe: konser sıklığına sınır yokken günde 3 konserle tek şehirde 4. haftada stadyuma çıkılıyordu (bkz. "Tempo").
 - Konseri iptal etmek o şehirde şöhret kaybettirir; ceza satılan biletle büyür (bkz. "Kayıp ve sonuç"). Hiç kimse gelmezse konser gelirsiz biter ve şöhret düşer.
 
 ### Karar derinliği: setlist sırası, sahne olayları ve bis
@@ -447,7 +458,7 @@ Kurallar `packages/shared/src/performance.ts` dosyasındadır.
 
 Her konser bittiğinde sunucu, o konsere özel iki ila dört cümlelik bir eleştiri üretip sonuçla birlikte saklar (Türkçe ve İngilizce). Metin havuzları `packages/shared/src/content/texts.ts` içindedir: altı kalite basamağının her birinde 8 ana cümle, 4 EFSANEVİ cümlesi, doluluk için 9 cümle (hepsi mekânı anar), her sahne olayının başarı ve başarısızlık cümlesi, basın desteği (sıcak ≥60 / soğuk ≤10), aynı şehirde son 48 oyun saatinde çalan rakip grupla kıyas (kalite farkı 8 ve üstüyse) ve her şehre özgü iki renk cümlesi. Doluluk ve ana cümleye en fazla iki bağlam cümlesi eklenir; seçim konserin kimliğine göre deterministiktir. Eleştiri konseri bilir: mekânın adı, şehir, gerçek seyirci sayısı, gecenin en iyi şarkısı ve sahneye çıkmayan üye sayısı. Türkçede yer tutuculara ek getirilmez (test denetler). Örnek: "Kadıköy Bodrum Bar tıklım tıklımdı. 72 seyirci bis istedi; Kadıköy Bodrum Bar yerinden oynadı." Oyuncu eleştiriyi tek dokunuşla grup ya da şehir sohbetinde paylaşabilir.
 
-Raporun altında **"Neden böyle geçti?"** bölümü her etkeni zayıf / idare eder / güçlü diye değerlendirir (şarkı kalitesi, şarkıları bilme, çalım becerisi, sahne şovu, setlist uzunluğu, kadro, enerji, ruh hâli; sayı yok). Grubun üyeleri en zayıf üç etken için "Sıradaki konser için" önerileri ve ilgili ekrana giden düğmeleri görür (prova, şarkı yaz, okul, dinlen), ayrıca o şehirde sıradaki sahneye ne kaldığını gösteren çubuğu. Aynı çubuk grup sekmesinde her şehir için ve sahne sayfasında da var.
+Raporun altında **"Neden böyle geçti?"** bölümü her etkeni zayıf / idare eder / güçlü diye değerlendirir (şarkı kalitesi, şarkıları bilme, çalım becerisi, sahne şovu, setlist uzunluğu, kadro, enerji, ruh hâli, seyircinin tazeliği; sayı yok). Seyircinin tazeliği yalnızca grup o şehirde doygunluk penceresinde çaldıysa görünür (1 konser idare eder, 2+ zayıf). Grubun üyeleri en zayıf üç etken için "Sıradaki konser için" önerileri ve ilgili ekrana giden düğmeleri görür (prova, şarkı yaz, okul, dinlen, başka şehre git), ayrıca o şehirde sıradaki sahneye ne kaldığını gösteren çubuğu. Aynı çubuk grup sekmesinde her şehir için ve sahne sayfasında da var.
 
 ## Enerji, ilham ve moodlet'ler
 
@@ -682,6 +693,7 @@ Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. 
 Henüz eklenmemiş olanlar, önem sırasıyla (Popmundo karşılaştırmasındaki 8 boşluk kapatıldı; kalanlar):
 
 1. **Makamlara gerçek yetkiler:** başkanın şehirdeki vergi ya da bilet payını belirlemesi, emniyet müdürünün devriye ve suçla mücadele kararları.
+2. **Ekonomi: sürekli harcama yerleri.** Denge ölçümüne göre salon ve stadyum seviyesinde para harcama yerlerinden onlarca kat hızlı birikiyor (bkz. "Tempo" altında "Denge ölçümü"). Şöhretle büyüyen sürekli giderler ya da yeni pahalı içerik gerekiyor; gerekirse ikinci adım olarak grubun günlük konser sayısına sınır.
 3. **Nesiller:** çocukların büyüyüp oynanabilir karakter olması, miras.
 4. **Daha fazla işletme türü:** plak dükkânı, kayıt stüdyosu, konser salonu ruhsatları.
 5. Turne paketleri.

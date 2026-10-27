@@ -50,6 +50,7 @@ import {
   marketingAttendanceMult,
   stageEventAllowed,
   cityEventActive,
+  PACING,
 } from '@rifftown/shared';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import { bandPress } from './press';
@@ -255,6 +256,24 @@ export async function cancelGig(characterId: number, gigId: number) {
   });
 }
 
+/**
+ * Grubun bu konserden önceki doygunluk penceresi içinde aynı şehirde verdiği konser sayısı.
+ * Yalnızca sonuçlanmış, grubun kendi üyelerinden birinin sahneye çıktığı, festival dışı konserler sayılır.
+ */
+async function recentCityGigs(c: pg.PoolClient, gig: { id: number; band_id: number; city_id: string; starts_at: Date }): Promise<number> {
+  const hours = config.gigSaturationHours ?? PACING.citySaturationHours;
+  if (hours <= 0) return 0;
+  const since = new Date(gig.starts_at.getTime() - gameHoursToMs(hours, config.gameSpeed));
+  const r = await one(
+    c,
+    `SELECT count(*)::int AS n FROM gigs
+      WHERE band_id = $1 AND city_id = $2 AND id <> $3 AND status = 'done' AND festival_id IS NULL
+        AND starts_at > $4 AND starts_at <= $5 AND COALESCE((result->>'presentCount')::int, 0) > 0`,
+    [gig.band_id, gig.city_id, gig.id, since, gig.starts_at],
+  );
+  return r?.n ?? 0;
+}
+
 export async function addFame(c: pg.PoolClient, bandId: number, cityId: string, delta: number) {
   await c.query(
     `INSERT INTO band_fame(band_id, city_id, fame) VALUES ($1, $2, GREATEST(0, LEAST(100, $3::real)))
@@ -381,6 +400,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     cityEvent: cityEventActive(gig.city_id, band.genre as Genre, gig.starts_at.getTime(), config.gameSpeed),
     // Haftanın modası açık liste haftasına göre döner
     weekId: Number((await one(c, `SELECT id FROM chart_weeks WHERE status = 'open' ORDER BY id DESC LIMIT 1`))?.id ?? 0),
+    // Şehir doygunluğu: aynı şehirde yakın zamanda verilmiş konserler (rules.ts CITY_SATURATION)
+    recentCityGigs: band.npc_key || gig.festival_id ? 0 : await recentCityGigs(c, gig),
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür
   const ownerShare = await barGigShare(c, gig.location_id, res.revenue, ids);

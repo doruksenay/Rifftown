@@ -312,6 +312,26 @@ export function skillBonus(s: Skills, kind: SkillEffectKind): number {
   }
   return sum;
 }
+/** Toplanan etkilerin tavanı (şarkı yazma ve sahne puanına) */
+export const MAX_EFFECT_BONUS = 10;
+/** Uzmanlık payı: usta (60) üstündeki puanlar tavanın dışında bir kez daha sayılır, en fazla +5 */
+export const MASTERY_FROM = 60;
+export const MAX_MASTERY_BONUS = 5;
+/**
+ * Uzmanlık payı: bir etki türünde her becerinin usta seviyesini aşan kısmı × ağırlık. Genişlik (çok beceriyi
+ * azar azar açmak) tavana ucuzdan varır; derinlik ancak bu payla öne geçer. Hiçbir oyuncunun mevcut etkisini azaltmaz.
+ * Ölçüm: docs/DENGE_OLCUMU.md.
+ */
+export function masteryBonus(s: Skills, kind: SkillEffectKind): number {
+  let sum = 0;
+  for (const d of EFFECT_SKILLS) {
+    const w = d.effects![kind];
+    if (w && typeof s[d.id] === 'number') sum += Math.max(0, s[d.id] - MASTERY_FROM) * w;
+  }
+  return Math.min(MAX_MASTERY_BONUS, sum);
+}
+/** Puana eklenen etki: tavanlı toplam + uzmanlık payı (en fazla +15) */
+export const effectBonus = (s: Skills, kind: SkillEffectKind) => Math.min(MAX_EFFECT_BONUS, skillBonus(s, kind)) + masteryBonus(s, kind);
 /** Çarpan türündeki etkiler için: 1 + beceri ÷ 100 × ağırlık, en fazla ×1,5 */
 export const skillMult = (s: Skills, kind: SkillEffectKind) => Math.min(1.5, 1 + skillBonus(s, kind) / 100);
 export const SKILLS = SKILL_DEFS.map((s) => s.id);
@@ -346,12 +366,12 @@ export const stageScore = (s: Skills) =>
   Math.min(
     100,
     0.45 * lv(s, 'showmanship') + 0.25 * lv(s, 'pro_showmanship') + 0.15 * lv(s, 'dancing') + 0.15 * lv(s, 'audience') + 0.1 * lv(s, 'stagediving') +
-      Math.min(10, skillBonus(s, 'stage')),
+      effectBonus(s, 'stage'),
   );
 
 /** Şarkı yazarken kullanılan beceri (0–100) */
 export const songwritingScore = (s: Skills, genre: Genre) =>
-  Math.min(100, 0.45 * lv(s, 'composing') + 0.35 * lv(s, 'lyrics') + 0.2 * lv(s, genreSkillId(genre)) + Math.min(10, skillBonus(s, 'songwriting')));
+  Math.min(100, 0.45 * lv(s, 'composing') + 0.35 * lv(s, 'lyrics') + 0.2 * lv(s, genreSkillId(genre)) + effectBonus(s, 'songwriting'));
 
 /** Tür becerisine göre bir şarkıda ulaşılabilecek en yüksek aşinalık (50–100) */
 export const familiarityCap = (s: Skills, genre: Genre) => 50 + lv(s, genreSkillId(genre)) / 2;

@@ -26,6 +26,9 @@ export const PACING = {
   festivalApplyDays: 4,
   /** Seçim dönemi */
   electionDays: 7,
+  /** Şehir doygunluğu penceresi (oyun saati): bir grubun aynı şehirde bu süre içindeki önceki konserleri seyirciyi ve şöhret
+   *  kazancını azaltır (rules.ts CITY_SATURATION). Sunucuda GIG_SATURATION_HOURS ile değiştirilebilir, 0 kapatır. */
+  citySaturationHours: 60,
   /** Kira, işletme gideri ve banka faizi dönemi */
   rentPeriodDays: 7,
   upkeepPeriodDays: 7,

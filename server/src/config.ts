@@ -22,6 +22,8 @@ export const config = {
   host: process.env.HOST ?? '0.0.0.0',
   /** 1 = gerçek zaman. Geliştirmede 60 → 1 oyun saati 1 dakika sürer. */
   gameSpeed: num(process.env.GAME_SPEED, 1),
+  /** Şehir doygunluğu penceresi (oyun saati). Boşsa pacing.ts citySaturationHours (60); 0 doygunluğu kapatır. */
+  gigSaturationHours: process.env.GIG_SATURATION_HOURS ? num(process.env.GIG_SATURATION_HOURS, 60) : null,
   /** Zamanlayıcının kaç milisaniyede bir vadesi gelen işleri kontrol edeceği */
   workerIntervalMs: num(process.env.WORKER_INTERVAL_MS, 2000),
   /** Expo push servisi için isteğe bağlı erişim anahtarı */
