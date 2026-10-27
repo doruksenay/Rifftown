@@ -1,7 +1,6 @@
 // Eşyalar: envanter görünümü, ikinci el pazarı, sprey boya ve isim verme, atölyede üretim.
 
 import {
-  CRAFT_HOURS,
   type InventoryItemDto,
   ITEM_BY_ID,
   type ListingDto,
@@ -10,6 +9,8 @@ import {
   MAX_LISTINGS,
   RECIPE_BY_ID,
   type Skills,
+  meetsRecipeSkill,
+  recipeHours,
   clamp,
   containsProfanity,
   craftBonus,
@@ -230,6 +231,8 @@ export async function prepareCraft(c: pg.PoolClient, ch: CharacterRow, recipeId:
   const loc = LOCATION_BY_ID[locationId];
   if (!loc || loc.type !== 'hardware') fail('invalid_location');
   if (loc!.cityId !== ch.city_id) fail('not_in_city');
+  // Bazı tarifler bir becerinin belli bir seviyesini ister (ör. arch-top gitar için çalgı yapımcılığında amatör)
+  if (!meetsRecipeSkill(recipe!, ch.skills)) fail('craft_skill_low', 409);
   const used: number[] = [];
   for (const [mat, qty] of Object.entries(recipe!.materials)) {
     const rows = await many(
@@ -241,7 +244,7 @@ export async function prepareCraft(c: pg.PoolClient, ch: CharacterRow, recipeId:
     used.push(...rows.map((r) => Number(r.id)));
   }
   await c.query('DELETE FROM inventory WHERE id = ANY($1::bigint[])', [used]);
-  return { hours: CRAFT_HOURS, locationId: loc!.id, params: { recipe: recipe!.id, materials: recipe!.materials } };
+  return { hours: recipeHours(recipe!), locationId: loc!.id, params: { recipe: recipe!.id, materials: recipe!.materials } };
 }
 
 /** Üretimin sonucu. Yarıda bırakılırsa malzemeler geri verilir, ürün çıkmaz. */

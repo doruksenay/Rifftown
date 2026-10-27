@@ -145,14 +145,16 @@ Fiyatlar her şehirde aynıdır. Dükkâna geri satış fiyatın %50'si.
 |---|---|---|
 | Müzik mağazası | Her enstrüman için (saksofon, keman ve perküsyon dahil 8 rol) 3 seviye ($150 / $900 / $4.000) | Konserde rol becerisine +3 / +7 / +12; o beceride çalışma verimine +%6 / +%14 / +%24 |
 | Sahne butiği | Tişört ve kot ($80), deri ceket ($500), tasarım kostüm ($2.500) | Konserde sahne performansına +2 / +5 / +10 |
-| Sanat galerisi | 4 eser ($120 – $8.000) | Dinlenme verimine +%5 – +%25 (toplam en fazla +%40) |
+| Sanat galerisi | Eserler, şehir hatıraları ve efsane konser afişleri ($120 – $12.000; müzik mağazasında koleksiyon plakları) | Dinlenme verimine +%3 – +%30 (toplam en fazla +%40); bazıları koleksiyon parçası |
 | Kitapçı | Beceri kitapları ($30 – $80) | Beceriyi açar |
 | Hastane | Tedavi | Saatte +20 sağlık |
 | Oto galeri | Hatchback ($2.500), motosiklet ($4.500), aile sedanı ($9.000), turne minibüsü ($16.000), spor coupe ($28.000), klasik cabrio ($60.000, VIP) | Ülke içinde otobüsten 1,3 – 2,2 kat hızlı yolculuk |
 | Pet shop | Kedi ($250), köpek ($400), papağan ($700), Bengal kedisi ($4.000, VIP) | Dinlenmeye +%6 – +%15 |
 | Sahne butiği (ek) | Gümüş ($800) ve pırlanta ($5.000) nişan yüzüğü | Evlilik teklifi için |
 | Sahne ekipmanı | Sis makinesi, konfeti, ışık şovu, piroteknik ($80 – $800) | Konser ayarlarken seçilir, konserde harcanır; kaliteye +2 – +6 (toplam en fazla +12) |
-| Hırdavat | Atölye malzemeleri ($20 – $90), 10 renk sprey boya ($35) | Üretim ve boyama |
+| Hırdavat | Atölye malzemeleri ($10 – $95), bakım setleri ($45 – $70), 10 renk sprey boya ($35) | Üretim, onarım ve boyama |
+| Eczane, kitapçı rafı, kulis, butik, galeri | Tüketim eşyaları ($8 – $120) | Kullanınca küçük enerji, ruh hâli, sağlık ya da ilham (ortak 3 saatlik bekleme) |
+| Butik, kitapçı, galeri, müzik mağazası, pet shop | Hediyelikler ($15 – $900) | Hediye edince arkadaşlık +1 – +4 (aynı kişiye günde bir kez) |
 
 Her enstrüman türünden, kıyafetten, araçtan ve evcil hayvandan bir tanesi "kullanımda" olur. Sanat eserlerinin hepsi birlikte etki eder. Malzeme, sprey ve efektler yığılabilir (5'li alınabilir).
 
@@ -166,7 +168,7 @@ Her şehrin bit pazarında oyuncular eşyalarını ilana koyar; fiyat en fazla d
 
 ### Atölye (zanaat)
 
-Hırdavatçının atölyesinde malzemelerden enstrüman (gitar, bas, davul, synthesizer, mikrofon, saksofon, keman, konga) ya da sahne kostümü üretilir. Yeni malzemeler: pirinç gövde, saksofon kamışı, keman yayı. Üretim 4 saat sürer. Bonus el işçiliği becerisine bağlıdır: acemi biri dükkânın ilk seviyesine yakın (+3), usta biri dükkânın en iyisini geçen (+14) eşya çıkarır. Yarıda kesilen üretimde malzemeler geri verilir. Üretilen eşyada üreticinin adı yazar. Üretilen eşyalar dükkâna satılmaz, ikinci el pazarında satılır.
+Hırdavatçının atölyesinde malzemelerden enstrüman (gitar, bas, davul, synthesizer, mikrofon, saksofon, keman, konga ve 17 türe yatkın model), kıyafet, sanat eseri, sahne efekti, tüketim eşyası, hediyelik, yüzük ve bakım seti üretilir (81 tarif, `content/recipes.ts`). Bazı tarifler önce ara malzeme ister (tonewood, el sarımı manyetik, sahne kumaşı). Üretim varsayılan 4 saat sürer; tarif kendi süresini (1 – 10 saat) ve bir beceri eşiğini (ör. kuyumculukta usta) taşıyabilir. Bonus el işçiliği becerisine bağlıdır: acemi biri dükkânın ilk seviyesine yakın (+3), usta biri dükkânın en iyisini geçen (+14) eşya çıkarır. Yarıda kesilen üretimde malzemeler geri verilir. Üretilen eşyada üreticinin adı yazar. Üretilen eşyalar dükkâna satılmaz, ikinci el pazarında satılır. Ürünü dükkânda da satılan tarifler (tamir kiti, bakım setleri, bakım paketi) için malzeme maliyeti dükkân fiyatının en az yarısıdır; tüccarın atölye ürününe ödediği para malzemenin en fazla %25 fazlası ve günde 2 ürünle sınırlı (her tarif için test).
 
 ## Meslekler
 
@@ -351,16 +353,19 @@ Ayrıntı, varsayımlar ve bütün tablolar: [docs/DENGE_OLCUMU.md](docs/DENGE_O
 
 İçerik `packages/shared/src/content/` altında veri olarak durur; yeni bir beceri, eşya, tarif, başarım, görev ya da zincir eklemek bir satırdır, ekranlar ve sunucu kendiliğinden tanır.
 
-| İçerik | Önce | Şimdi | Dosya |
-|---|---|---|---|
-| Beceri | 41 | 100 | `content/skills.ts` (+ 7 yeni tür becerisi) |
-| Dükkân ve atölye eşyası | ~70 | 167 (8 rol, 6 sezonluk, 15 şehre özgü, 3 ödül eşyası) | `content/items.ts` |
-| Atölye tarifi | 6 | 19 | `content/items.ts` |
-| Tür / alt tür | 7 / 0 | 14 / 72 | `world.ts` (popülerlik tablosu veriyle), `performance.ts` |
-| Başarım | 39 | 110 (14 gizli keşif, 16 şehir) | `content/progress.ts` (istatistik eşikli) |
-| Haftalık görev havuzu | 12 | 28 | `content/progress.ts` |
-| Görev zinciri | 0 | 9 zincir (3 karakterli, seçimli), 39 adım | `content/progress.ts` |
-| Efsane sonrası hedef | 0 | 7 + Onur Listesi | `content/progress.ts` |
+| İçerik | İlk sürüm | 1. içerik işi | Şimdi | Dosya |
+|---|---|---|---|---|
+| Beceri | 41 | 100 | 142 | `content/skills.ts` (+ 7 tür becerisi) |
+| Dükkân ve atölye eşyası | ~70 | 168 | 405 (8 rol, 16 sezonluk, 30 şehre özgü, 3 ödül, 69 atölye ürünü, 29 tüketim, 26 hediyelik) | `content/items.ts`, `content/gear.ts`, `content/goods.ts` |
+| Atölye tarifi | 6 | 19 | 81 | `crafting.ts`, `content/items.ts`, `content/recipes.ts` |
+| Sahne olayı | 6 | 21 | 40 | `performance.ts` |
+| Eşya seti | 0 | 4 | 12 | `content/items.ts`, `content/gear.ts` |
+| Koleksiyon | 0 | 0 | 5 | `content/gear.ts` |
+| Tür / alt tür | 7 / 0 | 14 / 72 | 14 / 72 | `world.ts` (popülerlik tablosu veriyle), `performance.ts` |
+| Başarım | 39 | 111 (14 gizli keşif, 16 şehir) | 119 (+5 koleksiyon) | `content/progress.ts` (istatistik eşikli), `achievements.ts` |
+| Haftalık görev havuzu | 12 | 29 | 31 | `content/progress.ts` |
+| Görev zinciri | 0 | 9 zincir (3 karakterli, seçimli), 39 adım | aynı | `content/progress.ts` |
+| Efsane sonrası hedef | 0 | 7 + Onur Listesi | aynı | `content/progress.ts` |
 
 - **Yeni beceriler** genel etki ağırlıklarıyla çalışır (`effects`): şarkı yazma, prova hızı, kayıt kalitesi, sokak müziği bahşişi, sahne, atölye, arkadaşlık, romantizm, kondisyon. Etkiler toplanır ama tavanlıdır: şarkı yazma ve sahne puanına en fazla +10, çarpanlarda en fazla ×1,5. Böylece "her şeyi öğren" stratejisi sınırlı kalır. **Uzmanlık payı** (`skills.ts` `masteryBonus`): her yan becerinin usta (60) seviyesini aşan kısmı × ağırlık, +10 tavanının dışında bir kez daha eklenir, en fazla +5 (toplam en fazla +15). Ölçümde geniş dağılım tavana derin dağılımdan ucuza varıyordu ve ikisi +10'da eşit kalıyordu; artık aynı çalışma saatiyle (240 saat) derin uzman şarkı yazmada 13,9'a, sahnede 12,4'e çıkar, geniş oyuncu 10'da kalır. 60'ın altındaki becerilerde etki eskisiyle aynıdır, kimsenin etkisi azalmaz (bkz. [docs/DENGE_OLCUMU.md](docs/DENGE_OLCUMU.md)).
 - **Yeni türler** (blues, folk, punk, soul, reggae, country, klasik) şehir popülerliğini ülke tabanı + şehir istisnalarından alır (ör. country Nashville'de 1,4).
@@ -368,6 +373,19 @@ Ayrıntı, varsayımlar ve bütün tablolar: [docs/DENGE_OLCUMU.md](docs/DENGE_O
 - **Set bonusları** (4 set): her gruptan bir eşya kuşanılınca sahne performansına eklenir, yalnızca en iyi set sayılır (en fazla +3): *Caz kulübü* (caz enstrümanı + smokin, +2), *Ağır zırh* (metal gitarı ya da beş telli bas + deri pantolon, +2), *Honky tonk* (rezonatör gitar ya da fiddle + kovboy şapkası + turne minibüsü ya da kamyonet, +3), *Neon gece* (modüler synth ya da elektronik pad + ışıklı kostüm, +2).
 - **Sezonluk eşyalar** (6): oyun yılı 56 gün, her mevsim 14 gün (`items.ts` `seasonAt`); kış paltosu ve kar makinesi kışın, çiçekli gömlek ilkbaharda, festival yazlığı yazın, hasat havai fişeği ve sınırlı baskı afiş sonbaharda satılır. Mevsim dışı alınamaz (`out_of_season`), elde olan kullanılmaya ve ikinci elde satılmaya devam eder.
 - **Eşya dengesi:** yeni enstrüman ve kıyafetler var olan fiyat/bonus merdiveninin ara basamaklarıdır; her yuvada tek eşya kuşanıldığı için ucuz eşyayla bonus biriktirilemez. Atölye ürünleri dükkâna satılmaz (eski kural), tamir kiti tarifinin malzemesi dükkân fiyatının en az yarısıdır (atölye-dükkân döngüsüyle para basılamaz).
+- **İçerik hacmi (Ekim 2026, 2. iş).** Sayı doldurmak yerine her yeni şeyin bir işi var:
+  - **Enstrümanlar:** her rolde dört yeni model ($250/+4, $600/+6, $1.400/+8, $3.000/+11), hepsi iki üç türe yatkın (+1). Var olan merdivenin ara basamaklarıdır; test, yarı fiyatına alınan eşyanın tür uyumuyla bile pahalı eşyanın taban bonusuna yetişemediğini her çift için denetler.
+  - **Kıyafetler:** 20 yeni parça ($130 – $5.000), 14 türün hepsine en az bir tür uyumlu kıyafet.
+  - **Yeni setler (8):** Paçavra punk, Kökler (reggae), Konser salonu, Altın çağ hip-hop, Yol türküsü (karavanla, +3), Anadolu psikedelik, Soul revü, Simli pop. Set tavanı (+3, yalnızca en iyi set) değişmedi; setler yeni güç değil, türüne göre giyinen gruba alternatif yol.
+  - **Araç ve evcil hayvan:** bisiklet, kafe yarışçısı, elektrikli sedan, karavan, turne otobüsü, limuzin (VIP); 8 yeni evcil hayvan. Evcil hayvanda bonus fiyatla birlikte artar (test).
+  - **Sahne efektleri (10 + 1 sezonluk):** puan başı fiyat en ucuz eski efektin ($40) altında değil; konser tavanı (+12) daha ucuza dolmaz.
+  - **Sanat ve koleksiyon:** 9 galeri eseri, her şehrin galerisinde kendi hatırası (15, yalnızca o şehirde), müzik mağazasında 6 koleksiyon plağı, galeride 5 efsane konser afişi. Puan başı fiyat konser afişi baskısının ($24) altında değil; sanat tavanı (%40) daha ucuza dolmaz. **Koleksiyonlar** (5): Dünya turu hatıraları, Plak arşivi, Afiş duvarı, Dört mevsim (her mevsimden bir sezonluk eşya), Atölye ustası (atölye yapımı bir enstrüman, kıyafet, sanat eseri ve hediyelik). Her biri bir başarım; üçü ünvan verir (Dünya gezgini, Plak avcısı, Yaratıcı eller). Para vermez.
+  - **Tüketim eşyaları (29, yuva `consumable`):** eczane rafı (pastil, vitamin, krem, elektrolit), kulis (kahve, protein bar, enerji içeceği), kitapçı (bulmaca, dergi, cep defteri, ilham defteri), galeri (müze bileti, katalog), butik (mum, spa), müzik mağazası (başka grubun konser bileti) ve sezonluklar. Envanterden kullanılır (`POST /inventory/:id/use`), küçük ve anlık enerji, ruh hâli, sağlık ya da ilham verir (tek kullanımda en fazla enerji 15, ruh hâli 10, sağlık 8, ilham 6), eşya harcanır. Bütün tüketim eşyaları ortak bir beklemeye tabidir (3 oyun saati, yemekten ayrı; `item_uses`, migration 020). Para üretmez; hastaneden ucuza sağlık ($2/puan) ve günün yemeğinden ucuza enerji yoktur (test). Yanıtta kesin sayı dönmez.
+  - **Hediyelikler (26, yuva `gift`):** çiçek, fular, parfüm, saat, şiir kitabı, pena kolye, imzalı baget, sezonluklar ve atölyede yapılanlar (mixtape, müzik kutusu, örgü atkı...). Var olan hediye akışında verilince arkadaşlığa +1 – +4 eklenir, aynı kişiye 24 oyun saatinde bir kez (`social_log` `gift_bonus`). Romantizme etkisi yoktur.
+  - **Bakım setleri (5):** tel değişim takımı (gitar, bas, keman), davul derisi seti (davul, perküsyon), kamış ve ped seti (saksofon), kontak temizleyici (klavye, mikrofon), araç bakım seti. Yalnızca kendi yuvalarını onarır (`ItemDef.repair`); tamir kiti her eşyayı, bakım paketi bütün kuşanılmış ekipmanı onarmaya devam eder (değerleri aynı, test). Bakım paketi artık eşya ekranından kullanılabilir.
+  - **Tarifler (62 yeni):** ara malzemeler (tonewood, el sarımı manyetik, sahne kumaşı) ve onlarla yapılan usta işi enstrümanlar, türe yatkın atölye enstrümanları ve kıyafetleri, sanat eserleri, sahne efektleri, tüketim, hediyelik, gümüş yüzük ve bakım setleri. Tarifler artık bir **beceri eşiği** (`skill`, ör. arch-top gitar için çalgı yapımcılığında amatör) ve kendi **süresi** (`hours`, 1 – 10 saat) taşıyabilir; eşik sunucuda denetlenir (`craft_skill_low`). 17 farklı beceri, 15 / 30 / 45 eşikleri. Atölye ekranı ürün türüne göre süzülür.
+  - **Beceriler (42 yeni):** 13 enstrüman (banjo, mandolin, bağlama, çello, arp (VIP), trompet, ney, akordeon, konser piyanosu, theremin (VIP), ritim programlama, çelik tava, yodel) sokakta bahşiş verir ve her biri türe özgü bir **sahne olayı** açar; 6 müzik becerisi (orkestrasyon ve ses mühendisliği sahne olayı, ezber ve nota çıkarma prova hızı, şiir ve saha kaydı ilham); 4 sahne becerisi yalnızca sahne olayı (akrobasi, VJ, hızlı kostüm değişimi, sahne sihirbazlığı); 7 zanaat becerisi (metal, deri, seramik, örgü, kuyumculuk, hat, ciltçilik) atölye tariflerini açar; sosyal (diplomasi, yabancı dil, eşli dans, aşk mektupları, hayvan bakımı), spor (bisiklet, tırmanış, boks, pilates, meditasyon, beslenme) ve ilk yardım. **Yeni etki türleri:** `inspiration` (dinlenme, sokak, yolculuk ve beceri açmadan gelen ilham), `pets` (evcil hayvanın dinlenme bonusu, en fazla ×1,3), `nutrition` ve `remedy` (tüketim eşyalarının enerjisi ve sağlığı); hepsi ×1,5 tavanlı. Şarkı yazma, sahne ve kayıt ağırlığı **eklenmedi**: denge ölçümündeki toplamlar (0,22 / 0,33 / 0,15) ve tavana en ucuz yol aynı kaldı (test). Prova ağırlığı 0,46'ya çıktı (×1,5 tavanının altında). "Ölü beceri" testi her becerinin bir etki ağırlığı, sahne olayı, tarif eşiği, rol/tür ya da kod bağlantısı olduğunu denetler.
+  - **Hata düzeltmesi:** atölyede yapılan sahne efektinin (piroteknik) bonusu konsere taşınmıyordu (eşya tanımındaki 0 kullanılıyordu). Artık rezervasyonda her efektin kendi bonusu `gigs.effect_bonuses` içinde saklanır (migration 020), iptalde bonusuyla geri verilir.
 - **Görev zincirleri** (Yolun hikâyesi, Stüdyo günlükleri, Manşetlere doğru, Usta çırak, Kalbin sesi, Sahnenin efendisi) ömür boyu istatistiklere bakar ve sırayla açılır; adım ödülleri $20–$120, her adım bir kez. Ana sayfada kart.
 - **Karakterli zincirler** (3): adı geçen bir karakter, hikâye cümleleri, bir seçim ve seçime göre dallanan devam. *Vedat Karahan'ın teklifi* (efsanevi prodüktör: ona güven → stüdyo mikrofonu, radyo yolu ve "Vedat Karahan'ın keşfi" ünvanı; kendi sesinde ısrar → küçük para, altın plak yolu ve "Bağımsız ruh"), *Rakip: Kızıl Tilkiler* (solist Cansu Tilki: meydan oku → DESTANSI konser ve "Tilki avcısı"; birlikte çal → sahne ceketi, festival ve "Tilkilerin dostu"), *Melek Hanım'ın dersleri* (İzmir'de emekli caz şarkıcısı Melek Aksoy: şarkı yazma → nota defteri ve "Melek Hanım'ın kalemi"; sahne → "Melek Hanım'ın öğrencisi"). Seçim `chain_claims.choice` içinde saklanır, bir kez yapılır; para ödülleri adım başına en fazla $80.
 - **Efsane sonrası:** "Efsane ol" hedefine ulaşan grup sırayla şu hedefleri görür: EFSANEVİ bir gece, 3 şehirde süperstar, platin plak, 5 festival, 8 şehirde süperstar, elmas plak (50.000), 15 şehrin hepsinde süperstar. Hepsi bitince Onur Listesi. Bu hedefler ayrı tanım değildir, başarımlara işaret eder (`LEGACY_GOALS` → `STAT_ACHIEVEMENTS`): eşik ve metin tek yerdedir, başarım kimlikleri ve hedef kimlikleri eski sürümle aynı kaldı. Platin plak başarımı da bu yüzden veri dosyasına taşındı. Şöhret artık zamanla azaldığı için (bkz. "Kayıp ve sonuç") süperstar şehirlerini korumak da kendi başına bir uğraştır.
@@ -620,6 +638,9 @@ Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düş
 | Spor | Kondisyon | Spor salonu |
 | Zanaat | El işçiliği | Kitapçı, atölyede gelişir |
 | Kariyer (ek) | İşletmecilik (işletme gelirini artırır, ekonomi ister) | Üniversite |
+| Zanaat (ek) | Metal, deri, seramik, örgü, kuyumculuk, hat, ciltçilik: atölye tariflerini açar | Kitapçı |
+| Spor (ek) | Bisiklet, tırmanış, boks, pilates (kondisyon), meditasyon (ilham), beslenme (tüketimden enerji) | Kitapçı |
+| Kariyer (ek) | İlk yardım (tüketimden sağlık, boğaz şurubu tarifi) | Kitapçı |
 
 ### Kariyer becerilerinin etkileri
 

@@ -79,7 +79,12 @@ describe('veri dosyaları', () => {
     for (const c of CHAINS) for (const s of c.steps) expect(s.reward).toBeLessThanOrEqual(120);
     for (const r of RECIPES) {
       const out = ITEM_BY_ID[r.itemId];
-      if (r.itemId === 'repair_kit') continue; // tamir kiti dükkânda da satılır, tarif yalnızca kolaylık
+      // Tamir kiti ve bakım setleri dükkânda da satılır, tarif yalnızca kolaylık: malzemesi fiyatın en az yarısı
+      if (out.repair) {
+        const c = Object.entries(r.materials).reduce((s, [m, n]) => s + ITEM_BY_ID[m].price * n, 0);
+        expect(c, r.id).toBeGreaterThanOrEqual(out.price * 0.5);
+        continue;
+      }
       expect(out.crafted, `${r.id}`).toBe(true);
     }
     // Tamir kitini atölyede yapmak dükkândan almaktan ucuz değil (malzeme ≥ fiyatın yarısı; geri satış %50)

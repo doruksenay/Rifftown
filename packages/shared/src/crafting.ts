@@ -5,6 +5,7 @@
 import type { L } from './world';
 import { clamp } from './rules';
 import { EXTRA_RECIPES } from './content/items';
+import { MORE_RECIPES } from './content/recipes';
 
 export const CRAFT_HOURS = 4;
 
@@ -17,6 +18,10 @@ export interface RecipeDef {
   materials: Record<string, number>;
   /** El işçiliği 0 ile 100 arasındayken bonus aralığı */
   bonus: [number, number];
+  /** Tarifi yapabilmek için gereken beceri ve en düşük seviyesi (yoksa herkes yapabilir) */
+  skill?: { id: string; min: number };
+  /** Üretim süresi, oyun saati (yoksa CRAFT_HOURS) */
+  hours?: number;
 }
 
 const instrument = (id: string, tr: string, en: string, materials: Record<string, number>): RecipeDef => ({
@@ -38,9 +43,14 @@ export const RECIPES: RecipeDef[] = [
   instrument('percussion', 'Konga', 'Conga', { mat_wood: 1, mat_drumhead: 1, mat_leather: 1 }),
   { id: 'outfit', itemId: 'outfit_crafted', name: { tr: 'Sahne kostümü', en: 'Stage costume' }, materials: { mat_fabric: 2, mat_sequins: 1 }, bonus: [2, 13] },
 ];
-// Veri dosyasındaki ek tarifler
-RECIPES.push(...EXTRA_RECIPES);
+// Veri dosyalarındaki ek tarifler
+RECIPES.push(...EXTRA_RECIPES, ...MORE_RECIPES);
 export const RECIPE_BY_ID: Record<string, RecipeDef> = Object.fromEntries(RECIPES.map((r) => [r.id, r]));
+
+/** Tarifin üretim süresi (oyun saati) */
+export const recipeHours = (r: RecipeDef) => r.hours ?? CRAFT_HOURS;
+/** Beceri eşiği karşılanıyor mu? (Bilinmeyen beceri 0 sayılır) */
+export const meetsRecipeSkill = (r: RecipeDef, skills: Record<string, number>) => !r.skill || (skills[r.skill.id] ?? 0) >= r.skill.min;
 
 /** Üretilen eşyanın bonusu */
 export function craftBonus(recipe: RecipeDef, craftsmanship: number, rand: () => number): number {

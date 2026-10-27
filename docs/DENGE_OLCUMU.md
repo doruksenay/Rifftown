@@ -180,6 +180,24 @@ Zincirlerden (A): Stüdyo günlükleri 4–10. hafta, Sahnenin efendisi stadyum 
 3. **Model daha yavaş tarafta.** Konserlerin kendiliğinden beceri geliştirmesi, eşya bonusları ve tek başına oyuncunun bütün geliri alması modelde yok; gerçek tempo muhtemelen ölçülenden hızlı.
 4. **Kapalı test verisi.** Bu sayılar oyuncu davranışı varsayımına dayanıyor; kapalı testte (README: 14 günlük test) gerçek konser sıklığı, para ve şöhret eğrileri bu tablolarla karşılaştırılmalı.
 
+## Ek ölçüm: içerik hacmi (27 Ekim 2026, 2. iş)
+
+Tarif 19 → 81, eşya 168 → 405, beceri 100 → 142 eklendikten sonra betik aynı tohumla yeniden çalıştırıldı. Aşağıdaki ek dışındaki tablolar ilk ölçümün çıktısıdır; değişen satırlar:
+
+| Ölçüm | Önce | Sonra | Neden |
+|---|---|---|---|
+| Şarkı yazma / sahne / kayıt ağırlık toplamı | 0,22 / 0,33 / 0,15 | aynı | Yeni becerilere bu etkiler bilerek verilmedi; tavana en ucuz yol (146 ve 180 okul saati) ve uzmanlık payı tabloları birebir aynı. Test bu toplamları sabitler. |
+| Prova ağırlığı | 0,38 (3 beceri) | 0,46 (5 beceri) | Ezber tekniği ve nota çıkarma (0,04'er). ×1,5 tavanına hâlâ varılamıyor. |
+| Sokak ağırlığı | 1,60 (9 beceri) | 3,50 (21 beceri) | Yeni enstrümanlar. ×1,5 tavanı zaten 2 beceriyle doluyordu; para etkisi saatte $4–50, değişmedi. |
+| Arkadaşlık ağırlığı | 0,38 | 0,54 | Diplomasi, yabancı dil. Çarpan ×1,5'te durur. |
+| Şöhret temposu (A–E, kulüp/salon/stadyum haftası) | | aynı | Konser formüllerine dokunulmadı. |
+| Oyuncu başına haftalık net (26. hafta, A yeni) | $46.097 | $46.112 | Görev havuzu 29 → 31 (yeni görevler $20 ve $40); fark haftada ~$15. |
+| Tek seferlik harcama kalemleri (VIP hariç) | $105.840 | $136.390 | En iyi araç $28.000 → $45.000 (turne otobüsü), bütün sanat eserleri $19.640 → $32.390. Tüketim eşyaları ve hediyelikler sürekli harcama yeridir (tabloya girmez). |
+
+Yeni gelir kaynağı yok: tüketim eşyaları ve hediyelikler para üretmez; atölyede yapılıp dükkâna satılan bir ürün yok (bakım setlerinin malzemesi fiyatın en az yarısı); tüccar atölye ürününe malzemenin en fazla %25 fazlasını, günde 2 ürün için öder (en kârlı tarifte, ısmarlama davul setinde, ürün başına ~$70, günde ~$140 ve 2 × 10 saatlik üretim; test her tarif için günde en fazla $200 denetler). Ara malzemelerin fiyatı kendi malzemelerinin maliyetine eşittir, kârı şişirmez. Sanat (%40) ve sahne efekti (+12) tavanları yeni eşyalarla daha ucuza dolmuyor: puan başı fiyat en ucuz eski eşyanın altında değil.
+
+Ölçülmedi (tahmin): tüketim eşyalarının ve ilham becerilerinin şarkı kalitesine etkisi. İlham en fazla 100'dür ve şarkıya en fazla +15 katar; ilham defteri 3 saatte bir +5 verir. Zengin bir oyuncu ilhamı sürekli yüksek tutabilir; bu, parayı tavanlı bir kaliteye çeviren bilinçli bir harcama yeridir (öneri 1'in yönünde).
+
 ## Ek: betik çıktısı
 
 Aşağıdaki bölüm `npx tsx scripts/balance/measure.ts` çıktısının kendisidir.
