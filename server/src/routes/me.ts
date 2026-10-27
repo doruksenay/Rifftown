@@ -34,9 +34,9 @@ import { achievementPoints, evaluateThrottled } from '../game/achievements';
 import { bailQuote, inCustody } from '../game/crime';
 import { homeOf } from '../game/homes';
 import { businessOf } from '../game/business';
-import { inventoryOf, toInventoryDto, ringPledged } from '../game/items';
+import { inventoryOf, recordMoneyFlow, requireTransferRoom, toInventoryDto, ringPledged } from '../game/items';
 import { hotelOf } from '../game/lifestyle';
-import { unreadMessages } from '../game/social';
+import { pair, unreadMessages } from '../game/social';
 import { idParam, parse } from './util';
 import { indulge, lastDeath } from '../game/consequences';
 
@@ -260,17 +260,24 @@ export async function meRoutes(app: FastifyInstance) {
     requireVip(req);
     const body = parse(z.object({ toName: z.string().trim().min(1), amount: z.number().int().min(1).max(VIP.maxTransfer) }), req.body);
     return tx(async (c) => {
-      const from = await lockCharacter(c, id);
-      if (isJailed(from)) fail('in_jail', 409);
-      await requireEstablished(c, id);
       const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL', [body.toName]);
       if (!target) fail('character_not_found', 404);
-      if (target.id === id) fail('invalid_target');
+      const toId = Number(target.id);
+      if (toId === id) fail('invalid_target');
+      // İki karakter id sırasıyla kilitlenir (takas, pazar ve hediyeyle aynı sıra)
+      const locked = new Map<number, Awaited<ReturnType<typeof lockCharacter>>>();
+      for (const cid of pair(id, toId)) locked.set(cid, await lockCharacter(c, cid));
+      const from = locked.get(id)!;
+      if (isJailed(from)) fail('in_jail', 409);
+      await requireEstablished(c, id);
       if (from.money < body.amount) fail('not_enough_money');
+      // İkili başına haftalık net para akışı tavanı (takas ve pazarla ortak)
+      await requireTransferRoom(c, id, toId, body.amount);
       await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [id, body.amount]);
-      await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [target.id, body.amount]);
-      await c.query('INSERT INTO money_transfers(from_id, to_id, amount) VALUES ($1, $2, $3)', [id, target.id, body.amount]);
-      await notify(c, target.id, 'money_received', { from: from.name, amount: body.amount });
+      await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [toId, body.amount]);
+      await c.query('INSERT INTO money_transfers(from_id, to_id, amount) VALUES ($1, $2, $3)', [id, toId, body.amount]);
+      await recordMoneyFlow(c, id, toId, body.amount, 'vip');
+      await notify(c, toId, 'money_received', { from: from.name, amount: body.amount });
       return { ok: true, money: from.money - body.amount };
     });
   });

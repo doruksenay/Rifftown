@@ -2,6 +2,7 @@ import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import Fastify from 'fastify';
 import { config } from './config';
+import { clientBucket, trustProxySetting } from './client-ip';
 import { GameError } from './errors';
 import { addVisibilityHook } from './visibility';
 import { actionRoutes } from './routes/actions';
@@ -23,13 +24,14 @@ import { publicRoutes, worldRoutes } from './routes/world';
 export async function buildApp(opts: { logger?: boolean } = {}) {
   const app = Fastify({
     logger: opts.logger === false ? false : { level: config.logLevel },
-    trustProxy: true,
+    // İstemcinin yazdığı X-Forwarded-For'a körü körüne güvenilmez: yalnızca yapılandırılan atlama sayısı (client-ip.ts)
+    trustProxy: trustProxySetting(),
     bodyLimit: 64 * 1024,
   });
 
   // Web sürümü DELETE ve PATCH de gönderir (ön kontrol isteğinde izin verilmeli)
   await app.register(cors, { origin: true, methods: ['GET', 'HEAD', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'] });
-  if (config.rateLimit) await app.register(rateLimit, { max: 300, timeWindow: '1 minute' });
+  if (config.rateLimit) await app.register(rateLimit, { max: 300, timeWindow: '1 minute', keyGenerator: clientBucket });
 
   app.setErrorHandler((err, req, reply) => {
     if (err instanceof GameError) {

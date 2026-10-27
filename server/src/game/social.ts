@@ -298,13 +298,13 @@ export async function giveGift(fromId: number, toId: number, inventoryId: number
     if (inv.listed) fail('item_listed', 409);
     if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
     if (isBoundItem(inv.item_id)) fail('item_bound', 409);
-    if (returnsTooSoon(inv, toId)) fail('item_recently_yours', 409);
+    if (await returnsTooSoon(c, inv, toId)) fail('item_recently_yours', 409);
     // VIP eşyası sadece VIP üyeye verilebilir (pazardaki kuralın aynısı)
     if (ITEM_BY_ID[inv.item_id]?.vip) {
       const vip = await one(c, 'SELECT u.vip_until FROM characters ch JOIN users u ON u.id = ch.user_id WHERE ch.id = $1', [toId]);
       if (!vip?.vip_until || vip.vip_until.getTime() < Date.now()) fail('vip_required', 403);
     }
-    await handOver(c, inv.id, fromId, toId);
+    await handOver(c, inv.id, fromId, toId, 'gift');
     await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'gift')`, [fromId, toId]);
     await addMoodlet(c, toId, 'gift');
     await notify(c, toId, 'gift', { fromId, from: me.name, itemId: inv.item_id, name: ITEM_BY_ID[inv.item_id]?.name ?? null });

@@ -1,29 +1,12 @@
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { notify } from '../game/common';
 import { createSession, deleteSession, hashPassword, requireUser, verifyPassword } from '../auth';
 import { many, one, pool, tx } from '../db';
 import { config } from '../config';
+import { clientBucket } from '../client-ip';
 import { fail } from '../errors';
 import { parse } from './util';
-
-/**
- * Kayıt sınırı için istemci adresi. Önünde Cloudflare olan barındırmalarda (Render gibi) bu başlıklar
- * kenar sunucusu tarafından yazılır ve istemci değiştiremez; yoksa vekil zincirinden gelen adres kullanılır.
- * IPv6'da adresin ilk 64 biti (bir ev ya da cihazın tüm adresleri) tek kova sayılır.
- */
-function registerBucket(req: FastifyRequest): string {
-  const h = req.headers;
-  const pick = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v)?.trim();
-  const ip = pick(h['cf-connecting-ip']) || pick(h['true-client-ip']) || req.ip || 'unknown';
-  if (!ip.includes(':') || ip.startsWith('::ffff:')) return ip.replace(/^::ffff:/, '');
-  // IPv6: kısaltmayı aç, ilk dört grubu al
-  const [head, tail = ''] = ip.split('::');
-  const a = head ? head.split(':') : [];
-  const b = tail ? tail.split(':') : [];
-  const full = [...a, ...Array(Math.max(0, 8 - a.length - b.length)).fill('0'), ...b];
-  return `${full.slice(0, 4).join(':')}::/64`;
-}
 
 const toUser = (u: any) => ({ id: u.id, email: u.email, lang: u.lang, isAdmin: u.is_admin });
 
@@ -43,7 +26,8 @@ export async function authRoutes(app: FastifyInstance) {
     );
     const email = body.email.trim().toLowerCase();
     if (await one(pool, 'SELECT 1 FROM users WHERE email = $1', [email])) fail('email_taken', 409);
-    const ip = registerBucket(req);
+    // Kayıt sınırının kovası: yalnızca güvenilir kaynaktan istemci adresi (client-ip.ts), IPv6'da /64
+    const ip = clientBucket(req);
     const hash = await hashPassword(body.password);
     // Aynı adresten günde en fazla birkaç hesap. Aynı adresten eşzamanlı kayıtlar sıraya girer.
     const user = await tx(async (c) => {

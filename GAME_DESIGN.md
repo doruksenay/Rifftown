@@ -672,9 +672,10 @@ Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. 
 ## Ek hesaplara karşı önlemler
 
 - Yeni hesaplar ilk 72 oyun saati pazar, takas, hediye, para gönderme, işletme kasasına para koyma ve iş teklifi kullanamaz.
-- El değiştiren bir eşya (pazar, takas, hediye) bir oyun haftası içinde önceki sahibine geri dönemez: aynı eşyayla para döngüsü kurulamaz.
-- Pazarda fiyat tavanı dükkân fiyatının iki katıdır; takasta eklenen para, karşılığında alınan eşyaların bu tavan değerini geçemez (en fazla $5.000).
-- Aynı adresten 24 saatte en fazla 3 hesap açılır (`REGISTER_PER_IP_DAY`). Adres Cloudflare'in yazdığı başlıktan alınır, IPv6'da /64 bloğu tek adres sayılır.
+- El değiştiren bir eşya (pazar, takas, hediye) bir oyun haftası içinde, o hafta **elinden geçtiği hiç kimseye** geri dönemez (zincirin her eli: A → B → C → A da kapalı). Geçmiş `item_handoffs` tablosunda (migration 020). Eskiden yalnızca bir önceki sahibe bakılıyordu ve 3 hesapla eşya aynı saatte geri dönüyordu (denge raporu §7: 4 döngüde +$20.000).
+- Pazarda fiyat tavanı dükkân fiyatının iki katıdır; takasta eklenen para, karşılığında alınan eşyaların **dükkân değerini** geçemez (eskiden iki katı; en fazla $5.000).
+- **İkili başına haftalık para akışı tavanı:** iki oyuncu arasında bir yönde akan NET para (takas parası + pazar alışı + VIP para gönderme) kayan 7 oyun gününde en fazla $5.000 (`PAIR_TRANSFER_CAP`, `player_money_flows`). Oyunun tüccarından alışlar sayılmaz. Tavan dolunca `transfer_cap_reached`; açık takas açık kalır.
+- Aynı adresten 24 saatte en fazla 3 hesap açılır (`REGISTER_PER_IP_DAY`). Adres yalnızca yapılandırılmış güvenilir kaynaktan alınır (`TRUST_PROXY_HOPS`, `CLIENT_IP_HEADER`; README "İstemci adresi"); istemcinin yazdığı başlıklar varsayılan olarak okunmaz. IPv6'da /64 bloğu tek adres sayılır. API istek sınırı da aynı adresi kullanır.
 - Rehber ve görev ödülleri küçüktür; API'de dakikada 300 istek sınırı vardır.
 
 ## Oyuncular

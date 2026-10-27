@@ -19,6 +19,8 @@ import {
   lv,
   LEGENDARY_ITEM_BONUS,
   ITEM_RETURN_COOLDOWN_HOURS,
+  PAIR_TRANSFER_CAP,
+  PLAYER_TRANSFER_WINDOW_HOURS,
   gameHoursToMs,
   maxResalePrice,
   skillBonus,
@@ -113,18 +115,51 @@ export async function ringPledged(db: Db, inventoryId: number) {
   return !!(await one(db, 'SELECT 1 FROM relationships WHERE proposal_ring = $1', [inventoryId]));
 }
 
-/** Eşya kısa süre önce bu kişiden gelmişse ona geri dönemez (aynı eşyayla para döngüsü kurulmasın) */
-export function returnsTooSoon(inv: { prev_owner?: unknown; handed_at?: Date | null }, to: number) {
-  if (inv.prev_owner == null || Number(inv.prev_owner) !== to || !inv.handed_at) return false;
-  return inv.handed_at.getTime() > Date.now() - gameHoursToMs(ITEM_RETURN_COOLDOWN_HOURS, config.gameSpeed);
+/**
+ * Eşya bekleme süresi içinde bu kişide bulunmuşsa ona geri dönemez: yalnızca bir önceki sahip değil, zincirdeki
+ * HER el (A → B → C → A rotasyonu ek hesabın parasını kayıpsız taşıyordu). Geçmiş item_handoffs tablosunda;
+ * migration 020'den önceki tek kayıt (prev_owner, handed_at) da okunur.
+ */
+export async function returnsTooSoon(db: Db, inv: { id: unknown; prev_owner?: unknown; handed_at?: Date | null }, to: number) {
+  const since = new Date(Date.now() - gameHoursToMs(ITEM_RETURN_COOLDOWN_HOURS, config.gameSpeed));
+  if (inv.prev_owner != null && Number(inv.prev_owner) === to && inv.handed_at && inv.handed_at > since) return true;
+  return !!(await one(
+    db,
+    'SELECT 1 FROM item_handoffs WHERE inventory_id = $1 AND created_at > $2 AND (from_id = $3 OR to_id = $3) LIMIT 1',
+    [inv.id, since, to],
+  ));
 }
 
-/** Eşya el değiştirir; önceki sahibi ve zamanı not edilir */
-export async function handOver(c: Db, inventoryId: number, from: number, to: number) {
+/** Eşya el değiştirir; önceki sahibi ve zamanı not edilir, geçmişe bir satır eklenir */
+export async function handOver(c: Db, inventoryId: number, from: number, to: number, kind: 'trade' | 'market' | 'gift') {
   await c.query(
     'UPDATE inventory SET character_id = $2, listed = FALSE, equipped = FALSE, prev_owner = $3, handed_at = now() WHERE id = $1',
     [inventoryId, to, from],
   );
+  await c.query('INSERT INTO item_handoffs(inventory_id, from_id, to_id, kind) VALUES ($1, $3, $2, $4)', [inventoryId, to, from, kind]);
+}
+
+/**
+ * Oyuncular arası para akışı tavanı (PAIR_TRANSFER_CAP): `from`dan `to`ya kayan pencere içindeki NET akış
+ * (from → to eksi to → from) bu aktarımla tavanı aşıyorsa reddedilir. Çağıran iki karakteri de pair() ile kilitlemiş olmalı.
+ * Oyunun kendi karakterleri (NPC tüccar) sayılmaz.
+ */
+export async function requireTransferRoom(c: Db, from: number, to: number, amount: number) {
+  if (amount <= 0) return;
+  const since = new Date(Date.now() - gameHoursToMs(PLAYER_TRANSFER_WINDOW_HOURS, config.gameSpeed));
+  const r = await one(
+    c,
+    `SELECT coalesce(sum(CASE WHEN from_id = $1 THEN amount ELSE -amount END), 0)::int AS net
+       FROM player_money_flows
+      WHERE ((from_id = $1 AND to_id = $2) OR (from_id = $2 AND to_id = $1)) AND created_at > $3`,
+    [from, to, since],
+  );
+  if (Math.max(0, r.net) + amount > PAIR_TRANSFER_CAP) fail('transfer_cap_reached', 409);
+}
+
+export async function recordMoneyFlow(c: Db, from: number, to: number, amount: number, kind: 'trade' | 'market' | 'vip') {
+  if (amount <= 0) return;
+  await c.query('INSERT INTO player_money_flows(from_id, to_id, amount, kind) VALUES ($1, $2, $3, $4)', [from, to, amount, kind]);
 }
 
 export async function listItem(characterId: number, locationId: string, inventoryId: number, price: number) {
@@ -185,11 +220,15 @@ export async function buyListing(buyerId: number, locationId: string, listingId:
     if (!still) fail('listing_gone', 409);
     // Tavan alışta da geçerli (kural gelmeden önce açılmış ilanlar)
     if (def && l.price > maxResalePrice(def.price, !!still.legendary_at)) fail('price_too_high');
-    if (returnsTooSoon(still, buyerId)) fail('item_recently_yours', 409);
+    if (await returnsTooSoon(c, still, buyerId)) fail('item_recently_yours', 409);
+    // Oyuncudan oyuncuya para akışı tavanı (oyunun tüccarı sayılmaz)
+    const sellerIsPlayer = !chars[Number(l.seller_id)].npc;
+    if (sellerIsPlayer) await requireTransferRoom(c, buyerId, Number(l.seller_id), l.price);
     const fee = Math.ceil(l.price * MARKET_FEE);
     await c.query('UPDATE characters SET money = money - $2, location_id = $3 WHERE id = $1', [buyerId, l.price, locationId]);
     await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [l.seller_id, l.price - fee]);
-    await handOver(c, l.inventory_id, Number(l.seller_id), buyerId);
+    await handOver(c, l.inventory_id, Number(l.seller_id), buyerId, 'market');
+    if (sellerIsPlayer) await recordMoneyFlow(c, buyerId, Number(l.seller_id), l.price, 'market');
     await c.query(`UPDATE listings SET status = 'sold', buyer_id = $2, closed_at = now() WHERE id = $1`, [l.id, buyerId]);
     await notify(c, Number(l.seller_id), 'item_sold', { itemId: l.item_id, price: l.price, earned: l.price - fee, buyer: buyer.name });
     return { ok: true, price: l.price };

@@ -89,6 +89,20 @@ Web sürümü: `https://<github-kullanıcı-adı>.github.io/Rifftown/`
 
 Yerelde Neon ile çalışmak için: `neon env pull` (adresleri `.env.local` dosyasına yazar), sonra `npm run dev:server`. Sunucu `.env.local` dosyasını kendisi okur.
 
+### İstemci adresi (kayıt ve istek sınırı)
+
+Aynı adresten günde en fazla 3 hesap açılır (`REGISTER_PER_IP_DAY`) ve API dakikada 300 istekle sınırlıdır; ikisi de istemcinin adresine göre sayılır. İstemci her başlığı (`X-Forwarded-For`, `cf-connecting-ip`, `true-client-ip`) kendisi yazabildiği için sunucu **hiçbir başlığa varsayılan olarak güvenmez**:
+
+| Değişken | Varsayılan | Anlamı |
+|---|---|---|
+| `TRUST_PROXY_HOPS` | `0` (Render'da `1`) | Önündeki vekil sayısı. `X-Forwarded-For`'un sağından bu kadar atlama okunur, soldaki (sahtelenebilen) değerler yok sayılır. `0`: bağlantının kendi adresi. |
+| `CLIENT_IP_HEADER` | boş (Render'da `cf-connecting-ip`) | Kenar sunucusunun istemciden geleni silip kendisi yazdığı başlık. Yalnızca ayarlanırsa ve içinde geçerli bir adres varsa okunur; yoksa yukarıdaki adres kullanılır. `none` kapatır. |
+
+- **Render:** trafik Cloudflare'den geçer ve `cf-connecting-ip` kenarda yazılır; Render'ın vekili istemcinin gönderdiği `X-Forwarded-For`'u silmeden sonuna ekler. Bu yüzden `render.yaml` `CLIENT_IP_HEADER=cf-connecting-ip` ve `TRUST_PROXY_HOPS=1` yazar (kod `RENDER=true` iken aynı değerleri kendisi de varsayar, panelde değişken eksik kalsa da sınır herkesi tek kovaya toplamaz). Render bir gün Cloudflare'i bırakırsa `CLIENT_IP_HEADER=none` yapılmalı.
+- **Kendi sunucun (deploy/):** önünde yalnızca Caddy var; `docker-compose.yml` `TRUST_PROXY_HOPS=1` verir.
+- **Kendi Cloudflare'in + kendi sunucun:** `CLIENT_IP_HEADER=cf-connecting-ip` ve güvenlik duvarında yalnızca Cloudflare adreslerine izin ver (yoksa köken adresine doğrudan gelen biri başlığı sahteleyebilir).
+- IPv6'da adresin ilk 64 biti tek adres sayılır. Kod: `server/src/client-ip.ts`.
+
 ## Kendi sunucunda yayına alma
 
 Ayda yaklaşık 5–40 € tutan, en az 2 GB RAM'li bir Ubuntu sunucusu yeterli (Hetzner, DigitalOcean, Contabo vb.).

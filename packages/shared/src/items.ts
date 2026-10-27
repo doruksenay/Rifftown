@@ -309,8 +309,24 @@ export const maxResalePrice = (shopPrice: number, legendary = false) =>
   Math.max(1, Math.round(shopPrice * (legendary ? LEGENDARY_RESALE_CAP_MULT : RESALE_CAP_MULT)));
 /** Yeni hesaplar bu kadar oyun saati boyunca pazar, takas, hediye ve para gönderme kullanamaz */
 export const NEW_ACCOUNT_TRADE_HOURS = 72;
-/** El değiştiren bir eşya bu kadar oyun saati içinde önceki sahibine geri dönemez (takas, pazar, hediye) */
+/**
+ * El değiştiren bir eşya bu kadar oyun saati içinde, bu sürede ona sahip olmuş HİÇ KİMSEYE geri dönemez
+ * (takas, pazar, hediye). Eskiden yalnızca bir önceki sahibe bakılıyordu; A → B → C → A zinciriyle eşya aynı saatte
+ * geri dönüyor, ek hesabın parası kayıpsız ana hesaba taşınıyordu (denge raporu §7). Geçmiş item_handoffs tablosunda
+ * (migration 020) tutulur.
+ */
 export const ITEM_RETURN_COOLDOWN_HOURS = 168;
+/** Takasta eklenen para, karşılığında alınan eşyaların dükkân değerinin bu katını geçemez (eskiden 2; pazar tavanı 2 kaldı) */
+export const TRADE_MONEY_VALUE_MULT = 1;
+/** Takas parasının dayanağı olan eşya değeri (EFSANEVİ eşya koleksiyonluktur: iki katı) */
+export const tradeMoneyValue = (shopPrice: number, legendary = false) => Math.max(1, Math.round(shopPrice * TRADE_MONEY_VALUE_MULT * (legendary ? 2 : 1)));
+/**
+ * İki oyuncu arasında bir yönde akabilecek NET para (takas parası, pazar alışı, VIP para gönderme), kayan
+ * PLAYER_TRANSFER_WINDOW_HOURS penceresinde. Ek hesap çiftliğinden ana hesaba aktarım ikili başına haftada bu kadarla
+ * sınırlıdır; oyunun tüccarı (NPC) sayılmaz. Akışlar player_money_flows tablosunda (migration 020).
+ */
+export const PAIR_TRANSFER_CAP = 5000;
+export const PLAYER_TRANSFER_WINDOW_HOURS = 168;
 /** Kiralık müzisyenler setlisti önceden öğrenir. */
 export const SESSION_FAMILIARITY = 70;
 export { GEAR_SETS } from './content/items';
