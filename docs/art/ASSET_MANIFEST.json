@@ -115,10 +115,10 @@
     "orange": "#F3722C"
   },
   "summary": {
-    "total": 565,
+    "total": 876,
     "valid": 62,
     "invalid": 0,
-    "missing": 503
+    "missing": 814
   },
   "assets": [
     {
@@ -5821,6 +5821,5658 @@
       ]
     },
     {
+      "id": "item/guitar_m1",
+      "category": "item",
+      "path": "item/guitar_m1.png",
+      "incomingFileName": "guitar_m1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Second-hand punk guitar",
+      "gameRefs": [
+        "guitar_m1"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/guitar_m1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_m1.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_m1.mask.png",
+      "incomingFileName": "guitar_m1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Second-hand punk guitar paint mask",
+      "gameRefs": [
+        "guitar_m1"
+      ],
+      "dependsOn": [
+        "item/guitar_m1"
+      ]
+    },
+    {
+      "id": "item/guitar_m2",
+      "category": "item",
+      "path": "item/guitar_m2.png",
+      "incomingFileName": "guitar_m2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Archtop blues guitar",
+      "gameRefs": [
+        "guitar_m2"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/guitar_m2.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_m2.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_m2.mask.png",
+      "incomingFileName": "guitar_m2.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Archtop blues guitar paint mask",
+      "gameRefs": [
+        "guitar_m2"
+      ],
+      "dependsOn": [
+        "item/guitar_m2"
+      ]
+    },
+    {
+      "id": "item/guitar_m3",
+      "category": "item",
+      "path": "item/guitar_m3.png",
+      "incomingFileName": "guitar_m3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Stoner guitar with fuzz pedal",
+      "gameRefs": [
+        "guitar_m3"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/guitar_m3.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_m3.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_m3.mask.png",
+      "incomingFileName": "guitar_m3.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Stoner guitar with fuzz pedal paint mask",
+      "gameRefs": [
+        "guitar_m3"
+      ],
+      "dependsOn": [
+        "item/guitar_m3"
+      ]
+    },
+    {
+      "id": "item/guitar_m4",
+      "category": "item",
+      "path": "item/guitar_m4.png",
+      "incomingFileName": "guitar_m4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Luthier flamenco guitar",
+      "gameRefs": [
+        "guitar_m4"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/guitar_m4.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_m4.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_m4.mask.png",
+      "incomingFileName": "guitar_m4.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Luthier flamenco guitar paint mask",
+      "gameRefs": [
+        "guitar_m4"
+      ],
+      "dependsOn": [
+        "item/guitar_m4"
+      ]
+    },
+    {
+      "id": "item/bass_m1",
+      "category": "item",
+      "path": "item/bass_m1.png",
+      "incomingFileName": "bass_m1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Short-scale punk bass",
+      "gameRefs": [
+        "bass_m1"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/bass_m1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_m1.mask",
+      "category": "paint_mask",
+      "path": "item/bass_m1.mask.png",
+      "incomingFileName": "bass_m1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Short-scale punk bass paint mask",
+      "gameRefs": [
+        "bass_m1"
+      ],
+      "dependsOn": [
+        "item/bass_m1"
+      ]
+    },
+    {
+      "id": "item/bass_m2",
+      "category": "item",
+      "path": "item/bass_m2.png",
+      "incomingFileName": "bass_m2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Dub bass (flatwound strings)",
+      "gameRefs": [
+        "bass_m2"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/bass_m2.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_m2.mask",
+      "category": "paint_mask",
+      "path": "item/bass_m2.mask.png",
+      "incomingFileName": "bass_m2.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Dub bass (flatwound strings) paint mask",
+      "gameRefs": [
+        "bass_m2"
+      ],
+      "dependsOn": [
+        "item/bass_m2"
+      ]
+    },
+    {
+      "id": "item/bass_m3",
+      "category": "item",
+      "path": "item/bass_m3.png",
+      "incomingFileName": "bass_m3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Six-string fusion bass",
+      "gameRefs": [
+        "bass_m3"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/bass_m3.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_m3.mask",
+      "category": "paint_mask",
+      "path": "item/bass_m3.mask.png",
+      "incomingFileName": "bass_m3.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Six-string fusion bass paint mask",
+      "gameRefs": [
+        "bass_m3"
+      ],
+      "dependsOn": [
+        "item/bass_m3"
+      ]
+    },
+    {
+      "id": "item/bass_m4",
+      "category": "item",
+      "path": "item/bass_m4.png",
+      "incomingFileName": "bass_m4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Upright bass with pickup",
+      "gameRefs": [
+        "bass_m4"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/bass_m4.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_m4.mask",
+      "category": "paint_mask",
+      "path": "item/bass_m4.mask.png",
+      "incomingFileName": "bass_m4.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Upright bass with pickup paint mask",
+      "gameRefs": [
+        "bass_m4"
+      ],
+      "dependsOn": [
+        "item/bass_m4"
+      ]
+    },
+    {
+      "id": "item/drums_m1",
+      "category": "item",
+      "path": "item/drums_m1.png",
+      "incomingFileName": "drums_m1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Cajon and brushes",
+      "gameRefs": [
+        "drums_m1"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/drums_m1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_m1.mask",
+      "category": "paint_mask",
+      "path": "item/drums_m1.mask.png",
+      "incomingFileName": "drums_m1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Cajon and brushes paint mask",
+      "gameRefs": [
+        "drums_m1"
+      ],
+      "dependsOn": [
+        "item/drums_m1"
+      ]
+    },
+    {
+      "id": "item/drums_m2",
+      "category": "item",
+      "path": "item/drums_m2.png",
+      "incomingFileName": "drums_m2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Hip-hop sample pad rig",
+      "gameRefs": [
+        "drums_m2"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/drums_m2.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_m2.mask",
+      "category": "paint_mask",
+      "path": "item/drums_m2.mask.png",
+      "incomingFileName": "drums_m2.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Hip-hop sample pad rig paint mask",
+      "gameRefs": [
+        "drums_m2"
+      ],
+      "dependsOn": [
+        "item/drums_m2"
+      ]
+    },
+    {
+      "id": "item/drums_m3",
+      "category": "item",
+      "path": "item/drums_m3.png",
+      "incomingFileName": "drums_m3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Double-pedal metal kit",
+      "gameRefs": [
+        "drums_m3"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/drums_m3.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_m3.mask",
+      "category": "paint_mask",
+      "path": "item/drums_m3.mask.png",
+      "incomingFileName": "drums_m3.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Double-pedal metal kit paint mask",
+      "gameRefs": [
+        "drums_m3"
+      ],
+      "dependsOn": [
+        "item/drums_m3"
+      ]
+    },
+    {
+      "id": "item/drums_m4",
+      "category": "item",
+      "path": "item/drums_m4.png",
+      "incomingFileName": "drums_m4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Vintage soul drum kit",
+      "gameRefs": [
+        "drums_m4"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/drums_m4.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_m4.mask",
+      "category": "paint_mask",
+      "path": "item/drums_m4.mask.png",
+      "incomingFileName": "drums_m4.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Vintage soul drum kit paint mask",
+      "gameRefs": [
+        "drums_m4"
+      ],
+      "dependsOn": [
+        "item/drums_m4"
+      ]
+    },
+    {
+      "id": "item/keys_m1",
+      "category": "item",
+      "path": "item/keys_m1.png",
+      "incomingFileName": "keys_m1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Melodica",
+      "gameRefs": [
+        "keys_m1"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/keys_m1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_m1.mask",
+      "category": "paint_mask",
+      "path": "item/keys_m1.mask.png",
+      "incomingFileName": "keys_m1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Melodica paint mask",
+      "gameRefs": [
+        "keys_m1"
+      ],
+      "dependsOn": [
+        "item/keys_m1"
+      ]
+    },
+    {
+      "id": "item/keys_m2",
+      "category": "item",
+      "path": "item/keys_m2.png",
+      "incomingFileName": "keys_m2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Wurlitzer-style electric piano",
+      "gameRefs": [
+        "keys_m2"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/keys_m2.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_m2.mask",
+      "category": "paint_mask",
+      "path": "item/keys_m2.mask.png",
+      "incomingFileName": "keys_m2.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Wurlitzer-style electric piano paint mask",
+      "gameRefs": [
+        "keys_m2"
+      ],
+      "dependsOn": [
+        "item/keys_m2"
+      ]
+    },
+    {
+      "id": "item/keys_m3",
+      "category": "item",
+      "path": "item/keys_m3.png",
+      "incomingFileName": "keys_m3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Harpsichord-voiced stage keyboard",
+      "gameRefs": [
+        "keys_m3"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/keys_m3.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_m3.mask",
+      "category": "paint_mask",
+      "path": "item/keys_m3.mask.png",
+      "incomingFileName": "keys_m3.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Harpsichord-voiced stage keyboard paint mask",
+      "gameRefs": [
+        "keys_m3"
+      ],
+      "dependsOn": [
+        "item/keys_m3"
+      ]
+    },
+    {
+      "id": "item/keys_m4",
+      "category": "item",
+      "path": "item/keys_m4.png",
+      "incomingFileName": "keys_m4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Polyphonic analogue synth",
+      "gameRefs": [
+        "keys_m4"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/keys_m4.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_m4.mask",
+      "category": "paint_mask",
+      "path": "item/keys_m4.mask.png",
+      "incomingFileName": "keys_m4.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Polyphonic analogue synth paint mask",
+      "gameRefs": [
+        "keys_m4"
+      ],
+      "dependsOn": [
+        "item/keys_m4"
+      ]
+    },
+    {
+      "id": "item/vocals_m1",
+      "category": "item",
+      "path": "item/vocals_m1.png",
+      "incomingFileName": "vocals_m1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Rap mic with headphones",
+      "gameRefs": [
+        "vocals_m1"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/vocals_m1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_m1.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_m1.mask.png",
+      "incomingFileName": "vocals_m1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Rap mic with headphones paint mask",
+      "gameRefs": [
+        "vocals_m1"
+      ],
+      "dependsOn": [
+        "item/vocals_m1"
+      ]
+    },
+    {
+      "id": "item/vocals_m2",
+      "category": "item",
+      "path": "item/vocals_m2.png",
+      "incomingFileName": "vocals_m2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Vintage crystal mic",
+      "gameRefs": [
+        "vocals_m2"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/vocals_m2.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_m2.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_m2.mask.png",
+      "incomingFileName": "vocals_m2.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Vintage crystal mic paint mask",
+      "gameRefs": [
+        "vocals_m2"
+      ],
+      "dependsOn": [
+        "item/vocals_m2"
+      ]
+    },
+    {
+      "id": "item/vocals_m3",
+      "category": "item",
+      "path": "item/vocals_m3.png",
+      "incomingFileName": "vocals_m3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Ribbon microphone",
+      "gameRefs": [
+        "vocals_m3"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/vocals_m3.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_m3.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_m3.mask.png",
+      "incomingFileName": "vocals_m3.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Ribbon microphone paint mask",
+      "gameRefs": [
+        "vocals_m3"
+      ],
+      "dependsOn": [
+        "item/vocals_m3"
+      ]
+    },
+    {
+      "id": "item/vocals_m4",
+      "category": "item",
+      "path": "item/vocals_m4.png",
+      "incomingFileName": "vocals_m4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Wireless headset mic rig",
+      "gameRefs": [
+        "vocals_m4"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/vocals_m4.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_m4.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_m4.mask.png",
+      "incomingFileName": "vocals_m4.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Wireless headset mic rig paint mask",
+      "gameRefs": [
+        "vocals_m4"
+      ],
+      "dependsOn": [
+        "item/vocals_m4"
+      ]
+    },
+    {
+      "id": "item/sax_m1",
+      "category": "item",
+      "path": "item/sax_m1.png",
+      "incomingFileName": "sax_m1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Plastic alto sax",
+      "gameRefs": [
+        "sax_m1"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/sax_m2",
+      "category": "item",
+      "path": "item/sax_m2.png",
+      "incomingFileName": "sax_m2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Soprano sax",
+      "gameRefs": [
+        "sax_m2"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/sax_m3",
+      "category": "item",
+      "path": "item/sax_m3.png",
+      "incomingFileName": "sax_m3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Vintage C-melody sax",
+      "gameRefs": [
+        "sax_m3"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/sax_m4",
+      "category": "item",
+      "path": "item/sax_m4.png",
+      "incomingFileName": "sax_m4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Gold-plated tenor sax",
+      "gameRefs": [
+        "sax_m4"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_m1",
+      "category": "item",
+      "path": "item/violin_m1.png",
+      "incomingFileName": "violin_m1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Carbon student violin",
+      "gameRefs": [
+        "violin_m1"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_m2",
+      "category": "item",
+      "path": "item/violin_m2.png",
+      "incomingFileName": "violin_m2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Electric violin",
+      "gameRefs": [
+        "violin_m2"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_m3",
+      "category": "item",
+      "path": "item/violin_m3.png",
+      "incomingFileName": "violin_m3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Viola",
+      "gameRefs": [
+        "violin_m3"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_m4",
+      "category": "item",
+      "path": "item/violin_m4.png",
+      "incomingFileName": "violin_m4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Five-string jazz violin",
+      "gameRefs": [
+        "violin_m4"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_m1",
+      "category": "item",
+      "path": "item/percussion_m1.png",
+      "incomingFileName": "percussion_m1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Frame drum and cymbals",
+      "gameRefs": [
+        "percussion_m1"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_m2",
+      "category": "item",
+      "path": "item/percussion_m2.png",
+      "incomingFileName": "percussion_m2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Bongos and shakers",
+      "gameRefs": [
+        "percussion_m2"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_m3",
+      "category": "item",
+      "path": "item/percussion_m3.png",
+      "incomingFileName": "percussion_m3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Djembe set",
+      "gameRefs": [
+        "percussion_m3"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_m4",
+      "category": "item",
+      "path": "item/percussion_m4.png",
+      "incomingFileName": "percussion_m4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Timbales and conga stage rig",
+      "gameRefs": [
+        "percussion_m4"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_hoodie",
+      "category": "item",
+      "path": "item/outfit_hoodie.png",
+      "incomingFileName": "outfit_hoodie.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Baggy hoodie and snapback",
+      "gameRefs": [
+        "outfit_hoodie"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_hoodie.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_hoodie.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_hoodie.mask.png",
+      "incomingFileName": "outfit_hoodie.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Baggy hoodie and snapback paint mask",
+      "gameRefs": [
+        "outfit_hoodie"
+      ],
+      "dependsOn": [
+        "item/outfit_hoodie"
+      ]
+    },
+    {
+      "id": "item/outfit_knitvest",
+      "category": "item",
+      "path": "item/outfit_knitvest.png",
+      "incomingFileName": "outfit_knitvest.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Knit vest and flat cap",
+      "gameRefs": [
+        "outfit_knitvest"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_knitvest.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_knitvest.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_knitvest.mask.png",
+      "incomingFileName": "outfit_knitvest.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Knit vest and flat cap paint mask",
+      "gameRefs": [
+        "outfit_knitvest"
+      ],
+      "dependsOn": [
+        "item/outfit_knitvest"
+      ]
+    },
+    {
+      "id": "item/outfit_mesh",
+      "category": "item",
+      "path": "item/outfit_mesh.png",
+      "incomingFileName": "outfit_mesh.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Neon mesh top",
+      "gameRefs": [
+        "outfit_mesh"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_mesh.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_mesh.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_mesh.mask.png",
+      "incomingFileName": "outfit_mesh.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Neon mesh top paint mask",
+      "gameRefs": [
+        "outfit_mesh"
+      ],
+      "dependsOn": [
+        "item/outfit_mesh"
+      ]
+    },
+    {
+      "id": "item/outfit_studs",
+      "category": "item",
+      "path": "item/outfit_studs.png",
+      "incomingFileName": "outfit_studs.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Studded cuffs and ripped tee",
+      "gameRefs": [
+        "outfit_studs"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_studs.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_studs.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_studs.mask.png",
+      "incomingFileName": "outfit_studs.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Studded cuffs and ripped tee paint mask",
+      "gameRefs": [
+        "outfit_studs"
+      ],
+      "dependsOn": [
+        "item/outfit_studs"
+      ]
+    },
+    {
+      "id": "item/outfit_flannel",
+      "category": "item",
+      "path": "item/outfit_flannel.png",
+      "incomingFileName": "outfit_flannel.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Flannel shirt and torn jeans",
+      "gameRefs": [
+        "outfit_flannel"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_flannel.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_flannel.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_flannel.mask.png",
+      "incomingFileName": "outfit_flannel.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Flannel shirt and torn jeans paint mask",
+      "gameRefs": [
+        "outfit_flannel"
+      ],
+      "dependsOn": [
+        "item/outfit_flannel"
+      ]
+    },
+    {
+      "id": "item/outfit_bomber",
+      "category": "item",
+      "path": "item/outfit_bomber.png",
+      "incomingFileName": "outfit_bomber.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Satin bomber jacket",
+      "gameRefs": [
+        "outfit_bomber"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_bomber.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_bomber.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_bomber.mask.png",
+      "incomingFileName": "outfit_bomber.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Satin bomber jacket paint mask",
+      "gameRefs": [
+        "outfit_bomber"
+      ],
+      "dependsOn": [
+        "item/outfit_bomber"
+      ]
+    },
+    {
+      "id": "item/outfit_fedora",
+      "category": "item",
+      "path": "item/outfit_fedora.png",
+      "incomingFileName": "outfit_fedora.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Fedora and braces",
+      "gameRefs": [
+        "outfit_fedora"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_fedora.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_fedora.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_fedora.mask.png",
+      "incomingFileName": "outfit_fedora.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Fedora and braces paint mask",
+      "gameRefs": [
+        "outfit_fedora"
+      ],
+      "dependsOn": [
+        "item/outfit_fedora"
+      ]
+    },
+    {
+      "id": "item/outfit_kilt",
+      "category": "item",
+      "path": "item/outfit_kilt.png",
+      "incomingFileName": "outfit_kilt.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Tartan kilt and boots",
+      "gameRefs": [
+        "outfit_kilt"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_kilt.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_kilt.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_kilt.mask.png",
+      "incomingFileName": "outfit_kilt.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Tartan kilt and boots paint mask",
+      "gameRefs": [
+        "outfit_kilt"
+      ],
+      "dependsOn": [
+        "item/outfit_kilt"
+      ]
+    },
+    {
+      "id": "item/outfit_rasta",
+      "category": "item",
+      "path": "item/outfit_rasta.png",
+      "incomingFileName": "outfit_rasta.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Rasta tam and linen shirt",
+      "gameRefs": [
+        "outfit_rasta"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_rasta.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_rasta.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_rasta.mask.png",
+      "incomingFileName": "outfit_rasta.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Rasta tam and linen shirt paint mask",
+      "gameRefs": [
+        "outfit_rasta"
+      ],
+      "dependsOn": [
+        "item/outfit_rasta"
+      ]
+    },
+    {
+      "id": "item/outfit_fringe",
+      "category": "item",
+      "path": "item/outfit_fringe.png",
+      "incomingFileName": "outfit_fringe.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Fringed suede jacket",
+      "gameRefs": [
+        "outfit_fringe"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_fringe.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_fringe.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_fringe.mask.png",
+      "incomingFileName": "outfit_fringe.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Fringed suede jacket paint mask",
+      "gameRefs": [
+        "outfit_fringe"
+      ],
+      "dependsOn": [
+        "item/outfit_fringe"
+      ]
+    },
+    {
+      "id": "item/outfit_folkvest",
+      "category": "item",
+      "path": "item/outfit_folkvest.png",
+      "incomingFileName": "outfit_folkvest.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Embroidered folk waistcoat",
+      "gameRefs": [
+        "outfit_folkvest"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_folkvest.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_folkvest.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_folkvest.mask.png",
+      "incomingFileName": "outfit_folkvest.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Embroidered folk waistcoat paint mask",
+      "gameRefs": [
+        "outfit_folkvest"
+      ],
+      "dependsOn": [
+        "item/outfit_folkvest"
+      ]
+    },
+    {
+      "id": "item/outfit_disco",
+      "category": "item",
+      "path": "item/outfit_disco.png",
+      "incomingFileName": "outfit_disco.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Disco shirt and flares",
+      "gameRefs": [
+        "outfit_disco"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_disco.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_disco.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_disco.mask.png",
+      "incomingFileName": "outfit_disco.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Disco shirt and flares paint mask",
+      "gameRefs": [
+        "outfit_disco"
+      ],
+      "dependsOn": [
+        "item/outfit_disco"
+      ]
+    },
+    {
+      "id": "item/outfit_goldchain",
+      "category": "item",
+      "path": "item/outfit_goldchain.png",
+      "incomingFileName": "outfit_goldchain.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Tracksuit with gold chains",
+      "gameRefs": [
+        "outfit_goldchain"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_goldchain.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_goldchain.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_goldchain.mask.png",
+      "incomingFileName": "outfit_goldchain.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Tracksuit with gold chains paint mask",
+      "gameRefs": [
+        "outfit_goldchain"
+      ],
+      "dependsOn": [
+        "item/outfit_goldchain"
+      ]
+    },
+    {
+      "id": "item/outfit_cloak",
+      "category": "item",
+      "path": "item/outfit_cloak.png",
+      "incomingFileName": "outfit_cloak.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Leather cloak and chains",
+      "gameRefs": [
+        "outfit_cloak"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_cloak.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_cloak.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_cloak.mask.png",
+      "incomingFileName": "outfit_cloak.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Leather cloak and chains paint mask",
+      "gameRefs": [
+        "outfit_cloak"
+      ],
+      "dependsOn": [
+        "item/outfit_cloak"
+      ]
+    },
+    {
+      "id": "item/outfit_velvettux",
+      "category": "item",
+      "path": "item/outfit_velvettux.png",
+      "incomingFileName": "outfit_velvettux.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Velvet tuxedo jacket",
+      "gameRefs": [
+        "outfit_velvettux"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_velvettux.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_velvettux.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_velvettux.mask.png",
+      "incomingFileName": "outfit_velvettux.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Velvet tuxedo jacket paint mask",
+      "gameRefs": [
+        "outfit_velvettux"
+      ],
+      "dependsOn": [
+        "item/outfit_velvettux"
+      ]
+    },
+    {
+      "id": "item/outfit_holo",
+      "category": "item",
+      "path": "item/outfit_holo.png",
+      "incomingFileName": "outfit_holo.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Holographic raincoat",
+      "gameRefs": [
+        "outfit_holo"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_holo.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_holo.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_holo.mask.png",
+      "incomingFileName": "outfit_holo.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Holographic raincoat paint mask",
+      "gameRefs": [
+        "outfit_holo"
+      ],
+      "dependsOn": [
+        "item/outfit_holo"
+      ]
+    },
+    {
+      "id": "item/outfit_streetwear",
+      "category": "item",
+      "path": "item/outfit_streetwear.png",
+      "incomingFileName": "outfit_streetwear.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Designer streetwear collection",
+      "gameRefs": [
+        "outfit_streetwear"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/outfit_streetwear.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_streetwear.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_streetwear.mask.png",
+      "incomingFileName": "outfit_streetwear.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Designer streetwear collection paint mask",
+      "gameRefs": [
+        "outfit_streetwear"
+      ],
+      "dependsOn": [
+        "item/outfit_streetwear"
+      ]
+    },
+    {
+      "id": "item/outfit_tailcoat",
+      "category": "item",
+      "path": "item/outfit_tailcoat.png",
+      "incomingFileName": "outfit_tailcoat.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Concert tailcoat",
+      "gameRefs": [
+        "outfit_tailcoat"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/outfit_tailcoat.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_tailcoat.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_tailcoat.mask.png",
+      "incomingFileName": "outfit_tailcoat.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Concert tailcoat paint mask",
+      "gameRefs": [
+        "outfit_tailcoat"
+      ],
+      "dependsOn": [
+        "item/outfit_tailcoat"
+      ]
+    },
+    {
+      "id": "item/outfit_crystal",
+      "category": "item",
+      "path": "item/outfit_crystal.png",
+      "incomingFileName": "outfit_crystal.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Crystal-studded stage jumpsuit",
+      "gameRefs": [
+        "outfit_crystal"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/outfit_crystal.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_crystal.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_crystal.mask.png",
+      "incomingFileName": "outfit_crystal.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Crystal-studded stage jumpsuit paint mask",
+      "gameRefs": [
+        "outfit_crystal"
+      ],
+      "dependsOn": [
+        "item/outfit_crystal"
+      ]
+    },
+    {
+      "id": "item/outfit_bespoke",
+      "category": "item",
+      "path": "item/outfit_bespoke.png",
+      "incomingFileName": "outfit_bespoke.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Bespoke tailored suit",
+      "gameRefs": [
+        "outfit_bespoke"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/outfit_bespoke.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_bespoke.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_bespoke.mask.png",
+      "incomingFileName": "outfit_bespoke.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Bespoke tailored suit paint mask",
+      "gameRefs": [
+        "outfit_bespoke"
+      ],
+      "dependsOn": [
+        "item/outfit_bespoke"
+      ]
+    },
+    {
+      "id": "item/bicycle_1",
+      "category": "item",
+      "path": "item/bicycle_1.png",
+      "incomingFileName": "bicycle_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Bicycle",
+      "gameRefs": [
+        "bicycle_1"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/bicycle_1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bicycle_1.mask",
+      "category": "paint_mask",
+      "path": "item/bicycle_1.mask.png",
+      "incomingFileName": "bicycle_1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Bicycle paint mask",
+      "gameRefs": [
+        "bicycle_1"
+      ],
+      "dependsOn": [
+        "item/bicycle_1"
+      ]
+    },
+    {
+      "id": "item/moto_2",
+      "category": "item",
+      "path": "item/moto_2.png",
+      "incomingFileName": "moto_2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Café racer motorbike",
+      "gameRefs": [
+        "moto_2"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/moto_2.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/moto_2.mask",
+      "category": "paint_mask",
+      "path": "item/moto_2.mask.png",
+      "incomingFileName": "moto_2.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Café racer motorbike paint mask",
+      "gameRefs": [
+        "moto_2"
+      ],
+      "dependsOn": [
+        "item/moto_2"
+      ]
+    },
+    {
+      "id": "item/ev_1",
+      "category": "item",
+      "path": "item/ev_1.png",
+      "incomingFileName": "ev_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Electric saloon",
+      "gameRefs": [
+        "ev_1"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/ev_1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/ev_1.mask",
+      "category": "paint_mask",
+      "path": "item/ev_1.mask.png",
+      "incomingFileName": "ev_1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Electric saloon paint mask",
+      "gameRefs": [
+        "ev_1"
+      ],
+      "dependsOn": [
+        "item/ev_1"
+      ]
+    },
+    {
+      "id": "item/camper_1",
+      "category": "item",
+      "path": "item/camper_1.png",
+      "incomingFileName": "camper_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Camper van",
+      "gameRefs": [
+        "camper_1"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/camper_1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/camper_1.mask",
+      "category": "paint_mask",
+      "path": "item/camper_1.mask.png",
+      "incomingFileName": "camper_1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Camper van paint mask",
+      "gameRefs": [
+        "camper_1"
+      ],
+      "dependsOn": [
+        "item/camper_1"
+      ]
+    },
+    {
+      "id": "item/bus_1",
+      "category": "item",
+      "path": "item/bus_1.png",
+      "incomingFileName": "bus_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Tour bus",
+      "gameRefs": [
+        "bus_1"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/bus_1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bus_1.mask",
+      "category": "paint_mask",
+      "path": "item/bus_1.mask.png",
+      "incomingFileName": "bus_1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Tour bus paint mask",
+      "gameRefs": [
+        "bus_1"
+      ],
+      "dependsOn": [
+        "item/bus_1"
+      ]
+    },
+    {
+      "id": "item/car_5",
+      "category": "item",
+      "path": "item/car_5.png",
+      "incomingFileName": "car_5.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Limousine",
+      "gameRefs": [
+        "car_5"
+      ],
+      "tier": "iconic",
+      "paintable": true,
+      "mask": "item/car_5.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/car_5.mask",
+      "category": "paint_mask",
+      "path": "item/car_5.mask.png",
+      "incomingFileName": "car_5.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Limousine paint mask",
+      "gameRefs": [
+        "car_5"
+      ],
+      "dependsOn": [
+        "item/car_5"
+      ]
+    },
+    {
+      "id": "item/pet_hamster",
+      "category": "item",
+      "path": "item/pet_hamster.png",
+      "incomingFileName": "pet_hamster.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hamster",
+      "gameRefs": [
+        "pet_hamster"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_canary",
+      "category": "item",
+      "path": "item/pet_canary.png",
+      "incomingFileName": "pet_canary.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Canary",
+      "gameRefs": [
+        "pet_canary"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_gecko",
+      "category": "item",
+      "path": "item/pet_gecko.png",
+      "incomingFileName": "pet_gecko.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Leopard gecko",
+      "gameRefs": [
+        "pet_gecko"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_hedgehog",
+      "category": "item",
+      "path": "item/pet_hedgehog.png",
+      "incomingFileName": "pet_hedgehog.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hedgehog",
+      "gameRefs": [
+        "pet_hedgehog"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_pug",
+      "category": "item",
+      "path": "item/pet_pug.png",
+      "incomingFileName": "pet_pug.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Pug",
+      "gameRefs": [
+        "pet_pug"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_husky",
+      "category": "item",
+      "path": "item/pet_husky.png",
+      "incomingFileName": "pet_husky.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Husky",
+      "gameRefs": [
+        "pet_husky"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_mainecoon",
+      "category": "item",
+      "path": "item/pet_mainecoon.png",
+      "incomingFileName": "pet_mainecoon.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Maine coon cat",
+      "gameRefs": [
+        "pet_mainecoon"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_vancat",
+      "category": "item",
+      "path": "item/pet_vancat.png",
+      "incomingFileName": "pet_vancat.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Van cat",
+      "gameRefs": [
+        "pet_vancat"
+      ],
+      "tier": "iconic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_sparklers",
+      "category": "item",
+      "path": "item/fx_sparklers.png",
+      "incomingFileName": "fx_sparklers.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Stage sparklers",
+      "gameRefs": [
+        "fx_sparklers"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_streamers",
+      "category": "item",
+      "path": "item/fx_streamers.png",
+      "incomingFileName": "fx_streamers.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Streamer cannon",
+      "gameRefs": [
+        "fx_streamers"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_lanterns",
+      "category": "item",
+      "path": "item/fx_lanterns.png",
+      "incomingFileName": "fx_lanterns.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Paper lantern ceiling",
+      "gameRefs": [
+        "fx_lanterns"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_uv",
+      "category": "item",
+      "path": "item/fx_uv.png",
+      "incomingFileName": "fx_uv.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "UV light and glow paint",
+      "gameRefs": [
+        "fx_uv"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_moving",
+      "category": "item",
+      "path": "item/fx_moving.png",
+      "incomingFileName": "fx_moving.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Moving-head lights",
+      "gameRefs": [
+        "fx_moving"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_kabuki",
+      "category": "item",
+      "path": "item/fx_kabuki.png",
+      "incomingFileName": "fx_kabuki.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Kabuki curtain drop",
+      "gameRefs": [
+        "fx_kabuki"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_rain",
+      "category": "item",
+      "path": "item/fx_rain.png",
+      "incomingFileName": "fx_rain.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Stage rain curtain",
+      "gameRefs": [
+        "fx_rain"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_flames",
+      "category": "item",
+      "path": "item/fx_flames.png",
+      "incomingFileName": "fx_flames.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Flame towers",
+      "gameRefs": [
+        "fx_flames"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_drones",
+      "category": "item",
+      "path": "item/fx_drones.png",
+      "incomingFileName": "fx_drones.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Light drone show",
+      "gameRefs": [
+        "fx_drones"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_hologram",
+      "category": "item",
+      "path": "item/fx_hologram.png",
+      "incomingFileName": "fx_hologram.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hologram projection",
+      "gameRefs": [
+        "fx_hologram"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_clock",
+      "category": "item",
+      "path": "item/art_clock.png",
+      "incomingFileName": "art_clock.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Vinyl record wall clock",
+      "gameRefs": [
+        "art_clock"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_litho",
+      "category": "item",
+      "path": "item/art_litho.png",
+      "incomingFileName": "art_litho.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Numbered lithograph",
+      "gameRefs": [
+        "art_litho"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_tickets",
+      "category": "item",
+      "path": "item/art_tickets.png",
+      "incomingFileName": "art_tickets.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Gig ticket collage",
+      "gameRefs": [
+        "art_tickets"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_vase",
+      "category": "item",
+      "path": "item/art_vase.png",
+      "incomingFileName": "art_vase.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Ceramic vase",
+      "gameRefs": [
+        "art_vase"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_graffiti",
+      "category": "item",
+      "path": "item/art_graffiti.png",
+      "incomingFileName": "art_graffiti.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Graffiti panel",
+      "gameRefs": [
+        "art_graffiti"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_triptych",
+      "category": "item",
+      "path": "item/art_triptych.png",
+      "incomingFileName": "art_triptych.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Analogue photo triptych",
+      "gameRefs": [
+        "art_triptych"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_gramophone",
+      "category": "item",
+      "path": "item/art_gramophone.png",
+      "incomingFileName": "art_gramophone.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Antique gramophone",
+      "gameRefs": [
+        "art_gramophone"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_bust",
+      "category": "item",
+      "path": "item/art_bust.png",
+      "incomingFileName": "art_bust.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Marble composer bust",
+      "gameRefs": [
+        "art_bust"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_portrait_vip",
+      "category": "item",
+      "path": "item/art_portrait_vip.png",
+      "incomingFileName": "art_portrait_vip.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Portrait by a master painter",
+      "gameRefs": [
+        "art_portrait_vip"
+      ],
+      "tier": "iconic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_istanbul",
+      "category": "item",
+      "path": "item/art_souvenir_istanbul.png",
+      "incomingFileName": "art_souvenir_istanbul.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Galata Tower miniature",
+      "gameRefs": [
+        "art_souvenir_istanbul"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_ankara",
+      "category": "item",
+      "path": "item/art_souvenir_ankara.png",
+      "incomingFileName": "art_souvenir_ankara.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Angora cat figurine",
+      "gameRefs": [
+        "art_souvenir_ankara"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_izmir",
+      "category": "item",
+      "path": "item/art_souvenir_izmir.png",
+      "incomingFileName": "art_souvenir_izmir.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Clock Tower postcard frame",
+      "gameRefs": [
+        "art_souvenir_izmir"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_berlin",
+      "category": "item",
+      "path": "item/art_souvenir_berlin.png",
+      "incomingFileName": "art_souvenir_berlin.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Framed piece of the Wall",
+      "gameRefs": [
+        "art_souvenir_berlin"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_hamburg",
+      "category": "item",
+      "path": "item/art_souvenir_hamburg.png",
+      "incomingFileName": "art_souvenir_hamburg.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Ship in a bottle",
+      "gameRefs": [
+        "art_souvenir_hamburg"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_munich",
+      "category": "item",
+      "path": "item/art_souvenir_munich.png",
+      "incomingFileName": "art_souvenir_munich.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Collector’s beer stein",
+      "gameRefs": [
+        "art_souvenir_munich"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_london",
+      "category": "item",
+      "path": "item/art_souvenir_london.png",
+      "incomingFileName": "art_souvenir_london.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Red phone box model",
+      "gameRefs": [
+        "art_souvenir_london"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_manchester",
+      "category": "item",
+      "path": "item/art_souvenir_manchester.png",
+      "incomingFileName": "art_souvenir_manchester.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Worker-bee badge board",
+      "gameRefs": [
+        "art_souvenir_manchester"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_liverpool",
+      "category": "item",
+      "path": "item/art_souvenir_liverpool.png",
+      "incomingFileName": "art_souvenir_liverpool.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Mersey ferry model",
+      "gameRefs": [
+        "art_souvenir_liverpool"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_paris",
+      "category": "item",
+      "path": "item/art_souvenir_paris.png",
+      "incomingFileName": "art_souvenir_paris.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Montmartre watercolour sketch",
+      "gameRefs": [
+        "art_souvenir_paris"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_lyon",
+      "category": "item",
+      "path": "item/art_souvenir_lyon.png",
+      "incomingFileName": "art_souvenir_lyon.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Guignol puppet",
+      "gameRefs": [
+        "art_souvenir_lyon"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_marseille",
+      "category": "item",
+      "path": "item/art_souvenir_marseille.png",
+      "incomingFileName": "art_souvenir_marseille.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Calanques photo print",
+      "gameRefs": [
+        "art_souvenir_marseille"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_newyork",
+      "category": "item",
+      "path": "item/art_souvenir_newyork.png",
+      "incomingFileName": "art_souvenir_newyork.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Subway sign replica",
+      "gameRefs": [
+        "art_souvenir_newyork"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_losangeles",
+      "category": "item",
+      "path": "item/art_souvenir_losangeles.png",
+      "incomingFileName": "art_souvenir_losangeles.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Walk of Fame star replica",
+      "gameRefs": [
+        "art_souvenir_losangeles"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_souvenir_nashville",
+      "category": "item",
+      "path": "item/art_souvenir_nashville.png",
+      "incomingFileName": "art_souvenir_nashville.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Honky-tonk neon miniature",
+      "gameRefs": [
+        "art_souvenir_nashville"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_vinyl_1",
+      "category": "item",
+      "path": "item/art_vinyl_1.png",
+      "incomingFileName": "art_vinyl_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "First-press blues LP",
+      "gameRefs": [
+        "art_vinyl_1"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_vinyl_2",
+      "category": "item",
+      "path": "item/art_vinyl_2.png",
+      "incomingFileName": "art_vinyl_2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Anatolian rock 45",
+      "gameRefs": [
+        "art_vinyl_2"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_vinyl_3",
+      "category": "item",
+      "path": "item/art_vinyl_3.png",
+      "incomingFileName": "art_vinyl_3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Jazz club live LP",
+      "gameRefs": [
+        "art_vinyl_3"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_vinyl_4",
+      "category": "item",
+      "path": "item/art_vinyl_4.png",
+      "incomingFileName": "art_vinyl_4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Numbered punk demo record",
+      "gameRefs": [
+        "art_vinyl_4"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_vinyl_5",
+      "category": "item",
+      "path": "item/art_vinyl_5.png",
+      "incomingFileName": "art_vinyl_5.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Disco maxi single",
+      "gameRefs": [
+        "art_vinyl_5"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_vinyl_6",
+      "category": "item",
+      "path": "item/art_vinyl_6.png",
+      "incomingFileName": "art_vinyl_6.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Symphony box set",
+      "gameRefs": [
+        "art_vinyl_6"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_poster_1969",
+      "category": "item",
+      "path": "item/art_poster_1969.png",
+      "incomingFileName": "art_poster_1969.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Muddy festival poster (1969)",
+      "gameRefs": [
+        "art_poster_1969"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_poster_1977",
+      "category": "item",
+      "path": "item/art_poster_1977.png",
+      "incomingFileName": "art_poster_1977.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Basement punk club poster (1977)",
+      "gameRefs": [
+        "art_poster_1977"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_poster_1985",
+      "category": "item",
+      "path": "item/art_poster_1985.png",
+      "incomingFileName": "art_poster_1985.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Stadium tour poster (1985)",
+      "gameRefs": [
+        "art_poster_1985"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_poster_1991",
+      "category": "item",
+      "path": "item/art_poster_1991.png",
+      "incomingFileName": "art_poster_1991.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Warehouse rave flyer (1991)",
+      "gameRefs": [
+        "art_poster_1991"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_poster_1994",
+      "category": "item",
+      "path": "item/art_poster_1994.png",
+      "incomingFileName": "art_poster_1994.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Grunge gig poster (1994)",
+      "gameRefs": [
+        "art_poster_1994"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/ring_gold",
+      "category": "item",
+      "path": "item/ring_gold.png",
+      "incomingFileName": "ring_gold.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Gold ring",
+      "gameRefs": [
+        "ring_gold"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/ring_emerald",
+      "category": "item",
+      "path": "item/ring_emerald.png",
+      "incomingFileName": "ring_emerald.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Vintage emerald ring",
+      "gameRefs": [
+        "ring_emerald"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_petals",
+      "category": "item",
+      "path": "item/fx_petals.png",
+      "incomingFileName": "fx_petals.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Petal confetti",
+      "gameRefs": [
+        "fx_petals"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_straw",
+      "category": "item",
+      "path": "item/outfit_straw.png",
+      "incomingFileName": "outfit_straw.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Straw hat and linen shirt",
+      "gameRefs": [
+        "outfit_straw"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_straw.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_straw.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_straw.mask.png",
+      "incomingFileName": "outfit_straw.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Straw hat and linen shirt paint mask",
+      "gameRefs": [
+        "outfit_straw"
+      ],
+      "dependsOn": [
+        "item/outfit_straw"
+      ]
+    },
+    {
+      "id": "item/guitar_c_cigarbox",
+      "category": "item",
+      "path": "item/guitar_c_cigarbox.png",
+      "incomingFileName": "guitar_c_cigarbox.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Cigar-box guitar",
+      "gameRefs": [
+        "guitar_c_cigarbox"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/guitar_c_cigarbox.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_c_cigarbox.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_c_cigarbox.mask.png",
+      "incomingFileName": "guitar_c_cigarbox.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Cigar-box guitar paint mask",
+      "gameRefs": [
+        "guitar_c_cigarbox"
+      ],
+      "dependsOn": [
+        "item/guitar_c_cigarbox"
+      ]
+    },
+    {
+      "id": "item/guitar_c_resonator",
+      "category": "item",
+      "path": "item/guitar_c_resonator.png",
+      "incomingFileName": "guitar_c_resonator.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade resonator guitar",
+      "gameRefs": [
+        "guitar_c_resonator"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/guitar_c_resonator.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_c_resonator.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_c_resonator.mask.png",
+      "incomingFileName": "guitar_c_resonator.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade resonator guitar paint mask",
+      "gameRefs": [
+        "guitar_c_resonator"
+      ],
+      "dependsOn": [
+        "item/guitar_c_resonator"
+      ]
+    },
+    {
+      "id": "item/guitar_c_archtop",
+      "category": "item",
+      "path": "item/guitar_c_archtop.png",
+      "incomingFileName": "guitar_c_archtop.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade archtop jazz guitar",
+      "gameRefs": [
+        "guitar_c_archtop"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/guitar_c_archtop.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_c_archtop.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_c_archtop.mask.png",
+      "incomingFileName": "guitar_c_archtop.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade archtop jazz guitar paint mask",
+      "gameRefs": [
+        "guitar_c_archtop"
+      ],
+      "dependsOn": [
+        "item/guitar_c_archtop"
+      ]
+    },
+    {
+      "id": "item/bass_c_washtub",
+      "category": "item",
+      "path": "item/bass_c_washtub.png",
+      "incomingFileName": "bass_c_washtub.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Washtub bass",
+      "gameRefs": [
+        "bass_c_washtub"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/bass_c_washtub.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_c_washtub.mask",
+      "category": "paint_mask",
+      "path": "item/bass_c_washtub.mask.png",
+      "incomingFileName": "bass_c_washtub.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Washtub bass paint mask",
+      "gameRefs": [
+        "bass_c_washtub"
+      ],
+      "dependsOn": [
+        "item/bass_c_washtub"
+      ]
+    },
+    {
+      "id": "item/bass_c_fretless",
+      "category": "item",
+      "path": "item/bass_c_fretless.png",
+      "incomingFileName": "bass_c_fretless.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade fretless bass",
+      "gameRefs": [
+        "bass_c_fretless"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/bass_c_fretless.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_c_fretless.mask",
+      "category": "paint_mask",
+      "path": "item/bass_c_fretless.mask.png",
+      "incomingFileName": "bass_c_fretless.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade fretless bass paint mask",
+      "gameRefs": [
+        "bass_c_fretless"
+      ],
+      "dependsOn": [
+        "item/bass_c_fretless"
+      ]
+    },
+    {
+      "id": "item/drums_c_cajon",
+      "category": "item",
+      "path": "item/drums_c_cajon.png",
+      "incomingFileName": "drums_c_cajon.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade cajon",
+      "gameRefs": [
+        "drums_c_cajon"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/drums_c_cajon.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_c_cajon.mask",
+      "category": "paint_mask",
+      "path": "item/drums_c_cajon.mask.png",
+      "incomingFileName": "drums_c_cajon.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade cajon paint mask",
+      "gameRefs": [
+        "drums_c_cajon"
+      ],
+      "dependsOn": [
+        "item/drums_c_cajon"
+      ]
+    },
+    {
+      "id": "item/drums_c_custom",
+      "category": "item",
+      "path": "item/drums_c_custom.png",
+      "incomingFileName": "drums_c_custom.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Custom wood drum kit",
+      "gameRefs": [
+        "drums_c_custom"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/drums_c_custom.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_c_custom.mask",
+      "category": "paint_mask",
+      "path": "item/drums_c_custom.mask.png",
+      "incomingFileName": "drums_c_custom.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Custom wood drum kit paint mask",
+      "gameRefs": [
+        "drums_c_custom"
+      ],
+      "dependsOn": [
+        "item/drums_c_custom"
+      ]
+    },
+    {
+      "id": "item/keys_c_toy",
+      "category": "item",
+      "path": "item/keys_c_toy.png",
+      "incomingFileName": "keys_c_toy.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Salvaged toy piano",
+      "gameRefs": [
+        "keys_c_toy"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/keys_c_toy.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_c_toy.mask",
+      "category": "paint_mask",
+      "path": "item/keys_c_toy.mask.png",
+      "incomingFileName": "keys_c_toy.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Salvaged toy piano paint mask",
+      "gameRefs": [
+        "keys_c_toy"
+      ],
+      "dependsOn": [
+        "item/keys_c_toy"
+      ]
+    },
+    {
+      "id": "item/keys_c_analog",
+      "category": "item",
+      "path": "item/keys_c_analog.png",
+      "incomingFileName": "keys_c_analog.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade analogue synth",
+      "gameRefs": [
+        "keys_c_analog"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/keys_c_analog.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_c_analog.mask",
+      "category": "paint_mask",
+      "path": "item/keys_c_analog.mask.png",
+      "incomingFileName": "keys_c_analog.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade analogue synth paint mask",
+      "gameRefs": [
+        "keys_c_analog"
+      ],
+      "dependsOn": [
+        "item/keys_c_analog"
+      ]
+    },
+    {
+      "id": "item/vocals_c_tincan",
+      "category": "item",
+      "path": "item/vocals_c_tincan.png",
+      "incomingFileName": "vocals_c_tincan.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Tin-can microphone",
+      "gameRefs": [
+        "vocals_c_tincan"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/vocals_c_tincan.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_c_tincan.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_c_tincan.mask.png",
+      "incomingFileName": "vocals_c_tincan.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Tin-can microphone paint mask",
+      "gameRefs": [
+        "vocals_c_tincan"
+      ],
+      "dependsOn": [
+        "item/vocals_c_tincan"
+      ]
+    },
+    {
+      "id": "item/vocals_c_ribbon",
+      "category": "item",
+      "path": "item/vocals_c_ribbon.png",
+      "incomingFileName": "vocals_c_ribbon.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade ribbon mic",
+      "gameRefs": [
+        "vocals_c_ribbon"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/vocals_c_ribbon.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_c_ribbon.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_c_ribbon.mask.png",
+      "incomingFileName": "vocals_c_ribbon.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Handmade ribbon mic paint mask",
+      "gameRefs": [
+        "vocals_c_ribbon"
+      ],
+      "dependsOn": [
+        "item/vocals_c_ribbon"
+      ]
+    },
+    {
+      "id": "item/sax_c_bamboo",
+      "category": "item",
+      "path": "item/sax_c_bamboo.png",
+      "incomingFileName": "sax_c_bamboo.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Bamboo saxophone",
+      "gameRefs": [
+        "sax_c_bamboo"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/sax_c_soprano",
+      "category": "item",
+      "path": "item/sax_c_soprano.png",
+      "incomingFileName": "sax_c_soprano.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade soprano sax",
+      "gameRefs": [
+        "sax_c_soprano"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_c_fiddle",
+      "category": "item",
+      "path": "item/violin_c_fiddle.png",
+      "incomingFileName": "violin_c_fiddle.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade fiddle",
+      "gameRefs": [
+        "violin_c_fiddle"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_c_electric",
+      "category": "item",
+      "path": "item/violin_c_electric.png",
+      "incomingFileName": "violin_c_electric.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade electric violin",
+      "gameRefs": [
+        "violin_c_electric"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_c_djembe",
+      "category": "item",
+      "path": "item/percussion_c_djembe.png",
+      "incomingFileName": "percussion_c_djembe.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade djembe",
+      "gameRefs": [
+        "percussion_c_djembe"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_c_darbuka",
+      "category": "item",
+      "path": "item/percussion_c_darbuka.png",
+      "incomingFileName": "percussion_c_darbuka.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade clay darbuka",
+      "gameRefs": [
+        "percussion_c_darbuka"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_denim",
+      "category": "item",
+      "path": "item/outfit_c_denim.png",
+      "incomingFileName": "outfit_c_denim.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Patched denim vest",
+      "gameRefs": [
+        "outfit_c_denim"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_c_denim.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_denim.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_c_denim.mask.png",
+      "incomingFileName": "outfit_c_denim.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Patched denim vest paint mask",
+      "gameRefs": [
+        "outfit_c_denim"
+      ],
+      "dependsOn": [
+        "item/outfit_c_denim"
+      ]
+    },
+    {
+      "id": "item/outfit_c_knit",
+      "category": "item",
+      "path": "item/outfit_c_knit.png",
+      "incomingFileName": "outfit_c_knit.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Knitted stage set",
+      "gameRefs": [
+        "outfit_c_knit"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_c_knit.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_knit.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_c_knit.mask.png",
+      "incomingFileName": "outfit_c_knit.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Knitted stage set paint mask",
+      "gameRefs": [
+        "outfit_c_knit"
+      ],
+      "dependsOn": [
+        "item/outfit_c_knit"
+      ]
+    },
+    {
+      "id": "item/outfit_c_track",
+      "category": "item",
+      "path": "item/outfit_c_track.png",
+      "incomingFileName": "outfit_c_track.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Hand-painted tracksuit",
+      "gameRefs": [
+        "outfit_c_track"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_c_track.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_track.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_c_track.mask.png",
+      "incomingFileName": "outfit_c_track.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Hand-painted tracksuit paint mask",
+      "gameRefs": [
+        "outfit_c_track"
+      ],
+      "dependsOn": [
+        "item/outfit_c_track"
+      ]
+    },
+    {
+      "id": "item/outfit_c_fringe",
+      "category": "item",
+      "path": "item/outfit_c_fringe.png",
+      "incomingFileName": "outfit_c_fringe.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Fringed leather jacket",
+      "gameRefs": [
+        "outfit_c_fringe"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_c_fringe.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_fringe.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_c_fringe.mask.png",
+      "incomingFileName": "outfit_c_fringe.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Fringed leather jacket paint mask",
+      "gameRefs": [
+        "outfit_c_fringe"
+      ],
+      "dependsOn": [
+        "item/outfit_c_fringe"
+      ]
+    },
+    {
+      "id": "item/outfit_c_spikes",
+      "category": "item",
+      "path": "item/outfit_c_spikes.png",
+      "incomingFileName": "outfit_c_spikes.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Spiked leather armour",
+      "gameRefs": [
+        "outfit_c_spikes"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_c_spikes.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_spikes.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_c_spikes.mask.png",
+      "incomingFileName": "outfit_c_spikes.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Spiked leather armour paint mask",
+      "gameRefs": [
+        "outfit_c_spikes"
+      ],
+      "dependsOn": [
+        "item/outfit_c_spikes"
+      ]
+    },
+    {
+      "id": "item/outfit_c_embroid",
+      "category": "item",
+      "path": "item/outfit_c_embroid.png",
+      "incomingFileName": "outfit_c_embroid.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Embroidered folk vest",
+      "gameRefs": [
+        "outfit_c_embroid"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_c_embroid.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_embroid.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_c_embroid.mask.png",
+      "incomingFileName": "outfit_c_embroid.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Embroidered folk vest paint mask",
+      "gameRefs": [
+        "outfit_c_embroid"
+      ],
+      "dependsOn": [
+        "item/outfit_c_embroid"
+      ]
+    },
+    {
+      "id": "item/outfit_c_gown",
+      "category": "item",
+      "path": "item/outfit_c_gown.png",
+      "incomingFileName": "outfit_c_gown.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Hand-sewn concert gown",
+      "gameRefs": [
+        "outfit_c_gown"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_c_gown.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_gown.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_c_gown.mask.png",
+      "incomingFileName": "outfit_c_gown.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Hand-sewn concert gown paint mask",
+      "gameRefs": [
+        "outfit_c_gown"
+      ],
+      "dependsOn": [
+        "item/outfit_c_gown"
+      ]
+    },
+    {
+      "id": "item/outfit_c_mirror",
+      "category": "item",
+      "path": "item/outfit_c_mirror.png",
+      "incomingFileName": "outfit_c_mirror.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Mirror-mosaic stage suit",
+      "gameRefs": [
+        "outfit_c_mirror"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_c_mirror.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_c_mirror.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_c_mirror.mask.png",
+      "incomingFileName": "outfit_c_mirror.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Mirror-mosaic stage suit paint mask",
+      "gameRefs": [
+        "outfit_c_mirror"
+      ],
+      "dependsOn": [
+        "item/outfit_c_mirror"
+      ]
+    },
+    {
+      "id": "item/art_c_poster",
+      "category": "item",
+      "path": "item/art_c_poster.png",
+      "incomingFileName": "art_c_poster.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Screen-printed gig poster",
+      "gameRefs": [
+        "art_c_poster"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_c_collage",
+      "category": "item",
+      "path": "item/art_c_collage.png",
+      "incomingFileName": "art_c_collage.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Record-sleeve collage",
+      "gameRefs": [
+        "art_c_collage"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_c_lyrics",
+      "category": "item",
+      "path": "item/art_c_lyrics.png",
+      "incomingFileName": "art_c_lyrics.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Framed hand-lettered lyrics",
+      "gameRefs": [
+        "art_c_lyrics"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_c_vase",
+      "category": "item",
+      "path": "item/art_c_vase.png",
+      "incomingFileName": "art_c_vase.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Glazed ceramic vase",
+      "gameRefs": [
+        "art_c_vase"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_c_mosaic",
+      "category": "item",
+      "path": "item/art_c_mosaic.png",
+      "incomingFileName": "art_c_mosaic.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Bead and vinyl mosaic",
+      "gameRefs": [
+        "art_c_mosaic"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_c_neon",
+      "category": "item",
+      "path": "item/art_c_neon.png",
+      "incomingFileName": "art_c_neon.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade neon sign",
+      "gameRefs": [
+        "art_c_neon"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_c_sculpture",
+      "category": "item",
+      "path": "item/art_c_sculpture.png",
+      "incomingFileName": "art_c_sculpture.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Scrap-metal sculpture",
+      "gameRefs": [
+        "art_c_sculpture"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_c_portrait",
+      "category": "item",
+      "path": "item/art_c_portrait.png",
+      "incomingFileName": "art_c_portrait.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Oil portrait of the band",
+      "gameRefs": [
+        "art_c_portrait"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_c_confetti",
+      "category": "item",
+      "path": "item/fx_c_confetti.png",
+      "incomingFileName": "fx_c_confetti.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade confetti cannon",
+      "gameRefs": [
+        "fx_c_confetti"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_c_smoke",
+      "category": "item",
+      "path": "item/fx_c_smoke.png",
+      "incomingFileName": "fx_c_smoke.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Smoke pots",
+      "gameRefs": [
+        "fx_c_smoke"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_c_lanterns",
+      "category": "item",
+      "path": "item/fx_c_lanterns.png",
+      "incomingFileName": "fx_c_lanterns.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade paper lanterns",
+      "gameRefs": [
+        "fx_c_lanterns"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_c_sparks",
+      "category": "item",
+      "path": "item/fx_c_sparks.png",
+      "incomingFileName": "fx_c_sparks.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Cold-spark machine",
+      "gameRefs": [
+        "fx_c_sparks"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_c_ledwall",
+      "category": "item",
+      "path": "item/fx_c_ledwall.png",
+      "incomingFileName": "fx_c_ledwall.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade LED wall",
+      "gameRefs": [
+        "fx_c_ledwall"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/ring_c_silver",
+      "category": "item",
+      "path": "item/ring_c_silver.png",
+      "incomingFileName": "ring_c_silver.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade silver ring",
+      "gameRefs": [
+        "ring_c_silver"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_lozenge",
+      "category": "item",
+      "path": "item/cons_lozenge.png",
+      "incomingFileName": "cons_lozenge.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Throat lozenges",
+      "gameRefs": [
+        "cons_lozenge"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_painkiller",
+      "category": "item",
+      "path": "item/cons_painkiller.png",
+      "incomingFileName": "cons_painkiller.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Painkillers",
+      "gameRefs": [
+        "cons_painkiller"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_vitamins",
+      "category": "item",
+      "path": "item/cons_vitamins.png",
+      "incomingFileName": "cons_vitamins.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Vitamin tablets",
+      "gameRefs": [
+        "cons_vitamins"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_balm",
+      "category": "item",
+      "path": "item/cons_balm.png",
+      "incomingFileName": "cons_balm.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Muscle balm",
+      "gameRefs": [
+        "cons_balm"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_herbtea",
+      "category": "item",
+      "path": "item/cons_herbtea.png",
+      "incomingFileName": "cons_herbtea.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Herbal tea pack",
+      "gameRefs": [
+        "cons_herbtea"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_electrolyte",
+      "category": "item",
+      "path": "item/cons_electrolyte.png",
+      "incomingFileName": "cons_electrolyte.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Electrolyte drink",
+      "gameRefs": [
+        "cons_electrolyte"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_coldbrew",
+      "category": "item",
+      "path": "item/cons_coldbrew.png",
+      "incomingFileName": "cons_coldbrew.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Cold-brew coffee",
+      "gameRefs": [
+        "cons_coldbrew"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_proteinbar",
+      "category": "item",
+      "path": "item/cons_proteinbar.png",
+      "incomingFileName": "cons_proteinbar.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Protein bar",
+      "gameRefs": [
+        "cons_proteinbar"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_energydrink",
+      "category": "item",
+      "path": "item/cons_energydrink.png",
+      "incomingFileName": "cons_energydrink.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Energy drink",
+      "gameRefs": [
+        "cons_energydrink"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_rider",
+      "category": "item",
+      "path": "item/cons_rider.png",
+      "incomingFileName": "cons_rider.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Backstage rider platter",
+      "gameRefs": [
+        "cons_rider"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_crossword",
+      "category": "item",
+      "path": "item/cons_crossword.png",
+      "incomingFileName": "cons_crossword.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Crossword magazine",
+      "gameRefs": [
+        "cons_crossword"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_musicmag",
+      "category": "item",
+      "path": "item/cons_musicmag.png",
+      "incomingFileName": "cons_musicmag.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Music magazine",
+      "gameRefs": [
+        "cons_musicmag"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_comic",
+      "category": "item",
+      "path": "item/cons_comic.png",
+      "incomingFileName": "cons_comic.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Comic book",
+      "gameRefs": [
+        "cons_comic"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_pocketbook",
+      "category": "item",
+      "path": "item/cons_pocketbook.png",
+      "incomingFileName": "cons_pocketbook.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Pocket notebook",
+      "gameRefs": [
+        "cons_pocketbook"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_journal",
+      "category": "item",
+      "path": "item/cons_journal.png",
+      "incomingFileName": "cons_journal.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Leather-bound idea journal",
+      "gameRefs": [
+        "cons_journal"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_museum",
+      "category": "item",
+      "path": "item/cons_museum.png",
+      "incomingFileName": "cons_museum.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Museum ticket",
+      "gameRefs": [
+        "cons_museum"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_catalogue",
+      "category": "item",
+      "path": "item/cons_catalogue.png",
+      "incomingFileName": "cons_catalogue.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Exhibition catalogue",
+      "gameRefs": [
+        "cons_catalogue"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_candle",
+      "category": "item",
+      "path": "item/cons_candle.png",
+      "incomingFileName": "cons_candle.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Aromatherapy candle",
+      "gameRefs": [
+        "cons_candle"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_spa",
+      "category": "item",
+      "path": "item/cons_spa.png",
+      "incomingFileName": "cons_spa.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Spa day voucher",
+      "gameRefs": [
+        "cons_spa"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_ticket",
+      "category": "item",
+      "path": "item/cons_ticket.png",
+      "incomingFileName": "cons_ticket.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Ticket to another band’s gig",
+      "gameRefs": [
+        "cons_ticket"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_pettreat",
+      "category": "item",
+      "path": "item/cons_pettreat.png",
+      "incomingFileName": "cons_pettreat.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Pet treats",
+      "gameRefs": [
+        "cons_pettreat"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_strawberries",
+      "category": "item",
+      "path": "item/cons_strawberries.png",
+      "incomingFileName": "cons_strawberries.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Bowl of fresh strawberries",
+      "gameRefs": [
+        "cons_strawberries"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_lemonade",
+      "category": "item",
+      "path": "item/cons_lemonade.png",
+      "incomingFileName": "cons_lemonade.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Iced lemonade",
+      "gameRefs": [
+        "cons_lemonade"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_chestnuts",
+      "category": "item",
+      "path": "item/cons_chestnuts.png",
+      "incomingFileName": "cons_chestnuts.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Roasted chestnuts",
+      "gameRefs": [
+        "cons_chestnuts"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_cocoa",
+      "category": "item",
+      "path": "item/cons_cocoa.png",
+      "incomingFileName": "cons_cocoa.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hot chocolate",
+      "gameRefs": [
+        "cons_cocoa"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_flowers",
+      "category": "item",
+      "path": "item/gift_flowers.png",
+      "incomingFileName": "gift_flowers.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Bouquet of flowers",
+      "gameRefs": [
+        "gift_flowers"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_scarf",
+      "category": "item",
+      "path": "item/gift_scarf.png",
+      "incomingFileName": "gift_scarf.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Silk scarf",
+      "gameRefs": [
+        "gift_scarf"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_perfume",
+      "category": "item",
+      "path": "item/gift_perfume.png",
+      "incomingFileName": "gift_perfume.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Perfume",
+      "gameRefs": [
+        "gift_perfume"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_watch",
+      "category": "item",
+      "path": "item/gift_watch.png",
+      "incomingFileName": "gift_watch.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Wristwatch",
+      "gameRefs": [
+        "gift_watch"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_poetry",
+      "category": "item",
+      "path": "item/gift_poetry.png",
+      "incomingFileName": "gift_poetry.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Poetry book",
+      "gameRefs": [
+        "gift_poetry"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_biography",
+      "category": "item",
+      "path": "item/gift_biography.png",
+      "incomingFileName": "gift_biography.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Musician biography",
+      "gameRefs": [
+        "gift_biography"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_songbook",
+      "category": "item",
+      "path": "item/gift_songbook.png",
+      "incomingFileName": "gift_songbook.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Songbook gift set",
+      "gameRefs": [
+        "gift_songbook"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_postcards",
+      "category": "item",
+      "path": "item/gift_postcards.png",
+      "incomingFileName": "gift_postcards.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Postcard set",
+      "gameRefs": [
+        "gift_postcards"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_framedphoto",
+      "category": "item",
+      "path": "item/gift_framedphoto.png",
+      "incomingFileName": "gift_framedphoto.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Framed gig photo",
+      "gameRefs": [
+        "gift_framedphoto"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_plush",
+      "category": "item",
+      "path": "item/gift_plush.png",
+      "incomingFileName": "gift_plush.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Plush toy",
+      "gameRefs": [
+        "gift_plush"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_picknecklace",
+      "category": "item",
+      "path": "item/gift_picknecklace.png",
+      "incomingFileName": "gift_picknecklace.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Guitar-pick necklace",
+      "gameRefs": [
+        "gift_picknecklace"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_sticks",
+      "category": "item",
+      "path": "item/gift_sticks.png",
+      "incomingFileName": "gift_sticks.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Drumsticks signed by a famous drummer",
+      "gameRefs": [
+        "gift_sticks"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_pottedflower",
+      "category": "item",
+      "path": "item/gift_pottedflower.png",
+      "incomingFileName": "gift_pottedflower.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Potted flower",
+      "gameRefs": [
+        "gift_pottedflower"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_wristband",
+      "category": "item",
+      "path": "item/gift_wristband.png",
+      "incomingFileName": "gift_wristband.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Festival wristband",
+      "gameRefs": [
+        "gift_wristband"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_beanie",
+      "category": "item",
+      "path": "item/gift_beanie.png",
+      "incomingFileName": "gift_beanie.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hand-knitted beanie",
+      "gameRefs": [
+        "gift_beanie"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_cookies",
+      "category": "item",
+      "path": "item/gift_cookies.png",
+      "incomingFileName": "gift_cookies.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Box of holiday cookies",
+      "gameRefs": [
+        "gift_cookies"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/care_strings",
+      "category": "item",
+      "path": "item/care_strings.png",
+      "incomingFileName": "care_strings.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Restringing kit",
+      "gameRefs": [
+        "care_strings"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/care_heads",
+      "category": "item",
+      "path": "item/care_heads.png",
+      "incomingFileName": "care_heads.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Drumhead replacement set",
+      "gameRefs": [
+        "care_heads"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/care_wind",
+      "category": "item",
+      "path": "item/care_wind.png",
+      "incomingFileName": "care_wind.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Reed and pad care kit",
+      "gameRefs": [
+        "care_wind"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/care_contact",
+      "category": "item",
+      "path": "item/care_contact.png",
+      "incomingFileName": "care_contact.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Contact cleaner and cable kit",
+      "gameRefs": [
+        "care_contact"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/care_vehicle",
+      "category": "item",
+      "path": "item/care_vehicle.png",
+      "incomingFileName": "care_vehicle.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Vehicle tune-up kit",
+      "gameRefs": [
+        "care_vehicle"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_thread",
+      "category": "item",
+      "path": "item/mat_thread.png",
+      "incomingFileName": "mat_thread.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Thread and buttons",
+      "gameRefs": [
+        "mat_thread"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_glue",
+      "category": "item",
+      "path": "item/mat_glue.png",
+      "incomingFileName": "mat_glue.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Glue and varnish",
+      "gameRefs": [
+        "mat_glue"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_spring",
+      "category": "item",
+      "path": "item/mat_spring.png",
+      "incomingFileName": "mat_spring.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Springs and screws",
+      "gameRefs": [
+        "mat_spring"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_cable",
+      "category": "item",
+      "path": "item/mat_cable.png",
+      "incomingFileName": "mat_cable.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Cable and jacks",
+      "gameRefs": [
+        "mat_cable"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_battery",
+      "category": "item",
+      "path": "item/mat_battery.png",
+      "incomingFileName": "mat_battery.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Battery pack",
+      "gameRefs": [
+        "mat_battery"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_bulb",
+      "category": "item",
+      "path": "item/mat_bulb.png",
+      "incomingFileName": "mat_bulb.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Bulbs and sockets",
+      "gameRefs": [
+        "mat_bulb"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_rubber",
+      "category": "item",
+      "path": "item/mat_rubber.png",
+      "incomingFileName": "mat_rubber.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Rubber",
+      "gameRefs": [
+        "mat_rubber"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_paper",
+      "category": "item",
+      "path": "item/mat_paper.png",
+      "incomingFileName": "mat_paper.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade paper",
+      "gameRefs": [
+        "mat_paper"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_ink",
+      "category": "item",
+      "path": "item/mat_ink.png",
+      "incomingFileName": "mat_ink.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Ink",
+      "gameRefs": [
+        "mat_ink"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_beads",
+      "category": "item",
+      "path": "item/mat_beads.png",
+      "incomingFileName": "mat_beads.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Beads",
+      "gameRefs": [
+        "mat_beads"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_frame",
+      "category": "item",
+      "path": "item/mat_frame.png",
+      "incomingFileName": "mat_frame.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Wooden frame",
+      "gameRefs": [
+        "mat_frame"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_wax",
+      "category": "item",
+      "path": "item/mat_wax.png",
+      "incomingFileName": "mat_wax.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Beeswax",
+      "gameRefs": [
+        "mat_wax"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_clay",
+      "category": "item",
+      "path": "item/mat_clay.png",
+      "incomingFileName": "mat_clay.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Pottery clay",
+      "gameRefs": [
+        "mat_clay"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_tape",
+      "category": "item",
+      "path": "item/mat_tape.png",
+      "incomingFileName": "mat_tape.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Blank cassette",
+      "gameRefs": [
+        "mat_tape"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_wool",
+      "category": "item",
+      "path": "item/mat_wool.png",
+      "incomingFileName": "mat_wool.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Ball of wool",
+      "gameRefs": [
+        "mat_wool"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_magnet",
+      "category": "item",
+      "path": "item/mat_magnet.png",
+      "incomingFileName": "mat_magnet.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Magnet and coil wire",
+      "gameRefs": [
+        "mat_magnet"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_silver",
+      "category": "item",
+      "path": "item/mat_silver.png",
+      "incomingFileName": "mat_silver.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Silver wire",
+      "gameRefs": [
+        "mat_silver"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_goldleaf",
+      "category": "item",
+      "path": "item/mat_goldleaf.png",
+      "incomingFileName": "mat_goldleaf.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Gold leaf",
+      "gameRefs": [
+        "mat_goldleaf"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_herbs",
+      "category": "item",
+      "path": "item/mat_herbs.png",
+      "incomingFileName": "mat_herbs.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Dried medicinal herbs",
+      "gameRefs": [
+        "mat_herbs"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_honey",
+      "category": "item",
+      "path": "item/mat_honey.png",
+      "incomingFileName": "mat_honey.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Jar of honey",
+      "gameRefs": [
+        "mat_honey"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_tonewood",
+      "category": "item",
+      "path": "item/mat_tonewood.png",
+      "incomingFileName": "mat_tonewood.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Seasoned tonewood",
+      "gameRefs": [
+        "mat_tonewood"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_handpickup",
+      "category": "item",
+      "path": "item/mat_handpickup.png",
+      "incomingFileName": "mat_handpickup.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hand-wound pickup",
+      "gameRefs": [
+        "mat_handpickup"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_cloth",
+      "category": "item",
+      "path": "item/mat_cloth.png",
+      "incomingFileName": "mat_cloth.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Woven stage cloth",
+      "gameRefs": [
+        "mat_cloth"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_c_notebook",
+      "category": "item",
+      "path": "item/cons_c_notebook.png",
+      "incomingFileName": "cons_c_notebook.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hand-bound songbook",
+      "gameRefs": [
+        "cons_c_notebook"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_c_tea",
+      "category": "item",
+      "path": "item/cons_c_tea.png",
+      "incomingFileName": "cons_c_tea.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Home-blended herbal tea",
+      "gameRefs": [
+        "cons_c_tea"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_c_syrup",
+      "category": "item",
+      "path": "item/cons_c_syrup.png",
+      "incomingFileName": "cons_c_syrup.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Honey-ginger syrup",
+      "gameRefs": [
+        "cons_c_syrup"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/cons_c_candle",
+      "category": "item",
+      "path": "item/cons_c_candle.png",
+      "incomingFileName": "cons_c_candle.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Lavender candle",
+      "gameRefs": [
+        "cons_c_candle"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_mixtape",
+      "category": "item",
+      "path": "item/gift_c_mixtape.png",
+      "incomingFileName": "gift_c_mixtape.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Personal mixtape",
+      "gameRefs": [
+        "gift_c_mixtape"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_bracelet",
+      "category": "item",
+      "path": "item/gift_c_bracelet.png",
+      "incomingFileName": "gift_c_bracelet.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Beaded friendship bracelet",
+      "gameRefs": [
+        "gift_c_bracelet"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_musicbox",
+      "category": "item",
+      "path": "item/gift_c_musicbox.png",
+      "incomingFileName": "gift_c_musicbox.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Wooden music box",
+      "gameRefs": [
+        "gift_c_musicbox"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_scarf",
+      "category": "item",
+      "path": "item/gift_c_scarf.png",
+      "incomingFileName": "gift_c_scarf.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hand-knitted scarf",
+      "gameRefs": [
+        "gift_c_scarf"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_necklace",
+      "category": "item",
+      "path": "item/gift_c_necklace.png",
+      "incomingFileName": "gift_c_necklace.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Silver pick pendant",
+      "gameRefs": [
+        "gift_c_necklace"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_sketch",
+      "category": "item",
+      "path": "item/gift_c_sketch.png",
+      "incomingFileName": "gift_c_sketch.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Charcoal portrait",
+      "gameRefs": [
+        "gift_c_sketch"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_mug",
+      "category": "item",
+      "path": "item/gift_c_mug.png",
+      "incomingFileName": "gift_c_mug.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade mug",
+      "gameRefs": [
+        "gift_c_mug"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_card",
+      "category": "item",
+      "path": "item/gift_c_card.png",
+      "incomingFileName": "gift_c_card.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Hand-lettered song card",
+      "gameRefs": [
+        "gift_c_card"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_snowglobe",
+      "category": "item",
+      "path": "item/gift_c_snowglobe.png",
+      "incomingFileName": "gift_c_snowglobe.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Snow globe",
+      "gameRefs": [
+        "gift_c_snowglobe"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gift_c_crown",
+      "category": "item",
+      "path": "item/gift_c_crown.png",
+      "incomingFileName": "gift_c_crown.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Dried-flower crown",
+      "gameRefs": [
+        "gift_c_crown"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
       "id": "item/spray",
       "category": "item",
       "path": "item/spray.png",
@@ -8008,6 +13660,23 @@
       "dependsOn": []
     },
     {
+      "id": "achievement/crafter_50",
+      "category": "achievement",
+      "path": "achievement/crafter_50.png",
+      "incomingFileName": "achievement-crafter_50.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Workshop regular",
+      "gameRefs": [
+        "crafter_50"
+      ],
+      "dependsOn": []
+    },
+    {
       "id": "achievement/workouts_20",
       "category": "achievement",
       "path": "achievement/workouts_20.png",
@@ -8178,6 +13847,40 @@
       "dependsOn": []
     },
     {
+      "id": "achievement/gifts_25",
+      "category": "achievement",
+      "path": "achievement/gifts_25.png",
+      "incomingFileName": "achievement-gifts_25.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Big heart",
+      "gameRefs": [
+        "gifts_25"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/self_care_25",
+      "category": "achievement",
+      "path": "achievement/self_care_25.png",
+      "incomingFileName": "achievement-self_care_25.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Self-care",
+      "gameRefs": [
+        "self_care_25"
+      ],
+      "dependsOn": []
+    },
+    {
       "id": "achievement/trader_5",
       "category": "achievement",
       "path": "achievement/trader_5.png",
@@ -8276,6 +13979,91 @@
       "label": "Diamond record",
       "gameRefs": [
         "diamond"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/collection_souvenirs",
+      "category": "achievement",
+      "path": "achievement/collection_souvenirs.png",
+      "incomingFileName": "achievement-collection_souvenirs.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "World tour keepsakes",
+      "gameRefs": [
+        "collection_souvenirs"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/collection_vinyl",
+      "category": "achievement",
+      "path": "achievement/collection_vinyl.png",
+      "incomingFileName": "achievement-collection_vinyl.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Record archive",
+      "gameRefs": [
+        "collection_vinyl"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/collection_posters",
+      "category": "achievement",
+      "path": "achievement/collection_posters.png",
+      "incomingFileName": "achievement-collection_posters.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Poster wall",
+      "gameRefs": [
+        "collection_posters"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/collection_seasons",
+      "category": "achievement",
+      "path": "achievement/collection_seasons.png",
+      "incomingFileName": "achievement-collection_seasons.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Four seasons",
+      "gameRefs": [
+        "collection_seasons"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/collection_workshop",
+      "category": "achievement",
+      "path": "achievement/collection_workshop.png",
+      "incomingFileName": "achievement-collection_workshop.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Workshop master",
+      "gameRefs": [
+        "collection_workshop"
       ],
       "dependsOn": []
     },
