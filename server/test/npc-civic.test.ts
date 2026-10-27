@@ -104,7 +104,8 @@ describe('NPC kadrosu', () => {
 });
 
 describe('NPC tüccar ve ekonomi', () => {
-  it('yalnızca atölye ürünü alır, malzeme maliyetini aşmaz, günde sınırlı; dükkân eşyası ve efsanevi eşya alınmaz', async () => {
+  // Günlük sınır oyun gününe bakar: testin hızlı saatinde (1 gün = 24 ms) pencere test bitmeden kapanabiliyordu
+  it('yalnızca atölye ürünü alır, malzeme maliyetini aşmaz, günde sınırlı; dükkân eşyası ve efsanevi eşya alınmaz', () => slow(async () => {
     const p = await newPlayer();
     await setMoney(p.character.id, 0);
     const crafted = (await q(`INSERT INTO inventory(character_id, item_id, slot, bonus, crafted_by) VALUES ($1, 'guitar_crafted', 'guitar', 14, $1) RETURNING id`, [p.character.id])).rows[0].id;
@@ -126,7 +127,7 @@ describe('NPC tüccar ve ekonomi', () => {
     const legend = (await q(`INSERT INTO inventory(character_id, item_id, slot, bonus, legendary_at) VALUES ($1, 'keys_crafted', 'keys', 14, now()) RETURNING id`, [p.character.id])).rows[0].id;
     await q('DELETE FROM npc_sales WHERE character_id = $1', [p.character.id]);
     expect((await p.c.post('/api/market/npc-sell', { locationId: 'istanbul-flea_market', inventoryId: legend })).body.error).toBe('npc_wont_buy');
-  });
+  }));
 
   it('NPC tüccar ilanları dükkân fiyatının altında ama geri satışta zarar ettirir; satış parası oyundan çıkar', async () => {
     await ensureNpcCivic();
