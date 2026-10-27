@@ -5,7 +5,7 @@
 import { PACING } from './pacing';
 import type { L } from './world';
 
-export type HomeId = 'room' | 'flat' | 'loft' | 'penthouse';
+export type HomeId = 'room' | 'flat' | 'loft' | 'house' | 'penthouse';
 
 export interface HomeDef {
   id: HomeId;
@@ -44,6 +44,15 @@ export const HOMES: HomeDef[] = [
     rent: 450,
     restBonus: 45,
     healthPerHour: 1.5,
+  },
+  {
+    // Orta oyun için kalıcı bir harcama yeri (denge raporu §2: paranın alabileceği bir şey kalmıyordu)
+    id: 'house',
+    name: { tr: 'Bahçeli müstakil ev', en: 'Townhouse with a garden' },
+    about: { tr: 'Bahçeli, prova odalı bir müstakil ev. Turneden dönünce gerçekten dinlenirsin.', en: 'A townhouse with a garden and a rehearsal room. You really rest after a tour.' },
+    rent: 900,
+    restBonus: 55,
+    healthPerHour: 1.8,
   },
   {
     id: 'penthouse',

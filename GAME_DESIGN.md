@@ -313,6 +313,7 @@ Evi olmayan oyuncu arkadaşının kanepesinde kalır (ücretsiz, bonussuz). Her 
 | Kiralık oda | $60 | +%15 | +0,5/saat |
 | Daire | $180 | +%30 | +1/saat |
 | Stüdyo loft | $450 | +%45 | +1,5/saat |
+| Bahçeli müstakil ev | $900 | +%55 | +1,8/saat |
 | Çatı katı (VIP) | $1.200 | +%65 | +2/saat |
 
 - Kira şehir çarpanıyla çarpılır. İlk haftanın kirası peşin ödenir; sonra her 7 oyun gününde bir kendiliğinden kesilir. Para yetmezse oyuncu evden çıkarılır ve bildirim alır.
@@ -405,12 +406,14 @@ Rehber bitince kartın yerini **sıradaki hedef** alır; her zaman tek, somut bi
 - Konseri sadece lider, bulunduğu şehirdeki bir mekâna ayarlayabilir: 2, 6, 12 ya da 24 oyun saati sonrasına.
 - Konser anında şehirde olmayan ya da cezaevindeki üye sahneye çıkamaz; bu kaliteyi düşürür.
 
-| Mekân | Kapasite | Bilet | Gereken şöhret | Şöhret çarpanı | Başa baş kalite |
-|---|---|---|---|---|---|
-| Bar | 80 | $10 | 0 | ×1 | 20 |
-| Kulüp | 350 | $20 | 15 | ×1,6 | 35 |
-| Konser salonu | 2.000 | $40 | 45 | ×2,5 | 50 |
-| Stadyum | 20.000 | $40 | 75 | ×3,5 | 65 |
+| Mekân | Kapasite | Bilet | Gereken şöhret | Şöhret çarpanı | Başa baş kalite | Prodüksiyon gideri |
+|---|---|---|---|---|---|---|
+| Bar | 80 | $10 | 0 | ×1 | 20 | yok |
+| Kulüp | 350 | $20 | 15 | ×1,6 | 35 | $150 |
+| Konser salonu | 2.000 | $40 | 45 | ×2,5 | 50 | $1.500 |
+| Stadyum | 20.000 | $40 | 75 | ×3,5 | 65 | $9.000 |
+
+Prodüksiyon gideri (sahne, ses, ışık, tanıtım; şehir çarpanıyla) konser ayarlanırken liderin cebinden peşin ödenir, iptalde yarısı geri verilir (`gigProductionCost`, migration 021). Eskiden büyük sahnede gider yoktu ve 90 günde giderin gelire oranı %9'a düşüyordu (denge raporu §2); gider gelirin kabaca %15–30'u kadardır. Bar (ilk saatler) ve festival muaftır.
 
 Bilet fiyatı şehir çarpanıyla çarpılır.
 

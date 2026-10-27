@@ -14,6 +14,8 @@ import {
   LOCATION_BY_ID,
   MAX_SETLIST,
   SESSION_MUSICIAN,
+  CITY_BY_ID,
+  gigProductionCost,
   ROLE_NAMES,
   type VenueType,
   tierName,
@@ -65,7 +67,9 @@ function BookGigScreen() {
   const venue = loc.type as VenueType;
   const sm = SESSION_MUSICIAN[venue];
   const takenRoles = new Set(band.data.members.map((m) => m.role));
-  const fee = sm.fee * session.length;
+  // Kiralık müzisyenler + prodüksiyon gideri (kulüp ve üstü, şehir çarpanıyla; sunucudaki kuralın aynısı)
+  const production = gigProductionCost(venue, CITY_BY_ID[loc.cityId]?.costMult ?? 1);
+  const fee = sm.fee * session.length + production;
   const songs = band.data.songs;
 
   const toggleSong = (id: number) =>
@@ -239,7 +243,8 @@ function BookGigScreen() {
         onChange={setEncore}
       />
 
-      <Body style={{ marginTop: space.xl }}>{t('totalFee', { fee: money(fee) })}</Body>
+      {production > 0 ? <Small style={{ marginTop: space.xl }}>{t('productionHint', { cost: money(production) })}</Small> : null}
+      <Body style={{ marginTop: production > 0 ? space.sm : space.xl }}>{t('totalFee', { fee: money(fee) })}</Body>
       <Button
         title={t('confirmBooking')}
         style={{ marginTop: space.md }}

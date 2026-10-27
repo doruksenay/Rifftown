@@ -1,5 +1,5 @@
 // Denge düzeltmelerinin sunucu testleri (denge raporu maddeleri 1–14): gerçek API ve zamanlayıcıyla.
-import { HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES } from '@rifftown/shared';
+import { CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -112,5 +112,38 @@ describe('madde 2: ek hesap çiftlikleri', () => {
     expect(g.revenue).toBeGreaterThan(0);
     expect(g.ownerShare).toBe(0);
     expect(Number((await q(`SELECT till FROM businesses WHERE location_id = 'istanbul-biz1'`)).rows[0].till)).toBe(tillBefore);
+  });
+});
+
+describe('madde 3: büyük sahnede prodüksiyon gideri', () => {
+  async function bandAt(city: string, fame: number, money: number) {
+    const p = await newPlayer({ cityId: city });
+    await q('UPDATE characters SET money = $2 WHERE id = $1', [p.character.id, money]);
+    const song = (await q(`INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, 'Prod', 'rock', 50) RETURNING id`, [p.character.id])).rows[0].id;
+    const band = (await p.c.post('/api/bands', { name: `Prod ${p.character.id}`, genre: 'rock', role: 'guitar' })).body.band;
+    await q(`INSERT INTO band_fame(band_id, city_id, fame) VALUES ($1, $2, $3)`, [band.id, city, fame]);
+    return { p, song: Number(song) };
+  }
+  const money = async (id: number) => Number((await q('SELECT money FROM characters WHERE id = $1', [id])).rows[0].money);
+
+  it('barda gider yok; kulüp ve üstünde peşin, şehir çarpanıyla; iptalde yarısı geri', async () => {
+    const bar = await bandAt('istanbul', 5, 100);
+    expect((await bar.p.c.post('/api/gigs', { locationId: 'istanbul-bar', inHours: 6, setlist: [bar.song] })).status).toBe(200);
+    expect(await money(bar.p.character.id)).toBe(100);
+
+    const hall = await bandAt('berlin', 50, 3000);
+    const cost = gigProductionCost('hall', CITY_BY_ID.berlin.costMult);
+    expect(cost).toBe(Math.round(VENUE_RULES.hall.production * 1.4));
+    const r = await hall.p.c.post('/api/gigs', { locationId: 'berlin-hall', inHours: 6, setlist: [hall.song] });
+    expect(r.status).toBe(200);
+    expect(await money(hall.p.character.id)).toBe(3000 - cost);
+    const cancel = await hall.p.c.del(`/api/gigs/${r.body.gig.id}`);
+    expect(cancel.status).toBe(200);
+    expect(cancel.body.refund).toBe(Math.floor(cost * GIG_PRODUCTION_REFUND));
+    expect(await money(hall.p.character.id)).toBe(3000 - cost + Math.floor(cost * GIG_PRODUCTION_REFUND));
+
+    // Parası yetmeyen salon konseri ayarlayamaz
+    const poor = await bandAt('berlin', 50, cost - 1);
+    expect((await poor.p.c.post('/api/gigs', { locationId: 'berlin-hall', inHours: 12, setlist: [poor.song] })).body.error).toBe('not_enough_money');
   });
 });

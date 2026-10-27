@@ -67,8 +67,25 @@ function economy(scenario: string, horizonH: number) {
     const hours = Object.fromEntries([...kinds].sort().map((k) => [k, mean(bots.map((b) => b.actionHours[k] ?? 0))]));
     const busyH = Object.values(hours).reduce((a: number, b: any) => a + b, 0);
     const skills = (id: string) => stats(bots.map((b) => b.final?.skills?.[id] ?? 0));
+    // Giderin gelire oranı (para defterinin eksi kalemleri ÷ artı kalemleri): bütün dönem ve 7. günden sonrası (orta oyun)
+    const ratio = (pick: (b: any) => Record<string, number>) =>
+      stats(
+        bots.map((b) => {
+          const l = pick(b);
+          const inc = Object.values(l).filter((v) => v > 0).reduce((a, v) => a + v, 0);
+          const exp = -Object.values(l).filter((v) => v < 0).reduce((a, v) => a + v, 0);
+          return inc > 0 ? Math.round((exp / inc) * 1000) / 10 : NaN;
+        }),
+      );
+    const after7 = (b: any) => {
+      const l: Record<string, number> = {};
+      for (const k of new Set([...Object.keys(b.ledger), ...Object.keys(b.ledger168 ?? {})])) l[k] = (b.ledger[k] ?? 0) - (b.ledger168?.[k] ?? 0);
+      return l;
+    };
     out.archetypes[arch] = {
       n: bots.length,
+      expenseToIncomePct: ratio((b) => b.ledger),
+      expenseToIncomeAfterDay7Pct: ratio(after7),
       money,
       perDay: stats(bots.map((b) => (moneyAt(b, horizonH) - 500) / (horizonH / 24))),
       ledger,

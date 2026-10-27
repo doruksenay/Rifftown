@@ -54,6 +54,8 @@ import {
   stageEventAllowed,
   cityEventActive,
   PACING,
+  gigProductionCost,
+  GIG_PRODUCTION_REFUND,
 } from '@rifftown/shared';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import { bandPress } from './press';
@@ -127,7 +129,9 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     const sessionRoles = [...new Set(req.sessionRoles ?? [])] as Instrument[];
     if (sessionRoles.some((r) => !(INSTRUMENTS as readonly string[]).includes(r))) fail('invalid_role');
     const fee = SESSION_MUSICIAN[venue].fee * sessionRoles.length;
-    if (char.money < fee) fail('not_enough_money');
+    // Prodüksiyon gideri: kulüp ve üstünde peşin (VENUE_RULES.production × şehir)
+    const production = gigProductionCost(venue, CITY_BY_ID[loc!.cityId].costMult);
+    if (char.money < fee + production) fail('not_enough_money');
 
     const scheduled = await one(
       c,
@@ -168,12 +172,12 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     if (fx.length) await c.query('DELETE FROM inventory WHERE id = ANY($1::bigint[])', [fx.map((f) => f.id)]);
 
     const plan = normalizePlan(req.plan, m!.genre as Genre);
-    await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee]);
+    await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee + production]);
     const gig = await one(
       c,
-      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan)],
+      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan, production_cost)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan), production],
     );
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
@@ -231,7 +235,8 @@ export async function cancelGig(characterId: number, gigId: number) {
     if (!gig) fail('not_found', 404);
     if (gig.status !== 'scheduled') fail('gig_not_scheduled');
     const venue = LOCATION_BY_ID[gig.location_id].type as VenueType;
-    const refund = SESSION_MUSICIAN[venue].fee * gig.session_roles.length;
+    // Kiralık müzisyen ücreti tam, prodüksiyon giderinin yarısı geri verilir (hazırlık yapılmıştı)
+    const refund = SESSION_MUSICIAN[venue].fee * gig.session_roles.length + Math.floor((gig.production_cost ?? 0) * GIG_PRODUCTION_REFUND);
     if (gig.festival_id) fail('festival_gig');
     // Ceza satılan biletle büyür: rezervasyondan bu yana geçen süreye göre beklenen seyircinin bir kısmı bilet almıştır
     const fame = await bandFame(c, m!.band_id, gig.city_id);
@@ -546,6 +551,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     effects: gig.effects ?? [],
     ownerShare,
     crewFee: crewPaid ? crew.fee : 0,
+    productionCost: gig.production_cost ?? 0,
     crewUnpaid: crew.roles.length > 0 && !crewPaid,
     festivalId: gig.festival_id ?? null,
   };
