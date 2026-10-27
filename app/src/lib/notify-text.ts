@@ -19,6 +19,13 @@ type T = (key: StringKey, vars?: Record<string, string | number>) => string;
 
 /** Bildirimi tek satırlık okunur metne çevirir. Sayılar yerine kelimeler kullanılır. */
 export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): string {
+  const text = baseText(n, t, p, lang);
+  // Eylem ve konserden kazanılan XP (para gibi harcanan bir bakiye; kesin sayı gösterilir)
+  const xp = Number((n.data as Record<string, any>)?.xp ?? 0);
+  return (n.kind === 'action_done' || n.kind === 'gig_done') && xp > 0 ? `${text} ${t('n_xp_gained', { n: Math.round(xp * 10) / 10 })}` : text;
+}
+
+function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): string {
   const d = n.data as Record<string, any>;
   const skillName = (id: string) => (SKILL_BY_ID[id] ? p(SKILL_BY_ID[id].name) : id);
   switch (n.kind) {

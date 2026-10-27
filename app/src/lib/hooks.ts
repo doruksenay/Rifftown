@@ -1,4 +1,5 @@
 import type {
+  AttributesDto,
   BandDetailDto,
   CityResponse,
   InventoryItemDto,
@@ -53,6 +54,12 @@ export function useCity(cityId: string | null | undefined) {
     enabled: !!cityId,
     refetchInterval: 60000,
   });
+}
+
+/** Nitelikler, harcanmamış XP ve XP tavanları */
+export function useAttributes() {
+  const { token } = useSession();
+  return useQuery({ queryKey: ['attributes'], queryFn: () => api.get<AttributesDto>('/attributes'), enabled: !!token });
 }
 
 /** Sunucuya değişiklik gönderir; hatayı kısa bildirimle gösterir, ilgili verileri yeniler. */
