@@ -28,6 +28,10 @@ export const TITLES: TitleDef[] = [
   T('t_multi', 'Çok sazlı', 'Multi-instrumentalist', 'all_roles'),
   T('t_jailbird', 'Müdavim', 'Jailbird', 'jailbird'),
   T('t_heartbreaker', 'Çapkın', 'Heartbreaker', 'heartbreaker'),
+  // Koleksiyonlardan
+  T('t_globetrotter', 'Dünya gezgini', 'Globetrotter', 'collection_souvenirs'),
+  T('t_crate_digger', 'Plak avcısı', 'Crate digger', 'collection_vinyl'),
+  T('t_maker', 'Yaratıcı eller', 'Maker', 'collection_workshop'),
   // Zincirlerden (adım ya da seçenek ChainStep.titleId / ChainChoice.titleId ile verir)
   T('kingmaker_protege', 'Vedat Karahan\'ın keşfi', 'Vedat Karahan\'s discovery'),
   T('independent', 'Bağımsız ruh', 'Independent spirit'),

@@ -476,7 +476,8 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   let mood = char.mood;
   let health = char.health;
   if (a.kind === 'rest') {
-    mood += restMoodGain(hours, Math.min(100, gear.art + ((params.restBonus as number) ?? 0) + (params.pet ? gear.pet : 0)));
+    // Hayvan bakımı becerisi evcil hayvanın dinlenme bonusunu artırır (en fazla ×1,3)
+    mood += restMoodGain(hours, Math.min(100, gear.art + ((params.restBonus as number) ?? 0) + (params.pet ? gear.pet * skillMult(char.skills, 'pets') : 0)));
   } else mood += MOOD_PER_HOUR[a.kind as keyof typeof MOOD_PER_HOUR] * hours;
   let healthChange = HEALTH_PER_HOUR[a.kind as keyof typeof HEALTH_PER_HOUR] * hours;
   // Kondisyon yorucu işlerdeki sağlık kaybını azaltır
@@ -738,6 +739,8 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
     await c.query('UPDATE characters SET jailed_until = $2 WHERE id = $1', [char.id, jailUntil]);
     await notify(c, char.id, 'arrested', { caseId: result.caseId, crime: result.crime, caught: true, cityId: char.city_id });
   }
+  // İlham becerileri (şiir, meditasyon, saha kaydı, hat) eylemlerden kazanılan ilhamı artırır (en fazla ×1,5)
+  if (inspirationDelta > 0) inspirationDelta *= skillMult(char.skills, 'inspiration');
   // Enerji ve ilham (eylemin harcadığı/verdiği; zamanla dolan kısım ayrıca hesaplanır)
   const afterWell = await changeWellbeing(c, char, { energy: energyDelta, inspiration: inspirationDelta, setInspiration });
   result.energyDelta = Math.round(energyDelta * 10) / 10;

@@ -240,7 +240,9 @@ export async function npcStockMarkets(rand: () => number = Math.random): Promise
     if (!trader) continue;
     const active = await one(pool, `SELECT count(*)::int AS n FROM listings WHERE seller_id = $1 AND status = 'active'`, [trader]);
     if (active.n >= NPC_MAX_LISTINGS) continue;
-    const def = pool_[Math.floor(rand() * pool_.length)];
+    // Şehre özgü eşyalar (nadir enstrümanlar, şehir hatıraları) yalnızca kendi şehrinin tüccarında: koleksiyon için yolculuk gerekir
+    const here = pool_.filter((i) => !i.cityOnly || i.cityOnly === city.id);
+    const def = here[Math.floor(rand() * here.length)];
     await tx(async (c) => {
       const inv = await one(c, 'INSERT INTO inventory(character_id, item_id, slot) VALUES ($1, $2, $3) RETURNING id', [trader, def.id, def.slot]);
       await c.query('UPDATE inventory SET listed = TRUE WHERE id = $1', [inv.id]);

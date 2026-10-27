@@ -44,7 +44,8 @@ export type StatId =
   | 'interviews'
   | 'videos'
   | 'radio_plays'
-  | 'tours_done';
+  | 'tours_done'
+  | 'items_used';
 
 export type StatRule = { stat: StatId; min: number };
 
@@ -98,6 +99,7 @@ export const STAT_ACHIEVEMENTS: StatAchievement[] = [
   A('skills_20', 'skills', 25, 'skills_known', 20, ['Rönesans insanı', '20 farklı beceri öğren.'], ['Renaissance', 'Learn 20 different skills.']),
   A('skills_35', 'skills', 50, 'skills_known', 35, ['Her şeyi bilen', '35 farklı beceri öğren.'], ['Know-it-all', 'Learn 35 different skills.']),
   A('crafter_10', 'skills', 20, 'crafts', 10, ['Usta eller', 'Atölyede 10 şey üret.'], ['Skilled hands', 'Make 10 things in the workshop.']),
+  A('crafter_50', 'skills', 30, 'crafts', 50, ['Atölye kurdu', 'Atölyede 50 şey üret.'], ['Workshop regular', 'Make 50 things in the workshop.']),
   A('workouts_20', 'skills', 15, 'workouts', 20, ['Formda', '20 kez antrenman yap.'], ['In shape', 'Work out 20 times.']),
   A('shifts_50', 'career', 20, 'shifts', 50, ['Mesai canavarı', '50 mesai tamamla.'], ['Workhorse', 'Finish 50 shifts.']),
   A('busk_1000', 'career', 20, 'busk_earnings', 1000, ['Şapka doldu', 'Sokak müziğinden toplam $1.000 topla.'], ['Full hat', 'Collect $1,000 busking.']),
@@ -108,6 +110,8 @@ export const STAT_ACHIEVEMENTS: StatAchievement[] = [
   A('dates_5', 'social', 15, 'dates', 5, ['Romantik', '5 kez randevuya çık.'], ['Romantic', 'Go on 5 dates.']),
   A('married', 'social', 25, 'married', 1, ['Mutlu son', 'Evlen.'], ['Happily ever after', 'Get married.']),
   A('gifts_5', 'social', 10, 'gifts', 5, ['Hediye seven', '5 hediye ver.'], ['Gift giver', 'Give 5 gifts.']),
+  A('gifts_25', 'social', 20, 'gifts', 25, ['Cömert kalp', '25 hediye ver.'], ['Big heart', 'Give 25 gifts.']),
+  A('self_care_25', 'social', 10, 'items_used', 25, ['Kendine iyi bak', '25 tüketim eşyası kullan.'], ['Self-care', 'Use 25 consumables.']),
   A('trader_5', 'social', 15, 'trades', 5, ['Pazarlıkçı', '5 takas tamamla.'], ['Haggler', 'Complete 5 trades.']),
   A('inked_4', 'social', 10, 'tattoos', 4, ['Mürekkepli', '4 dövme yaptır.'], ['Inked', 'Get 4 tattoos.'], true),
   // Uzun vadeli (efsane sonrası)
@@ -137,7 +141,8 @@ export type WeeklyKind =
   | 'cities_played'
   | 'gifts'
   | 'press'
-  | 'articles';
+  | 'articles'
+  | 'items_used';
 
 export interface WeeklyDef {
   id: string;
@@ -166,6 +171,8 @@ export const EXTRA_MISSIONS: WeeklyDef[] = [
   W('encore_2', 'encores', 2, 35, 'Bu hafta 2 bis yap', 'Play 2 encores this week'),
   W('cities_2', 'cities_played', 2, 55, 'Bu hafta 2 farklı şehirde çal', 'Play in 2 different cities'),
   W('gift_1', 'gifts', 1, 20, 'Bir arkadaşına hediye ver', 'Give a friend a gift'),
+  W('gift_3', 'gifts', 3, 40, 'Bu hafta 3 hediye ver', 'Give 3 gifts this week'),
+  W('use_3', 'items_used', 3, 20, 'Bu hafta 3 tüketim eşyası kullan', 'Use 3 consumables this week'),
   W('press_1', 'press', 1, 35, 'Bir röportaj ya da basın toplantısı ver', 'Give an interview or press conference'),
 ];
 

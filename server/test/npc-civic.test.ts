@@ -144,4 +144,15 @@ describe('NPC tüccar ve ekonomi', () => {
     await runNpcCivicNow();
     expect((await q(`SELECT money FROM characters WHERE npc_key = 'istanbul-trader'`)).rows[0].money).toBe(0);
   });
+
+  it('NPC tüccar başka şehrin nadir eşyasını ya da hatırasını satmaz', async () => {
+    await ensureNpcCivic();
+    for (let k = 0; k < 25; k++) await npcStockMarkets(() => (k + 0.5) / 25);
+    const rows = (await q(`SELECT l.item_id, c.npc_key FROM listings l JOIN characters c ON c.id = l.seller_id WHERE c.npc_role = 'trader'`)).rows;
+    expect(rows.length).toBeGreaterThan(0);
+    for (const r of rows) {
+      const only = ITEM_BY_ID[r.item_id].cityOnly;
+      if (only) expect(r.npc_key, r.item_id).toBe(`${only}-trader`);
+    }
+  });
 });

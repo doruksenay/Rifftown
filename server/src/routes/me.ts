@@ -35,7 +35,7 @@ import { bailQuote, inCustody } from '../game/crime';
 import { homeOf } from '../game/homes';
 import { businessOf } from '../game/business';
 import { inventoryOf, toInventoryDto, ringPledged } from '../game/items';
-import { hotelOf } from '../game/lifestyle';
+import { hotelOf, useItem } from '../game/lifestyle';
 import { unreadMessages } from '../game/social';
 import { idParam, parse } from './util';
 import { indulge, lastDeath } from '../game/consequences';
@@ -341,6 +341,12 @@ export async function meRoutes(app: FastifyInstance) {
       await c.query('UPDATE characters SET money = money + $2, location_id = $3 WHERE id = $1', [id, price, loc!.id]);
       return { ok: true, earned: price };
     });
+  });
+
+  // Tüketim eşyası kullan (enerji, ruh hâli, sağlık, ilham; ortak bekleme süresi)
+  app.post('/inventory/:id/use', async (req) => {
+    const { id } = parse(idParam, req.params);
+    return useItem(charId(req), id);
   });
 
   app.post('/inventory/:id/equip', async (req) => {

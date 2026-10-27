@@ -65,6 +65,13 @@ import { barGigShare } from './business';
 import { type CharacterRow, gearBonuses, isJailed, lockCharacter, membership, notify, notifySkillUps, toGigDto } from './common';
 
 /** Grubun bir şehirdeki şöhreti (0–100). */
+/** Konserin sahne efektlerinden gelen kalite (tavanlı). Kayıtlı bonus varsa (atölye efektleri) o, yoksa eşyanın bonusu. */
+export const fxBonusOf = (gig: { effects?: string[] | null; effect_bonuses?: number[] | null }) =>
+  Math.min(
+    MAX_FX_BONUS,
+    (gig.effects ?? []).reduce((sum: number, id: string, i: number) => sum + (gig.effect_bonuses?.[i] ?? ITEM_BY_ID[id]?.bonus ?? 0), 0),
+  );
+
 export async function bandFame(db: Db, bandId: number, cityId: string): Promise<number> {
   const r = await one(db, 'SELECT fame FROM band_fame WHERE band_id = $1 AND city_id = $2', [bandId, cityId]);
   return r?.fame ?? 0;
@@ -156,7 +163,7 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     // Sahne efektleri: liderin envanterinden ayrılır, konserde tüketilir (iptalde geri verilir)
     const fxIds = [...new Set((req.effects ?? []).map(Number))];
     const fx = fxIds.length
-      ? await many(c, `SELECT id, item_id FROM inventory WHERE id = ANY($1::bigint[]) AND character_id = $2 AND slot = 'fx' AND NOT listed FOR UPDATE`, [
+      ? await many(c, `SELECT id, item_id, bonus FROM inventory WHERE id = ANY($1::bigint[]) AND character_id = $2 AND slot = 'fx' AND NOT listed FOR UPDATE`, [
           fxIds,
           characterId,
         ])
@@ -168,9 +175,10 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee]);
     const gig = await one(
       c,
-      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan)],
+      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan, effect_bonuses)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      // Atölyede yapılmış efektin bonusu her üründe farklıdır: konsere kendi bonusuyla taşınır (fxBonusOf)
+      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan), fx.map((f) => f.bonus ?? ITEM_BY_ID[f.item_id]?.bonus ?? 0)],
     );
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
@@ -240,8 +248,10 @@ export async function cancelGig(characterId: number, gigId: number) {
     const penalty = cancelFamePenalty(venue, sold);
     await c.query(`UPDATE gigs SET status = 'cancelled', result = $2 WHERE id = $1`, [gigId, JSON.stringify({ cancelled: true, ticketsSold: sold, famePenalty: penalty })]);
     await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [characterId, refund]);
-    for (const itemId of gig.effects ?? []) {
-      await c.query(`INSERT INTO inventory(character_id, item_id, slot) VALUES ($1, $2, 'fx')`, [characterId, itemId]);
+    for (const [i, itemId] of (gig.effects ?? []).entries()) {
+      // Atölye efekti kendi bonusuyla geri verilir
+      const bonus = ITEM_BY_ID[itemId]?.crafted ? (gig.effect_bonuses?.[i] ?? null) : null;
+      await c.query(`INSERT INTO inventory(character_id, item_id, slot, bonus) VALUES ($1, $2, 'fx', $3)`, [characterId, itemId, bonus]);
     }
     // İptal şöhret kaybettirir; biletlerin çoğu satılmışsa skandala dönüşür
     await addFame(c, m!.band_id, gig.city_id, -penalty);
@@ -391,7 +401,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     performers,
     setlist: gig.setlist.map((id: number) => songs.find((s) => s.id === id)).filter(Boolean),
     rand: Math.random,
-    fxBonus: Math.min(MAX_FX_BONUS, (gig.effects ?? []).reduce((sum: number, id: string) => sum + (ITEM_BY_ID[id]?.bonus ?? 0), 0)),
+    fxBonus: fxBonusOf(gig),
     plan: gig.plan ?? {},
     press,
     crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },

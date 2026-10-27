@@ -26,6 +26,7 @@ import {
   isShop,
   isVenue,
   itemsForShop,
+  SLOT_NAMES,
   seasonAt,
   priceFor,
   type VenueType,
@@ -194,7 +195,11 @@ function LocationScreenScreen() {
           <Shop locationId={loc.id} shop="hospital" />
         </View>
       ) : loc.type === 'bookstore' ? (
-        <Bookstore locationId={loc.id} />
+        <>
+          <Bookstore locationId={loc.id} />
+          <Heading>{t('bookstoreShelf')}</Heading>
+          <Shop locationId={loc.id} shop="bookstore" />
+        </>
       ) : loc.type === 'university' ? (
         <School locationId={loc.id} cityMult={city.costMult} university />
       ) : loc.type === 'park' ? (
@@ -458,13 +463,20 @@ function Shop({ locationId, shop }: { locationId: string; shop: ShopType }) {
   const shelf = itemsForShop(shop, cityId).filter((i) => !i.season || i.season === season);
   const groups =
     shop === 'music_store'
-      ? INSTRUMENTS.map((inst) => ({ title: p(ROLE_NAMES[inst]), items: shelf.filter((i) => i.slot === inst) }))
+      ? [
+          ...INSTRUMENTS.map((inst) => ({ title: p(ROLE_NAMES[inst]), items: shelf.filter((i) => i.slot === inst) })),
+          ...(['art', 'consumable', 'gift'] as const).map((slot) => ({ title: p(SLOT_NAMES[slot]), items: shelf.filter((i) => i.slot === slot) })),
+        ].filter((g) => g.items.length)
       : shop === 'hardware'
         ? [
-            { title: t('materialsGroup'), items: shelf.filter((i) => i.slot === 'material') },
+            { title: t('materialsGroup'), items: shelf.filter((i) => i.slot === 'material' && !i.repair) },
+            { title: t('careGroup'), items: shelf.filter((i) => i.slot === 'material' && !!i.repair) },
             { title: t('spraysGroup'), items: shelf.filter((i) => i.slot === 'spray') },
           ]
-        : [{ title: '', items: shelf }];
+        : // Birden çok yuva varsa yuvaya göre gruplanır (ör. butik: kıyafet, yüzük, hediyelik, tüketim)
+          [...new Set(shelf.map((i) => i.slot))].length > 1
+          ? [...new Set(shelf.map((i) => i.slot))].map((slot) => ({ title: p(SLOT_NAMES[slot]), items: shelf.filter((i) => i.slot === slot) }))
+          : [{ title: '', items: shelf }];
   const countOf = (itemId: string) => mine.filter((m) => m.itemId === itemId).length;
   // Yığılabilir eşyalar (malzeme, sprey, efekt) tek satırda gösterilir
   const mineRows = mine.filter((m, i, arr) => !ITEM_BY_ID[m.itemId].stackable || arr.findIndex((x) => x.itemId === m.itemId && !x.listed) === i);

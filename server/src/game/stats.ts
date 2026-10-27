@@ -55,7 +55,8 @@ export async function lifetimeStats(db: Db, characterId: number): Promise<Stats>
        (SELECT count(*)::int FROM press_events WHERE character_id = $1) AS interviews,
        (SELECT count(*)::int FROM music_videos WHERE band_id IN (SELECT band_id FROM band)) AS videos,
        (SELECT COALESCE(sum(radio_plays), 0)::int FROM releases WHERE band_id IN (SELECT band_id FROM band)) AS radio_plays,
-       (SELECT count(*)::int FROM tours WHERE band_id IN (SELECT band_id FROM band) AND status = 'done') AS tours_done`,
+       (SELECT count(*)::int FROM tours WHERE band_id IN (SELECT band_id FROM band) AND status = 'done') AS tours_done,
+       (SELECT count(*)::int FROM item_uses WHERE character_id = $1) AS items_used`,
     [characterId],
   );
   const skills = Object.values((r?.skills ?? {}) as Record<string, number>);
@@ -103,5 +104,6 @@ export async function lifetimeStats(db: Db, characterId: number): Promise<Stats>
     videos: n('videos'),
     radio_plays: n('radio_plays'),
     tours_done: n('tours_done'),
+    items_used: n('items_used'),
   };
 }

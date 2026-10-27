@@ -28,6 +28,7 @@ async function progress(db: Db, characterId: number, kind: MissionKind, since: D
     meals: `SELECT count(*)::int AS v FROM meals WHERE character_id = $1 AND created_at >= $2`,
     hangouts: `SELECT count(*)::int AS v FROM social_log WHERE actor_id = $1 AND kind = 'hangout' AND created_at >= $2`,
     gifts: `SELECT count(*)::int AS v FROM social_log WHERE actor_id = $1 AND kind = 'gift' AND created_at >= $2`,
+    items_used: `SELECT count(*)::int AS v FROM item_uses WHERE character_id = $1 AND created_at >= $2`,
     stage_events: `SELECT count(*)::int AS v FROM gig_performers gp JOIN gigs g ON g.id = gp.gig_id,
                      jsonb_array_elements(COALESCE(g.result->'events', '[]'::jsonb)) e
                     WHERE gp.character_id = $1 AND gp.present AND g.status = 'done' AND g.starts_at >= $2 AND e->>'outcome' = 'success'`,

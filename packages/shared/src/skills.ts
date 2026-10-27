@@ -10,9 +10,24 @@ import { EXTRA_SKILLS } from './content/skills';
 /**
  * Becerilerin genel etkileri (veri dosyalarındaki beceriler için). Değer, beceri 100 iken etkinin büyüklüğüdür:
  * songwriting/recording/stage/crafting/fitness: o puana eklenen (beceri × ağırlık);
- * rehearsal/busking/social/romance: çarpana eklenen (beceri ÷ 100 × ağırlık).
+ * rehearsal/busking/social/romance/inspiration/pets/nutrition/remedy: çarpana eklenen (beceri ÷ 100 × ağırlık), en fazla ×1,5.
+ * inspiration: eylemlerden (dinlenme, sokak, yolculuk, beceri açma) kazanılan ilham; pets: evcil hayvanın dinlenme bonusu;
+ * nutrition: tüketim eşyalarının enerjisi; remedy: tüketim eşyalarının sağlığı.
  */
-export type SkillEffectKind = 'songwriting' | 'rehearsal' | 'recording' | 'busking' | 'stage' | 'crafting' | 'social' | 'romance' | 'fitness';
+export type SkillEffectKind =
+  | 'songwriting'
+  | 'rehearsal'
+  | 'recording'
+  | 'busking'
+  | 'stage'
+  | 'crafting'
+  | 'social'
+  | 'romance'
+  | 'fitness'
+  | 'inspiration'
+  | 'pets'
+  | 'nutrition'
+  | 'remedy';
 
 export type SkillCategory = 'music' | 'instruments' | 'genres' | 'stage' | 'career' | 'social' | 'sports' | 'crafts' | 'crime';
 

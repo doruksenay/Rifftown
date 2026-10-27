@@ -214,7 +214,7 @@ function BookGigScreen() {
                   key={i.id}
                   small
                   variant={on ? 'primary' : 'secondary'}
-                  title={`${p(def.name)} +${def.bonus}`}
+                  title={`${p(def.name)} +${i.bonus ?? def.bonus}`}
                   onPress={() => setEffects((e) => (on ? e.filter((x) => x !== i.id) : [...e, i.id]))}
                 />
               );
