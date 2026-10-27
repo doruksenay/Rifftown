@@ -115,10 +115,10 @@
     "orange": "#F3722C"
   },
   "summary": {
-    "total": 323,
+    "total": 565,
     "valid": 62,
     "invalid": 0,
-    "missing": 261
+    "missing": 503
   },
   "assets": [
     {
@@ -1840,6 +1840,168 @@
       ]
     },
     {
+      "id": "item/sax_1",
+      "category": "item",
+      "path": "item/sax_1.png",
+      "incomingFileName": "sax_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Student alto sax",
+      "gameRefs": [
+        "sax_1"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/sax_2",
+      "category": "item",
+      "path": "item/sax_2.png",
+      "incomingFileName": "sax_2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Stage tenor sax",
+      "gameRefs": [
+        "sax_2"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/sax_3",
+      "category": "item",
+      "path": "item/sax_3.png",
+      "incomingFileName": "sax_3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade pro saxophone",
+      "gameRefs": [
+        "sax_3"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_1",
+      "category": "item",
+      "path": "item/violin_1.png",
+      "incomingFileName": "violin_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Student violin",
+      "gameRefs": [
+        "violin_1"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_2",
+      "category": "item",
+      "path": "item/violin_2.png",
+      "incomingFileName": "violin_2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Stage violin with pickup",
+      "gameRefs": [
+        "violin_2"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_3",
+      "category": "item",
+      "path": "item/violin_3.png",
+      "incomingFileName": "violin_3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Master-built concert violin",
+      "gameRefs": [
+        "violin_3"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_1",
+      "category": "item",
+      "path": "item/percussion_1.png",
+      "incomingFileName": "percussion_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Darbuka and frame drum",
+      "gameRefs": [
+        "percussion_1"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_2",
+      "category": "item",
+      "path": "item/percussion_2.png",
+      "incomingFileName": "percussion_2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Conga and bongo set",
+      "gameRefs": [
+        "percussion_2"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_3",
+      "category": "item",
+      "path": "item/percussion_3.png",
+      "incomingFileName": "percussion_3.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Professional percussion rig",
+      "gameRefs": [
+        "percussion_3"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
       "id": "item/vocals_4",
       "category": "item",
       "path": "item/vocals_4.png",
@@ -2038,6 +2200,60 @@
       "dependsOn": [
         "item/keys_4"
       ]
+    },
+    {
+      "id": "item/sax_4",
+      "category": "item",
+      "path": "item/sax_4.png",
+      "incomingFileName": "sax_4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "1954 vintage tenor sax",
+      "gameRefs": [
+        "sax_4"
+      ],
+      "tier": "iconic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_4",
+      "category": "item",
+      "path": "item/violin_4.png",
+      "incomingFileName": "violin_4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Century-old master violin",
+      "gameRefs": [
+        "violin_4"
+      ],
+      "tier": "iconic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_4",
+      "category": "item",
+      "path": "item/percussion_4.png",
+      "incomingFileName": "percussion_4.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "A legendary percussionist's conga set",
+      "gameRefs": [
+        "percussion_4"
+      ],
+      "tier": "iconic",
+      "dependsOn": []
     },
     {
       "id": "item/outfit_1",
@@ -3072,6 +3288,60 @@
       ]
     },
     {
+      "id": "item/sax_crafted",
+      "category": "item",
+      "path": "item/sax_crafted.png",
+      "incomingFileName": "sax_crafted.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade saxophone",
+      "gameRefs": [
+        "sax_crafted"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/violin_crafted",
+      "category": "item",
+      "path": "item/violin_crafted.png",
+      "incomingFileName": "violin_crafted.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade violin",
+      "gameRefs": [
+        "violin_crafted"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_crafted",
+      "category": "item",
+      "path": "item/percussion_crafted.png",
+      "incomingFileName": "percussion_crafted.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade conga",
+      "gameRefs": [
+        "percussion_crafted"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
       "id": "item/outfit_crafted",
       "category": "item",
       "path": "item/outfit_crafted.png",
@@ -3109,6 +3379,2445 @@
       ],
       "dependsOn": [
         "item/outfit_crafted"
+      ]
+    },
+    {
+      "id": "item/guitar_1b",
+      "category": "item",
+      "path": "item/guitar_1b.png",
+      "incomingFileName": "guitar_1b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Electro-acoustic guitar",
+      "gameRefs": [
+        "guitar_1b"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/guitar_1b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_1b.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_1b.mask.png",
+      "incomingFileName": "guitar_1b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Electro-acoustic guitar paint mask",
+      "gameRefs": [
+        "guitar_1b"
+      ],
+      "dependsOn": [
+        "item/guitar_1b"
+      ]
+    },
+    {
+      "id": "item/guitar_2b",
+      "category": "item",
+      "path": "item/guitar_2b.png",
+      "incomingFileName": "guitar_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Semi-hollow jazz guitar",
+      "gameRefs": [
+        "guitar_2b"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/guitar_2b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_2b.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_2b.mask.png",
+      "incomingFileName": "guitar_2b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Semi-hollow jazz guitar paint mask",
+      "gameRefs": [
+        "guitar_2b"
+      ],
+      "dependsOn": [
+        "item/guitar_2b"
+      ]
+    },
+    {
+      "id": "item/guitar_2c",
+      "category": "item",
+      "path": "item/guitar_2c.png",
+      "incomingFileName": "guitar_2c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Seven-string metal guitar",
+      "gameRefs": [
+        "guitar_2c"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/guitar_2c.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_2c.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_2c.mask.png",
+      "incomingFileName": "guitar_2c.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Seven-string metal guitar paint mask",
+      "gameRefs": [
+        "guitar_2c"
+      ],
+      "dependsOn": [
+        "item/guitar_2c"
+      ]
+    },
+    {
+      "id": "item/bass_1b",
+      "category": "item",
+      "path": "item/bass_1b.png",
+      "incomingFileName": "bass_1b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Fretless bass",
+      "gameRefs": [
+        "bass_1b"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/bass_1b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_1b.mask",
+      "category": "paint_mask",
+      "path": "item/bass_1b.mask.png",
+      "incomingFileName": "bass_1b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Fretless bass paint mask",
+      "gameRefs": [
+        "bass_1b"
+      ],
+      "dependsOn": [
+        "item/bass_1b"
+      ]
+    },
+    {
+      "id": "item/bass_2b",
+      "category": "item",
+      "path": "item/bass_2b.png",
+      "incomingFileName": "bass_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Five-string bass",
+      "gameRefs": [
+        "bass_2b"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/bass_2b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_2b.mask",
+      "category": "paint_mask",
+      "path": "item/bass_2b.mask.png",
+      "incomingFileName": "bass_2b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Five-string bass paint mask",
+      "gameRefs": [
+        "bass_2b"
+      ],
+      "dependsOn": [
+        "item/bass_2b"
+      ]
+    },
+    {
+      "id": "item/drums_1b",
+      "category": "item",
+      "path": "item/drums_1b.png",
+      "incomingFileName": "drums_1b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Electronic drum pad",
+      "gameRefs": [
+        "drums_1b"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/drums_1b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_1b.mask",
+      "category": "paint_mask",
+      "path": "item/drums_1b.mask.png",
+      "incomingFileName": "drums_1b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Electronic drum pad paint mask",
+      "gameRefs": [
+        "drums_1b"
+      ],
+      "dependsOn": [
+        "item/drums_1b"
+      ]
+    },
+    {
+      "id": "item/drums_2b",
+      "category": "item",
+      "path": "item/drums_2b.png",
+      "incomingFileName": "drums_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Jazz drum kit",
+      "gameRefs": [
+        "drums_2b"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/drums_2b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_2b.mask",
+      "category": "paint_mask",
+      "path": "item/drums_2b.mask.png",
+      "incomingFileName": "drums_2b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Jazz drum kit paint mask",
+      "gameRefs": [
+        "drums_2b"
+      ],
+      "dependsOn": [
+        "item/drums_2b"
+      ]
+    },
+    {
+      "id": "item/keys_1b",
+      "category": "item",
+      "path": "item/keys_1b.png",
+      "incomingFileName": "keys_1b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Portable synth",
+      "gameRefs": [
+        "keys_1b"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/keys_1b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_1b.mask",
+      "category": "paint_mask",
+      "path": "item/keys_1b.mask.png",
+      "incomingFileName": "keys_1b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Portable synth paint mask",
+      "gameRefs": [
+        "keys_1b"
+      ],
+      "dependsOn": [
+        "item/keys_1b"
+      ]
+    },
+    {
+      "id": "item/keys_2b",
+      "category": "item",
+      "path": "item/keys_2b.png",
+      "incomingFileName": "keys_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Electric piano",
+      "gameRefs": [
+        "keys_2b"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/keys_2b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_2b.mask",
+      "category": "paint_mask",
+      "path": "item/keys_2b.mask.png",
+      "incomingFileName": "keys_2b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Electric piano paint mask",
+      "gameRefs": [
+        "keys_2b"
+      ],
+      "dependsOn": [
+        "item/keys_2b"
+      ]
+    },
+    {
+      "id": "item/keys_2c",
+      "category": "item",
+      "path": "item/keys_2c.png",
+      "incomingFileName": "keys_2c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Modular synth rack",
+      "gameRefs": [
+        "keys_2c"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/keys_2c.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_2c.mask",
+      "category": "paint_mask",
+      "path": "item/keys_2c.mask.png",
+      "incomingFileName": "keys_2c.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Modular synth rack paint mask",
+      "gameRefs": [
+        "keys_2c"
+      ],
+      "dependsOn": [
+        "item/keys_2c"
+      ]
+    },
+    {
+      "id": "item/vocals_1b",
+      "category": "item",
+      "path": "item/vocals_1b.png",
+      "incomingFileName": "vocals_1b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Dynamic stage mic",
+      "gameRefs": [
+        "vocals_1b"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/vocals_1b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_1b.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_1b.mask.png",
+      "incomingFileName": "vocals_1b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Dynamic stage mic paint mask",
+      "gameRefs": [
+        "vocals_1b"
+      ],
+      "dependsOn": [
+        "item/vocals_1b"
+      ]
+    },
+    {
+      "id": "item/vocals_2b",
+      "category": "item",
+      "path": "item/vocals_2b.png",
+      "incomingFileName": "vocals_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "In-ear monitor vocal rig",
+      "gameRefs": [
+        "vocals_2b"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/vocals_2b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_2b.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_2b.mask.png",
+      "incomingFileName": "vocals_2b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "In-ear monitor vocal rig paint mask",
+      "gameRefs": [
+        "vocals_2b"
+      ],
+      "dependsOn": [
+        "item/vocals_2b"
+      ]
+    },
+    {
+      "id": "item/guitar_2d",
+      "category": "item",
+      "path": "item/guitar_2d.png",
+      "incomingFileName": "guitar_2d.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Resonator guitar",
+      "gameRefs": [
+        "guitar_2d"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/guitar_2d.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_2d.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_2d.mask.png",
+      "incomingFileName": "guitar_2d.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Resonator guitar paint mask",
+      "gameRefs": [
+        "guitar_2d"
+      ],
+      "dependsOn": [
+        "item/guitar_2d"
+      ]
+    },
+    {
+      "id": "item/guitar_1c",
+      "category": "item",
+      "path": "item/guitar_1c.png",
+      "incomingFileName": "guitar_1c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Nylon-string classical guitar",
+      "gameRefs": [
+        "guitar_1c"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/guitar_1c.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_1c.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_1c.mask.png",
+      "incomingFileName": "guitar_1c.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Nylon-string classical guitar paint mask",
+      "gameRefs": [
+        "guitar_1c"
+      ],
+      "dependsOn": [
+        "item/guitar_1c"
+      ]
+    },
+    {
+      "id": "item/violin_2b",
+      "category": "item",
+      "path": "item/violin_2b.png",
+      "incomingFileName": "violin_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Country fiddle",
+      "gameRefs": [
+        "violin_2b"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/sax_2b",
+      "category": "item",
+      "path": "item/sax_2b.png",
+      "incomingFileName": "sax_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Baritone sax",
+      "gameRefs": [
+        "sax_2b"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/percussion_2b",
+      "category": "item",
+      "path": "item/percussion_2b.png",
+      "incomingFileName": "percussion_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Nyabinghi drum set",
+      "gameRefs": [
+        "percussion_2b"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_1c",
+      "category": "item",
+      "path": "item/keys_1c.png",
+      "incomingFileName": "keys_1c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Hammond-style organ",
+      "gameRefs": [
+        "keys_1c"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/keys_1c.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_1c.mask",
+      "category": "paint_mask",
+      "path": "item/keys_1c.mask.png",
+      "incomingFileName": "keys_1c.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Hammond-style organ paint mask",
+      "gameRefs": [
+        "keys_1c"
+      ],
+      "dependsOn": [
+        "item/keys_1c"
+      ]
+    },
+    {
+      "id": "item/outfit_1b",
+      "category": "item",
+      "path": "item/outfit_1b.png",
+      "incomingFileName": "outfit_1b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Band tee and boots",
+      "gameRefs": [
+        "outfit_1b"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_1b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_1b.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_1b.mask.png",
+      "incomingFileName": "outfit_1b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Band tee and boots paint mask",
+      "gameRefs": [
+        "outfit_1b"
+      ],
+      "dependsOn": [
+        "item/outfit_1b"
+      ]
+    },
+    {
+      "id": "item/outfit_2e",
+      "category": "item",
+      "path": "item/outfit_2e.png",
+      "incomingFileName": "outfit_2e.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Cowboy hat and boots",
+      "gameRefs": [
+        "outfit_2e"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_2e.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_2e.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_2e.mask.png",
+      "incomingFileName": "outfit_2e.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Cowboy hat and boots paint mask",
+      "gameRefs": [
+        "outfit_2e"
+      ],
+      "dependsOn": [
+        "item/outfit_2e"
+      ]
+    },
+    {
+      "id": "item/outfit_1c",
+      "category": "item",
+      "path": "item/outfit_1c.png",
+      "incomingFileName": "outfit_1c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Retro tracksuit",
+      "gameRefs": [
+        "outfit_1c"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_1c.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_1c.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_1c.mask.png",
+      "incomingFileName": "outfit_1c.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Retro tracksuit paint mask",
+      "gameRefs": [
+        "outfit_1c"
+      ],
+      "dependsOn": [
+        "item/outfit_1c"
+      ]
+    },
+    {
+      "id": "item/outfit_2b",
+      "category": "item",
+      "path": "item/outfit_2b.png",
+      "incomingFileName": "outfit_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Velvet jacket",
+      "gameRefs": [
+        "outfit_2b"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_2b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_2b.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_2b.mask.png",
+      "incomingFileName": "outfit_2b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Velvet jacket paint mask",
+      "gameRefs": [
+        "outfit_2b"
+      ],
+      "dependsOn": [
+        "item/outfit_2b"
+      ]
+    },
+    {
+      "id": "item/outfit_2c",
+      "category": "item",
+      "path": "item/outfit_2c.png",
+      "incomingFileName": "outfit_2c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Sequined stage dress",
+      "gameRefs": [
+        "outfit_2c"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_2c.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_2c.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_2c.mask.png",
+      "incomingFileName": "outfit_2c.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Sequined stage dress paint mask",
+      "gameRefs": [
+        "outfit_2c"
+      ],
+      "dependsOn": [
+        "item/outfit_2c"
+      ]
+    },
+    {
+      "id": "item/outfit_2d",
+      "category": "item",
+      "path": "item/outfit_2d.png",
+      "incomingFileName": "outfit_2d.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Leather trousers and vest",
+      "gameRefs": [
+        "outfit_2d"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_2d.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_2d.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_2d.mask.png",
+      "incomingFileName": "outfit_2d.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Leather trousers and vest paint mask",
+      "gameRefs": [
+        "outfit_2d"
+      ],
+      "dependsOn": [
+        "item/outfit_2d"
+      ]
+    },
+    {
+      "id": "item/outfit_3b",
+      "category": "item",
+      "path": "item/outfit_3b.png",
+      "incomingFileName": "outfit_3b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Light-up stage costume",
+      "gameRefs": [
+        "outfit_3b"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/outfit_3b.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_3b.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_3b.mask.png",
+      "incomingFileName": "outfit_3b.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Light-up stage costume paint mask",
+      "gameRefs": [
+        "outfit_3b"
+      ],
+      "dependsOn": [
+        "item/outfit_3b"
+      ]
+    },
+    {
+      "id": "item/outfit_3c",
+      "category": "item",
+      "path": "item/outfit_3c.png",
+      "incomingFileName": "outfit_3c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Haute couture tuxedo",
+      "gameRefs": [
+        "outfit_3c"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/outfit_3c.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_3c.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_3c.mask.png",
+      "incomingFileName": "outfit_3c.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Haute couture tuxedo paint mask",
+      "gameRefs": [
+        "outfit_3c"
+      ],
+      "dependsOn": [
+        "item/outfit_3c"
+      ]
+    },
+    {
+      "id": "item/art_1b",
+      "category": "item",
+      "path": "item/art_1b.png",
+      "incomingFileName": "art_1b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Signed record sleeve",
+      "gameRefs": [
+        "art_1b"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_1c",
+      "category": "item",
+      "path": "item/art_1c.png",
+      "incomingFileName": "art_1c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Black-and-white gig photo",
+      "gameRefs": [
+        "art_1c"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_2b",
+      "category": "item",
+      "path": "item/art_2b.png",
+      "incomingFileName": "art_2b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Neon sign",
+      "gameRefs": [
+        "art_2b"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_2c",
+      "category": "item",
+      "path": "item/art_2c.png",
+      "incomingFileName": "art_2c.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Bronze sculpture",
+      "gameRefs": [
+        "art_2c"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_3b",
+      "category": "item",
+      "path": "item/art_3b.png",
+      "incomingFileName": "art_3b.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Pop art screen print",
+      "gameRefs": [
+        "art_3b"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_rabbit",
+      "category": "item",
+      "path": "item/pet_rabbit.png",
+      "incomingFileName": "pet_rabbit.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Rabbit",
+      "gameRefs": [
+        "pet_rabbit"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_fish",
+      "category": "item",
+      "path": "item/pet_fish.png",
+      "incomingFileName": "pet_fish.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Aquarium fish",
+      "gameRefs": [
+        "pet_fish"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_tortoise",
+      "category": "item",
+      "path": "item/pet_tortoise.png",
+      "incomingFileName": "pet_tortoise.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Tortoise",
+      "gameRefs": [
+        "pet_tortoise"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pet_ferret",
+      "category": "item",
+      "path": "item/pet_ferret.png",
+      "incomingFileName": "pet_ferret.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Ferret",
+      "gameRefs": [
+        "pet_ferret"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/scooter_1",
+      "category": "item",
+      "path": "item/scooter_1.png",
+      "incomingFileName": "scooter_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Scooter",
+      "gameRefs": [
+        "scooter_1"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/scooter_1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/scooter_1.mask",
+      "category": "paint_mask",
+      "path": "item/scooter_1.mask.png",
+      "incomingFileName": "scooter_1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Scooter paint mask",
+      "gameRefs": [
+        "scooter_1"
+      ],
+      "dependsOn": [
+        "item/scooter_1"
+      ]
+    },
+    {
+      "id": "item/pickup_1",
+      "category": "item",
+      "path": "item/pickup_1.png",
+      "incomingFileName": "pickup_1.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Pickup truck",
+      "gameRefs": [
+        "pickup_1"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/pickup_1.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/pickup_1.mask",
+      "category": "paint_mask",
+      "path": "item/pickup_1.mask.png",
+      "incomingFileName": "pickup_1.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Pickup truck paint mask",
+      "gameRefs": [
+        "pickup_1"
+      ],
+      "dependsOn": [
+        "item/pickup_1"
+      ]
+    },
+    {
+      "id": "item/fx_bubbles",
+      "category": "item",
+      "path": "item/fx_bubbles.png",
+      "incomingFileName": "fx_bubbles.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Bubble machine",
+      "gameRefs": [
+        "fx_bubbles"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_lasers",
+      "category": "item",
+      "path": "item/fx_lasers.png",
+      "incomingFileName": "fx_lasers.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Laser show",
+      "gameRefs": [
+        "fx_lasers"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_co2",
+      "category": "item",
+      "path": "item/fx_co2.png",
+      "incomingFileName": "fx_co2.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "CO₂ jets",
+      "gameRefs": [
+        "fx_co2"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_screen",
+      "category": "item",
+      "path": "item/fx_screen.png",
+      "incomingFileName": "fx_screen.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Giant LED screen",
+      "gameRefs": [
+        "fx_screen"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_balloons",
+      "category": "item",
+      "path": "item/fx_balloons.png",
+      "incomingFileName": "fx_balloons.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Giant balloons",
+      "gameRefs": [
+        "fx_balloons"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_leather",
+      "category": "item",
+      "path": "item/mat_leather.png",
+      "incomingFileName": "mat_leather.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Leather",
+      "gameRefs": [
+        "mat_leather"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_led",
+      "category": "item",
+      "path": "item/mat_led.png",
+      "incomingFileName": "mat_led.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "LED strip",
+      "gameRefs": [
+        "mat_led"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_canvas",
+      "category": "item",
+      "path": "item/mat_canvas.png",
+      "incomingFileName": "mat_canvas.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Canvas",
+      "gameRefs": [
+        "mat_canvas"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_paint",
+      "category": "item",
+      "path": "item/mat_paint.png",
+      "incomingFileName": "mat_paint.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Oil paint set",
+      "gameRefs": [
+        "mat_paint"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_powder",
+      "category": "item",
+      "path": "item/mat_powder.png",
+      "incomingFileName": "mat_powder.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Stage powder",
+      "gameRefs": [
+        "mat_powder"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_amp_parts",
+      "category": "item",
+      "path": "item/mat_amp_parts.png",
+      "incomingFileName": "mat_amp_parts.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Amp parts",
+      "gameRefs": [
+        "mat_amp_parts"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_metal",
+      "category": "item",
+      "path": "item/mat_metal.png",
+      "incomingFileName": "mat_metal.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Metal sheet",
+      "gameRefs": [
+        "mat_metal"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_brass",
+      "category": "item",
+      "path": "item/mat_brass.png",
+      "incomingFileName": "mat_brass.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Brass body",
+      "gameRefs": [
+        "mat_brass"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_reed",
+      "category": "item",
+      "path": "item/mat_reed.png",
+      "incomingFileName": "mat_reed.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Sax reed",
+      "gameRefs": [
+        "mat_reed"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/mat_bow",
+      "category": "item",
+      "path": "item/mat_bow.png",
+      "incomingFileName": "mat_bow.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Violin bow",
+      "gameRefs": [
+        "mat_bow"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/condom",
+      "category": "item",
+      "path": "item/condom.png",
+      "incomingFileName": "condom.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Condom",
+      "gameRefs": [
+        "condom"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/repair_kit",
+      "category": "item",
+      "path": "item/repair_kit.png",
+      "incomingFileName": "repair_kit.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Repair kit",
+      "gameRefs": [
+        "repair_kit"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/gear_service",
+      "category": "item",
+      "path": "item/gear_service.png",
+      "incomingFileName": "gear_service.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Gear service pack",
+      "gameRefs": [
+        "gear_service"
+      ],
+      "tier": "basic",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_crafted",
+      "category": "item",
+      "path": "item/art_crafted.png",
+      "incomingFileName": "art_crafted.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade painting",
+      "gameRefs": [
+        "art_crafted"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/fx_crafted",
+      "category": "item",
+      "path": "item/fx_crafted.png",
+      "incomingFileName": "fx_crafted.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Handmade pyrotechnics",
+      "gameRefs": [
+        "fx_crafted"
+      ],
+      "tier": "crafted",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_leather_crafted",
+      "category": "item",
+      "path": "item/outfit_leather_crafted.png",
+      "incomingFileName": "outfit_leather_crafted.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Handmade leather jacket",
+      "gameRefs": [
+        "outfit_leather_crafted"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_leather_crafted.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_leather_crafted.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_leather_crafted.mask.png",
+      "incomingFileName": "outfit_leather_crafted.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Handmade leather jacket paint mask",
+      "gameRefs": [
+        "outfit_leather_crafted"
+      ],
+      "dependsOn": [
+        "item/outfit_leather_crafted"
+      ]
+    },
+    {
+      "id": "item/outfit_led_crafted",
+      "category": "item",
+      "path": "item/outfit_led_crafted.png",
+      "incomingFileName": "outfit_led_crafted.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Handmade light-up costume",
+      "gameRefs": [
+        "outfit_led_crafted"
+      ],
+      "tier": "crafted",
+      "paintable": true,
+      "mask": "item/outfit_led_crafted.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_led_crafted.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_led_crafted.mask.png",
+      "incomingFileName": "outfit_led_crafted.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Handmade light-up costume paint mask",
+      "gameRefs": [
+        "outfit_led_crafted"
+      ],
+      "dependsOn": [
+        "item/outfit_led_crafted"
+      ]
+    },
+    {
+      "id": "item/reward_vedat_mic",
+      "category": "item",
+      "path": "item/reward_vedat_mic.png",
+      "incomingFileName": "reward_vedat_mic.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Vedat Karahan's studio mic",
+      "gameRefs": [
+        "reward_vedat_mic"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/reward_vedat_mic.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/reward_vedat_mic.mask",
+      "category": "paint_mask",
+      "path": "item/reward_vedat_mic.mask.png",
+      "incomingFileName": "reward_vedat_mic.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Vedat Karahan's studio mic paint mask",
+      "gameRefs": [
+        "reward_vedat_mic"
+      ],
+      "dependsOn": [
+        "item/reward_vedat_mic"
+      ]
+    },
+    {
+      "id": "item/reward_fox_jacket",
+      "category": "item",
+      "path": "item/reward_fox_jacket.png",
+      "incomingFileName": "reward_fox_jacket.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Red Fox stage jacket",
+      "gameRefs": [
+        "reward_fox_jacket"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/reward_fox_jacket.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/reward_fox_jacket.mask",
+      "category": "paint_mask",
+      "path": "item/reward_fox_jacket.mask.png",
+      "incomingFileName": "reward_fox_jacket.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Red Fox stage jacket paint mask",
+      "gameRefs": [
+        "reward_fox_jacket"
+      ],
+      "dependsOn": [
+        "item/reward_fox_jacket"
+      ]
+    },
+    {
+      "id": "item/reward_melek_notebook",
+      "category": "item",
+      "path": "item/reward_melek_notebook.png",
+      "incomingFileName": "reward_melek_notebook.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Melek Aksoy's notebook",
+      "gameRefs": [
+        "reward_melek_notebook"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_winter",
+      "category": "item",
+      "path": "item/outfit_winter.png",
+      "incomingFileName": "outfit_winter.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Winter tour greatcoat",
+      "gameRefs": [
+        "outfit_winter"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_winter.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_winter.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_winter.mask.png",
+      "incomingFileName": "outfit_winter.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Winter tour greatcoat paint mask",
+      "gameRefs": [
+        "outfit_winter"
+      ],
+      "dependsOn": [
+        "item/outfit_winter"
+      ]
+    },
+    {
+      "id": "item/fx_snow",
+      "category": "item",
+      "path": "item/fx_snow.png",
+      "incomingFileName": "fx_snow.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Snow machine",
+      "gameRefs": [
+        "fx_snow"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_spring",
+      "category": "item",
+      "path": "item/outfit_spring.png",
+      "incomingFileName": "outfit_spring.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Floral spring shirt",
+      "gameRefs": [
+        "outfit_spring"
+      ],
+      "tier": "basic",
+      "paintable": true,
+      "mask": "item/outfit_spring.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_spring.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_spring.mask.png",
+      "incomingFileName": "outfit_spring.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Floral spring shirt paint mask",
+      "gameRefs": [
+        "outfit_spring"
+      ],
+      "dependsOn": [
+        "item/outfit_spring"
+      ]
+    },
+    {
+      "id": "item/outfit_summer",
+      "category": "item",
+      "path": "item/outfit_summer.png",
+      "incomingFileName": "outfit_summer.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Festival summer outfit",
+      "gameRefs": [
+        "outfit_summer"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_summer.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_summer.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_summer.mask.png",
+      "incomingFileName": "outfit_summer.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Festival summer outfit paint mask",
+      "gameRefs": [
+        "outfit_summer"
+      ],
+      "dependsOn": [
+        "item/outfit_summer"
+      ]
+    },
+    {
+      "id": "item/fx_fireworks",
+      "category": "item",
+      "path": "item/fx_fireworks.png",
+      "incomingFileName": "fx_fireworks.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Harvest fireworks",
+      "gameRefs": [
+        "fx_fireworks"
+      ],
+      "tier": "professional",
+      "dependsOn": []
+    },
+    {
+      "id": "item/art_autumn",
+      "category": "item",
+      "path": "item/art_autumn.png",
+      "incomingFileName": "art_autumn.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Autumn tour poster (limited print)",
+      "gameRefs": [
+        "art_autumn"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_istanbul",
+      "category": "item",
+      "path": "item/guitar_istanbul.png",
+      "incomingFileName": "guitar_istanbul.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Electric saz",
+      "gameRefs": [
+        "guitar_istanbul"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/guitar_istanbul.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_istanbul.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_istanbul.mask.png",
+      "incomingFileName": "guitar_istanbul.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Electric saz paint mask",
+      "gameRefs": [
+        "guitar_istanbul"
+      ],
+      "dependsOn": [
+        "item/guitar_istanbul"
+      ]
+    },
+    {
+      "id": "item/outfit_ankara",
+      "category": "item",
+      "path": "item/outfit_ankara.png",
+      "incomingFileName": "outfit_ankara.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Steppe parka",
+      "gameRefs": [
+        "outfit_ankara"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_ankara.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_ankara.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_ankara.mask.png",
+      "incomingFileName": "outfit_ankara.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Steppe parka paint mask",
+      "gameRefs": [
+        "outfit_ankara"
+      ],
+      "dependsOn": [
+        "item/outfit_ankara"
+      ]
+    },
+    {
+      "id": "item/sax_izmir",
+      "category": "item",
+      "path": "item/sax_izmir.png",
+      "incomingFileName": "sax_izmir.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Alsancak tenor sax",
+      "gameRefs": [
+        "sax_izmir"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_berlin",
+      "category": "item",
+      "path": "item/keys_berlin.png",
+      "incomingFileName": "keys_berlin.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "East Berlin analogue synth",
+      "gameRefs": [
+        "keys_berlin"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/keys_berlin.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/keys_berlin.mask",
+      "category": "paint_mask",
+      "path": "item/keys_berlin.mask.png",
+      "incomingFileName": "keys_berlin.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "East Berlin analogue synth paint mask",
+      "gameRefs": [
+        "keys_berlin"
+      ],
+      "dependsOn": [
+        "item/keys_berlin"
+      ]
+    },
+    {
+      "id": "item/drums_hamburg",
+      "category": "item",
+      "path": "item/drums_hamburg.png",
+      "incomingFileName": "drums_hamburg.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Kiez drum kit",
+      "gameRefs": [
+        "drums_hamburg"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/drums_hamburg.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_hamburg.mask",
+      "category": "paint_mask",
+      "path": "item/drums_hamburg.mask.png",
+      "incomingFileName": "drums_hamburg.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Kiez drum kit paint mask",
+      "gameRefs": [
+        "drums_hamburg"
+      ],
+      "dependsOn": [
+        "item/drums_hamburg"
+      ]
+    },
+    {
+      "id": "item/violin_munich",
+      "category": "item",
+      "path": "item/violin_munich.png",
+      "incomingFileName": "violin_munich.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B5",
+      "label": "Mittenwald violin",
+      "gameRefs": [
+        "violin_munich"
+      ],
+      "tier": "stage",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_london",
+      "category": "item",
+      "path": "item/outfit_london.png",
+      "incomingFileName": "outfit_london.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Kings Road leather jacket",
+      "gameRefs": [
+        "outfit_london"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_london.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_london.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_london.mask.png",
+      "incomingFileName": "outfit_london.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Kings Road leather jacket paint mask",
+      "gameRefs": [
+        "outfit_london"
+      ],
+      "dependsOn": [
+        "item/outfit_london"
+      ]
+    },
+    {
+      "id": "item/guitar_manchester",
+      "category": "item",
+      "path": "item/guitar_manchester.png",
+      "incomingFileName": "guitar_manchester.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Mill Town semi-acoustic",
+      "gameRefs": [
+        "guitar_manchester"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/guitar_manchester.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_manchester.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_manchester.mask.png",
+      "incomingFileName": "guitar_manchester.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Mill Town semi-acoustic paint mask",
+      "gameRefs": [
+        "guitar_manchester"
+      ],
+      "dependsOn": [
+        "item/guitar_manchester"
+      ]
+    },
+    {
+      "id": "item/bass_liverpool",
+      "category": "item",
+      "path": "item/bass_liverpool.png",
+      "incomingFileName": "bass_liverpool.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Mersey violin bass",
+      "gameRefs": [
+        "bass_liverpool"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/bass_liverpool.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/bass_liverpool.mask",
+      "category": "paint_mask",
+      "path": "item/bass_liverpool.mask.png",
+      "incomingFileName": "bass_liverpool.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Mersey violin bass paint mask",
+      "gameRefs": [
+        "bass_liverpool"
+      ],
+      "dependsOn": [
+        "item/bass_liverpool"
+      ]
+    },
+    {
+      "id": "item/guitar_paris",
+      "category": "item",
+      "path": "item/guitar_paris.png",
+      "incomingFileName": "guitar_paris.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Gypsy jazz guitar",
+      "gameRefs": [
+        "guitar_paris"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/guitar_paris.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_paris.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_paris.mask.png",
+      "incomingFileName": "guitar_paris.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Gypsy jazz guitar paint mask",
+      "gameRefs": [
+        "guitar_paris"
+      ],
+      "dependsOn": [
+        "item/guitar_paris"
+      ]
+    },
+    {
+      "id": "item/outfit_lyon",
+      "category": "item",
+      "path": "item/outfit_lyon.png",
+      "incomingFileName": "outfit_lyon.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Lyon silk stage shirt",
+      "gameRefs": [
+        "outfit_lyon"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/outfit_lyon.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_lyon.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_lyon.mask.png",
+      "incomingFileName": "outfit_lyon.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Lyon silk stage shirt paint mask",
+      "gameRefs": [
+        "outfit_lyon"
+      ],
+      "dependsOn": [
+        "item/outfit_lyon"
+      ]
+    },
+    {
+      "id": "item/vocals_marseille",
+      "category": "item",
+      "path": "item/vocals_marseille.png",
+      "incomingFileName": "vocals_marseille.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Harbour mic",
+      "gameRefs": [
+        "vocals_marseille"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/vocals_marseille.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/vocals_marseille.mask",
+      "category": "paint_mask",
+      "path": "item/vocals_marseille.mask.png",
+      "incomingFileName": "vocals_marseille.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Harbour mic paint mask",
+      "gameRefs": [
+        "vocals_marseille"
+      ],
+      "dependsOn": [
+        "item/vocals_marseille"
+      ]
+    },
+    {
+      "id": "item/drums_newyork",
+      "category": "item",
+      "path": "item/drums_newyork.png",
+      "incomingFileName": "drums_newyork.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Brooklyn breakbeat kit",
+      "gameRefs": [
+        "drums_newyork"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/drums_newyork.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/drums_newyork.mask",
+      "category": "paint_mask",
+      "path": "item/drums_newyork.mask.png",
+      "incomingFileName": "drums_newyork.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Brooklyn breakbeat kit paint mask",
+      "gameRefs": [
+        "drums_newyork"
+      ],
+      "dependsOn": [
+        "item/drums_newyork"
+      ]
+    },
+    {
+      "id": "item/outfit_la",
+      "category": "item",
+      "path": "item/outfit_la.png",
+      "incomingFileName": "outfit_la.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Hollywood glitter jacket",
+      "gameRefs": [
+        "outfit_la"
+      ],
+      "tier": "professional",
+      "paintable": true,
+      "mask": "item/outfit_la.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/outfit_la.mask",
+      "category": "paint_mask",
+      "path": "item/outfit_la.mask.png",
+      "incomingFileName": "outfit_la.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B4",
+      "label": "Hollywood glitter jacket paint mask",
+      "gameRefs": [
+        "outfit_la"
+      ],
+      "dependsOn": [
+        "item/outfit_la"
+      ]
+    },
+    {
+      "id": "item/guitar_nashville",
+      "category": "item",
+      "path": "item/guitar_nashville.png",
+      "incomingFileName": "guitar_nashville.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Music Row tele-style guitar",
+      "gameRefs": [
+        "guitar_nashville"
+      ],
+      "tier": "stage",
+      "paintable": true,
+      "mask": "item/guitar_nashville.mask.png",
+      "dependsOn": []
+    },
+    {
+      "id": "item/guitar_nashville.mask",
+      "category": "paint_mask",
+      "path": "item/guitar_nashville.mask.png",
+      "incomingFileName": "guitar_nashville.mask.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B3",
+      "label": "Music Row tele-style guitar paint mask",
+      "gameRefs": [
+        "guitar_nashville"
+      ],
+      "dependsOn": [
+        "item/guitar_nashville"
       ]
     },
     {
@@ -4075,23 +6784,6 @@
       "dependsOn": []
     },
     {
-      "id": "achievement/platinum",
-      "category": "achievement",
-      "path": "achievement/platinum.png",
-      "incomingFileName": "achievement-platinum.png",
-      "width": 256,
-      "height": 256,
-      "format": "png",
-      "transparent": true,
-      "status": "missing",
-      "batch": "B8",
-      "label": "Platinum record",
-      "gameRefs": [
-        "platinum"
-      ],
-      "dependsOn": []
-    },
-    {
       "id": "achievement/skilled",
       "category": "achievement",
       "path": "achievement/skilled.png",
@@ -4343,6 +7035,1247 @@
       "label": "VIP",
       "gameRefs": [
         "vip"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/empty_room",
+      "category": "achievement",
+      "path": "achievement/empty_room.png",
+      "incomingFileName": "achievement-empty_room.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Poet of empty rooms",
+      "gameRefs": [
+        "empty_room"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/pogo",
+      "category": "achievement",
+      "path": "achievement/pogo.png",
+      "incomingFileName": "achievement-pogo.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "All hell broke loose",
+      "gameRefs": [
+        "pogo"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/hard_landing",
+      "category": "achievement",
+      "path": "achievement/hard_landing.png",
+      "incomingFileName": "achievement-hard_landing.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Hard landing",
+      "gameRefs": [
+        "hard_landing"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/encore_flop",
+      "category": "achievement",
+      "path": "achievement/encore_flop.png",
+      "incomingFileName": "achievement-encore_flop.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Nobody asked",
+      "gameRefs": [
+        "encore_flop"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/fx_party",
+      "category": "achievement",
+      "path": "achievement/fx_party.png",
+      "incomingFileName": "achievement-fx_party.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Fireworks factory",
+      "gameRefs": [
+        "fx_party"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/one_man_band",
+      "category": "achievement",
+      "path": "achievement/one_man_band.png",
+      "incomingFileName": "achievement-one_man_band.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "One-person orchestra",
+      "gameRefs": [
+        "one_man_band"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/genre_hopper",
+      "category": "achievement",
+      "path": "achievement/genre_hopper.png",
+      "incomingFileName": "achievement-genre_hopper.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Genre hopper",
+      "gameRefs": [
+        "genre_hopper"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/legendary_owner",
+      "category": "achievement",
+      "path": "achievement/legendary_owner.png",
+      "incomingFileName": "achievement-legendary_owner.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Holy relic",
+      "gameRefs": [
+        "legendary_owner"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/rainbow",
+      "category": "achievement",
+      "path": "achievement/rainbow.png",
+      "incomingFileName": "achievement-rainbow.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Rainbow",
+      "gameRefs": [
+        "rainbow"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/pet_named",
+      "category": "achievement",
+      "path": "achievement/pet_named.png",
+      "incomingFileName": "achievement-pet_named.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Named it Rock",
+      "gameRefs": [
+        "pet_named"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/all_roles",
+      "category": "achievement",
+      "path": "achievement/all_roles.png",
+      "incomingFileName": "achievement-all_roles.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Multi-instrumentalist",
+      "gameRefs": [
+        "all_roles"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/broke",
+      "category": "achievement",
+      "path": "achievement/broke.png",
+      "incomingFileName": "achievement-broke.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Flat broke",
+      "gameRefs": [
+        "broke"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/front_page",
+      "category": "achievement",
+      "path": "achievement/front_page.png",
+      "incomingFileName": "achievement-front_page.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Front page",
+      "gameRefs": [
+        "front_page"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/heartbreaker",
+      "category": "achievement",
+      "path": "achievement/heartbreaker.png",
+      "incomingFileName": "achievement-heartbreaker.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Heartbreaker",
+      "gameRefs": [
+        "heartbreaker"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/scene_hit",
+      "category": "achievement",
+      "path": "achievement/scene_hit.png",
+      "incomingFileName": "achievement-scene_hit.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Right place, right song",
+      "gameRefs": [
+        "scene_hit"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_istanbul",
+      "category": "achievement",
+      "path": "achievement/city_istanbul.png",
+      "incomingFileName": "achievement-city_istanbul.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Voice of the Bosphorus",
+      "gameRefs": [
+        "city_istanbul"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_ankara",
+      "category": "achievement",
+      "path": "achievement/city_ankara.png",
+      "incomingFileName": "achievement-city_ankara.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Noise of the capital",
+      "gameRefs": [
+        "city_ankara"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_izmir",
+      "category": "achievement",
+      "path": "achievement/city_izmir.png",
+      "incomingFileName": "achievement-city_izmir.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Jazz on the Kordon",
+      "gameRefs": [
+        "city_izmir"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_berlin",
+      "category": "achievement",
+      "path": "achievement/city_berlin.png",
+      "incomingFileName": "achievement-city_berlin.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Past the door",
+      "gameRefs": [
+        "city_berlin"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_hamburg",
+      "category": "achievement",
+      "path": "achievement/city_hamburg.png",
+      "incomingFileName": "achievement-city_hamburg.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Reeperbahn apprentice",
+      "gameRefs": [
+        "city_hamburg"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_munich",
+      "category": "achievement",
+      "path": "achievement/city_munich.png",
+      "incomingFileName": "achievement-city_munich.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Applause at the Residenz",
+      "gameRefs": [
+        "city_munich"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_london",
+      "category": "achievement",
+      "path": "achievement/city_london.png",
+      "incomingFileName": "achievement-city_london.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Camden rebel",
+      "gameRefs": [
+        "city_london"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_manchester",
+      "category": "achievement",
+      "path": "achievement/city_manchester.png",
+      "incomingFileName": "achievement-city_manchester.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Sound of the North",
+      "gameRefs": [
+        "city_manchester"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_liverpool",
+      "category": "achievement",
+      "path": "achievement/city_liverpool.png",
+      "incomingFileName": "achievement-city_liverpool.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Mersey beat",
+      "gameRefs": [
+        "city_liverpool"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_paris",
+      "category": "achievement",
+      "path": "achievement/city_paris.png",
+      "incomingFileName": "achievement-city_paris.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "A night in Montmartre",
+      "gameRefs": [
+        "city_paris"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_lyon",
+      "category": "achievement",
+      "path": "achievement/city_lyon.png",
+      "incomingFileName": "achievement-city_lyon.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Club night of two rivers",
+      "gameRefs": [
+        "city_lyon"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_marseille",
+      "category": "achievement",
+      "path": "achievement/city_marseille.png",
+      "incomingFileName": "achievement-city_marseille.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "MC of the harbour",
+      "gameRefs": [
+        "city_marseille"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_newyork",
+      "category": "achievement",
+      "path": "achievement/city_newyork.png",
+      "incomingFileName": "achievement-city_newyork.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "The city never sleeps",
+      "gameRefs": [
+        "city_newyork"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_losangeles",
+      "category": "achievement",
+      "path": "achievement/city_losangeles.png",
+      "incomingFileName": "achievement-city_losangeles.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Star of the boulevard",
+      "gameRefs": [
+        "city_losangeles"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/city_nashville",
+      "category": "achievement",
+      "path": "achievement/city_nashville.png",
+      "incomingFileName": "achievement-city_nashville.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "New voice of Music Row",
+      "gameRefs": [
+        "city_nashville"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/world_kitchen",
+      "category": "achievement",
+      "path": "achievement/world_kitchen.png",
+      "incomingFileName": "achievement-world_kitchen.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "World kitchen",
+      "gameRefs": [
+        "world_kitchen"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/gigs_100",
+      "category": "achievement",
+      "path": "achievement/gigs_100.png",
+      "incomingFileName": "achievement-gigs_100.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Hundredth night",
+      "gameRefs": [
+        "gigs_100"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/gigs_250",
+      "category": "achievement",
+      "path": "achievement/gigs_250.png",
+      "incomingFileName": "achievement-gigs_250.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Road dog",
+      "gameRefs": [
+        "gigs_250"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/cities_5",
+      "category": "achievement",
+      "path": "achievement/cities_5.png",
+      "incomingFileName": "achievement-cities_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "City to city",
+      "gameRefs": [
+        "cities_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/cities_15",
+      "category": "achievement",
+      "path": "achievement/cities_15.png",
+      "incomingFileName": "achievement-cities_15.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Everywhere",
+      "gameRefs": [
+        "cities_15"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/stadium_gig",
+      "category": "achievement",
+      "path": "achievement/stadium_gig.png",
+      "incomingFileName": "achievement-stadium_gig.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Stadium lights",
+      "gameRefs": [
+        "stadium_gig"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/festival_gig",
+      "category": "achievement",
+      "path": "achievement/festival_gig.png",
+      "incomingFileName": "achievement-festival_gig.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Festival stage",
+      "gameRefs": [
+        "festival_gig"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/festival_5",
+      "category": "achievement",
+      "path": "achievement/festival_5.png",
+      "incomingFileName": "achievement-festival_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Festival regular",
+      "gameRefs": [
+        "festival_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/epic_5",
+      "category": "achievement",
+      "path": "achievement/epic_5.png",
+      "incomingFileName": "achievement-epic_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "EPIC streak",
+      "gameRefs": [
+        "epic_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/legendary_night",
+      "category": "achievement",
+      "path": "achievement/legendary_night.png",
+      "incomingFileName": "achievement-legendary_night.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "LEGENDARY",
+      "gameRefs": [
+        "legendary_night"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/stage_moments_10",
+      "category": "achievement",
+      "path": "achievement/stage_moments_10.png",
+      "incomingFileName": "achievement-stage_moments_10.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Stage commander",
+      "gameRefs": [
+        "stage_moments_10"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/encore_10",
+      "category": "achievement",
+      "path": "achievement/encore_10.png",
+      "incomingFileName": "achievement-encore_10.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "One more!",
+      "gameRefs": [
+        "encore_10"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/songs_50",
+      "category": "achievement",
+      "path": "achievement/songs_50.png",
+      "incomingFileName": "achievement-songs_50.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Notebook full",
+      "gameRefs": [
+        "songs_50"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/masterpiece",
+      "category": "achievement",
+      "path": "achievement/masterpiece.png",
+      "incomingFileName": "achievement-masterpiece.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Masterpiece",
+      "gameRefs": [
+        "masterpiece"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/recordings_25",
+      "category": "achievement",
+      "path": "achievement/recordings_25.png",
+      "incomingFileName": "achievement-recordings_25.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Studio rat",
+      "gameRefs": [
+        "recordings_25"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/singles_5",
+      "category": "achievement",
+      "path": "achievement/singles_5.png",
+      "incomingFileName": "achievement-singles_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Singles machine",
+      "gameRefs": [
+        "singles_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/albums_3",
+      "category": "achievement",
+      "path": "achievement/albums_3.png",
+      "incomingFileName": "achievement-albums_3.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Discography",
+      "gameRefs": [
+        "albums_3"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/platinum",
+      "category": "achievement",
+      "path": "achievement/platinum.png",
+      "incomingFileName": "achievement-platinum.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Platinum record",
+      "gameRefs": [
+        "platinum"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/no1_4weeks",
+      "category": "achievement",
+      "path": "achievement/no1_4weeks.png",
+      "incomingFileName": "achievement-no1_4weeks.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Top of the charts",
+      "gameRefs": [
+        "no1_4weeks"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/radio_100",
+      "category": "achievement",
+      "path": "achievement/radio_100.png",
+      "incomingFileName": "achievement-radio_100.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Radio friendly",
+      "gameRefs": [
+        "radio_100"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/video_1",
+      "category": "achievement",
+      "path": "achievement/video_1.png",
+      "incomingFileName": "achievement-video_1.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Lights, camera",
+      "gameRefs": [
+        "video_1"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/interview_5",
+      "category": "achievement",
+      "path": "achievement/interview_5.png",
+      "incomingFileName": "achievement-interview_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Press darling",
+      "gameRefs": [
+        "interview_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/article_10",
+      "category": "achievement",
+      "path": "achievement/article_10.png",
+      "incomingFileName": "achievement-article_10.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Wordsmith",
+      "gameRefs": [
+        "article_10"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/tour_1",
+      "category": "achievement",
+      "path": "achievement/tour_1.png",
+      "incomingFileName": "achievement-tour_1.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "On the road",
+      "gameRefs": [
+        "tour_1"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/skills_20",
+      "category": "achievement",
+      "path": "achievement/skills_20.png",
+      "incomingFileName": "achievement-skills_20.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Renaissance",
+      "gameRefs": [
+        "skills_20"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/skills_35",
+      "category": "achievement",
+      "path": "achievement/skills_35.png",
+      "incomingFileName": "achievement-skills_35.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Know-it-all",
+      "gameRefs": [
+        "skills_35"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/crafter_10",
+      "category": "achievement",
+      "path": "achievement/crafter_10.png",
+      "incomingFileName": "achievement-crafter_10.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Skilled hands",
+      "gameRefs": [
+        "crafter_10"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/workouts_20",
+      "category": "achievement",
+      "path": "achievement/workouts_20.png",
+      "incomingFileName": "achievement-workouts_20.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "In shape",
+      "gameRefs": [
+        "workouts_20"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/shifts_50",
+      "category": "achievement",
+      "path": "achievement/shifts_50.png",
+      "incomingFileName": "achievement-shifts_50.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Workhorse",
+      "gameRefs": [
+        "shifts_50"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/busk_1000",
+      "category": "achievement",
+      "path": "achievement/busk_1000.png",
+      "incomingFileName": "achievement-busk_1000.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Full hat",
+      "gameRefs": [
+        "busk_1000"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/travels_20",
+      "category": "achievement",
+      "path": "achievement/travels_20.png",
+      "incomingFileName": "achievement-travels_20.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Wanderer",
+      "gameRefs": [
+        "travels_20"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/meals_25",
+      "category": "achievement",
+      "path": "achievement/meals_25.png",
+      "incomingFileName": "achievement-meals_25.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Foodie",
+      "gameRefs": [
+        "meals_25"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/friends_5",
+      "category": "achievement",
+      "path": "achievement/friends_5.png",
+      "incomingFileName": "achievement-friends_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Popular",
+      "gameRefs": [
+        "friends_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/hangouts_25",
+      "category": "achievement",
+      "path": "achievement/hangouts_25.png",
+      "incomingFileName": "achievement-hangouts_25.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Social butterfly",
+      "gameRefs": [
+        "hangouts_25"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/dates_5",
+      "category": "achievement",
+      "path": "achievement/dates_5.png",
+      "incomingFileName": "achievement-dates_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Romantic",
+      "gameRefs": [
+        "dates_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/married",
+      "category": "achievement",
+      "path": "achievement/married.png",
+      "incomingFileName": "achievement-married.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Happily ever after",
+      "gameRefs": [
+        "married"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/gifts_5",
+      "category": "achievement",
+      "path": "achievement/gifts_5.png",
+      "incomingFileName": "achievement-gifts_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Gift giver",
+      "gameRefs": [
+        "gifts_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/trader_5",
+      "category": "achievement",
+      "path": "achievement/trader_5.png",
+      "incomingFileName": "achievement-trader_5.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Haggler",
+      "gameRefs": [
+        "trader_5"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/inked_4",
+      "category": "achievement",
+      "path": "achievement/inked_4.png",
+      "incomingFileName": "achievement-inked_4.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Inked",
+      "gameRefs": [
+        "inked_4"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/superstar_3",
+      "category": "achievement",
+      "path": "achievement/superstar_3.png",
+      "incomingFileName": "achievement-superstar_3.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Star of three cities",
+      "gameRefs": [
+        "superstar_3"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/superstar_8",
+      "category": "achievement",
+      "path": "achievement/superstar_8.png",
+      "incomingFileName": "achievement-superstar_8.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Global star",
+      "gameRefs": [
+        "superstar_8"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/superstar_all",
+      "category": "achievement",
+      "path": "achievement/superstar_all.png",
+      "incomingFileName": "achievement-superstar_all.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Immortal",
+      "gameRefs": [
+        "superstar_all"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "achievement/diamond",
+      "category": "achievement",
+      "path": "achievement/diamond.png",
+      "incomingFileName": "achievement-diamond.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B8",
+      "label": "Diamond record",
+      "gameRefs": [
+        "diamond"
       ],
       "dependsOn": []
     },
@@ -5384,6 +9317,193 @@
       "dependsOn": []
     },
     {
+      "id": "moodlet/scandal",
+      "category": "moodlet",
+      "path": "moodlet/scandal.png",
+      "incomingFileName": "moodlet-scandal.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Scandal",
+      "gameRefs": [
+        "scandal"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/hospitalized",
+      "category": "moodlet",
+      "path": "moodlet/hospitalized.png",
+      "incomingFileName": "moodlet-hospitalized.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Hospitalised",
+      "gameRefs": [
+        "hospitalized"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/band_split",
+      "category": "moodlet",
+      "path": "moodlet/band_split.png",
+      "incomingFileName": "moodlet-band_split.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Split",
+      "gameRefs": [
+        "band_split"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/fling",
+      "category": "moodlet",
+      "path": "moodlet/fling.png",
+      "incomingFileName": "moodlet-fling.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "A night to remember",
+      "gameRefs": [
+        "fling"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/regret",
+      "category": "moodlet",
+      "path": "moodlet/regret.png",
+      "incomingFileName": "moodlet-regret.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Regret",
+      "gameRefs": [
+        "regret"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/cheated",
+      "category": "moodlet",
+      "path": "moodlet/cheated.png",
+      "incomingFileName": "moodlet-cheated.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Cheated on",
+      "gameRefs": [
+        "cheated"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/family_evening",
+      "category": "moodlet",
+      "path": "moodlet/family_evening.png",
+      "incomingFileName": "moodlet-family_evening.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Family evening",
+      "gameRefs": [
+        "family_evening"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/sleepless",
+      "category": "moodlet",
+      "path": "moodlet/sleepless.png",
+      "incomingFileName": "moodlet-sleepless.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Sleepless night",
+      "gameRefs": [
+        "sleepless"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/expecting",
+      "category": "moodlet",
+      "path": "moodlet/expecting.png",
+      "incomingFileName": "moodlet-expecting.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Expecting",
+      "gameRefs": [
+        "expecting"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/new_parent",
+      "category": "moodlet",
+      "path": "moodlet/new_parent.png",
+      "incomingFileName": "moodlet-new_parent.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "New parent",
+      "gameRefs": [
+        "new_parent"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/family_strain",
+      "category": "moodlet",
+      "path": "moodlet/family_strain.png",
+      "incomingFileName": "moodlet-family_strain.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Family strain",
+      "gameRefs": [
+        "family_strain"
+      ],
+      "dependsOn": []
+    },
+    {
       "id": "moodlet/exhausted",
       "category": "moodlet",
       "path": "moodlet/exhausted.png",
@@ -5465,6 +9585,40 @@
       "label": "Behind bars",
       "gameRefs": [
         "jailed"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/craving",
+      "category": "moodlet",
+      "path": "moodlet/craving.png",
+      "incomingFileName": "moodlet-craving.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Craving",
+      "gameRefs": [
+        "craving"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "moodlet/aging",
+      "category": "moodlet",
+      "path": "moodlet/aging.png",
+      "incomingFileName": "moodlet-aging.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "status": "missing",
+      "batch": "B9",
+      "label": "Getting on",
+      "gameRefs": [
+        "aging"
       ],
       "dependsOn": []
     },
@@ -5839,6 +9993,244 @@
       "label": "Anatolian rock cover 2",
       "gameRefs": [
         "anatolian"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/blues.1",
+      "category": "cover",
+      "path": "cover/blues.1.jpg",
+      "incomingFileName": "cover-blues.1.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Blues cover 1",
+      "gameRefs": [
+        "blues"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/blues.2",
+      "category": "cover",
+      "path": "cover/blues.2.jpg",
+      "incomingFileName": "cover-blues.2.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Blues cover 2",
+      "gameRefs": [
+        "blues"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/folk.1",
+      "category": "cover",
+      "path": "cover/folk.1.jpg",
+      "incomingFileName": "cover-folk.1.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Folk cover 1",
+      "gameRefs": [
+        "folk"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/folk.2",
+      "category": "cover",
+      "path": "cover/folk.2.jpg",
+      "incomingFileName": "cover-folk.2.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Folk cover 2",
+      "gameRefs": [
+        "folk"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/punk.1",
+      "category": "cover",
+      "path": "cover/punk.1.jpg",
+      "incomingFileName": "cover-punk.1.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Punk cover 1",
+      "gameRefs": [
+        "punk"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/punk.2",
+      "category": "cover",
+      "path": "cover/punk.2.jpg",
+      "incomingFileName": "cover-punk.2.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Punk cover 2",
+      "gameRefs": [
+        "punk"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/soul.1",
+      "category": "cover",
+      "path": "cover/soul.1.jpg",
+      "incomingFileName": "cover-soul.1.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Soul cover 1",
+      "gameRefs": [
+        "soul"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/soul.2",
+      "category": "cover",
+      "path": "cover/soul.2.jpg",
+      "incomingFileName": "cover-soul.2.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Soul cover 2",
+      "gameRefs": [
+        "soul"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/reggae.1",
+      "category": "cover",
+      "path": "cover/reggae.1.jpg",
+      "incomingFileName": "cover-reggae.1.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Reggae cover 1",
+      "gameRefs": [
+        "reggae"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/reggae.2",
+      "category": "cover",
+      "path": "cover/reggae.2.jpg",
+      "incomingFileName": "cover-reggae.2.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Reggae cover 2",
+      "gameRefs": [
+        "reggae"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/country.1",
+      "category": "cover",
+      "path": "cover/country.1.jpg",
+      "incomingFileName": "cover-country.1.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Country cover 1",
+      "gameRefs": [
+        "country"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/country.2",
+      "category": "cover",
+      "path": "cover/country.2.jpg",
+      "incomingFileName": "cover-country.2.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Country cover 2",
+      "gameRefs": [
+        "country"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/classical.1",
+      "category": "cover",
+      "path": "cover/classical.1.jpg",
+      "incomingFileName": "cover-classical.1.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Classical cover 1",
+      "gameRefs": [
+        "classical"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "cover/classical.2",
+      "category": "cover",
+      "path": "cover/classical.2.jpg",
+      "incomingFileName": "cover-classical.2.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "jpg",
+      "transparent": false,
+      "status": "missing",
+      "batch": "B10",
+      "label": "Classical cover 2",
+      "gameRefs": [
+        "classical"
       ],
       "dependsOn": []
     }

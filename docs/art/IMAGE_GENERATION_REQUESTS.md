@@ -422,6 +422,431 @@ Consistency: it must look like it belongs to the same set as the approved Riffto
 
 Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/keys_crafted` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
 
+### item/guitar_1b
+
+```text
+Asset ID: item/guitar_1b
+File name: guitar_1b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Electro-acoustic guitar.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_1b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/guitar_2b
+
+```text
+Asset ID: item/guitar_2b
+File name: guitar_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Semi-hollow jazz guitar.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_2b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/guitar_2c
+
+```text
+Asset ID: item/guitar_2c
+File name: guitar_2c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Seven-string metal guitar.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_2c` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/bass_1b
+
+```text
+Asset ID: item/bass_1b
+File name: bass_1b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Fretless bass.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the bass body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/bass_1b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/bass_2b
+
+```text
+Asset ID: item/bass_2b
+File name: bass_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Five-string bass.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the bass body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/bass_2b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/drums_1b
+
+```text
+Asset ID: item/drums_1b
+File name: drums_1b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Electronic drum pad.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the outer shells of the drums (not the heads, hoops, lugs, cymbals or stands). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/drums_1b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/drums_2b
+
+```text
+Asset ID: item/drums_2b
+File name: drums_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Jazz drum kit.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the outer shells of the drums (not the heads, hoops, lugs, cymbals or stands). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/drums_2b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/keys_1b
+
+```text
+Asset ID: item/keys_1b
+File name: keys_1b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Portable synth.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the keyboard casing (not the keys, knobs, screen or wooden side panels). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/keys_1b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/keys_2b
+
+```text
+Asset ID: item/keys_2b
+File name: keys_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Electric piano.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the keyboard casing (not the keys, knobs, screen or wooden side panels). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/keys_2b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/keys_2c
+
+```text
+Asset ID: item/keys_2c
+File name: keys_2c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Modular synth rack.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the keyboard casing (not the keys, knobs, screen or wooden side panels). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/keys_2c` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/vocals_1b
+
+```text
+Asset ID: item/vocals_1b
+File name: vocals_1b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Dynamic stage mic.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the microphone handle/body (not the grille). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/vocals_1b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/vocals_2b
+
+```text
+Asset ID: item/vocals_2b
+File name: vocals_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: In-ear monitor vocal rig.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the microphone handle/body (not the grille). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/vocals_2b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/guitar_2d
+
+```text
+Asset ID: item/guitar_2d
+File name: guitar_2d.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Resonator guitar.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_2d` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/guitar_1c
+
+```text
+Asset ID: item/guitar_1c
+File name: guitar_1c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Nylon-string classical guitar.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_1c` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/keys_1c
+
+```text
+Asset ID: item/keys_1c
+File name: keys_1c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Hammond-style organ.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the keyboard casing (not the keys, knobs, screen or wooden side panels). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/keys_1c` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/reward_vedat_mic
+
+```text
+Asset ID: item/reward_vedat_mic
+File name: reward_vedat_mic.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Vedat Karahan's studio mic.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the microphone handle/body (not the grille). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/reward_vedat_mic` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/guitar_istanbul
+
+```text
+Asset ID: item/guitar_istanbul
+File name: guitar_istanbul.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Electric saz.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_istanbul` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/keys_berlin
+
+```text
+Asset ID: item/keys_berlin
+File name: keys_berlin.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: East Berlin analogue synth.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the keyboard casing (not the keys, knobs, screen or wooden side panels). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/keys_berlin` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/drums_hamburg
+
+```text
+Asset ID: item/drums_hamburg
+File name: drums_hamburg.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Kiez drum kit.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the outer shells of the drums (not the heads, hoops, lugs, cymbals or stands). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/drums_hamburg` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/guitar_manchester
+
+```text
+Asset ID: item/guitar_manchester
+File name: guitar_manchester.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Mill Town semi-acoustic.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_manchester` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/bass_liverpool
+
+```text
+Asset ID: item/bass_liverpool
+File name: bass_liverpool.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Mersey violin bass.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the bass body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/bass_liverpool` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/guitar_paris
+
+```text
+Asset ID: item/guitar_paris
+File name: guitar_paris.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Gypsy jazz guitar.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_paris` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/vocals_marseille
+
+```text
+Asset ID: item/vocals_marseille
+File name: vocals_marseille.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Harbour mic.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the microphone handle/body (not the grille). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/vocals_marseille` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/drums_newyork
+
+```text
+Asset ID: item/drums_newyork
+File name: drums_newyork.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Brooklyn breakbeat kit.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the outer shells of the drums (not the heads, hoops, lugs, cymbals or stands). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/drums_newyork` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/guitar_nashville
+
+```text
+Asset ID: item/guitar_nashville
+File name: guitar_nashville.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Music Row tele-style guitar.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the guitar body top and sides (not the neck, fretboard, pickguard, pickups, hardware or strings). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/guitar_nashville` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
 ## B4 — Outfits, vehicles, spray paint and paint masks
 
 ### item/outfit_1
@@ -577,6 +1002,346 @@ Consistency: it must look like it belongs to the same set as the approved Riffto
 
 Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_crafted` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
 
+### item/outfit_1b
+
+```text
+Asset ID: item/outfit_1b
+File name: outfit_1b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Band tee and boots.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_1b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_2e
+
+```text
+Asset ID: item/outfit_2e
+File name: outfit_2e.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Cowboy hat and boots.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_2e` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_1c
+
+```text
+Asset ID: item/outfit_1c
+File name: outfit_1c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Retro tracksuit.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_1c` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_2b
+
+```text
+Asset ID: item/outfit_2b
+File name: outfit_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Velvet jacket.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_2b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_2c
+
+```text
+Asset ID: item/outfit_2c
+File name: outfit_2c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Sequined stage dress.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_2c` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_2d
+
+```text
+Asset ID: item/outfit_2d
+File name: outfit_2d.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Leather trousers and vest.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_2d` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_3b
+
+```text
+Asset ID: item/outfit_3b
+File name: outfit_3b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Light-up stage costume.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_3b` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_3c
+
+```text
+Asset ID: item/outfit_3c
+File name: outfit_3c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Haute couture tuxedo.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_3c` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/scooter_1
+
+```text
+Asset ID: item/scooter_1
+File name: scooter_1.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Scooter.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the car/van body paint or the motorcycle tank and fairings (not glass, tyres, wheels, chrome, lights). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/scooter_1` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/pickup_1
+
+```text
+Asset ID: item/pickup_1
+File name: pickup_1.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Pickup truck.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the car/van body paint or the motorcycle tank and fairings (not glass, tyres, wheels, chrome, lights). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/pickup_1` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_leather_crafted
+
+```text
+Asset ID: item/outfit_leather_crafted
+File name: outfit_leather_crafted.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Handmade leather jacket.
+Tier: Crafted: custom handmade one-off, visible handwork (hand-cut shapes, screws, stitches, wood grain), charming and personal. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_leather_crafted` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_led_crafted
+
+```text
+Asset ID: item/outfit_led_crafted
+File name: outfit_led_crafted.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Handmade light-up costume.
+Tier: Crafted: custom handmade one-off, visible handwork (hand-cut shapes, screws, stitches, wood grain), charming and personal. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_led_crafted` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/reward_fox_jacket
+
+```text
+Asset ID: item/reward_fox_jacket
+File name: reward_fox_jacket.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Red Fox stage jacket.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/reward_fox_jacket` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_winter
+
+```text
+Asset ID: item/outfit_winter
+File name: outfit_winter.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Winter tour greatcoat.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_winter` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_spring
+
+```text
+Asset ID: item/outfit_spring
+File name: outfit_spring.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Floral spring shirt.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_spring` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_summer
+
+```text
+Asset ID: item/outfit_summer
+File name: outfit_summer.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Festival summer outfit.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_summer` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_ankara
+
+```text
+Asset ID: item/outfit_ankara
+File name: outfit_ankara.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Steppe parka.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_ankara` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_london
+
+```text
+Asset ID: item/outfit_london
+File name: outfit_london.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Kings Road leather jacket.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_london` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_lyon
+
+```text
+Asset ID: item/outfit_lyon
+File name: outfit_lyon.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Lyon silk stage shirt.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_lyon` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
+### item/outfit_la
+
+```text
+Asset ID: item/outfit_la
+File name: outfit_la.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Hollywood glitter jacket.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Paintable surface: players can repaint the main garment fabric or leather (not zips, studs, buttons, crystals, hanger or mannequin). Render that surface in a neutral light grey (#DADADA) with full natural shading, reflections and highlights and no colour tint; every other part keeps its natural material (wood, chrome, plastic, glass, rubber).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/outfit_la` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
+
 ### item/spray
 
 ```text
@@ -595,6 +1360,174 @@ Consistency: it must look like it belongs to the same set as the approved Riffto
 Maske ChatGPT'den istenmez. Görsel geçerli olunca: `npm run art:automask -- item/spray` (sonra `npm run art:sync`, galeride boya örneklerini kontrol et).
 
 ## B5 — Art, rings, pets, stage effects, materials
+
+### item/sax_1
+
+```text
+Asset ID: item/sax_1
+File name: sax_1.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Student alto sax.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/sax_2
+
+```text
+Asset ID: item/sax_2
+File name: sax_2.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Stage tenor sax.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/sax_3
+
+```text
+Asset ID: item/sax_3
+File name: sax_3.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Handmade pro saxophone.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/violin_1
+
+```text
+Asset ID: item/violin_1
+File name: violin_1.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Student violin.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/violin_2
+
+```text
+Asset ID: item/violin_2
+File name: violin_2.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Stage violin with pickup.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/violin_3
+
+```text
+Asset ID: item/violin_3
+File name: violin_3.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Master-built concert violin.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/percussion_1
+
+```text
+Asset ID: item/percussion_1
+File name: percussion_1.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Darbuka and frame drum.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/percussion_2
+
+```text
+Asset ID: item/percussion_2
+File name: percussion_2.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Conga and bongo set.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/percussion_3
+
+```text
+Asset ID: item/percussion_3
+File name: percussion_3.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Professional percussion rig.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/sax_4
+
+```text
+Asset ID: item/sax_4
+File name: sax_4.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: 1954 vintage tenor sax.
+Tier: Tier 4 Iconic/Legendary: a legendary collectible with history, aged or exceptional materials, unmistakably special. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/violin_4
+
+```text
+Asset ID: item/violin_4
+File name: violin_4.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Century-old master violin.
+Tier: Tier 4 Iconic/Legendary: a legendary collectible with history, aged or exceptional materials, unmistakably special. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/percussion_4
+
+```text
+Asset ID: item/percussion_4
+File name: percussion_4.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: A legendary percussionist's conga set.
+Tier: Tier 4 Iconic/Legendary: a legendary collectible with history, aged or exceptional materials, unmistakably special. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
 
 ### item/art_1
 
@@ -926,6 +1859,580 @@ File name: mat_sequins.png
 Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
 Subject: a small glass jar overflowing with sequins and rhinestones.
 Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/sax_crafted
+
+```text
+Asset ID: item/sax_crafted
+File name: sax_crafted.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Handmade saxophone.
+Tier: Crafted: custom handmade one-off, visible handwork (hand-cut shapes, screws, stitches, wood grain), charming and personal. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/violin_crafted
+
+```text
+Asset ID: item/violin_crafted
+File name: violin_crafted.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Handmade violin.
+Tier: Crafted: custom handmade one-off, visible handwork (hand-cut shapes, screws, stitches, wood grain), charming and personal. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/percussion_crafted
+
+```text
+Asset ID: item/percussion_crafted
+File name: percussion_crafted.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Handmade conga.
+Tier: Crafted: custom handmade one-off, visible handwork (hand-cut shapes, screws, stitches, wood grain), charming and personal. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/violin_2b
+
+```text
+Asset ID: item/violin_2b
+File name: violin_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Country fiddle.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/sax_2b
+
+```text
+Asset ID: item/sax_2b
+File name: sax_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Baritone sax.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/percussion_2b
+
+```text
+Asset ID: item/percussion_2b
+File name: percussion_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Nyabinghi drum set.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/art_1b
+
+```text
+Asset ID: item/art_1b
+File name: art_1b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Signed record sleeve.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/art_1c
+
+```text
+Asset ID: item/art_1c
+File name: art_1c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Black-and-white gig photo.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/art_2b
+
+```text
+Asset ID: item/art_2b
+File name: art_2b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Neon sign.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/art_2c
+
+```text
+Asset ID: item/art_2c
+File name: art_2c.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Bronze sculpture.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/art_3b
+
+```text
+Asset ID: item/art_3b
+File name: art_3b.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Pop art screen print.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/pet_rabbit
+
+```text
+Asset ID: item/pet_rabbit
+File name: pet_rabbit.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Rabbit.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/pet_fish
+
+```text
+Asset ID: item/pet_fish
+File name: pet_fish.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Aquarium fish.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/pet_tortoise
+
+```text
+Asset ID: item/pet_tortoise
+File name: pet_tortoise.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Tortoise.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/pet_ferret
+
+```text
+Asset ID: item/pet_ferret
+File name: pet_ferret.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Ferret.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/fx_bubbles
+
+```text
+Asset ID: item/fx_bubbles
+File name: fx_bubbles.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Bubble machine.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/fx_lasers
+
+```text
+Asset ID: item/fx_lasers
+File name: fx_lasers.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Laser show.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/fx_co2
+
+```text
+Asset ID: item/fx_co2
+File name: fx_co2.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: CO₂ jets.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/fx_screen
+
+```text
+Asset ID: item/fx_screen
+File name: fx_screen.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Giant LED screen.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/fx_balloons
+
+```text
+Asset ID: item/fx_balloons
+File name: fx_balloons.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Giant balloons.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_leather
+
+```text
+Asset ID: item/mat_leather
+File name: mat_leather.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Leather.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_led
+
+```text
+Asset ID: item/mat_led
+File name: mat_led.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: LED strip.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_canvas
+
+```text
+Asset ID: item/mat_canvas
+File name: mat_canvas.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Canvas.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_paint
+
+```text
+Asset ID: item/mat_paint
+File name: mat_paint.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Oil paint set.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_powder
+
+```text
+Asset ID: item/mat_powder
+File name: mat_powder.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Stage powder.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_amp_parts
+
+```text
+Asset ID: item/mat_amp_parts
+File name: mat_amp_parts.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Amp parts.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_metal
+
+```text
+Asset ID: item/mat_metal
+File name: mat_metal.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Metal sheet.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_brass
+
+```text
+Asset ID: item/mat_brass
+File name: mat_brass.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Brass body.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_reed
+
+```text
+Asset ID: item/mat_reed
+File name: mat_reed.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Sax reed.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/mat_bow
+
+```text
+Asset ID: item/mat_bow
+File name: mat_bow.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Violin bow.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/condom
+
+```text
+Asset ID: item/condom
+File name: condom.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Condom.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/repair_kit
+
+```text
+Asset ID: item/repair_kit
+File name: repair_kit.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Repair kit.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/gear_service
+
+```text
+Asset ID: item/gear_service
+File name: gear_service.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Gear service pack.
+Tier: Tier 1 Basic: affordable entry-level build, simple shapes, plain materials, modest hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/art_crafted
+
+```text
+Asset ID: item/art_crafted
+File name: art_crafted.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Handmade painting.
+Tier: Crafted: custom handmade one-off, visible handwork (hand-cut shapes, screws, stitches, wood grain), charming and personal. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/fx_crafted
+
+```text
+Asset ID: item/fx_crafted
+File name: fx_crafted.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Handmade pyrotechnics.
+Tier: Crafted: custom handmade one-off, visible handwork (hand-cut shapes, screws, stitches, wood grain), charming and personal. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/reward_melek_notebook
+
+```text
+Asset ID: item/reward_melek_notebook
+File name: reward_melek_notebook.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Melek Aksoy's notebook.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/fx_snow
+
+```text
+Asset ID: item/fx_snow
+File name: fx_snow.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Snow machine.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/fx_fireworks
+
+```text
+Asset ID: item/fx_fireworks
+File name: fx_fireworks.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Harvest fireworks.
+Tier: Tier 3 Professional: high-end craftsmanship, premium materials (figured wood, polished metal), refined details. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/art_autumn
+
+```text
+Asset ID: item/art_autumn
+File name: art_autumn.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Autumn tour poster (limited print).
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/sax_izmir
+
+```text
+Asset ID: item/sax_izmir
+File name: sax_izmir.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Alsancak tenor sax.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
+Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### item/violin_munich
+
+```text
+Asset ID: item/violin_munich
+File name: violin_munich.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 512×512 PNG)
+Subject: Mittenwald violin.
+Tier: Tier 2 Stage: solid professional workhorse, better materials and finish, reliable hardware. Show the tier through design, materials and craftsmanship, not through a coloured frame.
 Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
 Camera and composition: Single object, three-quarter view from slightly above, centred, the object fills about 80% of the frame with roughly 10% empty padding on every side, no floor, no cast shadow, nothing else in the frame. Use the same camera height and angle as the other items in this set.
 Background: Fully transparent background: PNG with a real alpha channel. Do not draw a checkerboard, floor, shadow or backdrop.
@@ -1824,19 +3331,6 @@ Background: Fully transparent background: PNG with a real alpha channel, no chec
 Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
 ```
 
-### achievement/platinum
-
-```text
-Asset ID: achievement/platinum
-File name: achievement-platinum.png
-Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
-Subject: "Platinum record" — Sell 10,000 copies of one release..
-Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
-Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
-Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
-Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
-```
-
 ### achievement/skilled
 
 ```text
@@ -2026,6 +3520,955 @@ Asset ID: achievement/vip
 File name: achievement-vip.png
 Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
 Subject: "VIP" — Become a VIP member..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/empty_room
+
+```text
+Asset ID: achievement/empty_room
+File name: achievement-empty_room.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Poet of empty rooms" — Play a gig to 3 people or fewer..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/pogo
+
+```text
+Asset ID: achievement/pogo
+File name: achievement-pogo.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "All hell broke loose" — Land a mosh pit call at a gig..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/hard_landing
+
+```text
+Asset ID: achievement/hard_landing
+File name: achievement-hard_landing.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Hard landing" — Stage-dive and hit the floor..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/encore_flop
+
+```text
+Asset ID: achievement/encore_flop
+File name: achievement-encore_flop.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Nobody asked" — Go for a bold encore and have it flop..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/fx_party
+
+```text
+Asset ID: achievement/fx_party
+File name: achievement-fx_party.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Fireworks factory" — Use three or more stage effects at one gig..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/one_man_band
+
+```text
+Asset ID: achievement/one_man_band
+File name: achievement-one_man_band.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "One-person orchestra" — Be the only band member on stage, with at least three session players..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/genre_hopper
+
+```text
+Asset ID: achievement/genre_hopper
+File name: achievement-genre_hopper.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Genre hopper" — Write songs in six different genres..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/legendary_owner
+
+```text
+Asset ID: achievement/legendary_owner
+File name: achievement-legendary_owner.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Holy relic" — Own a legendary instrument..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/rainbow
+
+```text
+Asset ID: achievement/rainbow
+File name: achievement-rainbow.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Rainbow" — Own items painted in five different colours..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/pet_named
+
+```text
+Asset ID: achievement/pet_named
+File name: achievement-pet_named.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Named it Rock" — Give your pet a name..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/all_roles
+
+```text
+Asset ID: achievement/all_roles
+File name: achievement-all_roles.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Multi-instrumentalist" — Learn the main skill of all eight band roles..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/broke
+
+```text
+Asset ID: achievement/broke
+File name: achievement-broke.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Flat broke" — End up with no money in pocket or bank..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/front_page
+
+```text
+Asset ID: achievement/front_page
+File name: achievement-front_page.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Front page" — Have the city reporter write a story about your band..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/heartbreaker
+
+```text
+Asset ID: achievement/heartbreaker
+File name: achievement-heartbreaker.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Heartbreaker" — Have three one-night flings..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/scene_hit
+
+```text
+Asset ID: achievement/scene_hit
+File name: achievement-scene_hit.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Right place, right song" — Play a gig where your subgenres really land in that city's scene..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_istanbul
+
+```text
+Asset ID: achievement/city_istanbul
+File name: achievement-city_istanbul.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Voice of the Bosphorus" — Play a good or better Anatolian rock gig in Istanbul..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_ankara
+
+```text
+Asset ID: achievement/city_ankara
+File name: achievement-city_ankara.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Noise of the capital" — Play a good or better Rock gig in Ankara..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_izmir
+
+```text
+Asset ID: achievement/city_izmir
+File name: achievement-city_izmir.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Jazz on the Kordon" — Play a good or better Jazz gig in Izmir..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_berlin
+
+```text
+Asset ID: achievement/city_berlin
+File name: achievement-city_berlin.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Past the door" — Play a good or better Electronic gig in Berlin..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_hamburg
+
+```text
+Asset ID: achievement/city_hamburg
+File name: achievement-city_hamburg.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Reeperbahn apprentice" — Play a good or better Punk gig in Hamburg..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_munich
+
+```text
+Asset ID: achievement/city_munich
+File name: achievement-city_munich.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Applause at the Residenz" — Play a good or better Classical gig in Munich..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_london
+
+```text
+Asset ID: achievement/city_london
+File name: achievement-city_london.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Camden rebel" — Play a good or better Punk gig in London..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_manchester
+
+```text
+Asset ID: achievement/city_manchester
+File name: achievement-city_manchester.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Sound of the North" — Play a good or better Rock gig in Manchester..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_liverpool
+
+```text
+Asset ID: achievement/city_liverpool
+File name: achievement-city_liverpool.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Mersey beat" — Play a good or better Pop gig in Liverpool..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_paris
+
+```text
+Asset ID: achievement/city_paris
+File name: achievement-city_paris.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "A night in Montmartre" — Play a good or better Jazz gig in Paris..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_lyon
+
+```text
+Asset ID: achievement/city_lyon
+File name: achievement-city_lyon.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Club night of two rivers" — Play a good or better Electronic gig in Lyon..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_marseille
+
+```text
+Asset ID: achievement/city_marseille
+File name: achievement-city_marseille.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "MC of the harbour" — Play a good or better Hip-hop gig in Marseille..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_newyork
+
+```text
+Asset ID: achievement/city_newyork
+File name: achievement-city_newyork.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "The city never sleeps" — Play a good or better Hip-hop gig in New York..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_losangeles
+
+```text
+Asset ID: achievement/city_losangeles
+File name: achievement-city_losangeles.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Star of the boulevard" — Play a good or better Pop gig in Los Angeles..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/city_nashville
+
+```text
+Asset ID: achievement/city_nashville
+File name: achievement-city_nashville.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "New voice of Music Row" — Play a good or better Country gig in Nashville..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/world_kitchen
+
+```text
+Asset ID: achievement/world_kitchen
+File name: achievement-world_kitchen.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "World kitchen" — Taste the local dish of all 15 cities..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/gigs_100
+
+```text
+Asset ID: achievement/gigs_100
+File name: achievement-gigs_100.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Hundredth night" — Play 100 gigs..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/gigs_250
+
+```text
+Asset ID: achievement/gigs_250
+File name: achievement-gigs_250.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Road dog" — Play 250 gigs..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/cities_5
+
+```text
+Asset ID: achievement/cities_5
+File name: achievement-cities_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "City to city" — Play gigs in 5 cities..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/cities_15
+
+```text
+Asset ID: achievement/cities_15
+File name: achievement-cities_15.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Everywhere" — Play all 15 cities in the world..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/stadium_gig
+
+```text
+Asset ID: achievement/stadium_gig
+File name: achievement-stadium_gig.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Stadium lights" — Play a stadium..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/festival_gig
+
+```text
+Asset ID: achievement/festival_gig
+File name: achievement-festival_gig.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Festival stage" — Play a festival..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/festival_5
+
+```text
+Asset ID: achievement/festival_5
+File name: achievement-festival_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Festival regular" — Play 5 festivals..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/epic_5
+
+```text
+Asset ID: achievement/epic_5
+File name: achievement-epic_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "EPIC streak" — Play 5 EPIC gigs..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/legendary_night
+
+```text
+Asset ID: achievement/legendary_night
+File name: achievement-legendary_night.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "LEGENDARY" — Play a LEGENDARY night..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/stage_moments_10
+
+```text
+Asset ID: achievement/stage_moments_10
+File name: achievement-stage_moments_10.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Stage commander" — Land 10 stage moments..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/encore_10
+
+```text
+Asset ID: achievement/encore_10
+File name: achievement-encore_10.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "One more!" — Play 10 encores..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/songs_50
+
+```text
+Asset ID: achievement/songs_50
+File name: achievement-songs_50.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Notebook full" — Write 50 songs..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/masterpiece
+
+```text
+Asset ID: achievement/masterpiece
+File name: achievement-masterpiece.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Masterpiece" — Write an outstanding song..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/recordings_25
+
+```text
+Asset ID: achievement/recordings_25
+File name: achievement-recordings_25.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Studio rat" — Make 25 recordings..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/singles_5
+
+```text
+Asset ID: achievement/singles_5
+File name: achievement-singles_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Singles machine" — Release 5 singles..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/albums_3
+
+```text
+Asset ID: achievement/albums_3
+File name: achievement-albums_3.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Discography" — Release 3 albums..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/platinum
+
+```text
+Asset ID: achievement/platinum
+File name: achievement-platinum.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Platinum record" — Sell 10,000 copies of one release..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/no1_4weeks
+
+```text
+Asset ID: achievement/no1_4weeks
+File name: achievement-no1_4weeks.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Top of the charts" — Spend 4 weeks at number one on city charts..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/radio_100
+
+```text
+Asset ID: achievement/radio_100
+File name: achievement-radio_100.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Radio friendly" — Get 100 radio plays..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/video_1
+
+```text
+Asset ID: achievement/video_1
+File name: achievement-video_1.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Lights, camera" — Shoot a music video..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/interview_5
+
+```text
+Asset ID: achievement/interview_5
+File name: achievement-interview_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Press darling" — Give 5 interviews or press conferences..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/article_10
+
+```text
+Asset ID: achievement/article_10
+File name: achievement-article_10.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Wordsmith" — Publish 10 articles..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/tour_1
+
+```text
+Asset ID: achievement/tour_1
+File name: achievement-tour_1.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "On the road" — Finish a tour..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/skills_20
+
+```text
+Asset ID: achievement/skills_20
+File name: achievement-skills_20.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Renaissance" — Learn 20 different skills..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/skills_35
+
+```text
+Asset ID: achievement/skills_35
+File name: achievement-skills_35.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Know-it-all" — Learn 35 different skills..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/crafter_10
+
+```text
+Asset ID: achievement/crafter_10
+File name: achievement-crafter_10.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Skilled hands" — Make 10 things in the workshop..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/workouts_20
+
+```text
+Asset ID: achievement/workouts_20
+File name: achievement-workouts_20.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "In shape" — Work out 20 times..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/shifts_50
+
+```text
+Asset ID: achievement/shifts_50
+File name: achievement-shifts_50.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Workhorse" — Finish 50 shifts..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/busk_1000
+
+```text
+Asset ID: achievement/busk_1000
+File name: achievement-busk_1000.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Full hat" — Collect $1,000 busking..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/travels_20
+
+```text
+Asset ID: achievement/travels_20
+File name: achievement-travels_20.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Wanderer" — Travel 20 times..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/meals_25
+
+```text
+Asset ID: achievement/meals_25
+File name: achievement-meals_25.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Foodie" — Eat out 25 times..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/friends_5
+
+```text
+Asset ID: achievement/friends_5
+File name: achievement-friends_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Popular" — Make 5 friends..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/hangouts_25
+
+```text
+Asset ID: achievement/hangouts_25
+File name: achievement-hangouts_25.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Social butterfly" — Hang out 25 times..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/dates_5
+
+```text
+Asset ID: achievement/dates_5
+File name: achievement-dates_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Romantic" — Go on 5 dates..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/married
+
+```text
+Asset ID: achievement/married
+File name: achievement-married.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Happily ever after" — Get married..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/gifts_5
+
+```text
+Asset ID: achievement/gifts_5
+File name: achievement-gifts_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Gift giver" — Give 5 gifts..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/trader_5
+
+```text
+Asset ID: achievement/trader_5
+File name: achievement-trader_5.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Haggler" — Complete 5 trades..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/inked_4
+
+```text
+Asset ID: achievement/inked_4
+File name: achievement-inked_4.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Inked" — Get 4 tattoos..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/superstar_3
+
+```text
+Asset ID: achievement/superstar_3
+File name: achievement-superstar_3.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Star of three cities" — Be a superstar in 3 cities..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/superstar_8
+
+```text
+Asset ID: achievement/superstar_8
+File name: achievement-superstar_8.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Global star" — Be a superstar in 8 cities..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/superstar_all
+
+```text
+Asset ID: achievement/superstar_all
+File name: achievement-superstar_all.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Immortal" — Be a superstar in all 15 cities..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### achievement/diamond
+
+```text
+Asset ID: achievement/diamond
+File name: achievement-diamond.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 256×256 PNG)
+Subject: "Diamond record" — Sell 50,000 copies of one release..
 Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
 Camera and composition: Round badge emblem, centred, a metallic medal rim and one clear symbol in the middle, readable at 64 px, about 10% padding.
 Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
@@ -2827,6 +5270,149 @@ Background: Fully transparent background: PNG with a real alpha channel, no chec
 Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
 ```
 
+### moodlet/scandal
+
+```text
+Asset ID: moodlet/scandal
+File name: moodlet-scandal.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Scandal" — Your name is in the papers for the wrong reasons..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/hospitalized
+
+```text
+Asset ID: moodlet/hospitalized
+File name: moodlet-hospitalized.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Hospitalised" — You neglected yourself and ended up in hospital..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/band_split
+
+```text
+Asset ID: moodlet/band_split
+File name: moodlet-band_split.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Split" — You parted ways with a band..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/fling
+
+```text
+Asset ID: moodlet/fling
+File name: moodlet-fling.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "A night to remember" — Last night was unexpectedly lovely..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/regret
+
+```text
+Asset ID: moodlet/regret
+File name: moodlet-regret.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Regret" — You need to think about last night a little..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/cheated
+
+```text
+Asset ID: moodlet/cheated
+File name: moodlet-cheated.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Cheated on" — Someone you trusted let you down..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/family_evening
+
+```text
+Asset ID: moodlet/family_evening
+File name: moodlet-family_evening.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Family evening" — You had a lovely evening at home..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/sleepless
+
+```text
+Asset ID: moodlet/sleepless
+File name: moodlet-sleepless.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Sleepless night" — The baby was up all night..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/expecting
+
+```text
+Asset ID: moodlet/expecting
+File name: moodlet-expecting.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Expecting" — Your family is growing..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/new_parent
+
+```text
+Asset ID: moodlet/new_parent
+File name: moodlet-new_parent.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "New parent" — You're holding a brand-new life..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/family_strain
+
+```text
+Asset ID: moodlet/family_strain
+File name: moodlet-family_strain.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Family strain" — You couldn’t cover your child’s care this week..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
 ### moodlet/exhausted
 
 ```text
@@ -2886,6 +5472,32 @@ Asset ID: moodlet/jailed
 File name: moodlet-jailed.png
 Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
 Subject: a simple icon for the mood "Behind bars" — You are in prison..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/craving
+
+```text
+Asset ID: moodlet/craving
+File name: moodlet-craving.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Craving" — You are hooked and haven’t had your fix. Treatment at the hospital helps..
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
+Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### moodlet/aging
+
+```text
+Asset ID: moodlet/aging
+File name: moodlet-aging.png
+Size and format: 1024×1024 square, PNG with transparent background (the game resizes it to 128×128 PNG)
+Subject: a simple icon for the mood "Getting on" — The years are catching up with you..
 Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
 Camera and composition: Simple glossy app-style icon, one bold symbol or small expressive object, centred, readable at 24 px, same style as the other icons.
 Background: Fully transparent background: PNG with a real alpha channel, no checkerboard.
@@ -3174,6 +5786,188 @@ Asset ID: cover/anatolian.2
 File name: cover-anatolian.2.png
 Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
 Subject: an album cover artwork evoking Anatolian rock music (variation 2).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/blues.1
+
+```text
+Asset ID: cover/blues.1
+File name: cover-blues.1.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Blues music (variation 1).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/blues.2
+
+```text
+Asset ID: cover/blues.2
+File name: cover-blues.2.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Blues music (variation 2).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/folk.1
+
+```text
+Asset ID: cover/folk.1
+File name: cover-folk.1.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Folk music (variation 1).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/folk.2
+
+```text
+Asset ID: cover/folk.2
+File name: cover-folk.2.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Folk music (variation 2).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/punk.1
+
+```text
+Asset ID: cover/punk.1
+File name: cover-punk.1.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Punk music (variation 1).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/punk.2
+
+```text
+Asset ID: cover/punk.2
+File name: cover-punk.2.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Punk music (variation 2).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/soul.1
+
+```text
+Asset ID: cover/soul.1
+File name: cover-soul.1.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Soul music (variation 1).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/soul.2
+
+```text
+Asset ID: cover/soul.2
+File name: cover-soul.2.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Soul music (variation 2).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/reggae.1
+
+```text
+Asset ID: cover/reggae.1
+File name: cover-reggae.1.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Reggae music (variation 1).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/reggae.2
+
+```text
+Asset ID: cover/reggae.2
+File name: cover-reggae.2.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Reggae music (variation 2).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/country.1
+
+```text
+Asset ID: cover/country.1
+File name: cover-country.1.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Country music (variation 1).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/country.2
+
+```text
+Asset ID: cover/country.2
+File name: cover-country.2.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Country music (variation 2).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/classical.1
+
+```text
+Asset ID: cover/classical.1
+File name: cover-classical.1.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Classical music (variation 1).
+Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
+Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
+Background: Full-bleed artwork (no transparency).
+Consistency: it must look like it belongs to the same set as the approved Rifftown style board and the assets already approved in this conversation.
+```
+
+### cover/classical.2
+
+```text
+Asset ID: cover/classical.2
+File name: cover-classical.2.png
+Size and format: 1024×1024 square, PNG (the game resizes it to 1024×1024 JPG)
+Subject: an album cover artwork evoking Classical music (variation 2).
 Style: Rifftown Visual Language v1: painted, stylized semi-realistic game illustration with a polished, contemporary mobile-game finish (not a photograph and not a 3D product render); premium but playful, never photorealistic and never cartoonish; clean silhouettes that stay readable at small sizes; consistent soft key light from the upper left with a subtle cool rim light; natural material and object colours, with the brand neons (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF) used only as small light accents; absolutely no text, letters, numbers, logos, brand names, trademarks or watermarks anywhere in the image; do not copy recognisable real product designs (guitar headstock shapes, car badges, fashion logos) or real people.
 Camera and composition: Square album cover artwork, bold central motif, leaves room for the game to print the band name and title later.
 Background: Full-bleed artwork (no transparency).
