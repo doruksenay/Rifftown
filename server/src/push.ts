@@ -62,6 +62,9 @@ const TEMPLATES: Record<string, Tpl> = {
   },
   fling_offer: (d, l) => ({ title: T(l, 'Bir teklif', 'An offer'), body: T(l, `${d.from} geceyi seninle geçirmek istiyor.`, `${d.from} would like to spend the night with you.`) }),
   fling_accepted: (d, l) => ({ title: T(l, 'Evet dedi', 'They said yes'), body: T(l, `${d.from} teklifini kabul etti.`, `${d.from} accepted.`) }),
+  pregnancy: (_d, l) => ({ title: T(l, 'Müjde', 'Big news'), body: T(l, 'Aileniz büyüyor!', 'Your family is growing!') }),
+  baby_born: (d, l) => ({ title: T(l, 'Hoş geldin bebek', 'Welcome, baby'), body: T(l, `Bebeğiniz dünyaya geldi: ${d.name}.`, `Your baby has arrived: ${d.name}.`) }),
+  family_try_offer: (d, l) => ({ title: T(l, 'Aile', 'Family'), body: T(l, `${d.from} seninle çocuk sahibi olmayı denemek istiyor.`, `${d.from} would like to try for a baby with you.`) }),
   cheated_on: (d, l) => ({ title: T(l, 'Kötü bir haber', 'Bad news'), body: T(l, `${d.from} sana sadık kalmadı.`, `${d.from} wasn't faithful to you.`) }),
   child_upkeep: (d, l) =>
     d.paid ? null : { title: T(l, 'Aile bütçesi', 'Family budget'), body: T(l, `${d.name} için bu hafta bakım giderini karşılayamadın.`, `You couldn't cover ${d.name}'s care this week.`) },

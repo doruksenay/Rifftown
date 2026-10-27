@@ -190,6 +190,8 @@ function LocationScreenScreen() {
             label={t('treatHere')}
           />
           <ProfessionsHere locationId={loc.id} zone="hospital" />
+          <Heading>{t('pharmacy')}</Heading>
+          <Shop locationId={loc.id} shop="hospital" />
         </View>
       ) : loc.type === 'bookstore' ? (
         <Bookstore locationId={loc.id} />

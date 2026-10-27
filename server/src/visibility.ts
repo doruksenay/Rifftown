@@ -57,6 +57,9 @@ function blurNode(node: unknown, depth = 0): unknown {
     } else if (SIGN_ONLY.has(k) && typeof v === 'number') {
       // Etkinin yalnızca yönü gösterilir (setlist sırası, basın etkisi vb.)
       out[k] = Math.sign(v);
+    } else if (k === 'dueDays' && typeof v === 'number') {
+      // Doğuma kalan süre: VIP olmayanlara beşer günlük adımlarla
+      out[k] = Math.ceil(v / 5) * 5;
     } else if (k === 'lessonRate' && typeof v === 'number') {
       // Ders verimi: VIP olmayanlara yarımlık adımlarla (öğretmenin rütbesi ve ilişki seviyesi tam okunamasın)
       out[k] = Math.floor(v * 2) / 2;

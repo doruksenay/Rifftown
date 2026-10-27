@@ -87,3 +87,39 @@ export const childAge = (bornAt: Date | string, gameSpeed: number, nowMs = Date.
 export const childStage = (age: number): ChildStage => (age < 3 ? 'baby' : age < 13 ? 'child' : age < 18 ? 'teen' : 'adult');
 /** Haftalık bakım gideri (çocuk başına, şehir çarpanıyla); her ebeveyn yarısını öder. Yetişkin çocuk için gider yok. */
 export const CHILD_WEEKLY_UPKEEP = 40;
+
+// ---------- Aile planlaması ve hamilelik ----------
+// Açık içerik yok, yalnızca mekanik; bütün taraflar yetişkin, her adım karşılıklı onaylı.
+// Hamilelik yalnızca iki tarafın da "çocuk sahibi olmaya açığım" ayarı açıksa olabilir (varsayılan kapalı).
+// Korunmalı birliktelikte ihtimal tam sıfır. Taşıyan ebeveyn cinsiyetten bağımsızdır: çift (ya da macerada zar) seçer.
+// Terminasyon, evlatlık verme, sağlık ya da ölüm riski, kısırlık mekaniği yoktur.
+
+/** Korunmasız tek gecelik macerada (iki tarafın ayarı açıksa) hamilelik ihtimali: çok düşük */
+export const FLING_PREGNANCY_CHANCE = 0.015;
+/** Bilinçli deneme ("çocuk sahibi olmayı dene") başına ihtimal */
+export const TRY_PREGNANCY_CHANCE = 0.25;
+/** Deneme için gereken romantizm (sevgili seviyesi) */
+export const TRY_MIN_ROMANCE = DATING_ROMANCE;
+/** Aynı çift için denemeler arası bekleme (oyun günü) ve teklif geçerliliği (oyun saati) */
+export const TRY_PAIR_COOLDOWN_DAYS = 3;
+export const TRY_OFFER_HOURS = 6;
+/** Deneme iki taraftan da bu kadar enerji alır */
+export const TRY_ENERGY = 10;
+/** Hamilelik süresi ve doğumdan sonra taşıyan için bekleme (oyun günü) */
+export const PREGNANCY_DAYS = 20;
+export const POSTPARTUM_COOLDOWN_DAYS = 30;
+/** Koruma eşyası (hastanenin eczane rafında) */
+export const CONDOM_ITEM = 'condom';
+
+/** Bebeğe kendiliğinden verilen ad (ebeveynlerin şehrine göre; deterministik) */
+const BABY_NAMES: Record<string, string[]> = {
+  TR: ['Deniz', 'Ada', 'Ege', 'Defne', 'Can', 'Elif', 'Umut', 'Su', 'Arda', 'Lina'],
+  DE: ['Mia', 'Leon', 'Emma', 'Paul', 'Hanna', 'Finn', 'Lea', 'Jonas', 'Ida', 'Max'],
+  GB: ['Olivia', 'Jack', 'Amelia', 'Harry', 'Isla', 'Oscar', 'Ivy', 'George', 'Rose', 'Alfie'],
+  FR: ['Jade', 'Louis', 'Léa', 'Gabriel', 'Chloé', 'Hugo', 'Inès', 'Arthur', 'Manon', 'Jules'],
+  US: ['Ava', 'Noah', 'Mia', 'Liam', 'Ella', 'Lucas', 'Grace', 'Mason', 'Lily', 'Ethan'],
+};
+export const babyName = (countryCode: string, seed: number) => {
+  const list = BABY_NAMES[countryCode] ?? BABY_NAMES.US;
+  return list[Math.abs(Math.floor(seed)) % list.length];
+};

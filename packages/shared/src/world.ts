@@ -59,7 +59,8 @@ export const GENRE_NAMES: Record<Genre, L> = {
   classical: { tr: 'Klasik', en: 'Classical' },
 };
 
-export type ShopType = 'music_store' | 'boutique' | 'gallery' | 'bookstore' | 'car_dealer' | 'pet_shop' | 'hardware' | 'stage_shop';
+/** 'hospital': hastanenin eczane rafı (ör. prezervatif); hastane ayrıca tedavi mekânıdır */
+export type ShopType = 'music_store' | 'boutique' | 'gallery' | 'bookstore' | 'car_dealer' | 'pet_shop' | 'hardware' | 'stage_shop' | 'hospital';
 /** Meslek ve siyasetin geçtiği yeni mekânlar */
 export type CivicType =
   | 'city_hall'
@@ -118,7 +119,7 @@ export const LOCATION_TYPE_NAMES: Record<LocationType, L> = {
   bank: { tr: 'Banka', en: 'Bank' },
 };
 
-const SHOP_TYPES: readonly string[] = ['music_store', 'boutique', 'gallery', 'bookstore', 'car_dealer', 'pet_shop', 'hardware', 'stage_shop'];
+const SHOP_TYPES: readonly string[] = ['music_store', 'boutique', 'gallery', 'bookstore', 'car_dealer', 'pet_shop', 'hardware', 'stage_shop', 'hospital'];
 export const isShop = (t: LocationType): t is ShopType => SHOP_TYPES.includes(t);
 
 /** Konser verilebilen mekân türleri ve kuralları. */

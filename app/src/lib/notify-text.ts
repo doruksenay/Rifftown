@@ -140,6 +140,14 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
     case 'fling_accepted':
     case 'fling_declined':
       return t(`n_${n.kind}` as StringKey, { from: d.from ?? '' });
+    case 'pregnancy':
+      return t('n_pregnancy');
+    case 'baby_born':
+      return t('n_baby_born', { name: d.name ?? '' });
+    case 'family_try_offer':
+      return t('n_family_try_offer', { from: d.from ?? '' });
+    case 'family_try_done':
+      return t('n_family_try_done');
     case 'cheated_on':
       return t(d.ended ? 'n_cheated_on_ended' : 'n_cheated_on', { from: d.from ?? '' });
     case 'child_upkeep':

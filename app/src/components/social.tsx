@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { confirmThen } from '@/components/careers';
 import { TierMeter } from '@/components/tier';
-import { Avatar, Body, Button, Card, Empty, Field, Heading, Row, Small, Strong } from '@/components/ui';
+import { Avatar, Body, Button, Card, Choice, Empty, Field, Heading, Row, Small, Strong } from '@/components/ui';
 import { api } from '@/lib/api';
 import { dateTime, duration } from '@/lib/format';
 import { useInventory, useRun } from '@/lib/hooks';
@@ -146,6 +146,7 @@ export function RelationshipPanel({ id, name }: { id: number; name: string }) {
             <ActionLine title={t('dateAction')} note={dateWait} disabled={busy || pending || !!dateWait} onPress={() => act('date', { locationId: `${city}-restaurant` })} />
           ) : null}
           <FlingLine id={id} disabled={busy || pending} act={act} />
+          {r.stage !== 'none' && r.romance >= 40 ? <FamilyTryLine id={id} disabled={busy || pending} act={act} /> : null}
         </View>
       ) : null}
 
@@ -304,25 +305,115 @@ export function Guestbook({ id, canSign }: { id: number; canSign: boolean }) {
   );
 }
 
-/** Tek gecelik macera: aynı bar, kulüp ya da otelde; karşılıklı onay (metinler imalı) */
+/** Tek gecelik macera: aynı bar, kulüp ya da otelde; karşılıklı onay (metinler imalı). Korunma tercihi iki tarafta da sorulur. */
 function FlingLine({ id, disabled, act }: { id: number; disabled: boolean; act: (path: string, body?: unknown, invalidate?: string[]) => Promise<void> }) {
   const { t } = useI18n();
-  const q = useQuery({ queryKey: ['fling', id], queryFn: () => api.get<{ incoming: boolean; outgoing: boolean }>(`/relationships/${id}/fling`) });
+  const q = useQuery({ queryKey: ['fling', id], queryFn: () => api.get<FlingState>(`/relationships/${id}/fling`) });
   const qc = useQueryClient();
+  const [prot, setProt] = useState(true);
   const done = async (path: string, body?: unknown) => {
-    await act(path, body, ['me']);
+    await act(path, body, ['me', 'inventory']);
     qc.invalidateQueries({ queryKey: ['fling', id] });
   };
+  const protChoice = (
+    <Choice
+      options={[
+        { value: 'yes', label: t('protectedYes'), hint: t('protectedHint') },
+        { value: 'no', label: t('protectedNo') },
+      ]}
+      value={prot ? 'yes' : 'no'}
+      onChange={(v) => setProt(v === 'yes')}
+    />
+  );
   if (q.data?.incoming) {
     return (
       <View style={{ gap: space.xs }}>
         <Small>{t('flingIncoming')}</Small>
+        {protChoice}
         <Row>
           <Button small variant="ghost" title={t('decline')} disabled={disabled} onPress={() => done('fling/decline')} />
-          <Button small title={t('accept')} disabled={disabled} onPress={() => done('fling/accept')} />
+          <Button small title={t('accept')} disabled={disabled} onPress={() => done('fling/accept', { protected: prot })} />
         </Row>
       </View>
     );
   }
-  return <ActionLine title={t('flingOffer')} note={q.data?.outgoing ? t('flingPending') : t('flingHint')} disabled={disabled || !!q.data?.outgoing} onPress={() => done('fling')} />;
+  return (
+    <View style={{ gap: space.xs }}>
+      {!q.data?.outgoing ? protChoice : null}
+      <ActionLine title={t('flingOffer')} note={q.data?.outgoing ? t('flingPending') : t('flingHint')} disabled={disabled || !!q.data?.outgoing} onPress={() => done('fling', { protected: prot })} />
+    </View>
+  );
+}
+
+interface FlingState {
+  incoming: boolean;
+  outgoing: boolean;
+  familyIncoming: { carrierIsMe: boolean } | null;
+  familyOutgoing: boolean;
+}
+
+/** Sevgili ya da evli çift: "çocuk sahibi olmayı dene" (iki tarafın da aile ayarı açık olmalı; taşıyan çiftçe seçilir) */
+function FamilyTryLine({ id, disabled, act }: { id: number; disabled: boolean; act: (path: string, body?: unknown, invalidate?: string[]) => Promise<void> }) {
+  const { t } = useI18n();
+  const q = useQuery({ queryKey: ['fling', id], queryFn: () => api.get<FlingState>(`/relationships/${id}/fling`) });
+  const qc = useQueryClient();
+  const [carrier, setCarrier] = useState<'me' | 'them'>('me');
+  const done = async (path: string, body?: unknown) => {
+    await act(path, body, ['me', 'family']);
+    qc.invalidateQueries({ queryKey: ['fling', id] });
+  };
+  const inc = q.data?.familyIncoming;
+  if (inc) {
+    return (
+      <View style={{ gap: space.xs }}>
+        <Small>{inc.carrierIsMe ? t('familyIncomingMe') : t('familyIncomingThem')}</Small>
+        <Row>
+          <Button small variant="ghost" title={t('decline')} disabled={disabled} onPress={() => done('family-try/decline')} />
+          <Button small title={t('accept')} disabled={disabled} onPress={() => done('family-try/accept')} />
+        </Row>
+      </View>
+    );
+  }
+  return (
+    <View style={{ gap: space.xs }}>
+      <Choice
+        options={[
+          { value: 'me', label: t('carrierMe') },
+          { value: 'them', label: t('carrierThem') },
+        ]}
+        value={carrier}
+        onChange={setCarrier}
+      />
+      <ActionLine title={t('familyTry')} note={q.data?.familyOutgoing ? t('flingPending') : t('familyTryHint')} disabled={disabled || !!q.data?.familyOutgoing} onPress={() => done('family-try', { carrier })} />
+    </View>
+  );
+}
+
+/** Kendi profilinde: aile planlaması ayarı ve süren hamilelik */
+export function FamilySettings() {
+  const { t } = useI18n();
+  const qc = useQueryClient();
+  const { run, pending } = useRun();
+  const q = useQuery({ queryKey: ['family'], queryFn: () => api.get<{ familyOpen: boolean; pregnancy: { carrier: boolean; otherName: string | null; dueDays: number } | null }>('/family') });
+  if (!q.data) return null;
+  const set = async (open: boolean) => {
+    if (await run(() => api.post('/family/open', { open }))) qc.invalidateQueries({ queryKey: ['family'] });
+  };
+  return (
+    <View style={{ marginTop: space.md, gap: space.xs }}>
+      <Heading>{t('familyPlanning')}</Heading>
+      <Small>{t('familyPlanningHint')}</Small>
+      <Choice
+        options={[
+          { value: 'off', label: t('familyClosed') },
+          { value: 'on', label: t('familyOpen') },
+        ]}
+        value={q.data.familyOpen ? 'on' : 'off'}
+        onChange={(v) => !pending && set(v === 'on')}
+      />
+      {q.data.pregnancy ? (
+        <Small>{q.data.pregnancy.carrier ? t('expectingSelf', { n: q.data.pregnancy.dueDays }) : t('expectingOther', { name: q.data.pregnancy.otherName ?? '', n: q.data.pregnancy.dueDays })}</Small>
+      ) : null}
+    </View>
+  );
 }

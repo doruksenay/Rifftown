@@ -39,10 +39,15 @@ describe('tek gecelik macera', () => {
     expect((await a.c.post(`/api/relationships/${a.character.id}/fling`)).body.error).toBe('invalid_target');
     const before = await raw(a.character.id);
     expect((await a.c.post(`/api/relationships/${b.character.id}/fling`)).status).toBe(200);
-    expect((await b.c.get(`/api/relationships/${a.character.id}/fling`)).body).toEqual({ incoming: true, outgoing: false });
+    expect((await b.c.get(`/api/relationships/${a.character.id}/fling`)).body).toMatchObject({ incoming: true, outgoing: false, familyIncoming: null });
     vi.spyOn(Math, 'random').mockReturnValue(0.99); // pişmanlık yok
+    // Korunmalı (varsayılan): kimsede prezervatif yoksa olmaz; kabul edenin prezervatifi harcanır
+    expect((await b.c.post(`/api/relationships/${a.character.id}/fling/accept`)).body.error).toBe('no_protection');
+    expect((await b.c.post('/api/shop/buy', { locationId: 'istanbul-hospital', itemId: 'condom', qty: 2 })).status).toBe(200);
+    await at(b, 'istanbul-bar');
     const r = await b.c.post(`/api/relationships/${a.character.id}/fling/accept`);
-    expect(r.body).toMatchObject({ status: 'done', regret: false, discovered: false });
+    expect(r.body).toMatchObject({ status: 'done', protected: true, regret: false, discovered: false, pregnancy: false });
+    expect((await q(`SELECT count(*)::int AS n FROM inventory WHERE character_id = $1 AND item_id = 'condom'`, [b.character.id])).rows[0].n).toBe(1);
     for (const p of [a, b]) expect(await moodlets(p)).toContain('fling');
     const after = await raw(a.character.id);
     expect(after.money).toBe(before.money);
@@ -92,6 +97,7 @@ describe('tek gecelik macera', () => {
     await at(stranger, 'istanbul-hotel');
     expect((await stranger.c.post(`/api/relationships/${cheater.character.id}/fling`)).status).toBe(200);
     vi.spyOn(Math, 'random').mockReturnValue(0); // dedikodu ve ortaya çıkma kesin
+    await q(`INSERT INTO inventory(character_id, item_id, slot) VALUES ($1, 'condom', 'material')`, [cheater.character.id]);
     const r = await cheater.c.post(`/api/relationships/${stranger.character.id}/fling/accept`);
     expect(r.body).toMatchObject({ status: 'done', gossip: true, regret: true, discovered: true });
     expect(await moodlets(partner)).toEqual(expect.arrayContaining(['cheated', 'heartbreak']));

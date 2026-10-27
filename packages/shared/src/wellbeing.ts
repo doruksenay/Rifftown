@@ -132,6 +132,8 @@ export type MoodletId =
   | 'family_evening'
   | 'sleepless'
   | 'family_strain'
+  | 'expecting'
+  | 'new_parent'
   // Durumdan doğanlar (saklanmaz, her an hesaplanır)
   | 'exhausted'
   | 'tired'
@@ -186,6 +188,8 @@ export const MOODLETS: MoodletDef[] = [
   M('cheated', -18, 72, 'Aldatıldı', 'Cheated on', 'Güvendiğin biri seni üzdü.', 'Someone you trusted let you down.'),
   M('family_evening', 6, 24, 'Aile akşamı', 'Family evening', 'Evde güzel bir akşam geçirdiniz.', 'You had a lovely evening at home.'),
   M('sleepless', -4, 24, 'Uykusuz gece', 'Sleepless night', 'Bebek bütün gece uyumadı.', 'The baby was up all night.'),
+  M('expecting', 4, 480, 'Bebek bekliyor', 'Expecting', 'Ailen büyüyor.', 'Your family is growing.'),
+  M('new_parent', 15, 72, 'Yeni ebeveyn', 'New parent', 'Kucağında yeni bir hayat var.', 'You\'re holding a brand-new life.'),
   M('family_strain', -8, 48, 'Aile bütçesi', 'Family strain', 'Çocuğun bakım giderini karşılayamadın.', 'You couldn’t cover your child’s care this week.'),
   M('exhausted', -15, 0, 'Bitkin', 'Exhausted', 'Enerjin tükenmek üzere. Dinlen ya da bir şey ye.', 'You are running on empty. Rest or eat something.'),
   M('tired', -6, 0, 'Yorgun', 'Tired', 'Enerjin azaldı.', 'Your energy is low.'),
