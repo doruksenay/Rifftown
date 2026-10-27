@@ -290,14 +290,20 @@ async function canCarry(c: Db, id: number) {
   return !r?.active && !r?.recent;
 }
 /** Çiftin çocuk sınırı: doğmuş çocuklar ve süren hamilelikler birlikte */
-async function pairChildren(c: Db, x: number, y: number) {
+/** Bir karakterin çocukları ve süren hamilelikleri (kiminle olursa olsun) */
+async function characterChildren(c: Db, id: number) {
   const r = await one(
     c,
-    `SELECT (SELECT count(*)::int FROM children WHERE (parent_a = $1 AND parent_b = $2) OR (parent_a = $2 AND parent_b = $1))
-          + (SELECT count(*)::int FROM pregnancies WHERE status = 'active' AND ((carrier_id = $1 AND other_id = $2) OR (carrier_id = $2 AND other_id = $1))) AS n`,
-    [x, y],
+    `SELECT (SELECT count(*)::int FROM children WHERE parent_a = $1 OR parent_b = $1)
+          + (SELECT count(*)::int FROM pregnancies WHERE status = 'active' AND (carrier_id = $1 OR other_id = $1)) AS n`,
+    [id],
   );
   return Number(r?.n ?? 0);
+}
+
+/** Çocuk sınırı karakter başına: iki taraftan biri sınırdaysa yeni çocuk olmaz (eskiden çift başınaydı) */
+export async function familyFull(c: Db, x: number, y: number) {
+  return (await characterChildren(c, x)) >= MAX_CHILDREN || (await characterChildren(c, y)) >= MAX_CHILDREN;
 }
 
 /**
@@ -307,7 +313,7 @@ async function pairChildren(c: Db, x: number, y: number) {
 async function maybeConceive(c: pg.PoolClient, x: CharacterRow, y: CharacterRow, chance: number, source: 'try' | 'fling', carrierId: number | null, rand: () => number) {
   const flags = await many(c, 'SELECT id, family_open FROM characters WHERE id = ANY($1::bigint[])', [[x.id, y.id]]);
   if (flags.length !== 2 || !flags.every((f) => f.family_open)) return null;
-  if ((await pairChildren(c, x.id, y.id)) >= MAX_CHILDREN) return null;
+  if (await familyFull(c, x.id, y.id)) return null;
   const candidates = (carrierId ? [carrierId] : rand() < 0.5 ? [x.id, y.id] : [y.id, x.id]);
   let carrier: number | null = null;
   for (const id of candidates) if (await canCarry(c, id)) { carrier = id; break; }
@@ -338,7 +344,7 @@ async function checkCouple(c: pg.PoolClient, me: CharacterRow, them: CharacterRo
   if (!rel || Number(rel.romance) < TRY_MIN_ROMANCE || rel.stage === 'none') fail('need_partner', 403);
   const flags = await many(c, 'SELECT family_open FROM characters WHERE id = ANY($1::bigint[])', [[me.id, them.id]]);
   if (!flags.every((f) => f.family_open)) fail('family_closed', 409);
-  if ((await pairChildren(c, me.id, them.id)) >= MAX_CHILDREN) fail('too_many_children');
+  if (await familyFull(c, me.id, them.id)) fail('too_many_children');
   const recent = await one(c, 'SELECT 1 FROM family_tries WHERE a_id = $1 AND b_id = $2 AND created_at > $3', [a, b, new Date(Date.now() - hoursMs(TRY_PAIR_COOLDOWN_DAYS * 24))]);
   if (recent) fail('cooldown', 409);
 }

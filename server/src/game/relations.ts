@@ -12,6 +12,8 @@ import {
   FLIRT_COOLDOWN_HOURS,
   FLIRT_MIN_FRIENDSHIP,
   HANGOUT_COOLDOWN_HOURS,
+  HANGOUT_UPLIFTS_PER_DAY,
+  HANGOUT_PAIR_UPLIFTS_PER_DAY,
   LOCATION_BY_ID,
   MAX_CHILDREN,
   MEAL_BY_ID,
@@ -39,6 +41,7 @@ import { evaluateAchievements } from './achievements';
 import { type CharacterRow, activeAction, isJailed, lockCharacter, notify, requireEstablished } from './common';
 import { mealPrice, payBusinessForMeal } from './lifestyle';
 import { addMoodlet, nudgeWellbeing } from './wellbeing';
+import { familyFull } from './family';
 import { cleanText, isBlocked, lockRel, pair, requirePlayer } from './social';
 
 const hoursMs = (h: number) => gameHoursToMs(h, config.gameSpeed);
@@ -117,15 +120,30 @@ export async function hangout(actor: number, other: number) {
     await c.query('UPDATE relationships SET friendship = $3, last_hangout = now(), updated_at = now() WHERE a_id = $1 AND b_id = $2', [rel.a_id, rel.b_id, friendship]);
     const skills = { ...me.skills };
     bumpSkill(skills, 'charisma', 0.3);
-    await c.query('UPDATE characters SET mood = LEAST(100, mood + 3), skills = $2 WHERE id = $1', [me.id, JSON.stringify(skills)]);
-    await c.query('UPDATE characters SET mood = LEAST(100, mood + 3) WHERE id = $1', [them.id]);
+    // Ruh hâli ve ilham etkisi günde sınırlı (ek hesaplarla pompalanmasın): aynı kişiyle günde bir, toplam günde üç
+    const since = new Date(Date.now() - gameHoursToMs(24, config.gameSpeed));
+    const pairToday = await one(
+      c,
+      `SELECT count(*)::int AS n FROM social_log WHERE kind = 'hangout_uplift' AND actor_id = $1 AND target_id = $2 AND created_at > $3`,
+      [actor, other, since],
+    );
+    const uplifted = async (id: number) =>
+      Number((await one(c, `SELECT count(*)::int AS n FROM social_log WHERE kind = 'hangout_uplift' AND actor_id = $1 AND created_at > $2`, [id, since]))!.n);
+    const lifts: number[] = [];
+    const pairDone = Number(pairToday!.n) >= HANGOUT_PAIR_UPLIFTS_PER_DAY;
+    // Aynı ikili: kimin başlattığından bağımsız (iki yönün kaydı da sayılır)
+    const reverse = Number((await one(c, `SELECT count(*)::int AS n FROM social_log WHERE kind = 'hangout_uplift' AND actor_id = $2 AND target_id = $1 AND created_at > $3`, [actor, other, since]))!.n);
+    if (!pairDone && reverse < HANGOUT_PAIR_UPLIFTS_PER_DAY) for (const id of [actor, other]) if ((await uplifted(id)) < HANGOUT_UPLIFTS_PER_DAY) lifts.push(id);
+    await c.query('UPDATE characters SET skills = $2 WHERE id = $1', [me.id, JSON.stringify(skills)]);
     await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'hangout')`, [actor, other]);
     await notify(c, other, 'hangout', { fromId: actor, from: me.name });
-    for (const id of [actor, other]) {
+    for (const id of lifts) {
+      await c.query('UPDATE characters SET mood = LEAST(100, mood + 3) WHERE id = $1', [id]);
       await addMoodlet(c, id, 'good_company');
       await nudgeWellbeing(c, id, { inspiration: INSPIRATION_GAIN.hangout });
+      await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'hangout_uplift')`, [id, id === actor ? other : actor]);
     }
-    return { friendship: Math.round(friendship), gain };
+    return { friendship: Math.round(friendship), gain, uplift: lifts.includes(actor) };
   });
 }
 
@@ -322,8 +340,8 @@ export async function requestAdoption(actor: number, other: number, locationId: 
     const loc = LOCATION_BY_ID[locationId];
     if (!loc || loc.type !== 'city_hall' || loc.cityId !== me.city_id) fail('invalid_location');
     if (rel.adoption_by) fail('already_requested', 409);
-    const n = await one(c, 'SELECT count(*)::int AS n FROM children WHERE (parent_a = $1 AND parent_b = $2) OR (parent_a = $2 AND parent_b = $1)', [actor, other]);
-    if (n.n >= MAX_CHILDREN) fail('too_many_children');
+    // Çocuk sınırı karakter başına (süren hamilelikler dahil)
+    if (await familyFull(c, actor, other)) fail('too_many_children');
     const fee = Math.round(ADOPTION_FEE * CITY_BY_ID[me.city_id!].costMult);
     if (me.money < fee) fail('not_enough_money');
     await c.query('UPDATE relationships SET adoption_by = $3, adoption_name = $4 WHERE a_id = $1 AND b_id = $2', [rel.a_id, rel.b_id, actor, childName]);

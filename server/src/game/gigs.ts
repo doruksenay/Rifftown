@@ -416,7 +416,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     recentCityGigs: band.npc_key || gig.festival_id ? 0 : await recentCityGigs(c, gig),
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür
-  const ownerShare = await barGigShare(c, gig.location_id, res.revenue, ids);
+  // Oyunun kendi gruplarının konserinden bar sahibine pay yok (yoktan para basılmasın; denge raporu §7)
+  const ownerShare = band.npc_key ? 0 : await barGigShare(c, gig.location_id, res.revenue, ids);
   res.revenue -= ownerShare;
   // Ekip ücreti bilet gelirinden ödenir; yetmezse ödenmez ve moral çöker
   const crewPaid = crew.roles.length > 0 && res.revenue >= crew.fee;
