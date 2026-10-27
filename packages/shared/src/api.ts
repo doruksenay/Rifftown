@@ -255,7 +255,7 @@ export interface PublicCharacterDto {
   home: { homeId: HomeId; cityId: string } | null;
   convictions: number;
   partner: { characterId: number; name: string; stage: 'engaged' | 'married' } | null;
-  children: { name: string; bornAt: string }[];
+  children: { name: string; bornAt: string; age?: number; stage?: 'baby' | 'child' | 'teen' | 'adult' }[];
   tattoos: string[];
   friendsCount: number;
 }

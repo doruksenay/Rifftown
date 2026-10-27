@@ -36,7 +36,7 @@ import { config } from '../config';
 import { type Db, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { evaluateAchievements } from './achievements';
-import { type CharacterRow, activeAction, isJailed, lockCharacter, notify } from './common';
+import { type CharacterRow, activeAction, isJailed, lockCharacter, notify, requireEstablished } from './common';
 import { mealPrice, payBusinessForMeal } from './lifestyle';
 import { addMoodlet, nudgeWellbeing } from './wellbeing';
 import { cleanText, isBlocked, lockRel, pair, requirePlayer } from './social';
@@ -316,6 +316,9 @@ export async function requestAdoption(actor: number, other: number, locationId: 
     const rel = await lockRel(c, actor, other);
     const me = await lockCharacter(c, actor);
     if (rel.stage !== 'married') fail('need_married');
+    // Ek hesapla çocuk çiftliği olmasın
+    await requireEstablished(c, actor);
+    await requireEstablished(c, other);
     const loc = LOCATION_BY_ID[locationId];
     if (!loc || loc.type !== 'city_hall' || loc.cityId !== me.city_id) fail('invalid_location');
     if (rel.adoption_by) fail('already_requested', 409);

@@ -3,7 +3,7 @@
 // Eylem, konser ve liste sonuçlarından hemen sonra; diğer olaylar (oy, para gönderme, VIP) için /me çağrısında
 // en fazla dakikada bir kontrol edilir.
 
-import { CITY_IDENTITY, INSTRUMENTS, ROLE_SKILLS, STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
+import { CITY_IDENTITY, HEARTBREAKER_FLINGS, INSTRUMENTS, ROLE_SKILLS, STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
 import { addMoodlet } from './wellbeing';
 import { type Db, many, one } from '../db';
 import { notify } from './common';
@@ -128,7 +128,8 @@ export async function evaluateAchievements(db: Db, characterId: number): Promise
        (SELECT count(DISTINCT color)::int FROM inventory WHERE character_id = $1 AND color IS NOT NULL) AS colors,
        EXISTS (SELECT 1 FROM inventory WHERE character_id = $1 AND slot = 'pet' AND nickname IS NOT NULL) AS pet_named,
        (SELECT money = 0 AND bank = 0 FROM characters WHERE id = $1) AS broke,
-       EXISTS (SELECT 1 FROM articles WHERE npc AND NOT removed AND band_id IN (SELECT band_id FROM band)) AS front_page`,
+       EXISTS (SELECT 1 FROM articles WHERE npc AND NOT removed AND band_id IN (SELECT band_id FROM band)) AS front_page,
+       (SELECT count(*)::int FROM flings WHERE a_id = $1 OR b_id = $1) AS flings`,
     [characterId],
   );
   const known = (s.skills ?? {}) as Record<string, number>;
@@ -146,6 +147,7 @@ export async function evaluateAchievements(db: Db, characterId: number): Promise
     pet_named: !!d?.pet_named,
     broke: !!d?.broke,
     front_page: !!d?.front_page,
+    heartbreaker: Number(d?.flings ?? 0) >= HEARTBREAKER_FLINGS,
     all_roles: INSTRUMENTS.every((r) => typeof known[ROLE_SKILLS[r].specific] === 'number'),
   });
 

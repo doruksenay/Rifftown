@@ -4,6 +4,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { fail } from '../errors';
 import { charId, requireUser } from '../auth';
+import { answerFling, flingState, offerFling } from '../game/family';
 import { answerAdoption, answerProposal, breakUp, cancelProposal, date, flirt, hangout, propose, relationship, requestAdoption, wedding } from '../game/relations';
 import {
   answerFriend,
@@ -106,6 +107,13 @@ export async function communityRoutes(app: FastifyInstance) {
   app.get('/characters/:id/relationship', async (req) => relationship(charId(req), parse(other, req.params).id));
   app.post('/relationships/:id/hangout', async (req) => hangout(charId(req), parse(other, req.params).id));
   app.post('/relationships/:id/flirt', async (req) => flirt(charId(req), parse(other, req.params).id));
+  // Tek gecelik macera: teklif, kabul ya da ret (karşılıklı onay)
+  app.get('/relationships/:id/fling', async (req) => flingState(pool, charId(req), parse(other, req.params).id));
+  app.post('/relationships/:id/fling', async (req) => offerFling(charId(req), parse(other, req.params).id));
+  app.post('/relationships/:id/fling/:answer', async (req) => {
+    const { id, answer } = parse(z.object({ id: z.coerce.number().int(), answer: z.enum(['accept', 'decline']) }), req.params);
+    return answerFling(charId(req), id, answer === 'accept');
+  });
   app.post('/relationships/:id/date', async (req) => {
     const body = parse(z.object({ locationId: z.string() }), req.body);
     return date(charId(req), parse(other, req.params).id, body.locationId);

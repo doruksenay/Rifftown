@@ -27,6 +27,7 @@ export const TITLES: TitleDef[] = [
   T('t_broke', 'Meteliksiz', 'Flat broke', 'broke'),
   T('t_multi', 'Çok sazlı', 'Multi-instrumentalist', 'all_roles'),
   T('t_jailbird', 'Müdavim', 'Jailbird', 'jailbird'),
+  T('t_heartbreaker', 'Çapkın', 'Heartbreaker', 'heartbreaker'),
   // Zincirlerden (adım ya da seçenek ChainStep.titleId / ChainChoice.titleId ile verir)
   T('kingmaker_protege', 'Vedat Karahan\'ın keşfi', 'Vedat Karahan\'s discovery'),
   T('independent', 'Bağımsız ruh', 'Independent spirit'),

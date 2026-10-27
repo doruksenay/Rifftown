@@ -104,7 +104,7 @@ export const indulgenceNow = (stored: number, at: Date | string | null, gameSpee
 
 // ---------- Skandal ----------
 
-export type ScandalKind = 'conviction' | 'cancel' | 'disaster' | 'addiction';
+export type ScandalKind = 'conviction' | 'cancel' | 'disaster' | 'addiction' | 'affair';
 
 export interface ScandalDef {
   kind: ScandalKind;
@@ -120,6 +120,8 @@ export const SCANDALS: Record<ScandalKind, ScandalDef> = {
   cancel: { kind: 'cancel', fame: 1, press: 8, name: { tr: 'Son dakika iptali', en: 'Last-minute cancellation' } },
   disaster: { kind: 'disaster', fame: 1.5, press: 10, name: { tr: 'Felaket bir konser', en: 'A disastrous show' } },
   addiction: { kind: 'addiction', fame: 1, press: 10, name: { tr: 'Bağımlılık haberi', en: 'Addiction story' } },
+  // Tek gecelik macera dedikodusu (relations.ts): küçük
+  affair: { kind: 'affair', fame: 0.5, press: 6, name: { tr: 'Magazin dedikodusu', en: 'Tabloid gossip' } },
 };
 export const SCANDAL_SPILLOVER = 0.3;
 /** Bu kalitenin altında biten kulüp ve üstü konser skandal olur */

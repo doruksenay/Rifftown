@@ -8,6 +8,7 @@ import { processChartWeeks } from './game/music';
 import { npcDirector } from './game/npc';
 import { npcCivicDirector } from './game/npc-civic';
 import { processRent } from './game/homes';
+import { processChildren } from './game/family';
 import { processUpkeep } from './game/business';
 import { processFestivals } from './game/festivals';
 import { processBankInterest } from './game/lifestyle';
@@ -44,6 +45,7 @@ export async function tick() {
   const justice = await stage('adalet', () => processJustice());
   const charts = await stage('listeler', () => processChartWeeks());
   await stage('kira', () => processRent());
+  await stage('çocuk bakımı', () => processChildren());
   await stage('işletme giderleri', () => processUpkeep());
   await stage('banka faizi', () => processBankInterest());
   await stage('festivaller', () => processFestivals());

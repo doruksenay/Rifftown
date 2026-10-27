@@ -60,6 +60,11 @@ const TEMPLATES: Record<string, Tpl> = {
     const a = ACHIEVEMENT_BY_ID[d.id];
     return a ? { title: T(l, 'Başarım açıldı!', 'Achievement unlocked!'), body: `${pick(a.name, l)} · +${a.points}` } : null;
   },
+  fling_offer: (d, l) => ({ title: T(l, 'Bir teklif', 'An offer'), body: T(l, `${d.from} geceyi seninle geçirmek istiyor.`, `${d.from} would like to spend the night with you.`) }),
+  fling_accepted: (d, l) => ({ title: T(l, 'Evet dedi', 'They said yes'), body: T(l, `${d.from} teklifini kabul etti.`, `${d.from} accepted.`) }),
+  cheated_on: (d, l) => ({ title: T(l, 'Kötü bir haber', 'Bad news'), body: T(l, `${d.from} sana sadık kalmadı.`, `${d.from} wasn't faithful to you.`) }),
+  child_upkeep: (d, l) =>
+    d.paid ? null : { title: T(l, 'Aile bütçesi', 'Family budget'), body: T(l, `${d.name} için bu hafta bakım giderini karşılayamadın.`, `You couldn't cover ${d.name}'s care this week.`) },
   lesson_given: (d, l) => ({ title: T(l, 'Ders verdin', 'You gave a lesson'), body: T(l, `${d.student} senden ders aldı: ${skillName(d.skill, l)}.`, `${d.student} took a lesson from you: ${skillName(d.skill, l)}.`) }),
   lesson_invite: (d, l) => ({ title: T(l, 'Ders teklifi', 'Lesson offer'), body: T(l, `${d.from} sana ${skillName(d.skill, l)} öğretmek istiyor.`, `${d.from} wants to teach you ${skillName(d.skill, l)}.`) }),
   title_earned: (d, l) => {

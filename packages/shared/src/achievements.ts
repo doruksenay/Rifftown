@@ -102,6 +102,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   A('all_roles', 'discovery', 25, ['Çok sazlı', 'Sekiz grup rolünün hepsinin asıl becerisini öğren.'], ['Multi-instrumentalist', 'Learn the main skill of all eight band roles.'], true),
   A('broke', 'discovery', 5, ['Meteliksiz', 'Cebinde ve bankada hiç paran kalmasın.'], ['Flat broke', 'End up with no money in pocket or bank.'], true),
   A('front_page', 'discovery', 10, ['Gazete manşeti', 'Şehir gazetesinin muhabiri grubun hakkında haber yazsın.'], ['Front page', 'Have the city reporter write a story about your band.'], true),
+  A('heartbreaker', 'discovery', 10, ['Çapkın', 'Üç tek gecelik macera yaşa.'], ['Heartbreaker', 'Have three one-night flings.'], true),
   A('scene_hit', 'discovery', 15, ['Doğru yer, doğru şarkı', 'Alt türlerin o şehrin sahnesinde çok tuttuğu bir konser ver.'], ['Right place, right song', 'Play a gig where your subgenres really land in that city\'s scene.'], true),
 ];
 

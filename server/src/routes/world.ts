@@ -1,6 +1,7 @@
 import { CITY_BY_ID, LOCATION_BY_ID, isVenue } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
+import { childrenOf } from '../game/family';
 import { requireUser } from '../auth';
 import { config } from '../config';
 import { many, one, pool } from '../db';
@@ -202,9 +203,8 @@ export async function worldRoutes(app: FastifyInstance) {
           );
           return p ? { characterId: Number(p.id), name: p.name, stage: p.stage } : null;
         })(),
-        children: (
-          await many(pool, 'SELECT name, born_at FROM children WHERE parent_a = $1 OR parent_b = $1 ORDER BY born_at', [ch.id])
-        ).map((k) => ({ name: k.name, bornAt: k.born_at.toISOString() })),
+        // Çocuklar oyun takvimiyle büyür: yaş ve yaş basamağıyla
+        children: await childrenOf(pool, ch.id),
         tattoos: (await many(pool, 'SELECT tattoo_id FROM tattoos WHERE character_id = $1 ORDER BY id', [ch.id])).map((t) => t.tattoo_id),
         friendsCount: (await one(pool, 'SELECT count(*)::int AS n FROM relationships WHERE (a_id = $1 OR b_id = $1) AND friends', [ch.id]))!.n,
       },

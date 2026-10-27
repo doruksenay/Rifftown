@@ -145,6 +145,7 @@ export function RelationshipPanel({ id, name }: { id: number; name: string }) {
           {r.romance >= DATE_MIN_ROMANCE && city ? (
             <ActionLine title={t('dateAction')} note={dateWait} disabled={busy || pending || !!dateWait} onPress={() => act('date', { locationId: `${city}-restaurant` })} />
           ) : null}
+          <FlingLine id={id} disabled={busy || pending} act={act} />
         </View>
       ) : null}
 
@@ -301,4 +302,27 @@ export function Guestbook({ id, canSign }: { id: number; canSign: boolean }) {
       )}
     </>
   );
+}
+
+/** Tek gecelik macera: aynı bar, kulüp ya da otelde; karşılıklı onay (metinler imalı) */
+function FlingLine({ id, disabled, act }: { id: number; disabled: boolean; act: (path: string, body?: unknown, invalidate?: string[]) => Promise<void> }) {
+  const { t } = useI18n();
+  const q = useQuery({ queryKey: ['fling', id], queryFn: () => api.get<{ incoming: boolean; outgoing: boolean }>(`/relationships/${id}/fling`) });
+  const qc = useQueryClient();
+  const done = async (path: string, body?: unknown) => {
+    await act(path, body, ['me']);
+    qc.invalidateQueries({ queryKey: ['fling', id] });
+  };
+  if (q.data?.incoming) {
+    return (
+      <View style={{ gap: space.xs }}>
+        <Small>{t('flingIncoming')}</Small>
+        <Row>
+          <Button small variant="ghost" title={t('decline')} disabled={disabled} onPress={() => done('fling/decline')} />
+          <Button small title={t('accept')} disabled={disabled} onPress={() => done('fling/accept')} />
+        </Row>
+      </View>
+    );
+  }
+  return <ActionLine title={t('flingOffer')} note={q.data?.outgoing ? t('flingPending') : t('flingHint')} disabled={disabled || !!q.data?.outgoing} onPress={() => done('fling')} />;
 }

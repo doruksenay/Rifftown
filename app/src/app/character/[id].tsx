@@ -42,7 +42,11 @@ function CharacterProfileScreen() {
   const isMe = me.data?.character?.id === ch.id;
   const family = [
     ch.partner ? t('partnerLine', { stage: t(`partnerStage_${ch.partner.stage}` as StringKey), name: ch.partner.name }) : null,
-    ch.children.length ? t('childrenLine', { names: ch.children.map((k) => k.name).join(', ') }) : null,
+    ch.children.length
+      ? t('childrenLine', {
+          names: ch.children.map((k) => (k.stage ? t('childAgeShort', { name: k.name, age: k.age ?? 0, stage: t(`childStage_${k.stage}` as StringKey) }) : k.name)).join(', '),
+        })
+      : null,
     ch.tattoos.length ? t('tattoosLine', { list: ch.tattoos.map((x) => (TATTOO_BY_ID[x] ? p(TATTOO_BY_ID[x].name) : x)).join(', ') }) : null,
   ].filter(Boolean) as string[];
   return (

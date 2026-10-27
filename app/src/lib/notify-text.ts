@@ -136,6 +136,14 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
     case 'adoption_request':
     case 'adoption_done':
       return t(`n_${n.kind}` as StringKey, { name: d.name ?? '' });
+    case 'fling_offer':
+    case 'fling_accepted':
+    case 'fling_declined':
+      return t(`n_${n.kind}` as StringKey, { from: d.from ?? '' });
+    case 'cheated_on':
+      return t(d.ended ? 'n_cheated_on_ended' : 'n_cheated_on', { from: d.from ?? '' });
+    case 'child_upkeep':
+      return t(d.paid ? 'n_child_upkeep_paid' : 'n_child_upkeep_unpaid', { name: d.name ?? '', money: `$${Number(d.amount ?? 0).toLocaleString('en-US')}` });
     case 'item_sold':
       return t('n_item_sold', { money: money(d.earned ?? 0) });
     case 'job_offer':
@@ -196,6 +204,7 @@ export function notificationHref(n: NotificationDto, myId?: number): string | nu
   if (n.kind === 'action_done' && d.kind === 'write_song') return '/me';
   if (n.kind === 'achievement') return '/achievements';
   if (n.kind === 'lesson_invite' && d.fromId) return `/character/${d.fromId}`;
+  if ((n.kind === 'fling_offer' || n.kind === 'fling_accepted') && d.fromId) return `/character/${d.fromId}`;
   if ((n.kind === 'evicted' || n.kind === 'rent_paid') && d.cityId) return `/location/${d.cityId}-real_estate`;
   if (n.kind === 'release_out' || n.kind === 'sales_report' || (n.kind === 'action_done' && d.kind === 'record')) return '/releases';
   if (n.kind === 'arrested' || n.kind === 'convicted' || n.kind === 'acquitted') return '/';

@@ -126,6 +126,12 @@ export type MoodletId =
   | 'scandal'
   | 'hospitalized'
   | 'band_split'
+  | 'fling'
+  | 'regret'
+  | 'cheated'
+  | 'family_evening'
+  | 'sleepless'
+  | 'family_strain'
   // Durumdan doğanlar (saklanmaz, her an hesaplanır)
   | 'exhausted'
   | 'tired'
@@ -175,6 +181,12 @@ export const MOODLETS: MoodletDef[] = [
   M('scandal', -12, 48, 'Skandal', 'Scandal', 'Adın gazetelerde kötü bir haberle geçiyor.', 'Your name is in the papers for the wrong reasons.'),
   M('hospitalized', -8, 24, 'Hastanelik oldu', 'Hospitalised', 'Kendini ihmal ettin ve hastaneye kaldırıldın.', 'You neglected yourself and ended up in hospital.'),
   M('band_split', -8, 24, 'Ayrılık', 'Split', 'Grupla yollar ayrıldı.', 'You parted ways with a band.'),
+  M('fling', 8, 12, 'Tek gecelik macera', 'A night to remember', 'Dün gece beklenmedik biçimde güzeldi.', 'Last night was unexpectedly lovely.'),
+  M('regret', -6, 24, 'Pişmanlık', 'Regret', 'Dün geceyi biraz düşünmen gerekiyor.', 'You need to think about last night a little.'),
+  M('cheated', -18, 72, 'Aldatıldı', 'Cheated on', 'Güvendiğin biri seni üzdü.', 'Someone you trusted let you down.'),
+  M('family_evening', 6, 24, 'Aile akşamı', 'Family evening', 'Evde güzel bir akşam geçirdiniz.', 'You had a lovely evening at home.'),
+  M('sleepless', -4, 24, 'Uykusuz gece', 'Sleepless night', 'Bebek bütün gece uyumadı.', 'The baby was up all night.'),
+  M('family_strain', -8, 48, 'Aile bütçesi', 'Family strain', 'Çocuğun bakım giderini karşılayamadın.', 'You couldn’t cover your child’s care this week.'),
   M('exhausted', -15, 0, 'Bitkin', 'Exhausted', 'Enerjin tükenmek üzere. Dinlen ya da bir şey ye.', 'You are running on empty. Rest or eat something.'),
   M('tired', -6, 0, 'Yorgun', 'Tired', 'Enerjin azaldı.', 'Your energy is low.'),
   M('inspired', 8, 0, 'İlham dolu', 'Inspired', 'Kafanda melodiler dönüyor.', 'Melodies keep coming to you.'),
