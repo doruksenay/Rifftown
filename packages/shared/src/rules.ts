@@ -275,6 +275,19 @@ export const saturationFameMult = (recentGigs: number) => 1 / (1 + CITY_SATURATI
 export const saturationAttendanceMult = (recentGigs: number) =>
   Math.max(CITY_SATURATION.minAttendance, 1 - CITY_SATURATION.attendancePerGig * Math.max(0, recentGigs));
 
+/**
+ * Şarkı puanının ağırlıkları mekâna göre: büyük sahnede şarkının kendisi ve çalım becerisi daha çok, prova
+ * (aşinalık, yalnızca zamanla kazanılır) daha az sayılır. Eskiden her yerde 0,4 / 0,35 / 0,25 idi; beste 8 olan
+ * bir oyuncu aşinalık ve kiralık kadroyla salonda ve stadyumda da şöhret kazanıyordu (denge raporu §1).
+ */
+export const SONG_SCORE_WEIGHTS: Record<VenueType, { quality: number; familiarity: number; skill: number }> = {
+  bar: { quality: 0.4, familiarity: 0.35, skill: 0.25 },
+  club: { quality: 0.42, familiarity: 0.32, skill: 0.26 },
+  hall: { quality: 0.46, familiarity: 0.26, skill: 0.28 },
+  stadium: { quality: 0.5, familiarity: 0.2, skill: 0.3 },
+  festival: { quality: 0.45, familiarity: 0.27, skill: 0.28 },
+};
+
 /** Sahne olaylarının toplam kalite etkisi sınırı (±puan) */
 export const MAX_EVENT_EFFECT = 12;
 
@@ -366,9 +379,10 @@ export function computeGig(input: GigInput): GigResult {
   const presence = present.length / memberCount;
 
   const styleBonuses = setlist.map((s) => subgenreGigBonus(s.subgenre, city.id, venue, input.weekId ?? 0));
+  const w = SONG_SCORE_WEIGHTS[venue];
   const songScores = setlist.map((s, i) => {
     const fam = present.reduce((sum, p) => sum + (p.familiarity[s.id] ?? 0), 0) / present.length;
-    return { id: s.id, score: 0.4 * s.quality + 0.35 * fam + 0.25 * bandSkill + styleBonuses[i] };
+    return { id: s.id, score: w.quality * s.quality + w.familiarity * fam + w.skill * bandSkill + styleBonuses[i] };
   });
   const avgSong = songScores.reduce((sum, s) => sum + s.score, 0) / songScores.length;
   const lengthFactor = Math.min(1, 0.6 + 0.1 * setlist.length);

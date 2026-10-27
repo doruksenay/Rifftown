@@ -1,12 +1,13 @@
 // Denge düzeltmelerinin sunucu testleri (denge raporu maddeleri 1–14): gerçek API ve zamanlayıcıyla.
 import { VENUE_RULES } from '@rifftown/shared';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
 import { advance, newPlayer, setup, teardown } from './helpers';
 
 beforeAll(setup);
 afterAll(teardown);
+afterEach(() => vi.restoreAllMocks());
 
 describe('madde 1: büyük sahnede beceri belirleyici', () => {
   it('sunucu: salonda kiralık kadro grubun seviyesine bağlanır (beste 8, gitar 52 olan oyuncu + 3 kiralık)', async () => {
@@ -29,6 +30,8 @@ describe('madde 1: büyük sahnede beceri belirleyici', () => {
       const r = await p.c.post('/api/gigs', { locationId: 'izmir-hall', inHours: 2, setlist: songs, sessionRoles: ['vocals', 'bass', 'drums'] });
       expect(r.status).toBe(200);
       await pool.query(`UPDATE gigs SET starts_at = now() - interval '1 minute' WHERE id = $1`, [r.body.gig.id]);
+      // Zar ortada: seyirci ve kalite gürültüsü sabit
+      vi.spyOn(Math, 'random').mockReturnValue(0.5);
       await advance(10);
       const g = (await pool.query('SELECT result FROM gigs WHERE id = $1', [r.body.gig.id])).rows[0].result;
       // Eskiden kiralık kadro 70 beceriyle çalıyor, kalite ~50 ve şöhret artıyordu; şimdi salonun çıtası geçilemiyor
@@ -39,3 +42,4 @@ describe('madde 1: büyük sahnede beceri belirleyici', () => {
     }
   });
 });
+
