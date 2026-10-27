@@ -27,6 +27,17 @@ import {
   SESSION_SKILL_MARGIN,
   fameGainMult,
   sessionLevels,
+  fxQualityBonus,
+  MAX_FX_BONUS,
+  STAGE_EVENTS,
+  STAGE_EVENT_BY_ID,
+  stageEventOdds,
+  ENCORE_RULES,
+  boldEncoreChance,
+  gearQualityBonus,
+  GEAR_QUALITY_CAP,
+  setlistFlow,
+  FLOW_MULT,
 } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { config } from '../src/config';
@@ -293,5 +304,48 @@ describe('büyük sahnede beceri belirleyici (kurallar)', () => {
     expect(sessionLevels('stadium', { skill: 40, stage: 30 }).skill).toBe(40 + SESSION_SKILL_MARGIN.stadium);
     // Grup zaten iyiyse mekânın seviyesini geçmez
     expect(sessionLevels('club', { skill: 90, stage: 90 })).toEqual({ skill: SESSION_MUSICIAN.club.skill, stage: SESSION_MUSICIAN.club.stage });
+  });
+});
+
+// ---------- Konserde karar (denge raporu madde 6) ----------
+
+describe('konser planı: reçete yok, karar var (kurallar)', () => {
+  it('sahne efektleri: aynı efekt bir kez sayılır, azalan getiri, tavan 6', () => {
+    expect(fxQualityBonus(Array(6).fill('fx_smoke'))).toBe(2);
+    expect(fxQualityBonus(['fx_pyro'])).toBe(6);
+    expect(fxQualityBonus(['fx_pyro', 'fx_screen', 'fx_lasers'])).toBe(MAX_FX_BONUS);
+    expect(fxQualityBonus(['fx_smoke', 'fx_confetti'])).toBeCloseTo(3 + 2 * 0.5);
+    expect(fxQualityBonus([])).toBe(0);
+  });
+
+  it('sahne olayları: eşikte beklenen değer negatif, her ek olay daha riskli ve daha az getirir, mekâna göre değişir', () => {
+    for (const e of STAGE_EVENTS) {
+      expect(e.penalty).toBe(e.bonus);
+      const atMin = stageEventOdds(e, e.min, 0, 'club', 80);
+      expect(atMin.chance * atMin.bonus - (1 - atMin.chance) * atMin.penalty).toBeLessThan(0);
+      const first = stageEventOdds(e, e.min + 25, 0, 'hall', 80);
+      const third = stageEventOdds(e, e.min + 25, 2, 'hall', 80);
+      expect(third.chance).toBeLessThan(first.chance);
+      expect(third.bonus).toBeLessThan(first.bonus);
+    }
+    const banter = STAGE_EVENT_BY_ID.banter;
+    expect(stageEventOdds(banter, 60, 0, 'bar', 80).bonus).toBeGreaterThan(stageEventOdds(banter, 60, 0, 'stadium', 80).bonus);
+    const singalong = STAGE_EVENT_BY_ID.singalong;
+    expect(stageEventOdds(singalong, 60, 0, 'stadium', 80).bonus).toBeGreaterThan(stageEventOdds(singalong, 60, 0, 'bar', 80).bonus);
+    // Yorgun grup olaylarda daha sık hata yapar
+    expect(stageEventOdds(banter, 40, 0, 'club', 30).chance).toBeLessThan(stageEventOdds(banter, 40, 0, 'club', 80).chance);
+  });
+
+  it('cesur bis kumardır; set bonusu, tür uyumu ve setlist sırası kaliteye anlamlı katkı verir', () => {
+    expect(ENCORE_RULES.bold.failQuality).toBe(-6);
+    // Enerjisi düşük grupta cesur bis çoğu zaman tutmaz
+    expect(boldEncoreChance(60, 30)).toBeLessThan(0.5);
+    expect(boldEncoreChance(80, 90)).toBeGreaterThan(0.7);
+    expect(gearQualityBonus(3, 0)).toBe(1.5);
+    expect(gearQualityBonus(3, 3)).toBe(GEAR_QUALITY_CAP);
+    // En güçlü şarkı sonda, zayıflar ortada: en az 1 puan
+    const songs = [60, 40, 42, 45, 70].map((score) => ({ score }));
+    expect(setlistFlow(songs)).toBeGreaterThanOrEqual(1);
+    expect(FLOW_MULT).toBe(5);
   });
 });

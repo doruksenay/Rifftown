@@ -8,6 +8,7 @@ import {
   GENRES,
   STAGE_EVENTS,
   stageEventAllowed,
+  stageEventOdds,
   computeGig,
   type GigPerformer,
   type Genre,
@@ -17,6 +18,8 @@ import {
   SESSION_MUSICIAN,
   SESSION_FAMILIARITY,
   sessionLevels,
+  fxQualityBonus,
+  gearQualityBonus,
   roleSkill,
   stageScore,
   SUBGENRES,
@@ -53,7 +56,7 @@ const PROFILES: Profile[] = [
 ];
 const ROLES: Instrument[] = ['guitar', 'vocals', 'bass', 'drums'];
 
-function performers(p: Profile, opts: { instBonus?: number; outfit?: number; energy?: number } = {}, songIds: number[]): GigPerformer[] {
+function performers(p: Profile, opts: { instBonus?: number; outfit?: number; energy?: number; gearQuality?: number } = {}, songIds: number[]): GigPerformer[] {
   const out: GigPerformer[] = [];
   for (let i = 0; i < p.members; i++) {
     const role = ROLES[i % ROLES.length];
@@ -80,6 +83,7 @@ function performers(p: Profile, opts: { instBonus?: number; outfit?: number; ene
       present: true,
       instrumentBonus: opts.instBonus ?? 0,
       outfitBonus: opts.outfit ?? 0,
+      gearQuality: opts.gearQuality ?? 0,
       familiarity: Object.fromEntries(songIds.map((id) => [id, p.fam])),
     });
   }
@@ -108,6 +112,7 @@ interface Variant {
   label: string;
   instBonus?: number;
   outfit?: number;
+  gearQuality?: number;
   subgenre?: string | null;
   city?: string;
   weekId?: number;
@@ -141,7 +146,7 @@ function simulate(p: Profile, v: Variant, seed: number) {
       fame: p.fame,
       genre: v.genre ?? 'rock',
       city: CITY_BY_ID[v.city ?? 'istanbul'],
-      performers: performers(p, { instBonus: v.instBonus, outfit: v.outfit }, ids),
+      performers: performers(p, { instBonus: v.instBonus, outfit: v.outfit, gearQuality: v.gearQuality }, ids),
       setlist,
       rand: r,
       fxBonus: v.fx ?? 0,
@@ -173,10 +178,12 @@ const VARIANTS: Variant[] = [
   { id: 'sub_scene', label: 'Alt tür sahne şehrinde (+3)', subgenre: rockScene, city: 'ankara' },
   { id: 'sub_scene_trend', label: 'Alt tür sahne + moda (+5)', subgenre: rockScene, city: 'ankara', weekId: trendWeek },
   { id: 'sub_niche_big', label: 'Niş alt tür büyük sahnede (−3)', subgenre: niche, city: 'istanbul' },
-  { id: 'set_bonus', label: 'Set bonusu (+3 sahne)', outfit: 3 },
-  { id: 'affinity', label: 'Tür uyumu (+3 enstrüman)', instBonus: 3 },
+  { id: 'set_bonus', label: 'Set bonusu (+3 sahne)', outfit: 3, gearQuality: gearQualityBonus(3, 0) },
+  { id: 'affinity', label: 'Tür uyumu (+3 enstrüman)', instBonus: 3, gearQuality: gearQualityBonus(0, 3) },
   { id: 'gear_top', label: 'En iyi dükkân enstrümanı (+12) ve kostüm (+10)', instBonus: 12, outfit: 10 },
-  { id: 'fx12', label: 'Sahne efektleri tavanı (+12; en ucuzu 6 sis makinesi = $480/konser)', fx: 12 },
+  { id: 'fx12', label: '6 sis makinesi ($480/konser)', fx: fxQualityBonus(Array(6).fill('fx_smoke')) },
+  { id: 'fx_pyro', label: 'Piroteknik ($800)', fx: fxQualityBonus(['fx_pyro']) },
+  { id: 'fx_mix', label: 'Sis + konfeti + ışık ($530)', fx: fxQualityBonus(['fx_smoke', 'fx_confetti', 'fx_lights']) },
   { id: 'crew_sound', label: 'Ses teknisyeni (+3)', crew: 3 },
   { id: 'press_hot', label: 'Basın sıcak (60)', press: 60 },
   { id: 'enc_safe', label: 'Güvenli bis', encore: 'safe' },
@@ -227,17 +234,28 @@ for (const p of PROFILES) {
     }
   }
   sweep.sort((a, b) => b.fame - a.fame);
-  out.planSweep[p.id] = { qualifiedEvents: q, plans: sweep.length, top5: sweep.slice(0, 5), worst3: sweep.slice(-3), noneNone: sweep.find((x) => !x.events.length && x.encore === 'none') };
+  // Strateji: olay sayısı + bis kararı (aynı stratejinin farklı olay kombinasyonları tek sayılır)
+  const strategy = (x: { events: string[]; encore: string }) => `${x.events.length} olay + ${x.encore}`;
+  const top5 = sweep.slice(0, 5);
+  out.planSweep[p.id] = {
+    qualifiedEvents: q,
+    plans: sweep.length,
+    top5,
+    top5Strategies: [...new Set(top5.map(strategy))],
+    top10Strategies: [...new Set(sweep.slice(0, 10).map(strategy))],
+    worst3: sweep.slice(-3),
+    noneNone: sweep.find((x) => !x.events.length && x.encore === 'none'),
+  };
   void saveN;
 }
 
 // Sahne olayının beklenen değeri eşikte ve eşik+25'te
 for (const e of STAGE_EVENTS) {
-  const ev = (lvl: number) => {
-    const p = Math.min(0.95, Math.max(0.15, 0.45 + (lvl - e.min) * 0.02));
-    return Math.round((p * e.bonus - (1 - p) * e.penalty) * 100) / 100;
+  const ev = (lvl: number, index = 0, venue = 'club') => {
+    const o = typeof stageEventOdds === 'function' ? stageEventOdds(e, lvl, index, venue, 70) : { chance: Math.min(0.95, Math.max(0.15, 0.45 + (lvl - e.min) * 0.02)), bonus: e.bonus, penalty: e.penalty };
+    return Math.round((o.chance * o.bonus - (1 - o.chance) * o.penalty) * 100) / 100;
   };
-  out.eventEV[e.id] = { min: e.min, bonus: e.bonus, penalty: e.penalty, cooldownH: e.cooldownHours, evAtMin: ev(e.min), evAtMinPlus25: ev(e.min + 25) };
+  out.eventEV[e.id] = { min: e.min, bonus: e.bonus, penalty: e.penalty, cooldownH: e.cooldownHours, evAtMin: ev(e.min), evAtMinPlus25: ev(e.min + 25), thirdAtMinPlus25: ev(e.min + 25, 2), stadiumAtMinPlus25: ev(e.min + 25, 0, 'stadium') };
 }
 
 // Tür popülerliği: aynı profil, aynı şehir, en iyi ve en kötü tür

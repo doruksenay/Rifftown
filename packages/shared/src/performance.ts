@@ -201,6 +201,8 @@ export interface FlowSong {
 export const FLOW_WEIGHTS = { opener: 1.1, warmupStart: 0.85, warmupEnd: 1.1, closer: 1.35 } as const;
 /** Setlist sırasından gelebilecek en büyük kalite etkisi (±puan) */
 export const MAX_FLOW_EFFECT = 8;
+/** Ağırlıklı ve düz ortalama farkının çarpanı. 2 → 5: sıra eskiden kaliteye 0,4 puan ekliyordu (süs; denge raporu §5). */
+export const FLOW_MULT = 5;
 
 /** Sıranın kaliteye etkisi (puan, ±MAX_FLOW_EFFECT). 3 şarkıdan kısa setlerde sıra önemsizdir. */
 export function setlistFlow(songs: FlowSong[]): number {
@@ -212,7 +214,7 @@ export function setlistFlow(songs: FlowSong[]): number {
   const sumW = w.reduce((a, b) => a + b, 0);
   const weighted = songs.reduce((s, x, i) => s + x.score * w[i], 0) / sumW;
   const plain = songs.reduce((s, x) => s + x.score, 0) / n;
-  let effect = (weighted - plain) * 2;
+  let effect = (weighted - plain) * FLOW_MULT;
   // Tempo: hareketli bir açılış ve hızlı bir kapanış seyirciyi tutar; üst üste üç yavaş şarkı salonu uyutur
   if (songs[0].tempo && songs[0].tempo !== 'slow') effect += 1;
   if (songs[n - 1].tempo === 'fast') effect += 1.5;
@@ -256,29 +258,63 @@ const E = (id: string, skill: string, min: number, bonus: number, penalty: numbe
 });
 
 export const STAGE_EVENTS: StageEventDef[] = [
-  E('banter', 'showmanship', 15, 2, 1, 12, ['Seyirciyle sohbet', 'Crowd banter'], ['Şarkılar arasında seyirciyle şakalaşmak.', 'Joking with the crowd between songs.']),
-  E('singalong', 'audience', 15, 4, 2, 24, ['Hep bir ağızdan', 'Sing-along'], ['Nakaratı seyirciye söyletmek.', 'Getting the crowd to sing the chorus.']),
-  E('solo', 'role', 45, 5, 3, 24, ['Uzun solo', 'Extended solo'], ['Gecenin en iyi çalanı sahnenin önüne çıkar.', 'The best player steps to the front.']),
-  E('dance', 'dancing', 30, 4, 3, 24, ['Dans koreografisi', 'Dance routine'], ['Prova edilmiş bir dans gösterisi.', 'A rehearsed dance routine.']),
-  E('unplugged', 'improvisation', 15, 3, 2, 24, ['Akustik ara', 'Unplugged break'], ['Ortada sade, akustik bir bölüm.', 'A stripped-back acoustic moment mid-set.']),
-  E('stage_dive', 'stagediving', 5, 6, 5, 48, ['Seyircinin üstüne atlamak', 'Stage dive'], ['Riskli ama unutulmaz.', 'Risky but unforgettable.']),
+  E('banter', 'showmanship', 15, 2, 2, 12, ['Seyirciyle sohbet', 'Crowd banter'], ['Şarkılar arasında seyirciyle şakalaşmak.', 'Joking with the crowd between songs.']),
+  E('singalong', 'audience', 15, 4, 4, 24, ['Hep bir ağızdan', 'Sing-along'], ['Nakaratı seyirciye söyletmek.', 'Getting the crowd to sing the chorus.']),
+  E('solo', 'role', 45, 5, 5, 24, ['Uzun solo', 'Extended solo'], ['Gecenin en iyi çalanı sahnenin önüne çıkar.', 'The best player steps to the front.']),
+  E('dance', 'dancing', 30, 4, 4, 24, ['Dans koreografisi', 'Dance routine'], ['Prova edilmiş bir dans gösterisi.', 'A rehearsed dance routine.']),
+  E('unplugged', 'improvisation', 15, 3, 3, 24, ['Akustik ara', 'Unplugged break'], ['Ortada sade, akustik bir bölüm.', 'A stripped-back acoustic moment mid-set.']),
+  E('stage_dive', 'stagediving', 5, 6, 6, 48, ['Seyircinin üstüne atlamak', 'Stage dive'], ['Riskli ama unutulmaz.', 'Risky but unforgettable.']),
   // Beceriye ve türe bağlı olaylar (her biri bir becerinin sahnede ilk kez gerçek bir kullanımı)
-  E('cover', 'genre', 30, 3, 2, 24, ['Sürpriz cover', 'Surprise cover'], ['Türün klasiklerinden birini kendi yorumunla çalmak (grubun türündeki beceri).', 'Playing a classic of your genre your own way (your genre skill).']),
-  E('story', 'storytelling', 30, 3, 1, 12, ['Şarkının hikâyesi', 'The story behind the song'], ['Bir şarkıdan önce onun hikâyesini anlatmak.', 'Telling the story behind a song before playing it.']),
-  E('light_cue', 'stage_lighting', 30, 3, 2, 24, ['Işık senkronu', 'Light cue'], ['Işıklar ritme kilitlenir; büyük an büyür.', 'The lights lock to the beat; the big moment gets bigger.']),
-  E('sax_solo', 'saxophone', 45, 5, 3, 24, ['Saksofon solosu', 'Sax solo'], ['Saksofoncu sahnenin önüne çıkar.', 'The sax player steps to the front.']),
-  E('violin_solo', 'violin', 45, 5, 3, 24, ['Keman solosu', 'Violin solo'], ['Salonu bir anda susturan bir keman bölümü.', 'A violin passage that silences the room.']),
-  E('percussion_break', 'hand_percussion', 30, 4, 2, 24, ['Perküsyon arası', 'Percussion break'], ['Bütün grup susar, yalnızca ritim kalır.', 'The band drops out and only the rhythm remains.']),
-  E('drum_battle', 'drums', 45, 4, 3, 48, ['Davul düellosu', 'Drum battle'], ['Davulcu seyirciyle ritim düellosuna girer.', 'The drummer takes on the crowd in a rhythm duel.']),
-  E('mosh_pit', 'showmanship', 30, 5, 3, 24, ['Pogo çağrısı', 'Mosh pit call'], ['Salonun ortası açılır ve kıyamet kopar.', 'The middle of the room opens up and all hell breaks loose.'], ['rock', 'metal', 'punk']),
-  E('freestyle', 'genre', 30, 5, 3, 24, ['Serbest doğaçlama', 'Freestyle'], ['Seyircinin verdiği kelimelerle anında rap.', 'Rapping on the spot with words thrown by the crowd.'], ['hiphop']),
-  E('big_drop', 'synth_programming', 15, 5, 3, 24, ['Büyük drop', 'The big drop'], ['Uzun bir gerilimin ardından bas düşer.', 'After a long build-up, the bass drops.'], ['electronic']),
-  E('jam', 'improvisation', 45, 5, 3, 24, ['Doğaçlama atışması', 'Trading fours'], ['Çalgıcılar sırayla dörder ölçü doğaçlama yapar.', 'The players trade four-bar improvisations.'], ['jazz', 'blues', 'soul']),
-  E('call_response', 'vocal_harmony', 15, 4, 2, 24, ['Çağrı ve cevap', 'Call and response'], ['Vokal çağırır, salon cevap verir.', 'The singer calls, the room answers.'], ['soul', 'blues', 'country']),
-  E('campfire', 'acoustic_guitar', 15, 4, 2, 24, ['Kamp ateşi anı', 'Campfire moment'], ['Herkesin bildiği bir türkü, akustik gitar eşliğinde.', 'A song everyone knows, around an acoustic guitar.'], ['folk', 'country', 'anatolian']),
-  E('dub_echo', 'mixing', 15, 4, 2, 24, ['Dub yankısı', 'Dub echo'], ['Ses masasında canlı yankı ve boşluk.', 'Live echo and space from the mixing desk.'], ['reggae', 'electronic']),
-  E('hushed_hall', 'audience', 45, 4, 3, 24, ['Nefesler tutuldu', 'Hushed hall'], ['En sessiz bölümde salonun nefesini tutması.', 'Holding the whole room breathless in the quietest passage.'], ['classical', 'jazz']),
+  E('cover', 'genre', 30, 3, 3, 24, ['Sürpriz cover', 'Surprise cover'], ['Türün klasiklerinden birini kendi yorumunla çalmak (grubun türündeki beceri).', 'Playing a classic of your genre your own way (your genre skill).']),
+  E('story', 'storytelling', 30, 3, 3, 12, ['Şarkının hikâyesi', 'The story behind the song'], ['Bir şarkıdan önce onun hikâyesini anlatmak.', 'Telling the story behind a song before playing it.']),
+  E('light_cue', 'stage_lighting', 30, 3, 3, 24, ['Işık senkronu', 'Light cue'], ['Işıklar ritme kilitlenir; büyük an büyür.', 'The lights lock to the beat; the big moment gets bigger.']),
+  E('sax_solo', 'saxophone', 45, 5, 5, 24, ['Saksofon solosu', 'Sax solo'], ['Saksofoncu sahnenin önüne çıkar.', 'The sax player steps to the front.']),
+  E('violin_solo', 'violin', 45, 5, 5, 24, ['Keman solosu', 'Violin solo'], ['Salonu bir anda susturan bir keman bölümü.', 'A violin passage that silences the room.']),
+  E('percussion_break', 'hand_percussion', 30, 4, 4, 24, ['Perküsyon arası', 'Percussion break'], ['Bütün grup susar, yalnızca ritim kalır.', 'The band drops out and only the rhythm remains.']),
+  E('drum_battle', 'drums', 45, 4, 4, 48, ['Davul düellosu', 'Drum battle'], ['Davulcu seyirciyle ritim düellosuna girer.', 'The drummer takes on the crowd in a rhythm duel.']),
+  E('mosh_pit', 'showmanship', 30, 5, 5, 24, ['Pogo çağrısı', 'Mosh pit call'], ['Salonun ortası açılır ve kıyamet kopar.', 'The middle of the room opens up and all hell breaks loose.'], ['rock', 'metal', 'punk']),
+  E('freestyle', 'genre', 30, 5, 5, 24, ['Serbest doğaçlama', 'Freestyle'], ['Seyircinin verdiği kelimelerle anında rap.', 'Rapping on the spot with words thrown by the crowd.'], ['hiphop']),
+  E('big_drop', 'synth_programming', 15, 5, 5, 24, ['Büyük drop', 'The big drop'], ['Uzun bir gerilimin ardından bas düşer.', 'After a long build-up, the bass drops.'], ['electronic']),
+  E('jam', 'improvisation', 45, 5, 5, 24, ['Doğaçlama atışması', 'Trading fours'], ['Çalgıcılar sırayla dörder ölçü doğaçlama yapar.', 'The players trade four-bar improvisations.'], ['jazz', 'blues', 'soul']),
+  E('call_response', 'vocal_harmony', 15, 4, 4, 24, ['Çağrı ve cevap', 'Call and response'], ['Vokal çağırır, salon cevap verir.', 'The singer calls, the room answers.'], ['soul', 'blues', 'country']),
+  E('campfire', 'acoustic_guitar', 15, 4, 4, 24, ['Kamp ateşi anı', 'Campfire moment'], ['Herkesin bildiği bir türkü, akustik gitar eşliğinde.', 'A song everyone knows, around an acoustic guitar.'], ['folk', 'country', 'anatolian']),
+  E('dub_echo', 'mixing', 15, 4, 4, 24, ['Dub yankısı', 'Dub echo'], ['Ses masasında canlı yankı ve boşluk.', 'Live echo and space from the mixing desk.'], ['reggae', 'electronic']),
+  E('hushed_hall', 'audience', 45, 4, 4, 24, ['Nefesler tutuldu', 'Hushed hall'], ['En sessiz bölümde salonun nefesini tutması.', 'Holding the whole room breathless in the quietest passage.'], ['classical', 'jazz']),
 ];
+/**
+ * Olayın tarzı: mekânın büyüklüğüne göre etkisi değişir (bağlam). Samimi olaylar küçük sahnede, kalabalık ve gösteri
+ * olayları büyük sahnede daha çok tutar. Bonus × EVENT_VENUE_MULT[tarz][mekân].
+ */
+export type StageEventStyle = 'intimate' | 'crowd' | 'virtuoso' | 'spectacle';
+export const EVENT_STYLE: Record<string, StageEventStyle> = {
+  banter: 'intimate', unplugged: 'intimate', story: 'intimate', campfire: 'intimate', hushed_hall: 'intimate',
+  singalong: 'crowd', cover: 'crowd', mosh_pit: 'crowd', big_drop: 'crowd', call_response: 'crowd',
+  solo: 'virtuoso', sax_solo: 'virtuoso', violin_solo: 'virtuoso', percussion_break: 'virtuoso', drum_battle: 'virtuoso', freestyle: 'virtuoso', jam: 'virtuoso',
+  dance: 'spectacle', stage_dive: 'spectacle', light_cue: 'spectacle', dub_echo: 'spectacle',
+};
+export const EVENT_VENUE_MULT: Record<StageEventStyle, Record<string, number>> = {
+  intimate: { bar: 1.3, club: 1.15, hall: 0.9, stadium: 0.6, festival: 0.7 },
+  crowd: { bar: 0.7, club: 0.9, hall: 1.1, stadium: 1.3, festival: 1.3 },
+  virtuoso: { bar: 1, club: 1.05, hall: 1.1, stadium: 0.9, festival: 0.9 },
+  spectacle: { bar: 0.8, club: 1, hall: 1.1, stadium: 1.2, festival: 1.2 },
+};
+/**
+ * Bir gecede denenen her ek olay seyirciyi yorar: k. olayın (0'dan sayılır) başarı şansı −EVENT_FATIGUE_CHANCE × k,
+ * başarı bonusu × EVENT_STACK_MULT[k]; ceza tam. Ortalama enerjisi 40'ın altındaki grup olaylarda ayrıca −0,1 şans.
+ * Eskiden olayın cezası bonusunun yarısıydı ve her nitelikli olay pozitif beklenen değerliydi: "3 olay + cesur bis"
+ * her profilde ilk 5 planın tamamıydı (denge raporu §5). Şimdi ceza = bonus (eşikte beklenen değer negatif) ve üçüncü olay
+ * ancak çok becerikli grupta başa baş.
+ */
+export const EVENT_FATIGUE_CHANCE = 0.12;
+export const EVENT_STACK_MULT = [1, 0.7, 0.4] as const;
+export const LOW_ENERGY_EVENT_PENALTY = 0.1;
+export function stageEventOdds(def: StageEventDef, level: number, index: number, venue: string, avgEnergy: number) {
+  const chance = clamp(stageEventChance(level, def.min) - EVENT_FATIGUE_CHANCE * index - (avgEnergy < 40 ? LOW_ENERGY_EVENT_PENALTY : 0), 0.05, 0.95);
+  const ctx = EVENT_VENUE_MULT[EVENT_STYLE[def.id] ?? 'virtuoso'][venue] ?? 1;
+  const bonus = def.bonus * (EVENT_STACK_MULT[Math.min(index, EVENT_STACK_MULT.length - 1)] ?? 0.4) * ctx;
+  return { chance, bonus: Math.round(bonus * 10) / 10, penalty: def.penalty };
+}
+
 /** Olay bu türdeki grup için planlanabilir mi? */
 export const stageEventAllowed = (def: StageEventDef, genre: Genre) => !def.genres || def.genres.includes(genre);
 export const STAGE_EVENT_BY_ID: Record<string, StageEventDef> = Object.fromEntries(STAGE_EVENTS.map((e) => [e.id, e]));
@@ -297,16 +333,20 @@ export type EncorePlan = (typeof ENCORE_PLANS)[number];
 export type EncoreOutcome = 'none' | 'skipped' | 'success' | 'flop';
 /** Seyirci bu kalitenin altında bis istemez */
 export const ENCORE_MIN_QUALITY = 40;
+/**
+ * Cesur bis kumardır: başarısızlığı −3 → −6 kalite, şöhret ×0,95 → ×0,9; başarı şöhreti ×1,15 → ×1,12; tutma şansı
+ * daha çok enerjiye bağlı (boldEncoreChance). Eskiden kulüp ve üstünde her durumda güvenli bisten iyiydi.
+ */
 export const ENCORE_RULES = {
   safe: { energy: 5, quality: 1, fameMult: 1.05 },
-  bold: { energy: 12, quality: 3, fameMult: 1.15, failQuality: -3, failFameMult: 0.95 },
+  bold: { energy: 12, quality: 3, fameMult: 1.12, failQuality: -6, failFameMult: 0.9 },
   /** İstenmeyen bise çıkmak */
   unwanted: { quality: -4, fameMult: 0.9 },
 } as const;
 
 /** Cesur bisin tutma şansı: grubun enerjisine ve gecenin kalitesine bağlı */
 export const boldEncoreChance = (quality: number, avgEnergy: number) =>
-  clamp(0.3 + (clamp(avgEnergy, 0, 100) / 100) * 0.6 + (quality - ENCORE_MIN_QUALITY) / 200, 0.1, 0.9);
+  clamp(0.2 + (clamp(avgEnergy, 0, 100) / 100) * 0.6 + (quality - ENCORE_MIN_QUALITY) / 300, 0.1, 0.85);
 
 export interface EncoreResult {
   outcome: EncoreOutcome;

@@ -312,8 +312,33 @@ export function sessionLevels(venue: keyof typeof SESSION_MUSICIAN, own: { skill
   return { skill: Math.max(0, Math.min(sm.skill, own.skill + margin)), stage: Math.max(0, Math.min(sm.stage, own.stage + margin)) };
 }
 
-/** Bir konserde sahne efektlerinden gelebilecek en yüksek kalite artışı */
-export const MAX_FX_BONUS = 12;
+/**
+ * Sahne efektleri: her efekt türü bir kez sayılır (aynı efektten ikincisi bir şey katmaz), en güçlüsü tam, sonrakiler
+ * yarı, çeyrek… (FX_STACK_DECAY) ve toplam en fazla MAX_FX_BONUS. Eskiden tavan +12'ydi ve 6 sis makinesi ($480) her
+ * konserde +12 kalite veriyordu (denge raporu §5).
+ */
+export const MAX_FX_BONUS = 6;
+export const FX_STACK_DECAY = 0.5;
+export function fxQualityBonus(itemIds: string[]): number {
+  const seen = new Set<string>();
+  const bonuses: number[] = [];
+  for (const id of itemIds) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const b = ITEM_BY_ID[id]?.bonus ?? 0;
+    if (b > 0) bonuses.push(b);
+  }
+  bonuses.sort((a, b) => b - a);
+  const total = bonuses.reduce((sum, b, i) => sum + b * FX_STACK_DECAY ** i, 0);
+  return Math.round(Math.min(MAX_FX_BONUS, total) * 10) / 10;
+}
+/**
+ * Set bonusu ve tür uyumu doğrudan kaliteye de eklenir (eskiden yalnız sahne puanına ve rol becerisine girip kaliteye
+ * 1 puandan az katkı veriyordu): set bonusu × 0,5 + tür uyumu (tavan +3) × 0,35, üye başına en fazla +2.
+ */
+export const GEAR_QUALITY_CAP = 2;
+export const gearQualityBonus = (setStage: number, affinity: number) =>
+  Math.round(Math.min(GEAR_QUALITY_CAP, Math.max(0, setStage) * 0.5 + Math.min(MAX_GENRE_BONUS, Math.max(0, affinity)) * 0.35) * 100) / 100;
 /** İkinci el pazarında satıştan alınan komisyon */
 export const MARKET_FEE = 0.05;
 export const MAX_LISTINGS = 20;

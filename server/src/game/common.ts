@@ -213,6 +213,8 @@ export interface GearBonuses {
   /** Tamamlanan eşya setinin sahne bonusu ve kimliği (items.ts gearSetBonus) */
   setStage: number;
   setId: string | null;
+  /** Kuşanılmış kıyafet ve enstrümanların grubun türüne uyum bonusu (toplam, tavansız; gearQualityBonus tavanlar) */
+  affinity: number;
 }
 
 /** Karakterin kuşandığı eşyalardan ve dövmelerinden gelen bonuslar. */
@@ -221,7 +223,7 @@ export async function gearBonuses(db: Db, characterIds: number[], genre?: Genre)
   const out = new Map<number, GearBonuses>();
   const equippedIds = new Map<number, string[]>();
   for (const id of characterIds) {
-    out.set(id, { instruments: {}, outfit: 0, art: 0, pet: 0, vehicleSpeed: 0, tattoos: 0, setStage: 0, setId: null });
+    out.set(id, { instruments: {}, outfit: 0, art: 0, pet: 0, vehicleSpeed: 0, tattoos: 0, setStage: 0, setId: null, affinity: 0 });
     equippedIds.set(id, []);
   }
   if (characterIds.length === 0) return out;
@@ -238,11 +240,15 @@ export async function gearBonuses(db: Db, characterIds: number[], genre?: Genre)
     const bonus = (r.bonus ?? def.bonus) + (r.legendary_at ? LEGENDARY_ITEM_BONUS : 0);
     if (def.slot === 'art') g.art += bonus;
     else if (!r.equipped) continue;
-    else if (def.slot === 'outfit') g.outfit = bonus + genreAffinity(def, genre);
+    else if (def.slot === 'outfit') {
+      g.outfit = bonus + genreAffinity(def, genre);
+      g.affinity += genreAffinity(def, genre);
+    }
     else if (def.slot === 'pet') g.pet = bonus;
     else if (def.slot === 'vehicle') g.vehicleSpeed = def.speed ?? 0;
     // Yıpranmış enstrüman bonusunun bir kısmını kaybeder (tamirle geri gelir)
     else if ((INSTRUMENTS as readonly string[]).includes(def.slot)) g.instruments[def.slot as Instrument] = wornBonus(bonus, Number(r.wear ?? 0)) + genreAffinity(def, genre);
+    // Tür uyumu kaliteye de katkı verir: yalnızca sahnede çalınan rolün enstrümanı sayılır (gigs.ts)
     if (r.equipped) equippedIds.get(r.character_id)?.push(r.item_id);
   }
   // Set bonusu: kuşanılmış eşyalar bir seti tamamlıyorsa sahneye küçük katkı (en iyi set, tavanlı)

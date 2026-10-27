@@ -14,7 +14,7 @@ import {
   encoreOutcome,
   setlistFlow,
   stageEventAllowed,
-  stageEventChance,
+  stageEventOdds,
   subgenreGigBonus,
 } from './performance';
 import { CITY_EVENT_ATTENDANCE } from './content/cities';
@@ -247,6 +247,8 @@ export interface GigPerformer {
   energy?: number;
   /** İlham (0–100); EFSANEVİ gece olasılığını artırır */
   inspiration?: number;
+  /** Set bonusu ve tür uyumunun kaliteye doğrudan katkısı (items.ts gearQualityBonus; yoksa 0) */
+  gearQuality?: number;
 }
 
 export interface GigSong {
@@ -436,6 +438,7 @@ export function computeGig(input: GigInput): GigResult {
   // Sahne olayları: grubun kendi sahnedeki üyelerinden en uygun olanı dener (kiralık müzisyenler plana uymaz)
   const events: { id: string; outcome: StageEventOutcome; by: number | null }[] = [];
   let eventDelta = 0;
+  let attempted = 0;
   const cooldown = new Set(input.cooldownEvents ?? []);
   for (const id of [...new Set(input.plan?.events ?? [])].slice(0, MAX_STAGE_EVENTS)) {
     const def = STAGE_EVENT_BY_ID[id];
@@ -458,17 +461,25 @@ export function computeGig(input: GigInput): GigResult {
         bestLevel = level;
       }
     }
-    // Kimse bilmiyorsa ya da eşiğin altındaysa olay bozulur
-    const ok = best !== null && bestLevel >= def.min && rand() < stageEventChance(bestLevel, def.min);
-    eventDelta += ok ? def.bonus : -def.penalty;
+    // Kimse bilmiyorsa ya da eşiğin altındaysa olay bozulur. Her ek olay seyirciyi yorar, etkisi mekâna göre değişir.
+    const odds = stageEventOdds(def, bestLevel, attempted, venue, avg((p) => p.energy ?? 100));
+    attempted++;
+    const ok = best !== null && bestLevel >= def.min && rand() < odds.chance;
+    eventDelta += ok ? odds.bonus : -odds.penalty;
     events.push({ id, outcome: ok ? 'success' : 'fail', by: best?.characterId ?? null });
   }
   eventDelta = clamp(eventDelta, -MAX_EVENT_EFFECT, MAX_EVENT_EFFECT);
   if (events.some((e) => e.outcome !== 'skipped')) factors.events = eventDelta < 0 ? 'weak' : eventDelta >= 4 ? 'strong' : 'ok';
 
+  // Set bonusu ve tür uyumu: grubun sahnedeki kendi üyelerinin ortalaması kaliteye doğrudan (items.ts gearQualityBonus)
+  const gearQuality = own.length ? own.reduce((sum, p) => sum + (p.gearQuality ?? 0), 0) / own.length : 0;
   const noise = 0.92 + rand() * 0.16;
   const base = Math.round(
-    clamp(avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + (input.crew?.quality ?? 0) + flow + eventDelta, 0, 100),
+    clamp(
+      avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + (input.crew?.quality ?? 0) + flow + eventDelta + gearQuality,
+      0,
+      100,
+    ),
   );
   // Bis: gece iyi geçtiyse seyirci ister; cesur bis enerjiye bağlı bir kumardır
   const enc = encoreOutcome(input.plan?.encore, base, avg((p) => p.energy ?? 100), rand);

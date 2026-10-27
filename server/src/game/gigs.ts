@@ -12,7 +12,9 @@ import {
   LOCATION_BY_ID,
   MAX_SETLIST,
   MAX_SCHEDULED_GIGS,
-  MAX_FX_BONUS,
+  fxQualityBonus,
+  gearQualityBonus,
+  genreAffinity,
   ITEM_BY_ID,
   SESSION_FAMILIARITY,
   SESSION_MUSICIAN,
@@ -76,6 +78,12 @@ export async function bandFame(db: Db, bandId: number, cityId: string): Promise<
 }
 
 const GIG_BLOCK_HOURS = 3;
+
+/** Üyenin sahnede çaldığı roldeki kuşanılmış enstrümanın tür uyumu */
+function roleAffinity(rows: { character_id: unknown; item_id: string; slot: string }[], characterId: number, role: string, genre: Genre) {
+  const r = rows.find((x) => Number(x.character_id) === characterId && x.slot === role);
+  return r ? genreAffinity(ITEM_BY_ID[r.item_id], genre) : 0;
+}
 
 /** VIP avantajı: bir mekânda konser verilse kaç kişinin geleceğinin tahmini aralığı.
  *  Başka şehirdeki mekânlar için de sorulabilir (turne planlarken). */
@@ -325,6 +333,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   const onStage = (ch: CharacterRow) => ch.city_id === gig.city_id && !isJailed(ch);
   // Tür uyumlu eşyalar ve set bonusu grubun türüne göre
   const gear = await gearBonuses(c, ids, band.genre as Genre);
+  const gearRows = await many(c, `SELECT character_id, item_id, slot FROM inventory WHERE character_id = ANY($1::bigint[]) AND equipped AND NOT listed`, [ids]);
   const famRows = await many(
     c,
     'SELECT character_id, song_id, value FROM familiarity WHERE character_id = ANY($1::bigint[]) AND song_id = ANY($2::bigint[])',
@@ -357,6 +366,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       present: onStage(ch),
       instrumentBonus: g.instruments[role] ?? 0,
       outfitBonus: g.outfit + g.tattoos + g.setStage,
+      // Set bonusu ve tür uyumu (kıyafet + çaldığı rolün enstrümanı) kaliteye doğrudan
+      gearQuality: gearQualityBonus(g.setStage, g.affinity + roleAffinity(gearRows, ch.id, role, band.genre as Genre)),
       familiarity,
     };
   });
@@ -408,7 +419,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     performers,
     setlist: gig.setlist.map((id: number) => songs.find((s) => s.id === id)).filter(Boolean),
     rand: Math.random,
-    fxBonus: Math.min(MAX_FX_BONUS, (gig.effects ?? []).reduce((sum: number, id: string) => sum + (ITEM_BY_ID[id]?.bonus ?? 0), 0)),
+    // Her efekt türü bir kez, azalan getiriyle, tavan MAX_FX_BONUS (items.ts fxQualityBonus)
+    fxBonus: fxQualityBonus(gig.effects ?? []),
     plan: gig.plan ?? {},
     press,
     crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },
