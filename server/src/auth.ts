@@ -78,8 +78,8 @@ export async function requireUser(req: FastifyRequest, _reply: FastifyReply) {
     characterId: row.character_id,
   };
   req.token = token;
-  // Son kullanım zamanını en fazla 10 dakikada bir güncelle
-  if (Date.now() - new Date(row.last_used).getTime() > 10 * 60 * 1000) {
+  // Son kullanım zamanını en fazla dakikada bir güncelle (yönetim panelindeki "online" sayısı buna dayanır)
+  if (Date.now() - new Date(row.last_used).getTime() > 60 * 1000) {
     pool.query('UPDATE sessions SET last_used = now() WHERE token_hash = $1', [sha256(token)]).catch(() => {});
   }
 }

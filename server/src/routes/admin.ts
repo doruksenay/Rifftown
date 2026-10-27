@@ -4,6 +4,7 @@ import { requireAdmin, revokeUserSessions } from '../auth';
 import { many, one, pool } from '../db';
 import { fail } from '../errors';
 import { ADMIN_HTML } from './admin-page';
+import { adminPlayerRoutes } from './admin-players';
 import { extendVip } from '../game/vip';
 import { removeArticle } from '../game/press';
 import { idParam, parse } from './util';
@@ -14,6 +15,7 @@ export async function adminPage(app: FastifyInstance) {
 
 export async function adminRoutes(app: FastifyInstance) {
   app.addHook('preHandler', requireAdmin);
+  await app.register(adminPlayerRoutes);
 
   app.get('/admin/stats', async () => {
     const r = await one(
@@ -36,7 +38,8 @@ export async function adminRoutes(app: FastifyInstance) {
     const q = parse(z.object({ q: z.string().max(100).optional() }), req.query);
     const rows = await many(
       pool,
-      `SELECT u.id, u.email, u.is_admin, u.banned, u.created_at, u.vip_until, c.id AS character_id, c.name, c.money, c.city_id, c.profession
+      `SELECT u.id, u.email, u.is_admin, u.banned, u.created_at, u.vip_until, c.id AS character_id, c.name, c.money, c.city_id, c.profession,
+              (SELECT max(last_used) FROM sessions s WHERE s.user_id = u.id) AS last_seen
          FROM users u LEFT JOIN characters c ON c.user_id = u.id
         WHERE $1::text IS NULL OR u.email ILIKE '%' || $1 || '%' OR c.name ILIKE '%' || $1 || '%'
         ORDER BY u.id DESC LIMIT 100`,
