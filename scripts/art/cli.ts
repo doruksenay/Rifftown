@@ -8,6 +8,7 @@
 // Hiçbir adım görsel üretmez; yalnızca gelen dosyaları işler ve denetler.
 
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { basename, dirname, join, relative } from 'node:path';
 import { ITEMS, CITIES, LOCATION_TYPE_NAMES, PAINT_COLORS } from '@rifftown/shared';
 import sharp from 'sharp';
@@ -392,6 +393,18 @@ async function validate(): Promise<{ checked: Checked[]; ok: boolean }> {
       c.status = 'invalid';
       c.problems.push(`eşyanın görseli (${item.id}) geçerli değil; önce o düzeltilmeli`);
     }
+  }
+  // Birebir aynı içerik: ChatGPT'ye referans olarak verilen bir görsel yanlışlıkla başka bir varlık olarak gelebilir
+  const firstByHash = new Map<string, string>();
+  for (const c of checked) {
+    if (c.status !== 'valid') continue;
+    const a = catalog.find((x) => x.id === c.id)!;
+    const hash = createHash('sha1').update(readFileSync(join(ASSET_ROOT, a.path))).digest('hex');
+    const first = firstByHash.get(hash);
+    if (first) {
+      c.status = 'invalid';
+      c.problems.push(`${first} ile birebir aynı görsel; bu varlık için ayrı bir resim gerekli`);
+    } else firstByHash.set(hash, c.id);
   }
   const general: string[] = [];
   // Yinelenen kimlik / yol

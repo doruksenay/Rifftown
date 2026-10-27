@@ -1,5 +1,29 @@
 # B2: mekânlar (ChatGPT'ye tek parça)
 
+## Sonuç (ilk teslim, 27 Ekim)
+
+33 mekândan 32'si oyunda. Işık, renk ve bitiş bütün sette tutarlı.
+
+| Dosya | Durum | Not |
+| --- | --- | --- |
+| `place/club` | Eksik | Gelen resim, referans olarak verilen `place/bar` ile birebir aynıydı. Doğrulama artık aynı içeriği yakalıyor |
+| `place/tattoo`, `place/bookstore` | Oyunda | Resim kare geldi (938×836); 16:7'ye kırpılınca büyütüldü ve biraz yumuşak. İstenirse yatay olarak yeniden üretilebilir |
+| Vitrinli mekânlar | Oyunda | Dövme, kitapçı, hırdavat, spor salonu, restoran, otel, banka, pet shop, emlakçı, galeri, sahne dükkânı aynı kaldırım, bank ve saksı düzeniyle çizilmiş. Set olarak tutarlı, ama yan yana tekrar ediyor |
+| Gökyüzü | Not | Neredeyse bütün resimlerde aynı Amerikan gökdelen silueti var; mekânlar her şehirde ortak olduğu için İstanbul'da da bu siluet görünür |
+| Küçük yazılar | Not | Emlakçı ilanlarında, amfilerde ve mahkeme mührünün çevresinde okunmayan küçük yazı benzerleri var; oyun boyutunda fark edilmiyor |
+
+## Eksik: kulüp (ChatGPT'ye tek parça)
+
+Bar resmini referans olarak ekle, ama kulübün ondan farklı ve daha büyük bir mekân olduğunu vurgula:
+
+```text
+Same Rifftown location set and the same painted finish as the attached bar image, but a DIFFERENT, larger venue — do not reuse or repeat the bar.
+
+club.png — 1536x1024 landscape, full-bleed. Inside a mid-sized music club for about 500 people, seen from the middle of a packed dance floor: a wide raised stage with a band, coloured moving spotlights and haze, a lighting truss, a balcony rail running along the side walls above the crowd. Evening, subtle brand-neon accents (cyan #00E5FF, hot pink #FF2EB6, electric purple #8A2BFF). Everything important inside the middle two-thirds vertically (cropped to a 16:7 strip). ABSOLUTELY NO text, letters, numbers, logos or brand names, including on amps and drum heads.
+```
+
+## İlk istek
+
 Yeni sohbet aç; stil panosunu ve onaylanan `place/bar` resmini ekle, sonra gönder. Her resimden sonra "next" yaz. 33 resim uzun sürer; istersen sohbeti ikiye böl (1–17 ve 18–33), ikinci sohbette de aynı açılışı ve bar resmini kullan.
 
 ```text

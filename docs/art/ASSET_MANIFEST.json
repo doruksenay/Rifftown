@@ -116,9 +116,9 @@
   },
   "summary": {
     "total": 323,
-    "valid": 30,
+    "valid": 62,
     "invalid": 0,
-    "missing": 293
+    "missing": 261
   },
   "assets": [
     {
@@ -419,7 +419,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Concert hall",
       "gameRefs": [
@@ -436,7 +436,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Stadium",
       "gameRefs": [
@@ -453,7 +453,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Festival grounds",
       "gameRefs": [
@@ -470,7 +470,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Music school",
       "gameRefs": [
@@ -487,7 +487,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Rehearsal studio",
       "gameRefs": [
@@ -504,7 +504,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Workplace",
       "gameRefs": [
@@ -521,7 +521,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Hospital",
       "gameRefs": [
@@ -538,7 +538,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Music store",
       "gameRefs": [
@@ -555,7 +555,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Stage boutique",
       "gameRefs": [
@@ -572,7 +572,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Art gallery",
       "gameRefs": [
@@ -589,7 +589,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Bookstore",
       "gameRefs": [
@@ -606,7 +606,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "City hall",
       "gameRefs": [
@@ -623,7 +623,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Police headquarters",
       "gameRefs": [
@@ -640,7 +640,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Courthouse",
       "gameRefs": [
@@ -657,7 +657,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Business tower",
       "gameRefs": [
@@ -674,7 +674,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Newspaper",
       "gameRefs": [
@@ -691,7 +691,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Place of worship",
       "gameRefs": [
@@ -708,7 +708,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "University",
       "gameRefs": [
@@ -725,7 +725,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Park",
       "gameRefs": [
@@ -742,7 +742,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Recording studio",
       "gameRefs": [
@@ -759,7 +759,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Prison",
       "gameRefs": [
@@ -776,7 +776,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Estate agent",
       "gameRefs": [
@@ -793,7 +793,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Car dealer",
       "gameRefs": [
@@ -810,7 +810,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Pet shop",
       "gameRefs": [
@@ -827,7 +827,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Hardware and workshop",
       "gameRefs": [
@@ -844,7 +844,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Stage equipment shop",
       "gameRefs": [
@@ -861,7 +861,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Second-hand market",
       "gameRefs": [
@@ -878,7 +878,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Tattoo studio",
       "gameRefs": [
@@ -895,7 +895,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Gym",
       "gameRefs": [
@@ -912,7 +912,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Restaurant",
       "gameRefs": [
@@ -929,7 +929,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Hotel",
       "gameRefs": [
@@ -946,7 +946,7 @@
       "height": 700,
       "format": "webp",
       "transparent": false,
-      "status": "missing",
+      "status": "valid",
       "batch": "B2",
       "label": "Bank",
       "gameRefs": [
