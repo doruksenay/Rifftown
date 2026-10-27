@@ -3,6 +3,7 @@
 // En üst kalite seviyesi büyük harfle (DESTANSI / EPIC), diğerleri küçük harfle yazılır.
 
 import { REVIEW_CITY, REVIEW_CROWD, REVIEW_EVENT, REVIEW_EVENT_GENERIC, REVIEW_LEGENDARY, REVIEW_PRESS, REVIEW_RIVAL, REVIEW_TIERS } from './content/texts';
+import { NEWS_PARTS, REVIEW_CROWD_PARTS, REVIEW_PARTS } from './content/review-parts';
 import type { L, Lang } from './world';
 
 export interface Tier {
@@ -189,7 +190,52 @@ export interface GigReviewInput {
 }
 
 /** Tohumdan deterministik seçim (aynı konser hep aynı metni üretir) */
-const pickBy = <T>(xs: T[], seed: number, salt: number) => xs[Math.abs(Math.imul(seed + 1, 2654435761) ^ (salt * 40503)) % xs.length];
+const pickBy = <T>(xs: T[], seed: number, salt: number) => xs[pickIndex(xs.length, seed, salt)];
+const pickIndex = (n: number, seed: number, salt: number) => {
+  let h = Math.imul((seed | 0) + 1, 2654435761) ^ Math.imul(salt + 7, 40503);
+  h = Math.imul(h ^ (h >>> 15), 2246822519);
+  h ^= h >>> 13;
+  return Math.abs(h) % n;
+};
+const placeholders = (s: string) => new Set(s.match(/\{[a-z]+\}/g) ?? []);
+
+/**
+ * İki cümleciği "; " ile birleştirir (content/review-parts.ts). İkinci parça, birincide geçen yer tutucuları
+ * tekrarlamayan ilk adaydır ("{song}" iki kez geçmesin). Aynı tohum hep aynı cümleyi verir.
+ */
+function composePair(first: L[], second: L[], seed: number, salt: number): L {
+  const a = pickBy(first, seed, salt);
+  const used = placeholders(a.tr);
+  const start = pickIndex(second.length, seed, salt + 1);
+  let b = second[start];
+  for (let k = 0; k < second.length; k++) {
+    const cand = second[(start + k) % second.length];
+    if (![...placeholders(cand.tr)].some((x) => used.has(x))) {
+      b = cand;
+      break;
+    }
+  }
+  return { tr: `${a.tr}; ${b.tr}`, en: `${a.en}; ${b.en}` };
+}
+
+/**
+ * Gazete haberi (NPC muhabir): başlık + giriş + kapanış parçalardan (12 × 10 × 10). song yoksa şarkı anan parçalar
+ * kullanılmaz. Dönüş yer tutuculu metindir; çağıran doldurur.
+ */
+export function newsArticleTemplate(seed: number, hasSong: boolean): { title: L; body: L } {
+  const ok = (x: L) => hasSong || !x.tr.includes('{song}');
+  const titles = NEWS_PARTS.titles.filter(ok);
+  const title = pickBy(titles, seed, 30);
+  // Haber grubu mutlaka anar: başlık anmıyorsa giriş cümlesi anar
+  const leads = NEWS_PARTS.leads.filter((x) => ok(x) && (title.tr.includes('{band}') || x.tr.includes('{band}')));
+  const closers = NEWS_PARTS.closers.filter(ok);
+  return { title, body: composePairSentences(leads, closers, seed, 31) };
+}
+/** İki tam cümleyi boşlukla birleştirir; ikinci cümle birincinin yer tutucularını tekrarlamaz */
+function composePairSentences(first: L[], second: L[], seed: number, salt: number): L {
+  const p = composePair(first, second, seed, salt);
+  return { tr: p.tr.replace('; ', ' '), en: p.en.replace('; ', ' ') };
+}
 
 /** Konser eleştirisi; iki dilde birden üretilir ve konserle birlikte saklanır. */
 export function gigReview(r: GigReviewInput): L {
@@ -205,9 +251,14 @@ export function gigReview(r: GigReviewInput): L {
     }
     let tier = REVIEW_TIERS[0];
     for (const b of REVIEW_TIERS) if (r.quality >= b.minQuality) tier = b;
-    const main = r.legendary ? pickBy(REVIEW_LEGENDARY, r.seed, 1) : pickBy(tier.lines, r.seed, 1);
+    let parts0 = REVIEW_PARTS[0];
+    for (const b of REVIEW_PARTS) if (r.quality >= b.minQuality) parts0 = b;
+    // Ana cümle çoğunlukla parçalardan (basamak başına 100+ kombinasyon), arada bir klasik tam cümle
+    const classic = pickIndex(5, r.seed, 9) === 0;
+    const main = r.legendary ? pickBy(REVIEW_LEGENDARY, r.seed, 1) : classic ? pickBy(tier.lines, r.seed, 1) : composePair(parts0.openers, parts0.followups, r.seed, 1);
     const ratio = r.capacity > 0 ? r.attendance / r.capacity : 0;
-    const crowd = pickBy(REVIEW_CROWD[ratio >= 0.85 ? 'packed' : ratio >= 0.4 ? 'half' : 'empty'], r.seed, 2);
+    const state = ratio >= 0.85 ? 'packed' : ratio >= 0.4 ? 'half' : 'empty';
+    const crowd = pickIndex(5, r.seed, 8) === 0 ? pickBy(REVIEW_CROWD[state], r.seed, 2) : composePair(REVIEW_CROWD_PARTS[state].openers, REVIEW_CROWD_PARTS[state].details, r.seed, 2);
     const parts = [fill(crowd[lang], v), fill(main[lang], v)];
     // Bağlam cümleleri: olay, rakip, basın, şehir (en fazla ikisi, metin uzamasın)
     const extra: L[] = [];

@@ -324,6 +324,10 @@ async function grinderPro(b: Bot) {
   if (await maintain(b, 45)) return;
   const res = await musicianStep(b, { hire: true, minSongs: 4, gigGapH: 20, reserve: 60 });
   if (res === true || (await busy(b.id))) return;
+  // Beste geliştikçe repertuvarı yenile: yorgunluk penceresi boşsa yeni şarkı yaz (setlist en iyi 10 şarkıyı seçer)
+  if ((await recentSongs(b.id)) === 0) {
+    if (await writeSong(b)) return;
+  }
   const r = await row(b.id);
   if (r.money >= 400) {
     const targets = ['composing', 'lyrics', b.instrument, 'showmanship'];

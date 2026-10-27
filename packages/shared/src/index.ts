@@ -31,6 +31,7 @@ export * from './community';
 export * from './npc-civic';
 export * from './perks';
 export * from './content/texts';
+export * from './content/review-parts';
 export * from './content/rewards';
 export * from './content/cities';
 export * from './lessons';

@@ -21,7 +21,7 @@ import {
   NPC_CIVIC,
   NPC_JUDGE_AT,
   NPC_MAX_LISTINGS,
-  NEWS_TEMPLATES,
+  newsArticleTemplate,
   LOCATION_BY_ID,
   NPC_NEWS_MIN_QUALITY,
   NPC_NEWS_PER_DAY,
@@ -170,8 +170,8 @@ export async function npcNews(): Promise<number> {
       const city = CITY_BY_ID[g.city_id];
       // Şablon havuzundan (content/texts.ts); şarkı adı yoksa şarkı anmayan şablonlar
       const venue = LOCATION_BY_ID[g.location_id]?.name ?? city.name;
-      const pool0 = g.song ? NEWS_TEMPLATES : NEWS_TEMPLATES.filter((x) => !x.title.tr.includes('{song}') && !x.body.tr.includes('{song}'));
-      const tpl = pool0[Number(g.id) % pool0.length];
+      // Haber parçalardan kurulur (başlık × giriş × kapanış; content/review-parts.ts), şarkı adı yoksa şarkı anmayanlar
+      const tpl = newsArticleTemplate(Number(g.id), !!g.song);
       const fillNews = (text: string, lang: 'tr' | 'en') =>
         text.replace(/\{band\}/g, g.band_name).replace(/\{city\}/g, city.name[lang]).replace(/\{venue\}/g, venue[lang]).replace(/\{n\}/g, String(g.attendance)).replace(/\{song\}/g, g.song ?? '');
       const tr = { t: fillNews(tpl.title.tr, 'tr'), b: fillNews(tpl.body.tr, 'tr') };
