@@ -79,6 +79,11 @@ export const ADMIN_HTML = /* html */ `<!doctype html>
       <table><thead><tr><th>Zaman</th><th>Tür</th><th>Şehir</th><th>Yazan</th><th>İçerik</th><th></th></tr></thead><tbody id="articles"></tbody></table>
     </section>
     <section>
+      <h2>Şehir kararları</h2>
+      <p style="color:var(--muted);margin:0 0 12px">Makam sahiplerinin kararları (bilet vergisi, işletme harcı, devriye) ve makam el değiştirince yapılan sıfırlamalar.</p>
+      <table><thead><tr><th>Zaman</th><th>Şehir</th><th>Makam</th><th>Karar</th><th>Kim</th><th>Eski → yeni</th></tr></thead><tbody id="policies"></tbody></table>
+    </section>
+    <section>
       <h2>Son profil değişiklikleri</h2>
       <p style="color:var(--muted);margin:0 0 12px">Uygunsuz fotoğraf, başlık ya da açıklamayı buradan kaldırabilirsin.</p>
       <div id="profiles" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px"></div>
@@ -387,6 +392,17 @@ async function loadProfiles() {
     card.append(row); box.append(card);
   }
 }
+async function loadPolicies() {
+  const { policies } = await api('/admin/policies');
+  const tb = $('policies'); tb.replaceChildren();
+  if (!policies.length) { const tr = el('tr'); const td = el('td', 'Karar yok.'); td.colSpan = 6; tr.append(td); tb.append(tr); return; }
+  for (const p of policies) {
+    const tr = el('tr');
+    tr.append(el('td', new Date(p.created_at).toLocaleString('tr-TR')), el('td', p.city_id), el('td', p.office), el('td', p.policy + (p.reason === 'reset' ? ' (sıfırlandı)' : '')),
+      el('td', p.name || '—'), el('td', p.old_level + ' → ' + p.new_level));
+    tb.append(tr);
+  }
+}
 async function loadArticles() {
   const { articles } = await api('/admin/articles');
   const tb = $('articles'); tb.replaceChildren();
@@ -406,7 +422,7 @@ async function show() {
     const me = await api('/me');
     if (!me.user.isAdmin) throw new Error('Bu hesap yönetici değil');
     $('login').hidden = true; $('panel').hidden = false;
-    await Promise.all([loadStats(), loadOnline(), loadUsers(), loadReports(), loadArticles(), loadProfiles(), loadChat()]);
+    await Promise.all([loadStats(), loadOnline(), loadUsers(), loadReports(), loadArticles(), loadPolicies(), loadProfiles(), loadChat()]);
     if (!window.__onlineTimer) window.__onlineTimer = setInterval(() => { if (token) { loadOnline().catch(() => {}); loadStats().catch(() => {}); } }, 30000);
   } catch (e) { token = null; localStorage.removeItem('rifftown_admin_token'); $('login').hidden = false; $('panel').hidden = true; $('loginErr').textContent = e.message === 'unauthorized' ? '' : e.message; }
 }

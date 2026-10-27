@@ -432,10 +432,36 @@ export interface OfficeHolderDto {
   announcement: string | null;
 }
 
+/** Şehirde yürürlükteki makam kararı (civic-powers.ts). policyLevel VIP olmayanlara yalnızca yönüyle (−1/0/1) gider. */
+export interface CityPolicyDto {
+  office: 'mayor' | 'governor' | 'police_chief';
+  policy: 'ticket_tax' | 'business_fee' | 'patrol';
+  policyLevel: number;
+  /** Kararı veren ve zamanı (varsayılandaysa null) */
+  setBy: { characterId: number; name: string } | null;
+  setAt: string | null;
+  /** İzleyen makam sahibi bu kararı şimdi değiştirebilir mi (sahip, VIP, bekleme süresi geçti); değilse ne zaman */
+  canChange?: boolean;
+  nextChangeAt?: string | null;
+}
+
+export interface PolicyLogDto {
+  office: string;
+  policy: string;
+  oldLevel: number;
+  newLevel: number;
+  reason: 'set' | 'reset';
+  name: string | null;
+  at: string;
+}
+
 export interface CivicResponse {
   cityId: string;
   holders: OfficeHolderDto[];
   elections: ElectionDto[];
+  /** Makam yetkileri: yürürlükteki kararlar ve son kayıtlar */
+  policies: CityPolicyDto[];
+  policyLog: PolicyLogDto[];
 }
 
 export interface BookGigRequest {

@@ -109,6 +109,16 @@ export async function adminRoutes(app: FastifyInstance) {
     return { articles: rows };
   });
 
+  /** Makam yetkileri: son kararlar ve sıfırlamalar (kim, ne zaman, eski/yeni değer) */
+  app.get('/admin/policies', async () => {
+    const rows = await many(
+      pool,
+      `SELECT l.id, l.city_id, l.office, l.policy, l.old_level, l.new_level, l.reason, l.created_at, c.name
+         FROM policy_log l LEFT JOIN characters c ON c.id = l.character_id ORDER BY l.created_at DESC, l.id DESC LIMIT 100`,
+    );
+    return { policies: rows };
+  });
+
   app.delete('/admin/articles/:id', async (req) => {
     const { id } = parse(idParam, req.params);
     await removeArticle(id);

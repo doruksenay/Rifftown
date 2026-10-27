@@ -39,6 +39,7 @@ import { type Db, many, one, pool, tx } from '../db';
 import { type CharacterRow, ageRef, lockCharacter, notify } from './common';
 import { addMoodlet } from './wellbeing';
 import { scandalPress } from './press';
+import { resetPolicy } from './politics';
 
 const hoursMs = (h: number) => gameHoursToMs(h, config.gameSpeed);
 
@@ -308,6 +309,10 @@ export async function releaseCharacter(c: pg.PoolClient, characterId: number, mo
   // İlandan inen eşyalar envanterde serbest kalır (yadigâr seçilebilsin, kayıtta "ilanda" görünmesin)
   await c.query('UPDATE inventory SET listed = FALSE WHERE character_id = $1 AND listed', [ch.id]);
   await c.query('DELETE FROM homes WHERE character_id = $1', [ch.id]);
+  // Makam boşalır; şehirdeki yetki kararı varsayılana döner (kayıt ve haberle)
+  for (const o of await many(c, 'SELECT city_id, office FROM office_holders WHERE character_id = $1 FOR UPDATE', [ch.id])) {
+    await resetPolicy(c, o.city_id, o.office, ch.id);
+  }
   await c.query('DELETE FROM office_holders WHERE character_id = $1', [ch.id]);
   await c.query(`DELETE FROM election_candidates WHERE character_id = $1`, [ch.id]);
   const partner = await one(c, 'SELECT partner_id FROM partners WHERE character_id = $1', [ch.id]);

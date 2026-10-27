@@ -4,7 +4,7 @@ import { RefreshControl, View } from 'react-native';
 import { Body, Button, Empty, Heading, ListRow, Row, Screen, ScreenHeader, Small } from '@/components/ui';
 import { dateTime, money } from '@/lib/format';
 import { TierText } from '@/components/tier';
-import { MayorAnnouncement } from '@/components/politics';
+import { CityPolicies, MayorAnnouncement } from '@/components/politics';
 import { useCity } from '@/lib/hooks';
 import { useI18n } from '@/lib/i18n';
 import type { StringKey } from '@/lib/strings';
@@ -56,6 +56,7 @@ export default function CityTab() {
         <CitySkyline cityId={city.id} height={140} />
       </Bleed>
       <MayorAnnouncement cityId={city.id} />
+      <CityPolicies cityId={city.id} />
       <CityIdentityCard cityId={city.id} speed={speed} />
 
       <ListRow

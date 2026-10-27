@@ -230,6 +230,24 @@ Her şehirde üç makam vardır: belediye başkanı (günlük $600), vali ($500)
 - Makam sahibine her oyun günü maaşı ödenir. Belediye başkanı şehir sayfasında herkesin gördüğü bir duyuru yayınlayabilir.
 - Ara sonuçları (oy sayılarını) sadece VIP üyeler görür.
 
+### Makam yetkileri
+
+Her makamın şehirde dar ve tavanlı tek bir kararı vardır (`packages/shared/src/civic-powers.ts`, sunucu `politics.ts`, migration 023). Karar ekranı belediye ve emniyet mekânlarındaki siyaset bölümünde; yürürlükteki kararlar şehir sekmesinde herkese kelimeyle görünür.
+
+| Makam | Karar | Aralık (varsayılan 0) | Etki | Bedeli / para |
+|---|---|---|---|---|
+| Belediye başkanı | Konser bilet vergisi | 0 … 5 basamak | Şehirdeki konserlerin bilet gelirinden basamak başına %1, en fazla %5 kesilir (barın sahip payından sonra, ekip ücretinden önce) | Vergi şehir kasasına gider, yani oyundan çıkar; başkanın cebine gitmez. Para basmaz, para yutağıdır. |
+| Vali | İşletme ruhsat harcı | −2 … +2 | Şehirdeki işletmelerin haftalık gideri basamak başına %10 (×0,8 … ×1,2) | İndirim para basmaz (daha az para yutulur) ama bedeli valinin maaşından düşer: indirim basamağı başına −%10 (−2'de günlük $500 yerine $400). Zam maaşı artırmaz. |
+| Emniyet müdürü | Devriye yoğunluğu | −1 … +2 | Basamak başına suç başarı şansı −3 puan, soruşturmanın faili bulma şansı +3 puan (mevcut %8–%92 ve %10–%90 sınırları aynen) | Sıkı devriye (+1, +2) şehirdeki konser seyircisini basamak başına %1 azaltır. Gevşek devriye (−1) suçu 3 puan kolaylaştırır. |
+
+- **Kim karar verir:** yalnızca makam sahibi, yalnızca kendi makamı için ve yalnızca VIP üyeyken (VIP süresi biten makam sahibi karar veremez; verdiği karar görev süresince yürürlükte kalır). Aralık dışı değer reddedilir; aynı makam sahibi kararını 24 oyun saatinde bir değiştirebilir.
+- **Seçimle el değiştirir:** karar yalnızca onu veren kişi görevdeyken geçerlidir. Seçimi başka biri kazanınca, makam sahibi ölünce ya da mirasını devredip emekliye ayrılınca karar varsayılana döner (kayıtlı ve haberli). Aynı kişi yeniden seçilirse kararı sürer.
+- **NPC makam sahibi** (yedek aday, bkz. "Oyunun kadrosu") karar vermez: o makamda yetki varsayılanda kalır.
+- **Maaş tavanı:** hiçbir karar maaşı artırmaz (en fazla günlük $600 / $500 / $450 aynen); NPC makam sahibi maaş almaz.
+- **Kayıt ve haber:** her karar ve sıfırlama `policy_log`'a yazılır (şehir, makam, kim, ne zaman, eski ve yeni değer) ve şehir gazetesinde iki dilli kısa bir haber olur (yazarsız, basın etkisi yok). Haber metni kesin sayı içermez ("bilet vergisini artırdı"). Yönetim panelinde "Şehir kararları" listesi.
+- **Görünürlük:** yürürlükteki karar herkese kelimeyle görünür (vergi yok / bilet vergisi var; indirimli / normal / zamlı; gevşek / normal / sıkı). VIP üyeler kesin değeri de görür ("%3", "×0,8", "+2"); VIP olmayanlara sunucu basamağı yalnızca yönüyle gönderir (`visibility.ts`: `policyLevel`, `oldLevel`, `newLevel`). Konser raporundaki kesilen vergi (`cityTax`) diğer gelir kalemleri gibi para olarak tam gösterilir.
+- **Mevcut şehirler (migration 023):** hiçbir karar yoktur; hepsi varsayılanda, eski davranışın aynısı.
+
 ## Sokak müziği
 
 Parkta 1, 2 ya da 4 saat çalınarak bahşiş toplanır. Saatlik bahşiş ≈ (4 + rol becerisi × 0,35 + sahne puanı × 0,15) × şehir çarpanı. Grubu ya da parası olmayan yeni oyuncular için bir başlangıç yoludur.
@@ -288,10 +306,10 @@ Polis, ajan, özel harekât ve yargıç meslekleri bu sistemle gerçek bir oynan
 | Mağazadan çalma | dükkânlar, kitapçı | 1 saat | gizlilik, sokak kurnazlığı | $60–180 | 12 saat |
 | Ofis soygunu | iş merkezi | 2 saat | kilit açma (en az çırak), gizlilik | $250–700 | 24 saat |
 
-- Ganimet şehir çarpanıyla çarpılır. Başarı şansı = 0,45 + beceri ortalaması × 0,006 − zorluk × 0,01 − görevdeki polis × 0,05; %8 ile %92 arasında. Son 12 oyun saatinde emniyette mesai yapan ya da soruşturan her polis şansı düşürür. VIP üyeler şansı yüzde olarak görür, diğerleri kelimeyle (şansın düşük, yarı yarıya, şansın yüksek).
+- Ganimet şehir çarpanıyla çarpılır. Başarı şansı = 0,45 + beceri ortalaması × 0,006 − zorluk × 0,01 − görevdeki polis × 0,05 − emniyet müdürünün devriye basamağı × 0,03 (bkz. "Makam yetkileri"); %8 ile %92 arasında. Son 12 oyun saatinde emniyette mesai yapan ya da soruşturan her polis şansı düşürür. VIP üyeler şansı yüzde olarak görür, diğerleri kelimeyle (şansın düşük, yarı yarıya, şansın yüksek).
 - Yeni "Sokak" beceri kategorisi: sokak kurnazlığı ($50), gizlilik ($70, sokak kurnazlığında çırak), kilit açma ($90, gizlilikte çırak) kitapçıdan alınır. Okulda öğretilmez; evde çalışarak ya da suç işleyerek gelişir. Kariyer kategorisine soruşturma ($60, temel hukukta çırak), müzik kategorisine kayıt yapımcılığı ($60, temel bestede çırak) eklendi.
 - **Yakalanma:** Başarısız suç suç üstü yakalanmaktır: karakter tutuklanır, cezaevine konur ve dava açılır.
-- **Faili meçhul:** Başarılı suç kayıtlara faili meçhul olarak geçer. Polis meslekleri emniyette 2 saatlik soruşturma yapabilir; son 7 oyun gününün, faili hâlâ o şehirde olan en eski faili meçhul suçunu arar. Bulma şansı = 0,35 + hukuk × 0,004 + soruşturma × 0,006 (+0,1 ajan ve özel harekât) − failin gizliliği × 0,005; %10 ile %90 arasında. Faili bulan polis tutuklar ve $120 × şehir çarpanı ikramiye alır. Soruşturma mesai sayılır (rütbe ilerler), ücreti normal mesainin yarısıdır.
+- **Faili meçhul:** Başarılı suç kayıtlara faili meçhul olarak geçer. Polis meslekleri emniyette 2 saatlik soruşturma yapabilir; son 7 oyun gününün, faili hâlâ o şehirde olan en eski faili meçhul suçunu arar. Bulma şansı = 0,35 + hukuk × 0,004 + soruşturma × 0,006 (+0,1 ajan ve özel harekât) − failin gizliliği × 0,005 + devriye basamağı × 0,03; %10 ile %90 arasında. Faili bulan polis tutuklar ve $120 × şehir çarpanı ikramiye alır. Soruşturma mesai sayılır (rütbe ilerler), ücreti normal mesainin yarısıdır.
 - **Mahkeme:** Davaya o şehirdeki VIP yargıç hafif (×0,5), normal ya da ağır (×1,5) cezayla veya beraatle karar verir ve $150 × şehir çarpanı ikramiye alır. Yargıç 12 oyun saati içinde bakmazsa mahkeme normal cezayı kendisi verir. Mahkûmiyette çalınan para (cepte kalan kadarı) geri alınır ve sabıka sayısı artar. Beraat eden dosya kapanır, aynı suç için yeniden soruşturma açılmaz.
 - **Cezaevi:** Tutukluluk karar çıkana kadar sürer. Tutukluyken ve hüküm süresince yalnızca dinlenilebilir; para da gönderilemez. Yolculuk, dükkân, mekân değiştirme, konser ayarlama yapılamaz; cezaevindeki üye konsere ve kayda çıkamaz. Hüküm giymiş mahkûm, kalan her ceza saati için $40 × şehir çarpanı kefaletle çıkabilir (tutukluyken kefalet yoktur).
 
@@ -330,7 +348,7 @@ Az oyunculu dönemde de seçim, mahkeme, pazar ve gazete boş çalışmasın diy
 | NPC | Ne yapar | Para basmasın diye |
 |---|---|---|
 | Yedek yargıç | Davanın süresinin yarısı dolmuş ve şehirde VIP oyuncu yargıç yoksa normal cezayla karar verir. Oyuncu yargıç varsa son tarihe kadar ona bırakır (sonra eski kural: mahkeme kendisi karar verir). | İkramiye almaz. |
-| Aday | Açık bir seçimde NPC aday yoksa ve en fazla bir oyuncu adayı varsa adaylığını koyar; boş makamı doldurur. Eşit oyda ya da hiç oy yokken oyuncu aday kazanır. | Makam maaşı NPC'ye ödenmez. |
+| Aday | Açık bir seçimde NPC aday yoksa ve en fazla bir oyuncu adayı varsa adaylığını koyar; boş makamı doldurur. Eşit oyda ya da hiç oy yokken oyuncu aday kazanır. Makam sahibi olarak karar vermez: o makamın yetkisi varsayılanda kalır. | Makam maaşı NPC'ye ödenmez. |
 | Muhabir | Son 48 oyun saatinde şehirde kalitesi 60'ı geçen oyuncu konserlerinden 8 şablonluk havuzdan (mekân, seyirci, gecenin şarkısı) iki dilli kısa haber yazar (şehir başına günde en fazla 2, aynı gruba bir turda 1). | Basın etkisi en fazla +2 ve haftalık 20 puanlık tavana tabi. |
 | İkinci el tüccarı | Bit pazarında atölye ürünlerini alır (dükkâna satılamadıkları için talep yaratır); dükkân eşyalarından ilanlar koyar. | Alış: nominal fiyatın en fazla %40'ı, bonusa göre, ama malzeme maliyetinin en fazla 1,25 katı; günde en fazla 2 satış; yeni hesaplar satamaz; EFSANEVİ eşya alınmaz. Satış: dükkân fiyatının %85'i (dükkâna geri satış %50 olduğundan al-sat zarar eder); VIP eşyası ve yüzük satmaz; satış parası oyundan çıkar (tüccarın parası her turda sıfırlanır). |
 
@@ -642,7 +660,7 @@ Her şehirde 2 bar ve 2 restoran ruhsatı oyunculara satılıktır (bar $20.000,
 - Her mesai saati kasaya gelir getirir (bar saatte $20, restoran $24, şehir çarpanıyla; sahibin işletmecilik becerisiyle %50'ye kadar artar). Sahip kendi işletmesinde maaşsız çalışır, gelir kasaya gider.
 - Bar: barda çalan gruplar bilet gelirinin sahip tarafından belirlenen payını (%0 – %30) öder.
 - Restoran: menü fiyatı ×0,8 – ×1,6 ayarlanır; yenen her yemeğin malzeme dışındaki %60'ı kasaya girer. Randevular da burada ödenir.
-- Haftalık gider (bar $350, restoran $300) önce kasadan, yetmezse sahibin cebinden alınır. İkisi de yetmezse işletme elden çıkar, çalışanlar işsiz kalır.
+- Haftalık gider (bar $350, restoran $300; şehir çarpanıyla, valinin ruhsat harcı kararıyla ×0,8 – ×1,2) önce kasadan, yetmezse sahibin cebinden alınır. İkisi de yetmezse işletme elden çıkar, çalışanlar işsiz kalır.
 - İşletme ruhsat bedelinin yarısına geri satılabilir. Kasadan para çekilebilir ya da kasaya para konabilir; son hareketler listelenir.
 
 ## Büyük sahneler
@@ -754,13 +772,12 @@ Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. 
 - Şehir sohbeti (sadece o şehirdeyken) ve grup sohbeti.
 - Grup daveti, kabul ve red, gruptan çıkarma, ayrılma (lider ayrılırsa liderlik en eski üyeye geçer, son üye ayrılırsa grup dağılır).
 - Oyuncu ve grup profilleri, dünya ve şehir liderlik tabloları.
-- Bildirimler: mesaj, arkadaşlık isteği ve kabulü, defter notu, hediye, takılma, flört, randevu, evlilik teklifi ve cevabı, düğün, ayrılık, boşanma, evlat edinme, pazarda satış, iş teklifi ve cevabı, işten çıkarılma, işletmeye el konulması, festivale seçilme, eylem bitti, konser ayarlandı, iptal edildi, sonuçlandı, davet geldi, üye katıldı veya ayrıldı, seviye atlandı, şöhret arttı, terfi edildi, seçim kazanıldı veya kaybedildi, makam sona erdi, para geldi, başarım açıldı, yeni yayın, haftalık satış raporu, tutuklama, mahkûmiyet, beraat, tahliye, kira ödendi, evden çıkarıldı, mirasçı onayı istendi, verildi ya da reddedildi, mirasçı oldu, çocuk mirasçı oldu, grup üyesi ya da eş emekliye ayrıldı.
+- Bildirimler: mesaj, arkadaşlık isteği ve kabulü, defter notu, hediye, takılma, flört, randevu, evlilik teklifi ve cevabı, düğün, ayrılık, boşanma, evlat edinme, pazarda satış, iş teklifi ve cevabı, işten çıkarılma, işletmeye el konulması, festivale seçilme, eylem bitti, konser ayarlandı, iptal edildi, sonuçlandı, davet geldi, üye katıldı veya ayrıldı, seviye atlandı, şöhret arttı, terfi edildi, seçim kazanıldı veya kaybedildi, makam sona erdi (makam kararları şehir gazetesinde haber olur), para geldi, başarım açıldı, yeni yayın, haftalık satış raporu, tutuklama, mahkûmiyet, beraat, tahliye, kira ödendi, evden çıkarıldı, mirasçı onayı istendi, verildi ya da reddedildi, mirasçı oldu, çocuk mirasçı oldu, grup üyesi ya da eş emekliye ayrıldı.
 
 ## Sonraki adımlar için öneriler
 
 Henüz eklenmemiş olanlar, önem sırasıyla (Popmundo karşılaştırmasındaki 8 boşluk kapatıldı; kalanlar):
 
-1. **Makamlara gerçek yetkiler:** başkanın şehirdeki vergi ya da bilet payını belirlemesi, emniyet müdürünün devriye ve suçla mücadele kararları.
-2. **Ekonomi: sürekli harcama yerleri.** Denge ölçümüne göre salon ve stadyum seviyesinde para harcama yerlerinden onlarca kat hızlı birikiyor (bkz. "Tempo" altında "Denge ölçümü"). Şöhretle büyüyen sürekli giderler ya da yeni pahalı içerik gerekiyor; gerekirse ikinci adım olarak grubun günlük konser sayısına sınır.
-3. **Daha fazla işletme türü:** plak dükkânı, kayıt stüdyosu, konser salonu ruhsatları.
-4. Turne paketleri.
+1. **Ekonomi: sürekli harcama yerleri.** Denge ölçümüne göre salon ve stadyum seviyesinde para harcama yerlerinden onlarca kat hızlı birikiyor (bkz. "Tempo" altında "Denge ölçümü"). Şöhretle büyüyen sürekli giderler ya da yeni pahalı içerik gerekiyor; gerekirse ikinci adım olarak grubun günlük konser sayısına sınır.
+2. **Daha fazla işletme türü:** plak dükkânı, kayıt stüdyosu, konser salonu ruhsatları.
+3. Turne paketleri.

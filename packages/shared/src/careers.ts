@@ -153,19 +153,19 @@ export const OFFICES: Office[] = [
     id: 'mayor', zone: 'city_hall', salaryPerDay: 600,
     name: R('Belediye başkanı', 'Mayor'),
     requires: [{ anyOf: ['rhetoric'], min: 15 }],
-    about: R('Şehrin yönetimi. Başkan, şehir sayfasında herkesin gördüğü bir duyuru yayınlayabilir.', 'Runs the city. The mayor can post an announcement everyone sees on the city page.'),
+    about: R('Şehrin yönetimi. Başkan, şehir sayfasında herkesin gördüğü bir duyuru yayınlayabilir ve konser bilet vergisini belirler.', 'Runs the city. The mayor can post an announcement everyone sees on the city page and sets the gig ticket tax.'),
   },
   {
     id: 'governor', zone: 'city_hall', salaryPerDay: 500,
     name: R('Vali', 'Governor'),
     requires: [{ anyOf: ['economics'], min: 30 }, { anyOf: ['rhetoric'], min: 15 }],
-    about: R('Devletin şehirdeki temsilcisi.', 'The state\'s representative in the city.'),
+    about: R('Devletin şehirdeki temsilcisi. Vali işletme ruhsat harcını belirler.', 'The state\'s representative in the city. The governor sets the business licence fee.'),
   },
   {
     id: 'police_chief', zone: 'police', salaryPerDay: 450,
     name: R('Emniyet müdürü', 'Police chief'),
     requires: [{ anyOf: ['law'], min: 30 }],
-    about: R('Şehrin emniyetinden sorumlu kişi.', 'The person in charge of the city\'s police.'),
+    about: R('Şehrin emniyetinden sorumlu kişi. Emniyet müdürü devriye yoğunluğunu belirler.', 'The person in charge of the city\'s police. The police chief sets patrol intensity.'),
   },
 ];
 
@@ -193,7 +193,7 @@ export const VIP_PLANS = [
 
 export const VIP_BENEFITS: L[] = [
   R('VIP\'e özel meslekler: CEO, gizli ajan, özel harekât, din görevlisi, yargıç', 'VIP-only jobs: CEO, special agent, task force, clergy, judge'),
-  R('Belediye başkanlığı, valilik ve emniyet müdürlüğü seçimlerinde aday olma ve oy kullanma', 'Run for and vote in mayor, governor and police chief elections'),
+  R('Belediye başkanlığı, valilik ve emniyet müdürlüğü seçimlerinde aday olma, oy kullanma ve makamda şehir kararları verme', 'Run for and vote in mayor, governor and police chief elections, and make city decisions in office'),
   R('VIP\'e özel beceriler: retorik, medya ilişkileri, sahneden atlama', 'VIP-only skills: rhetoric, media relations, stage diving'),
   R('VIP\'e özel eşyalar: vintage enstrümanlar, ünlü tasarımcı kostümü, müze kalitesinde tablo', 'VIP-only items: vintage instruments, celebrity designer costume, museum-grade painting'),
   R('Tüm değerlerin kesin sayıları ve konser öncesi seyirci tahmini', 'Exact numbers for every value and audience estimates before gigs'),

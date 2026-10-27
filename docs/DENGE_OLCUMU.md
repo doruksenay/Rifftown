@@ -225,6 +225,16 @@ Mirasçı (GAME_DESIGN.md "Nesiller") yeni bir gelir ya da ilerleme kaynağı de
 | Nitelik tohumu | Toplam en fazla +4 (nitelik başına 2) | Haftalık XP tavanının (50) onda biri kadar; etkisi her nitelikte en fazla +0,08 rol becerisi. |
 | Tempo | Çocuk 18 oyun yılında (~1.000 oyun günü, `GAME_SPEED=1` iken ~2,8 yıl) yetişir | Devir zinciriyle hızlı ilerleme yok; kullanıcı başına 56 oyun gününde bir. |
 
+## Ek ölçüm: makam yetkileri (27 Ekim 2026, 4. iş)
+
+Makam kararları (GAME_DESIGN.md "Makam yetkileri") para üretmez; varsayılanda (0) bütün tablolar aynı. Uç değerlerde (hesap, formülden):
+
+| Karar | Uç değer | Etki | Kıyas |
+|---|---|---|---|
+| Bilet vergisi | %5 | Stadyum oyuncusunun haftalık konser gelirinden ~$2.200 (A profili, 26. hafta ~$44.600 × %5) oyundan çıkar | Para yutağı; "Kalan riskler" 1'deki ekonomi şişmesinin yönünde, tek başına çözmez. Başkana gitmez. |
+| İşletme harcı | ×0,8 / ×1,2 | Bar giderinde haftada ±$70 (şehir çarpanı 1) | Vali indirimi kendi maaşından öder (−2'de günde −$100): indirim para basmaz. |
+| Devriye | +2 / −1 | Suç şansı −6 / +3 puan; sıkı devriyede konser seyircisi −%2 | Görevdeki bir polis 5 puan; seyirci kaybı kulüpte ~7 kişi, şöhret ve gelire etkisi doygunluğun çok altında. Gevşek devriye suçun (dünyaya karşı işlenir, ganimeti para basar) başarı şansını en fazla 3 puan artırır; görevdeki bir polisten az. |
+
 ## Ek: betik çıktısı
 
 Aşağıdaki bölüm `npx tsx scripts/balance/measure.ts` çıktısının kendisidir.

@@ -53,6 +53,8 @@ import {
   PACING,
   gigXp,
   roleAttrBonus,
+  patrolAttendanceMult,
+  ticketTaxRate,
 } from '@rifftown/shared';
 import { grantXp } from './attributes';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
@@ -65,6 +67,7 @@ import { fail } from '../errors';
 import { type Wellbeing, addMoodlet, changeWellbeing, wellbeingOf } from './wellbeing';
 import { evaluateMany } from './achievements';
 import { barGigShare } from './business';
+import { cityPolicies } from './politics';
 import { type CharacterRow, gearBonuses, isJailed, lockCharacter, membership, notify, notifySkillUps, toGigDto } from './common';
 
 /** Grubun bir şehirdeki şöhreti (0–100). */
@@ -397,6 +400,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   const marketing = bestOf(chars, 'marketing');
   const crew = await crewForGig(c, gig.band_id, gig.city_id, { accounting: bestOf(chars, 'accounting'), logistics: bestOf(ownChars, 'logistics') });
   const press = await bandPress(c, gig.band_id, gig.city_id);
+  // Makam yetkileri (civic-powers.ts): sıkı devriye seyirciyi biraz azaltır, başkanın bilet vergisi gelirden kesilir
+  const policy = await cityPolicies(c, gig.city_id);
   const res = computeGig({
     venue,
     fame,
@@ -408,7 +413,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     fxBonus: fxBonusOf(gig),
     plan: gig.plan ?? {},
     press,
-    crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },
+    crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) * patrolAttendanceMult(policy.police_chief) },
     cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
     // Şehrin haftalık etkinliği (content/cities.ts): o gün uyan türdeki konsere daha çok seyirci
     cityEvent: cityEventActive(gig.city_id, band.genre as Genre, gig.starts_at.getTime(), config.gameSpeed),
@@ -420,6 +425,9 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür
   const ownerShare = await barGigShare(c, gig.location_id, res.revenue, ids);
   res.revenue -= ownerShare;
+  // Şehrin bilet vergisi: oyundan çıkar (şehir kasası), başkana gitmez; para basmaz
+  const cityTax = Math.floor(Math.max(0, res.revenue) * ticketTaxRate(policy.mayor));
+  res.revenue -= cityTax;
   // Ekip ücreti bilet gelirinden ödenir; yetmezse ödenmez ve moral çöker
   const crewPaid = crew.roles.length > 0 && res.revenue >= crew.fee;
   if (crewPaid) res.revenue -= crew.fee;
@@ -549,6 +557,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     fame: fameAfter,
     effects: gig.effects ?? [],
     ownerShare,
+    cityTax,
     crewFee: crewPaid ? crew.fee : 0,
     crewUnpaid: crew.roles.length > 0 && !crewPaid,
     festivalId: gig.festival_id ?? null,

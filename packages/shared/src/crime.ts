@@ -73,9 +73,9 @@ const avgSkill = (s: Skills, ids: string[]) => ids.reduce((sum, id) => sum + lv(
 /** Görevdeki her polis başarı şansını bu kadar düşürür */
 export const POLICE_PRESSURE = 0.05;
 
-/** Suçun başarı şansı (0–1) */
-export function crimeChance(def: CrimeDef, skills: Skills, policeOnDuty: number): number {
-  return clamp(0.45 + avgSkill(skills, def.skills) * 0.006 - def.difficulty * 0.01 - policeOnDuty * POLICE_PRESSURE, 0.08, 0.92);
+/** Suçun başarı şansı (0–1). patrol: emniyet müdürünün devriye kararının etkisi (civic-powers.ts, -0,06 … +0,03) */
+export function crimeChance(def: CrimeDef, skills: Skills, policeOnDuty: number, patrol = 0): number {
+  return clamp(0.45 + avgSkill(skills, def.skills) * 0.006 - def.difficulty * 0.01 - policeOnDuty * POLICE_PRESSURE + patrol, 0.08, 0.92);
 }
 
 /** Polis meslekleri: soruşturma yapabilir */
@@ -89,11 +89,11 @@ export const COLD_CASE_DAYS = 7;
 /** Faili bulan polisin ikramiyesi (şehir çarpanıyla çarpılır) */
 export const ARREST_BONUS = 120;
 
-/** Soruşturmanın faili bulma şansı */
-export function solveChance(officerSkills: Skills, profession: string, criminalSkills: Skills): number {
+/** Soruşturmanın faili bulma şansı. patrol: devriye kararının etkisi (civic-powers.ts, -0,03 … +0,06) */
+export function solveChance(officerSkills: Skills, profession: string, criminalSkills: Skills, patrol = 0): number {
   const elite = profession === 'agent' || profession === 'swat' ? 0.1 : 0;
   return clamp(
-    0.35 + lv(officerSkills, 'law') * 0.004 + lv(officerSkills, 'investigation') * 0.006 + elite - lv(criminalSkills, 'stealth') * 0.005,
+    0.35 + lv(officerSkills, 'law') * 0.004 + lv(officerSkills, 'investigation') * 0.006 + elite - lv(criminalSkills, 'stealth') * 0.005 + patrol,
     0.1,
     0.9,
   );
