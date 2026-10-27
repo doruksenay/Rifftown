@@ -278,6 +278,26 @@ export const STAGE_EVENTS: StageEventDef[] = [
   E('campfire', 'acoustic_guitar', 15, 4, 2, 24, ['Kamp ateşi anı', 'Campfire moment'], ['Herkesin bildiği bir türkü, akustik gitar eşliğinde.', 'A song everyone knows, around an acoustic guitar.'], ['folk', 'country', 'anatolian']),
   E('dub_echo', 'mixing', 15, 4, 2, 24, ['Dub yankısı', 'Dub echo'], ['Ses masasında canlı yankı ve boşluk.', 'Live echo and space from the mixing desk.'], ['reggae', 'electronic']),
   E('hushed_hall', 'audience', 45, 4, 3, 24, ['Nefesler tutuldu', 'Hushed hall'], ['En sessiz bölümde salonun nefesini tutması.', 'Holding the whole room breathless in the quietest passage.'], ['classical', 'jazz']),
+  // Yeni becerilerin sahne olayları (content/skills.ts; her biri o becerinin tek ve gerçek sahne kullanımı)
+  E('banjo_roll', 'banjo', 30, 4, 2, 24, ['Banjo atışması', 'Banjo breakdown'], ['Hızlanan bir banjo bölümü, salon tempo tutar.', 'A banjo breakdown that speeds up while the room keeps time.'], ['country', 'folk']),
+  E('mandolin_trem', 'mandolin', 30, 3, 2, 24, ['Mandolin tremolosu', 'Mandolin tremolo'], ['Titreyen mandolin telleriyle hüzünlü bir ara.', 'A wistful interlude on trembling mandolin strings.'], ['folk', 'country', 'classical']),
+  E('saz_taksim', 'baglama', 30, 5, 3, 24, ['Saz taksimi', 'Saz taksim'], ['Şarkıdan önce serbest bir bağlama taksimi.', 'A free-form bağlama improvisation before the song.'], ['anatolian', 'folk']),
+  E('cello_lament', 'cello', 45, 5, 3, 24, ['Çello ağıtı', 'Cello lament'], ['Derin bir çello melodisi salonu ağırlaştırır.', 'A deep cello line that weighs on the whole room.'], ['classical', 'folk', 'metal']),
+  E('harp_gliss', 'harp', 45, 4, 2, 24, ['Arp glissandosu', 'Harp glissando'], ['Tellerin üstünden akan bir arp geçişi.', 'A harp sweep that pours across the strings.'], ['classical', 'folk']),
+  E('horn_section', 'trumpet', 30, 4, 2, 24, ['Üflemeli bölüm', 'Horn section'], ['Trompet nakaratı keskin vuruşlarla yükseltir.', 'The trumpet lifts the chorus with sharp stabs.'], ['jazz', 'soul', 'reggae', 'pop']),
+  E('ney_intro', 'ney', 30, 4, 2, 24, ['Ney girişi', 'Ney intro'], ['Karanlık sahnede tek bir ney sesi.', 'A single ney breath on a darkened stage.'], ['anatolian', 'classical', 'folk']),
+  E('accordion_waltz', 'accordion', 30, 4, 2, 24, ['Akordeon valsi', 'Accordion waltz'], ['Salon üç zamanlı bir valsle sallanır.', 'The room sways to a waltz in three.'], ['folk', 'country', 'pop']),
+  E('piano_ballad', 'concert_piano', 45, 5, 3, 24, ['Piyano baladı', 'Piano ballad'], ['Grup susar, yalnızca piyano ve ses kalır.', 'The band drops out, leaving just piano and voice.'], ['classical', 'jazz', 'pop', 'soul']),
+  E('theremin_wail', 'theremin', 30, 4, 3, 24, ['Theremin çığlığı', 'Theremin wail'], ['Elleri havada, dokunmadan çalınan ürpertici bir ses.', 'An eerie tone played with hands in the air, never touching.'], ['electronic', 'classical', 'metal']),
+  E('beat_switch', 'beatmaking', 30, 4, 2, 24, ['Ritim değişimi', 'Beat switch'], ['Şarkının ortasında ritim bambaşka bir şeye döner.', 'Mid-song, the beat flips into something else entirely.'], ['hiphop', 'electronic']),
+  E('steelpan_groove', 'steelpan', 15, 3, 1, 12, ['Çelik tava grovu', 'Steelpan groove'], ['Güneşli bir çelik tava melodisi.', 'A sunny steelpan melody.'], ['reggae', 'pop']),
+  E('yodel', 'yodeling', 15, 3, 2, 24, ['Yodel', 'Yodel'], ['Göğüs sesiyle kafa sesi arasında hızlı atlamalar.', 'Quick leaps between chest voice and head voice.'], ['country', 'folk']),
+  E('string_swell', 'orchestration', 30, 4, 2, 24, ['Orkestral doruk', 'Orchestral swell'], ['Son nakarat yaylılar ve üflemelilerle büyür.', 'The last chorus swells with strings and brass.'], ['classical', 'pop', 'metal', 'soul']),
+  E('feedback_wall', 'sound_engineering', 30, 4, 3, 24, ['Geri besleme duvarı', 'Wall of feedback'], ['Amfilerin uğultusu kontrollü bir fırtınaya döner.', 'The amps’ howl turns into a controlled storm.'], ['rock', 'metal', 'punk']),
+  E('acrobatic_leap', 'acrobatics', 30, 4, 3, 24, ['Akrobatik sıçrayış', 'Acrobatic leap'], ['Davul yükseltisinden havada bir takla.', 'A flip off the drum riser.'], ['pop', 'rock', 'punk']),
+  E('visual_sync', 'vj_visuals', 30, 4, 2, 24, ['Görsel senkron', 'Visual sync'], ['Ekrandaki görüntüler müziğe kilitlenir.', 'The visuals on screen lock to the music.'], ['electronic', 'pop']),
+  E('costume_reveal', 'quick_change', 30, 4, 2, 24, ['Kostüm sürprizi', 'Costume reveal'], ['Bir anda bambaşka bir kostümle dönmek.', 'Snapping back on stage in a different costume.'], ['pop', 'soul']),
+  E('magic_trick', 'stage_magic', 30, 3, 2, 24, ['Sihirbazlık numarası', 'Magic trick'], ['Şarkı arasında kaybolan bir pena, seyircinin cebinden çıkar.', 'Between songs, a vanished pick turns up in a fan’s pocket.']),
 ];
 /** Olay bu türdeki grup için planlanabilir mi? */
 export const stageEventAllowed = (def: StageEventDef, genre: Genre) => !def.genres || def.genres.includes(genre);
