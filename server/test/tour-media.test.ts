@@ -56,7 +56,7 @@ describe('kurallar', () => {
     const s = labelSplit(1000, 0.5, 100);
     expect(s.band + s.label).toBe(1000 * LABEL_POOL);
     expect(s.recouped).toBe(100);
-    expect(labelSplit(1000, 0.9, 0).band).toBe(Math.round(600 * 0.6)); // pay tavana kırpılır
+    expect(labelSplit(1000, 0.9, 0).band).toBe(Math.round(600 * 0.65)); // pay tavana (sözleşme hukukuyla %65) kırpılır
   });
 });
 

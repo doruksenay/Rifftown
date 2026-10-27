@@ -30,13 +30,14 @@ import {
   videoSalesBoost,
   PRODUCERS,
   type ProducerTier,
+  marketingSalesMult,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { evaluateMany } from './achievements';
-import { type CharacterRow, isJailed, lockCharacter, membership, notify } from './common';
+import { type CharacterRow, bandBestSkills, isJailed, lockCharacter, membership, notify } from './common';
 import { addFame } from './gigs';
 import { touchFamiliarity } from './consequences';
 import { videoQualityFor, weeklyRadio, weeklyVideoChart } from './media';
@@ -261,6 +262,8 @@ async function closeWeek(c: pg.PoolClient, week: any, rand: () => number) {
   }
   const videoQ = new Map<number, number>();
   for (const r of releases) videoQ.set(r.id, await videoQualityFor(c, r.band_id, r.song_ids));
+  // Pazarlama: grubun en iyi pazarlamacısı satışı en fazla %5 artırır (perks.ts)
+  const perkSkills = await bandBestSkills(c, releases.map((r) => r.band_id), ['marketing']);
 
   const fameRows = await many(c, 'SELECT band_id, city_id, fame FROM band_fame WHERE band_id = ANY($1::bigint[])', [
     [...new Set(releases.map((r) => r.band_id))],
@@ -275,7 +278,7 @@ async function closeWeek(c: pg.PoolClient, week: any, rand: () => number) {
       const base = weeklyUnits(r.kind, r.quality, fameOf(r.band_id, city.id), city.genrePopularity[r.genre as Genre], city, r.weeks_on_sale, rand);
       // Radyoda çalınan, klibi olan ve plak şirketinin pazarladığı yayın daha çok satar
       const label = r.contract_id && contracts.get(r.contract_id) ? LABEL_SALES_BOOST : 1;
-      const units = Math.round(base * radioSalesBoost(radio.get(r.id)?.get(city.id) ?? 0) * videoSalesBoost(videoQ.get(r.id) ?? 0) * label);
+      const units = Math.round(base * radioSalesBoost(radio.get(r.id)?.get(city.id) ?? 0) * videoSalesBoost(videoQ.get(r.id) ?? 0) * label * marketingSalesMult(perkSkills.get(Number(r.band_id))?.marketing ?? 0));
       if (units > 0) byCity.set(city.id, units);
     }
     sales.set(r.id, byCity);

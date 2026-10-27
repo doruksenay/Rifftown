@@ -47,6 +47,7 @@ import {
   DISASTER_QUALITY,
   cancelFamePenalty,
   ticketsSold,
+  marketingAttendanceMult,
 } from '@rifftown/shared';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import { bandPress } from './press';
@@ -352,7 +353,11 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   }
 
   // Turne ekibi (oyunun kendi grupları ekip tutmaz)
-  const crew = await crewForGig(c, gig.band_id, gig.city_id);
+  // Kariyer becerileri (perks.ts): pazarlama ve muhasebe grubun en iyisinden, lojistik sahnedekilerin en iyisinden
+  const ownChars = chars.filter(onStage);
+  const bestOf = (list: CharacterRow[], id: string) => Math.max(0, ...list.map((ch) => lv(ch.skills, id)));
+  const marketing = bestOf(chars, 'marketing');
+  const crew = await crewForGig(c, gig.band_id, gig.city_id, { accounting: bestOf(chars, 'accounting'), logistics: bestOf(ownChars, 'logistics') });
   const res = computeGig({
     venue,
     fame,
@@ -364,7 +369,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     fxBonus: Math.min(MAX_FX_BONUS, (gig.effects ?? []).reduce((sum: number, id: string) => sum + (ITEM_BY_ID[id]?.bonus ?? 0), 0)),
     plan: gig.plan ?? {},
     press: await bandPress(c, gig.band_id, gig.city_id),
-    crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult },
+    crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },
     cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür

@@ -578,6 +578,21 @@ Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düş
 | Zanaat | El işçiliği | Kitapçı, atölyede gelişir |
 | Kariyer (ek) | İşletmecilik (işletme gelirini artırır, ekonomi ister) | Üniversite |
 
+### Kariyer becerilerinin etkileri
+
+Kurallar `packages/shared/src/perks.ts`. Etkiler küçük ve tavanlıdır (beceri 100'de tavana varır); etkiyi o işte grubun en iyi üyesi taşır.
+
+| Beceri | Etki (beceri 100'de) | Kimin becerisi |
+|---|---|---|
+| Pazarlama | Konser seyircisi +%5, haftalık plak satışı +%5 | Grubun en iyisi |
+| Muhasebe | Tur ekibi ücreti, işletme ve plak şirketi haftalık gideri −%10 | Grubun en iyisi; giderde işletmenin sahibi |
+| Lojistik | Konser başı ekip moral kaybı −%30, sahnedeki enstrümanların yıpranması −%25 (ekip olmasa da) | Sahnedekilerin en iyisi |
+| Sözleşme hukuku | Plak şirketi sözleşmesinde grubun pay tavanı %60 → %65 (veritabanı kısıtı migration 015 ile %65) | Grup lideri (kabul anında yeniden kontrol edilir) |
+| Radyo programcılığı | Single'ların radyoda çalınması +%10 (şöhret ve satış etkisinin tavanları aynı) | Grubun en iyisi |
+| Fotoğrafçılık | Haberin basın etkisi +2 (olumsuzda %80'i, haftalık 20 puan tavanı aynı), klip kalitesi +4 | Haberde yazar; klipte şehirdeki üyelerin en iyisi |
+
+VIP olmayanlara sözleşmedeki azami pay yüzde puanına yuvarlanarak gider.
+
 ## Topluluk: pano, bloglar ve dergi
 
 Şehir sekmesinden "Topluluk" ekranı açılır. Kurallar `packages/shared/src/community.ts`, sunucu `server/src/game/community.ts`; yazılar haberlerle aynı `articles` tablosunda (tür: news, blog, board).

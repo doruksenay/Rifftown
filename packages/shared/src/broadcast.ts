@@ -75,7 +75,8 @@ export const LABEL_MIN_FAME = 15;
 /** Bir haftalık brüt satışın grup ve şirket arasında bölünmesi; avans grubun payından geri alınır */
 export function labelSplit(gross: number, bandShare: number, outstanding: number) {
   const pool = gross * LABEL_POOL;
-  const bandRaw = Math.round(pool * clamp(bandShare, LABEL_BAND_SHARE_RANGE[0], LABEL_BAND_SHARE_RANGE[1]));
+  // Üst sınır: sözleşme hukukuyla en fazla +5 puan (perks.ts maxBandShare); veritabanı kısıtı da aynı
+  const bandRaw = Math.round(pool * clamp(bandShare, LABEL_BAND_SHARE_RANGE[0], LABEL_BAND_SHARE_RANGE[1] + 0.05));
   const recouped = Math.max(0, Math.min(bandRaw, Math.round(outstanding)));
   return { band: bandRaw - recouped, label: Math.round(pool) - bandRaw + recouped, recouped };
 }

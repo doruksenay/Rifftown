@@ -19,6 +19,7 @@ interface Contract {
   label: string;
   band: { id: number; name: string };
   bandShare: number;
+  maxBandShare?: number;
   advance: number;
   recouped: number;
   weeks: number;
@@ -32,7 +33,8 @@ interface LabelsResponse {
   mine: { label: { id: number; name: string; till: number; totalRevenue: number; upkeepDue: string } | null; contracts: Contract[] };
 }
 
-const SHARES = [0.3, 0.4, 0.45, 0.5, 0.6];
+// %65 yalnızca sözleşme hukuku bilen bir grup liderine teklif edilebilir (perks.ts maxBandShare)
+const SHARES = [0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65];
 
 export default function LabelScreen() {
   const gate = useGate();
@@ -77,6 +79,7 @@ function Label() {
               <Strong>{k.side === 'label' ? k.band.name : k.label}</Strong>
               <Small>{t('contractTerms', { share: Math.round(k.bandShare * 100), advance: money(k.advance), weeks: k.weeks })}</Small>
               <Small>{t(`contract_${k.status}` as StringKey)}</Small>
+              {k.maxBandShare && k.maxBandShare > LABEL_BAND_SHARE_RANGE[1] ? <Small>{t('contractMaxShare', { max: Math.round(k.maxBandShare * 100) })}</Small> : null}
               {k.status === 'active' && k.advance > 0 ? <Small>{t('contractRecouped', { a: money(k.recouped), b: money(k.advance) })}</Small> : null}
               {k.myTurn ? (
                 <>

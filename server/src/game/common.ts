@@ -260,3 +260,17 @@ export async function requireEstablished(db: Db, characterId: number) {
   const until = r.created_at.getTime() + gameHoursToMs(hours, config.gameSpeed);
   if (until > Date.now()) throw new GameError('account_too_new', 403, new Date(until).toISOString());
 }
+
+/** Grupların üyeleri arasında becerilerin en yüksek değeri (kariyer becerilerinin grup etkisi için, perks.ts) */
+export async function bandBestSkills(db: Db, bandIds: number[], skills: string[]): Promise<Map<number, Record<string, number>>> {
+  const out = new Map<number, Record<string, number>>();
+  const ids = [...new Set(bandIds.map(Number))];
+  for (const id of ids) out.set(id, Object.fromEntries(skills.map((s) => [s, 0])));
+  if (!ids.length) return out;
+  const rows = await many(db, 'SELECT bm.band_id, c.skills FROM band_members bm JOIN characters c ON c.id = bm.character_id WHERE bm.band_id = ANY($1::bigint[])', [ids]);
+  for (const r of rows) {
+    const best = out.get(Number(r.band_id))!;
+    for (const s of skills) best[s] = Math.max(best[s], Number((r.skills ?? {})[s] ?? 0));
+  }
+  return out;
+}

@@ -207,7 +207,7 @@ export async function resolveArticle(c: pg.PoolClient, ch: CharacterRow, params:
   if (params.bandId) {
     const own = await membership(c, ch.id);
     if (own?.band_id !== params.bandId) {
-      const raw = articleImpact(params.tone, lv(ch.skills, 'journalism'), lv(ch.skills, 'lyrics'), ch.career_rank ?? 0);
+      const raw = articleImpact(params.tone, lv(ch.skills, 'journalism'), lv(ch.skills, 'lyrics'), ch.career_rank ?? 0, lv(ch.skills, 'photography'));
       // Bir hafta içinde bu gruba bu şehirde haberlerle gelen toplam etki tavanı
       const used = Number(
         (

@@ -55,6 +55,9 @@ function blurNode(node: unknown, depth = 0): unknown {
     } else if (SIGN_ONLY.has(k) && typeof v === 'number') {
       // Etkinin yalnızca yönü gösterilir (setlist sırası, basın etkisi vb.)
       out[k] = Math.sign(v);
+    } else if (k === 'maxBandShare' && typeof v === 'number') {
+      // Liderin sözleşme hukukunu ele vermesin: yüzde puanına aşağı yuvarlanır
+      out[k] = Math.floor(v * 100 + 1e-6) / 100;
     } else if (k === 'totalFame' && typeof v === 'number') {
       out[k] = Math.round(v);
     } else {

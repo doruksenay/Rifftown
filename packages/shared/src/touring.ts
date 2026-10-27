@@ -2,6 +2,7 @@
 // Ekip oyunun kendi çalışanlarıdır (NPC); grup lideri işe alır, her konserde ücretleri bilet gelirinden ödenir.
 
 import type { L } from './world';
+import { accountingCostMult } from './perks';
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
@@ -49,10 +50,11 @@ export const crewEffectScale = (morale: number) => (morale < 20 ? 0 : morale < 5
 export const CREW_MORALE = { perGig: -4, goodGig: 3, unpaid: -25, restPerDay: 5, quitBelow: 10, start: 70 } as const;
 export const MAX_CREW = CREW_ROLES.length;
 
-export function crewFees(roles: CrewRole[], costMult: number): number {
+/** accounting: grubun en iyi muhasebe becerisi (en fazla −%10, muhasebeci ekip üyesiyle çarpılarak birleşir) */
+export function crewFees(roles: CrewRole[], costMult: number, accounting = 0): number {
   const has = new Set(roles);
   const raw = roles.reduce((s, r) => s + CREW[r].fee, 0) * costMult;
-  return Math.round(raw * (has.has('accountant') ? 1 - CREW_EFFECTS.accountantFees : 1));
+  return Math.round(raw * (has.has('accountant') ? 1 - CREW_EFFECTS.accountantFees : 1) * accountingCostMult(accounting));
 }
 
 // ---------- Araç arızası ----------

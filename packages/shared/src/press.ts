@@ -57,9 +57,10 @@ export const ARTICLE_COOLDOWN_HOURS = 72;
 export const ARTICLE_WEEKLY_CAP = 20;
 
 /** Haberin basın desteğine etkisi: gazetecilik, söz yazımı ve rütbeye göre (olumsuz haber %80'i kadar) */
-export function articleImpact(tone: ArticleTone, journalism: number, lyrics: number, rank: number): number {
+export function articleImpact(tone: ArticleTone, journalism: number, lyrics: number, rank: number, photography = 0): number {
   if (tone === 'neutral') return 0.5;
-  const mag = 2 + journalism * 0.05 + lyrics * 0.02 + rank;
+  // Fotoğrafçılık habere görsel güç katar: en fazla +2 (perks.ts PERK_CAPS.photoArticle)
+  const mag = 2 + journalism * 0.05 + lyrics * 0.02 + rank + (Math.min(100, Math.max(0, photography)) / 100) * 2;
   return Math.round((tone === 'positive' ? mag : -mag * 0.8) * 10) / 10;
 }
 

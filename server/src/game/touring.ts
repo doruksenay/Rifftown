@@ -9,6 +9,7 @@ import {
   CREW_ROLES,
   type CrewRole,
   GIG_GEAR_WEAR,
+  INSTRUMENTS,
   ITEM_BY_ID,
   REPAIR,
   TOUR_FAME_BONUS,
@@ -23,6 +24,8 @@ import {
   crewFees,
   distanceKm,
   gameHoursToMs,
+  logisticsMoraleMult,
+  logisticsWearMult,
   lv,
 } from '@rifftown/shared';
 import type pg from 'pg';
@@ -69,19 +72,22 @@ export async function fireCrew(characterId: number, role: CrewRole) {
 }
 
 /** Konser için ekip etkileri; ücret bilet gelirinden ödenir (gigs.ts) */
-export async function crewForGig(db: Db, bandId: number, cityId: string) {
+/** perks: grubun en iyi muhasebe (ücret) ve sahnedekilerin en iyi lojistik (moral, yıpranma) becerisi */
+export async function crewForGig(db: Db, bandId: number, cityId: string, perks: { accounting?: number; logistics?: number } = {}) {
   const { roles, morale } = await crewOf(db, bandId);
   const has = new Set(roles);
   const k = crewEffectScale(morale);
+  const logi = perks.logistics ?? 0;
   return {
     roles,
     morale,
-    fee: crewFees(roles, CITY_BY_ID[cityId]?.costMult ?? 1),
+    fee: crewFees(roles, CITY_BY_ID[cityId]?.costMult ?? 1, perks.accounting ?? 0),
     qualityBonus: k * ((has.has('sound_tech') ? CREW_EFFECTS.soundQuality : 0) + (has.has('light_tech') ? CREW_EFFECTS.lightQuality : 0)),
     attendanceMult: 1 + k * (has.has('promoter') ? CREW_EFFECTS.promoterAttendance : 0),
     energySaved: k * (has.has('assistant') ? CREW_EFFECTS.assistantEnergy : 0),
-    wearMult: has.has('loader') && k > 0 ? CREW_EFFECTS.loaderWear : 1,
-    moraleLoss: CREW_MORALE.perGig * (has.has('tour_manager') ? CREW_EFFECTS.managerMorale : 1),
+    // Lojistik ekip olmasa da işe yarar: enstrümanlar düzgün paketlenir
+    wearMult: (has.has('loader') && k > 0 ? CREW_EFFECTS.loaderWear : 1) * logisticsWearMult(logi),
+    moraleLoss: CREW_MORALE.perGig * (has.has('tour_manager') ? CREW_EFFECTS.managerMorale : 1) * logisticsMoraleMult(logi),
   };
 }
 
@@ -247,5 +253,5 @@ export async function tourView(db: Db, bandId: number) {
 
 export const itemWearable = (itemId: string) => {
   const s = ITEM_BY_ID[itemId]?.slot;
-  return s === 'vehicle' || ['vocals', 'guitar', 'bass', 'drums', 'keys'].includes(s ?? '');
+  return s === 'vehicle' || (INSTRUMENTS as readonly string[]).includes(s ?? '');
 };

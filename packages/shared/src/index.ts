@@ -29,3 +29,4 @@ export * from './touring';
 export * from './broadcast';
 export * from './community';
 export * from './npc-civic';
+export * from './perks';

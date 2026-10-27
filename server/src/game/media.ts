@@ -14,7 +14,9 @@ import {
   type VideoDirector,
   gameHoursToMs,
   lv,
+  photographyVideoBonus,
   priceFor,
+  radioHostingMult,
   radioFame,
   radioPlays,
   videoChartFame,
@@ -25,7 +27,7 @@ import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one } from '../db';
 import { fail } from '../errors';
-import { type CharacterRow, isJailed, membership, notify } from './common';
+import { type CharacterRow, bandBestSkills, isJailed, membership, notify } from './common';
 import { addFame } from './gigs';
 
 const dayMs = () => gameHoursToMs(24, config.gameSpeed);
@@ -66,7 +68,9 @@ export async function resolveVideo(c: pg.PoolClient, ch: CharacterRow, params: R
   const hired = VIDEO_DIRECTORS[params.director as VideoDirector]?.skill ?? 0;
   const directing = Math.max(own, hired);
   const acting = here.length ? here.reduce((s, x) => s + lv(x.skills, 'acting'), 0) / here.length : 0;
-  const quality = videoQuality(rec.quality, directing, acting, rand);
+  // Fotoğrafçılık: şehirdeki üyelerin en iyisi kliplere görsel güç katar (en fazla +4, perks.ts)
+  const photo = Math.max(0, ...here.map((x) => lv(x.skills, 'photography')));
+  const quality = Math.min(100, Math.round(videoQuality(rec.quality, directing, acting, rand) + photographyVideoBonus(photo)));
   const v = await one(c, 'INSERT INTO music_videos(band_id, song_id, quality, director, directed_by) VALUES ($1, $2, $3, $4, $5) RETURNING id', [
     m.band_id,
     params.songId,
@@ -99,11 +103,14 @@ export async function weeklyRadio(c: pg.PoolClient, weekId: number, rand: () => 
   const fameOf = (b: number, city: string) => Number(fame.find((f) => Number(f.band_id) === b && f.city_id === city)?.fame ?? 0);
   const pressOf = (b: number, city: string) => Number(press.find((f) => Number(f.band_id) === b && f.city_id === city)?.value ?? 20);
   const famePerBandCity = new Map<string, number>();
+  // Radyo programcılığı: grubun en iyi radyocusu çalınmayı en fazla %10 artırır (perks.ts)
+  const perkSkills = await bandBestSkills(c, bandIds, ['radio_hosting']);
   for (const s of singles) {
+    const hostMult = radioHostingMult(perkSkills.get(Number(s.band_id))?.radio_hosting ?? 0);
     const byCity = new Map<string, number>();
     let total = 0;
     for (const city of CITIES) {
-      const plays = radioPlays(s.quality, fameOf(Number(s.band_id), city.id), city.genrePopularity[s.genre as Genre] ?? 1, pressOf(Number(s.band_id), city.id), s.weeks_on_sale, rand);
+      const plays = Math.round(radioPlays(s.quality, fameOf(Number(s.band_id), city.id), city.genrePopularity[s.genre as Genre] ?? 1, pressOf(Number(s.band_id), city.id), s.weeks_on_sale, rand) * hostMult);
       if (plays <= 0) continue;
       byCity.set(city.id, plays);
       total += plays;

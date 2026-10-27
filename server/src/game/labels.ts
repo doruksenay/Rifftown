@@ -15,7 +15,10 @@ import {
   LABEL_WEEKLY_UPKEEP,
   PACING,
   containsProfanity,
+  accountingCostMult,
   gameHoursToMs,
+  lv,
+  maxBandShare,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -58,21 +61,23 @@ async function ownLabel(c: Db, ownerId: number) {
   return l;
 }
 
-function validTerms(bandShare: number, advance: number, weeks: number) {
-  if (!(bandShare >= LABEL_BAND_SHARE_RANGE[0] && bandShare <= LABEL_BAND_SHARE_RANGE[1])) fail('invalid_share');
+/** maxShare: grup liderinin sözleşme hukukuna göre grubun alabileceği en yüksek pay (perks.ts maxBandShare) */
+function validTerms(bandShare: number, advance: number, weeks: number, maxShare = LABEL_BAND_SHARE_RANGE[1]) {
+  if (!(bandShare >= LABEL_BAND_SHARE_RANGE[0] && bandShare <= maxShare + 1e-9)) fail('invalid_share');
   if (!Number.isInteger(advance) || advance < 0 || advance > LABEL_ADVANCE_MAX) fail('invalid_advance');
   if (!Number.isInteger(weeks) || weeks < LABEL_CONTRACT_WEEKS[0] || weeks > LABEL_CONTRACT_WEEKS[1]) fail('invalid_weeks');
 }
 
 /** Şirket sahibi bir gruba teklif verir */
 export async function offerContract(ownerId: number, bandId: number, terms: { bandShare: number; advance: number; weeks: number }) {
-  validTerms(terms.bandShare, terms.advance, terms.weeks);
+  validTerms(terms.bandShare, terms.advance, terms.weeks, maxBandShare(100));
   return tx(async (c) => {
     await lockCharacter(c, ownerId);
     await requireEstablished(c, ownerId);
     const l = await ownLabel(c, ownerId);
-    const band = await one(c, 'SELECT id, name, leader_id, npc_key FROM bands WHERE id = $1', [bandId]);
+    const band = await one(c, 'SELECT b.id, b.name, b.leader_id, b.npc_key, c.skills AS leader_skills FROM bands b JOIN characters c ON c.id = b.leader_id WHERE b.id = $1', [bandId]);
     if (!band) fail('not_found', 404);
+    validTerms(terms.bandShare, terms.advance, terms.weeks, maxBandShare(lv(band.leader_skills ?? {}, 'contract_law')));
     if (band.npc_key) fail('npc_target', 403);
     // Kendi grubuyla sözleşme yapamaz (kendine para aktarma olmasın)
     const own = await membership(c, ownerId);
@@ -107,8 +112,9 @@ export async function answerContract(
   return tx(async (c) => {
     const peek = await one(
       c,
-      `SELECT k.*, l.owner_id, l.name AS label_name, b.leader_id, b.name AS band_name
-         FROM label_contracts k JOIN labels l ON l.id = k.label_id JOIN bands b ON b.id = k.band_id WHERE k.id = $1`,
+      `SELECT k.*, l.owner_id, l.name AS label_name, b.leader_id, b.name AS band_name, lc.skills AS leader_skills
+         FROM label_contracts k JOIN labels l ON l.id = k.label_id JOIN bands b ON b.id = k.band_id
+         JOIN characters lc ON lc.id = b.leader_id WHERE k.id = $1`,
       [contractId],
     );
     if (!peek) fail('not_found', 404);
@@ -122,6 +128,8 @@ export async function answerContract(
     if (!side) fail('forbidden', 403);
     if (k.last_by === side) fail('not_your_turn', 409);
     const other = side === 'band' ? owner : leader;
+    // Sözleşme hukuku: grubun pay tavanını grup liderinin becerisi belirler
+    const maxShare = maxBandShare(lv(peek.leader_skills ?? {}, 'contract_law'));
     if (answer === 'decline') {
       await c.query(`UPDATE label_contracts SET status = 'declined' WHERE id = $1`, [k.id]);
       await notify(c, other, 'label_declined', { contractId: k.id, label: peek.label_name, band: peek.band_name });
@@ -129,7 +137,7 @@ export async function answerContract(
     }
     if (answer === 'counter') {
       if (!counter) fail('invalid_input');
-      validTerms(counter!.bandShare, counter!.advance, counter!.weeks);
+      validTerms(counter!.bandShare, counter!.advance, counter!.weeks, maxShare);
       const fame = await one(c, 'SELECT COALESCE(max(fame), 0) AS f FROM band_fame WHERE band_id = $1', [k.band_id]);
       if (counter!.advance > advanceCap(Number(fame.f))) fail('advance_too_high');
       await c.query(`UPDATE label_contracts SET band_share = $2, advance = $3, weeks = $4, status = 'countered', last_by = $5 WHERE id = $1`, [
@@ -144,6 +152,8 @@ export async function answerContract(
     }
     // Kabul: grup başka şirketle imzalamamış olmalı, şirket avansı ödeyebilmeli
     if (await one(c, `SELECT 1 FROM label_contracts WHERE band_id = $1 AND status = 'active'`, [k.band_id])) fail('band_signed', 409);
+    // Lider değiştiyse ya da beceri düştüyse tavanın üstündeki pay imzalanamaz
+    if (Number(k.band_share) > maxShare + 1e-6) fail('invalid_share');
     await requireEstablished(c, leader);
     await requireEstablished(c, owner);
     const l = await one(c, 'SELECT * FROM labels WHERE id = $1 FOR UPDATE', [k.label_id]);
@@ -199,7 +209,8 @@ export async function processLabels(): Promise<number> {
       const owner = await lockCharacter(c, Number(cand.owner_id));
       const l = await one(c, 'SELECT * FROM labels WHERE id = $1 AND upkeep_due <= now() FOR UPDATE', [cand.id]);
       if (!l) return true;
-      const upkeep = Math.round(LABEL_WEEKLY_UPKEEP * (CITY_BY_ID[l.city_id]?.costMult ?? 1));
+      // Muhasebe: sahibinin becerisi gideri en fazla %10 düşürür (perks.ts)
+      const upkeep = Math.round(LABEL_WEEKLY_UPKEEP * (CITY_BY_ID[l.city_id]?.costMult ?? 1) * accountingCostMult(lv(owner.skills, 'accounting')));
       const fromTill = Math.min(l.till, upkeep);
       const fromPocket = upkeep - fromTill;
       if (owner.money >= fromPocket) {
@@ -224,8 +235,8 @@ export async function labelView(db: Db, viewer: number) {
   const m = await membership(db, viewer);
   const contracts = await many(
     db,
-    `SELECT k.*, l.name AS label_name, l.owner_id, b.name AS band_name, b.leader_id FROM label_contracts k
-       JOIN labels l ON l.id = k.label_id JOIN bands b ON b.id = k.band_id
+    `SELECT k.*, l.name AS label_name, l.owner_id, b.name AS band_name, b.leader_id, lc.skills AS leader_skills FROM label_contracts k
+       JOIN labels l ON l.id = k.label_id JOIN bands b ON b.id = k.band_id JOIN characters lc ON lc.id = b.leader_id
       WHERE (l.owner_id = $1 OR k.band_id = $2) AND k.status IN ('offered', 'countered', 'active')
       ORDER BY k.id DESC`,
     [viewer, m?.band_id ?? 0],
@@ -237,6 +248,7 @@ export async function labelView(db: Db, viewer: number) {
       label: k.label_name,
       band: { id: Number(k.band_id), name: k.band_name },
       bandShare: k.band_share,
+      maxBandShare: maxBandShare(lv(k.leader_skills ?? {}, 'contract_law')),
       advance: k.advance,
       recouped: k.recouped,
       weeks: k.weeks,
