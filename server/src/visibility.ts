@@ -27,10 +27,12 @@ const KEY_RULES: Record<string, Rule[]> = {
   press: [{ scale: 'press' }, { scale: 'press', map: true }],
   // Profesörün götürebileceği en yüksek seviye bir beceri değeridir
   maxLevel: [{ scale: 'skill' }],
+  // Karakter nitelikleri (attributes.ts): { charm: sayı, ... }
+  attributes: [{ scale: 'attribute', map: true }],
 };
 
 /** Bu anahtarlarda VIP olmayanlara 10'luk adımlarla */
-const COARSE_10 = new Set(['wear', 'morale']);
+const COARSE_10 = new Set(['wear', 'morale', 'attributeRoom']); // attributeRoom: nitelik toplamının tavana kalanı (toplamı ele vermesin)
 /** Bu anahtarlarda VIP olmayanlara yalnızca işaret (-1, 0, 1) gider */
 const SIGN_ONLY = new Set(['flow', 'pressDelta', 'impact']);
 

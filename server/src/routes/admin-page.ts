@@ -1,4 +1,4 @@
-// Yönetim paneli: istatistikler, online oyuncular, oyuncu arama ve tüm alanlarını düzenleme (para, beceri, profil...),
+// Yönetim paneli: istatistikler, online oyuncular, oyuncu arama ve tüm alanlarını düzenleme (para, beceri, nitelik, XP, profil...),
 // banlama, profil ve sohbet moderasyonu.
 // Sunucu /admin adresinde yayınlar. Sadece is_admin işaretli hesaplar kullanabilir.
 
@@ -245,6 +245,18 @@ async function openEditor(userId) {
       g4.append(w);
     }
 
+    body.append(el('h3', 'Nitelikler ve XP (nitelik 0-' + META.attributeMax + '; oyuncunun toplam tavanı ' + META.attributeTotalCap + ')'));
+    const gA = el('div', undefined, 'grid'); body.append(gA);
+    for (const a of META.attributes) {
+      const cur = Math.round((ch.attributes[a.id] ?? 0) * 100) / 100;
+      const input = mk('input', { type: 'number', min: 0, max: META.attributeMax, step: 1, value: cur });
+      gA.append(wrap(a.name, input));
+      edFields.push({ group: 'attributes', key: a.id, read: (i) => Number(i.value), orig: cur, input });
+    }
+    const xpNow = Math.floor((ch.xp ?? 0) * 100) / 100;
+    reg(gA, 'character', 'xp', 'Harcanmamış XP', mk('input', { type: 'number', min: 0, step: 1, value: xpNow }), (i) => Number(i.value), xpNow);
+    gA.append(wrap('Ömür boyu kazanılan XP', mk('input', { value: Math.floor(ch.xpTotal ?? 0), disabled: true })));
+
     body.append(el('h3', 'Beceriler (boş: açılmamış, 0-' + META.maxSkill + ')'));
     const quick = el('div', undefined, 'row');
     quick.append(btn('Hepsini ' + META.maxSkill + ' yap', () => document.querySelectorAll('.skillIn').forEach((i) => { i.value = META.maxSkill; })));
@@ -273,12 +285,15 @@ function box_reg_skill(box, s, input, cur) {
 async function saveEditor() {
   const patch = { user: {}, character: {} };
   const skills = {};
+  const attributes = {};
   for (const f of edFields) {
     const val = f.read(f.input);
     if (f.group === 'skills') { if (val !== f.orig) skills[f.key] = val; continue; }
+    if (f.group === 'attributes') { if (val !== f.orig) attributes[f.key] = val; continue; }
     if (JSON.stringify(val) !== JSON.stringify(f.orig)) patch[f.group][f.key] = val;
   }
   if (Object.keys(skills).length) patch.character.skills = skills;
+  if (Object.keys(attributes).length) patch.character.attributes = attributes;
   if (!Object.keys(patch.user).length) delete patch.user;
   if (!Object.keys(patch.character).length) delete patch.character;
   const msg = $('edMsg');

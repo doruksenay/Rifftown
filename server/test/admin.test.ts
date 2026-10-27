@@ -116,6 +116,33 @@ describe('yönetim: online ve oyuncu düzenleme', () => {
     expect((await admin.c.patch(`/api/admin/players/${t.userId}`, { character: { profession: 'yok' } })).status).toBe(400);
   });
 
+  it('nitelikler ve harcanmamış XP: ham değerler gelir, düzenlenir; geçersiz nitelik ve değer reddedilir', async () => {
+    const admin = await makeAdmin();
+    const t = await newPlayer({ instrument: 'vocals' });
+    const full = await admin.c.get(`/api/admin/players/${t.userId}`);
+    expect(full.body.character.attributes).toEqual({ charm: 20, voice: 20, creativity: 20, intellect: 10, constitution: 10, dexterity: 10 });
+    expect(full.body.character.xp).toBe(0);
+    expect(full.body.character.xpTotal).toBe(0);
+
+    const r = await admin.c.patch(`/api/admin/players/${t.userId}`, { character: { attributes: { charm: 37.5, dexterity: 100 }, xp: 45 } });
+    expect(r.status).toBe(200);
+    // Yönetici ham sayıyı görür (bulanıklaştırma yok); dokunulmayan nitelikler korunur
+    expect(r.body.character.attributes).toEqual({ charm: 37.5, voice: 20, creativity: 20, intellect: 10, constitution: 10, dexterity: 100 });
+    expect(r.body.character.xp).toBe(45);
+    const row = (await pool.query('SELECT attributes, xp, xp_total FROM characters WHERE id = $1', [t.character.id])).rows[0];
+    expect(row.attributes.charm).toBe(37.5);
+    expect(row.xp).toBe(45);
+    expect(row.xp_total).toBe(0); // elle verilen XP ömür boyu toplama ve tavanlara sayılmaz
+
+    expect((await admin.c.patch(`/api/admin/players/${t.userId}`, { character: { attributes: { luck: 10 } } })).status).toBe(400);
+    expect((await admin.c.patch(`/api/admin/players/${t.userId}`, { character: { attributes: { charm: 101 } } })).status).toBe(400);
+    expect((await admin.c.patch(`/api/admin/players/${t.userId}`, { character: { xp: -1 } })).status).toBe(400);
+    expect((await pool.query('SELECT attributes FROM characters WHERE id = $1', [t.character.id])).rows[0].attributes.charm).toBe(37.5);
+
+    // Oyuncu kendisi bu uçla nitelik ya da XP veremez
+    expect((await t.c.patch(`/api/admin/players/${t.userId}`, { character: { xp: 9999 } })).status).toBe(403);
+  });
+
   it('enerji elle verilince zaman damgası sıfırlanır (hemen eski değere kaymaz)', async () => {
     const admin = await makeAdmin();
     const t = await newPlayer();
@@ -166,5 +193,8 @@ describe('yönetim: online ve oyuncu düzenleme', () => {
     expect(m.body.skills.some((s: any) => s.id === 'guitar')).toBe(true);
     expect(m.body.cities.find((c: any) => c.id === 'istanbul').locations.length).toBeGreaterThan(0);
     expect(m.body.professions.length).toBeGreaterThan(0);
+    expect(m.body.attributes.map((a: any) => a.id)).toEqual(['charm', 'voice', 'creativity', 'intellect', 'constitution', 'dexterity']);
+    expect(m.body.attributeMax).toBe(100);
+    expect(m.body.attributeTotalCap).toBe(330);
   });
 });

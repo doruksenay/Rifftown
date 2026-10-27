@@ -34,3 +34,4 @@ export * from './content/texts';
 export * from './content/rewards';
 export * from './content/cities';
 export * from './lessons';
+export * from './attributes';

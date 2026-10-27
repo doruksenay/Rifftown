@@ -51,7 +51,10 @@ import {
   stageEventAllowed,
   cityEventActive,
   PACING,
+  gigXp,
+  roleAttrBonus,
 } from '@rifftown/shared';
+import { grantXp } from './attributes';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import { bandPress } from './press';
 import { afterGigCrew, crewForGig, wearGigGear } from './touring';
@@ -357,7 +360,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       energy: wells.get(ch.id)!.energy,
       inspiration: wells.get(ch.id)!.inspiration,
       present: onStage(ch),
-      instrumentBonus: g.instruments[role] ?? 0,
+      // Enstrüman bonusu + nitelik (vokalde ses, diğer rollerde el becerisi; en fazla +4, attributes.ts roleAttrBonus)
+      instrumentBonus: (g.instruments[role] ?? 0) + roleAttrBonus(ch.attributes, role),
       outfitBonus: g.outfit + g.tattoos + g.setStage,
       familiarity,
     };
@@ -422,6 +426,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
 
   const presentChars = chars.filter(onStage);
   const perMember = presentChars.length ? Math.floor(res.revenue / presentChars.length) : 0;
+  const xpGained = new Map<number, number>();
   for (const ch of presentChars) {
     const role = memberRows[chars.indexOf(ch)].role as Instrument;
     const skills = { ...ch.skills };
@@ -447,6 +452,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     // Sahne yorar ama ilham verir; iyi ya da kötü bir gece ruh hâlinde iz bırakır
     const inspiration = res.legendary ? INSPIRATION_GAIN.legendaryGig : INSPIRATION_GAIN.gig + Math.max(0, (res.quality - 50) / 8);
     await changeWellbeing(c, ch, { energy: -Math.max(0, GIG_ENERGY_COST - crew.energySaved) - (res.encoreEnergy ?? 0), inspiration });
+    // Sahneye çıkılan konser XP verir (günlük/haftalık tavanla; oyunun kendi müzisyenleri almaz)
+    if (res.presentCount > 0) xpGained.set(ch.id, await grantXp(c, ch, gigXp(res.quality), 'gig'));
     if (res.legendary) await addMoodlet(c, ch.id, 'legendary_gig');
     else if (res.quality >= 70) await addMoodlet(c, ch.id, 'great_gig');
     else if (res.quality < GIG_BREAK_EVEN_QUALITY) await addMoodlet(c, ch.id, 'bad_gig');
@@ -568,6 +575,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       perMember: onStage(ch) ? perMember : 0,
       fameDelta: res.fameDelta,
       review,
+      xp: xpGained.get(ch.id) ?? 0,
     });
     if (fameUp) await notify(c, ch.id, 'fame_up', { bandName: band.name, cityId: gig.city_id, fame: fameAfter });
   }

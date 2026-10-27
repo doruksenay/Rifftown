@@ -10,6 +10,7 @@ import type { EncoreOutcome, EncorePlan, StageEventOutcome, Tempo } from './perf
 import type { ArticleTone, PressMode } from './press';
 import type { ProducerTier, VideoDirector } from './broadcast';
 import type { Skills } from './skills';
+import type { Attributes } from './attributes';
 import type { Genre, Instrument, Lang } from './world';
 
 export interface ApiError {
@@ -95,6 +96,25 @@ export interface CharacterDto {
   age: number;
   /** Bağımlı mı (alışveriş/tüketim) */
   addicted: boolean;
+  /** Nitelikler (0–100; VIP olmayanlara bulanık, bkz. attributes.ts) */
+  attributes: Attributes;
+  /** Harcanmamış XP (para gibi harcanan bir bakiye; tam sayıya aşağı yuvarlanır) */
+  xp: number;
+}
+
+/** GET /api/attributes: nitelikler, XP ve tavanlar */
+export interface AttributesDto {
+  attributes: Attributes;
+  xp: number;
+  /** Toplam tavana kalan nitelik puanı (VIP olmayanlara 10'luk adımlarla) */
+  attributeRoom: number;
+  /** Son 24 oyun saatinde ve son 7 oyun gününde kazanılan XP ve tavanlar */
+  xpDay: number;
+  xpWeek: number;
+  xpDayCap: number;
+  xpWeekCap: number;
+  /** Yeni hesap: tavanlar yarı yarıya */
+  newAccount: boolean;
 }
 
 export interface HomeDto {

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { SESSION_MUSICIAN } from '@rifftown/shared';
+import { SESSION_MUSICIAN, recoveryAttrMult, startingAttributes } from '@rifftown/shared';
 import { config } from '../src/config';
 import { pool } from '../src/db';
 import { advance, client, me, newPlayer, raw, setMoney, setSkills, setVip, setup, teardown } from './helpers';
@@ -246,7 +246,8 @@ describe('dükkânlar ve hastane', () => {
     expect(t.status).toBe(200);
     await advance();
     const m = await me(c);
-    expect((await raw(character.id)).health).toBe(50);
+    // Tedavi saatte +20; bünye niteliği toparlanmayı biraz hızlandırır (gitaristte bünye 10: ×1,015)
+    expect((await raw(character.id)).health).toBeCloseTo(10 + 40 * recoveryAttrMult(startingAttributes('guitar')), 5);
     expect(m.character.money).toBe(500 - 80);
   });
 });

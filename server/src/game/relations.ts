@@ -30,6 +30,7 @@ import {
   lv,
   INSPIRATION_GAIN,
   skillMult,
+  socialAttrMult,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -106,13 +107,14 @@ const bumpSkill = (skills: Record<string, number>, id: string, amount: number) =
 };
 
 // ---------- Takılma ----------
+// Çekicilik niteliği takılma, flört ve randevu kazancını en fazla %15 artırır (attributes.ts socialAttrMult)
 
 export async function hangout(actor: number, other: number) {
   return tx(async (c) => {
     const { rel, me, them } = await lockPair(c, actor, other);
     if (await activeAction(c, actor)) fail('busy', 409);
     if (nextAt(rel.last_hangout, HANGOUT_COOLDOWN_HOURS)) fail('cooldown', 409);
-    const gain = hangoutGain(rel.friendship, lv(me.skills, 'charisma')) * skillMult(me.skills, 'social');
+    const gain = hangoutGain(rel.friendship, lv(me.skills, 'charisma')) * skillMult(me.skills, 'social') * socialAttrMult(me.attributes);
     const friendship = clamp(rel.friendship + gain, 0, 100);
     await c.query('UPDATE relationships SET friendship = $3, last_hangout = now(), updated_at = now() WHERE a_id = $1 AND b_id = $2', [rel.a_id, rel.b_id, friendship]);
     const skills = { ...me.skills };
@@ -143,7 +145,7 @@ export async function flirt(actor: number, other: number) {
     if ((p1 && p1 !== other) || (p2 && p2 !== actor)) fail('taken', 409);
     const theyFlirted = meFirst ? rel.flirted_b : rel.flirted_a;
     const cap = theyFlirted ? 100 : ONE_SIDED_ROMANCE_CAP;
-    const gain = flirtGain(rel.romance, lv(me.skills, 'seduction')) * skillMult(me.skills, 'romance');
+    const gain = flirtGain(rel.romance, lv(me.skills, 'seduction')) * skillMult(me.skills, 'romance') * socialAttrMult(me.attributes);
     const romance = Math.min(cap, Math.max(rel.romance, clamp(rel.romance + gain, 0, 100)));
     await c.query(
       `UPDATE relationships SET romance = $3::real, last_flirt = now(), ${meFirst ? 'flirted_a' : 'flirted_b'} = TRUE,
@@ -177,7 +179,7 @@ export async function date(actor: number, other: number, locationId: string) {
     if (me.money < cost) fail('not_enough_money');
     await c.query('UPDATE characters SET money = money - $2, location_id = $3 WHERE id = $1', [me.id, cost, loc!.id]);
     await payBusinessForMeal(c, locationId, cost, me.id);
-    const gain = dateGain(rel.romance, lv(me.skills, 'seduction')) * skillMult(me.skills, 'romance');
+    const gain = dateGain(rel.romance, lv(me.skills, 'seduction')) * skillMult(me.skills, 'romance') * socialAttrMult(me.attributes);
     const romance = clamp(rel.romance + gain, 0, 100);
     await c.query(
       `UPDATE relationships SET romance = $3::real, friendship = LEAST(100, friendship + 3), last_date = now(),

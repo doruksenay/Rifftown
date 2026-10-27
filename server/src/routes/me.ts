@@ -21,7 +21,12 @@ import {
   startingSkills,
   indulgenceForSpend,
   seasonAt,
+  ATTRIBUTES,
+  ATTR_MAX_SPEND,
+  startAllocationError,
+  startingAttributes,
 } from '@rifftown/shared';
+import { attributesOf, spendAttribute } from '../game/attributes';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { storedMoodlets } from '../game/wellbeing';
@@ -125,9 +130,15 @@ export async function meRoutes(app: FastifyInstance) {
         mainInstrument: z.enum(INSTRUMENTS),
         favoriteGenre: z.enum(GENRES).default('rock'),
         avatarColor: z.string().refine((c) => AVATAR_COLORS.includes(c)).optional(),
+        /** Başlangıç puanlarının dağılımı (toplam 20, bir niteliğe en fazla 10). Verilmezse role göre varsayılan. */
+        startAttributes: z.record(z.string().max(20), z.number()).optional(),
       }),
       req.body,
     );
+    if (body.startAttributes) {
+      const bad = startAllocationError(body.startAttributes);
+      if (bad) fail(bad);
+    }
     if (await one(pool, 'SELECT 1 FROM characters WHERE lower(name) = lower($1)', [body.name])) fail('name_taken', 409);
     const color = body.avatarColor ?? AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
     return tx(async (c) => {
@@ -138,10 +149,12 @@ export async function meRoutes(app: FastifyInstance) {
       if (heirs.length) await c.query('UPDATE characters SET inherited = 0 WHERE id = ANY($1::bigint[])', [heirs.map((h) => h.id)]);
       const ch = await one(
         c,
-        `INSERT INTO characters(user_id, name, avatar_color, main_instrument, money, mood, health, city_id, skills)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+        `INSERT INTO characters(user_id, name, avatar_color, main_instrument, money, mood, health, city_id, skills, attributes)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
         [req.user!.id, body.name, color, body.mainInstrument, START_MONEY + inheritance, START_MOOD, START_HEALTH, body.cityId,
-          JSON.stringify(startingSkills(body.mainInstrument, body.favoriteGenre))],
+          JSON.stringify(startingSkills(body.mainInstrument, body.favoriteGenre)),
+          // Nitelikler: 10 taban + ana enstrüman payı + başlangıç puanları. XP sıfırdan başlar (miras XP taşımaz).
+          JSON.stringify(startingAttributes(body.mainInstrument, body.startAttributes))],
       );
       await c.query(`INSERT INTO notifications(character_id, kind, data) VALUES ($1, 'welcome', '{}')`, [ch.id]);
       return { character: toCharacterDto(ch) };
@@ -185,6 +198,16 @@ export async function meRoutes(app: FastifyInstance) {
       await c.query('UPDATE characters SET location_id = $2 WHERE id = $1', [id, body.locationId]);
       return { ok: true, locationId: body.locationId };
     });
+  });
+
+  // ---------- Nitelikler ve XP ----------
+
+  app.get('/attributes', async (req) => attributesOf(pool, await getCharacter(pool, charId(req))));
+
+  /** XP harcayıp bir niteliği yükseltir (para ile XP alınamaz; puan geri alınmaz) */
+  app.post('/attributes/spend', async (req) => {
+    const body = parse(z.object({ attribute: z.enum(ATTRIBUTES), points: z.number().int().min(1).max(ATTR_MAX_SPEND).default(1) }), req.body);
+    return spendAttribute(charId(req), body.attribute, body.points);
   });
 
   // ---------- Kitapçı: beceri kitapları ----------

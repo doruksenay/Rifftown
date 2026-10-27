@@ -22,6 +22,8 @@ import {
   type Genre,
   gearSetBonus,
   genreAffinity,
+  type Attributes,
+  normalizeAttributes,
 } from '@rifftown/shared';
 import type { Db } from '../db';
 import { many, one } from '../db';
@@ -65,6 +67,11 @@ export interface CharacterRow {
   addicted_since: Date | null;
   critical_since: Date | null;
   dead_at: Date | null;
+  /** Nitelikler (attributes.ts); oyunun kendi müzisyenlerinde boş nesne */
+  attributes: Partial<Attributes>;
+  /** Harcanmamış ve ömür boyu kazanılan XP */
+  xp: number;
+  xp_total: number;
 }
 
 /** Profil fotoğrafının adresi (/api'ye göre); fotoğraf yoksa null */
@@ -118,6 +125,8 @@ export const toCharacterDto = (
   business: extra.business ?? null,
   age: Math.floor(config.agingEnabled ? ageOf(r.created_at, config.gameSpeed) : START_AGE),
   addicted: !!r.addicted_since,
+  attributes: normalizeAttributes(r.attributes),
+  xp: Math.floor(Number(r.xp ?? 0) + 1e-6),
   };
 };
 

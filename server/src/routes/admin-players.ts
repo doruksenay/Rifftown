@@ -2,7 +2,24 @@
 // requireAdmin kancası üst kapsamdan (adminRoutes) devralınır; buradaki hiçbir uç yöneticisiz çalışmaz.
 // Yönetici yetkisi (is_admin) bilerek buradan verilemez: sadece ADMIN_EMAILS ya da make-admin ile.
 
-import { CITIES, INSTRUMENTS, LOCATION_BY_ID, MAX_SKILL, NAME_RE, PROFESSION_BY_ID, PROFESSIONS, SKILL_DEFS, energyNow, inspirationNow, isSkill } from '@rifftown/shared';
+import {
+  ATTR_MAX,
+  ATTR_TOTAL_CAP,
+  ATTRIBUTE_DEFS,
+  ATTRIBUTES,
+  CITIES,
+  INSTRUMENTS,
+  LOCATION_BY_ID,
+  MAX_SKILL,
+  NAME_RE,
+  PROFESSION_BY_ID,
+  PROFESSIONS,
+  SKILL_DEFS,
+  energyNow,
+  inspirationNow,
+  isSkill,
+  normalizeAttributes,
+} from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { revokeUserSessions } from '../auth';
@@ -53,6 +70,10 @@ const characterPatch = z
     bio: text(1000),
     /** Sadece verilen beceriler değişir; null beceriyi siler (kilitli hâle döner) */
     skills: z.record(z.string().max(60), z.number().min(0).max(MAX_SKILL).nullable()),
+    /** Sadece verilen nitelikler değişir (0–100). Yönetici toplam tavanı (330) aşabilir; oyuncu aşamaz. */
+    attributes: z.partialRecord(z.enum(ATTRIBUTES), z.number().min(0).max(ATTR_MAX)),
+    /** Harcanmamış XP. Ömür boyu toplam (xp_total) değişmez: elle verilen XP tavanlara sayılmaz. */
+    xp: z.number().min(0).max(100_000),
   })
   .partial();
 
@@ -62,6 +83,9 @@ export async function adminPlayerRoutes(app: FastifyInstance) {
     maxSkill: MAX_SKILL,
     instruments: INSTRUMENTS,
     skills: SKILL_DEFS.map((s) => ({ id: s.id, category: s.category, name: s.name.tr })),
+    attributes: ATTRIBUTE_DEFS.map((a) => ({ id: a.id, name: a.name.tr })),
+    attributeMax: ATTR_MAX,
+    attributeTotalCap: ATTR_TOTAL_CAP,
     professions: PROFESSIONS.map((p) => ({ id: p.id, name: p.name.tr })),
     cities: CITIES.map((c) => ({
       id: c.id,
@@ -142,7 +166,7 @@ export async function adminPlayerRoutes(app: FastifyInstance) {
 
         // ---- Karakter ----
         if (Object.keys(c).length) {
-          const ch = await one(db, 'SELECT id, skills FROM characters WHERE user_id = $1 FOR UPDATE', [id]);
+          const ch = await one(db, 'SELECT id, skills, attributes FROM characters WHERE user_id = $1 FOR UPDATE', [id]);
           if (!ch) fail('no_character', 404);
           const sets: string[] = [];
           const vals: unknown[] = [ch!.id];
@@ -190,6 +214,8 @@ export async function adminPlayerRoutes(app: FastifyInstance) {
             }
             set('skills', JSON.stringify(next));
           }
+          if (c.attributes) set('attributes', JSON.stringify({ ...normalizeAttributes(ch!.attributes), ...c.attributes }));
+          if (c.xp !== undefined) set('xp', c.xp);
           if (sets.length) await db.query(`UPDATE characters SET ${sets.join(', ')} WHERE id = $1`, vals);
         }
       });
@@ -239,6 +265,10 @@ async function loadPlayer(userId: number) {
         bio: ch.bio,
         avatarVersion: ch.avatar_version,
         skills: ch.skills,
+        // Nitelikler her zaman altısıyla (oyunun kendi müzisyenlerinde 0), XP ham değer
+        attributes: normalizeAttributes(ch.attributes),
+        xp: ch.xp,
+        xpTotal: ch.xp_total,
         createdAt: ch.created_at,
       }
     : null;
