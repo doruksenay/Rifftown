@@ -171,13 +171,14 @@ export async function createScandal(
  * Harcama ya da tüketim düşkünlüğü artırır. Karakter satırı çağıran işlemde kilitli olmalı.
  * Eşik aşılınca bağımlılık başlar; tanınan bir grubun üyesiyse haber olur.
  */
-export async function indulge(c: pg.PoolClient, ch: CharacterRow, amount: number) {
-  const now = indulgenceNow(ch.indulgence ?? 0, ch.indulgence_at ?? null, config.gameSpeed) + amount;
+export async function indulge(c: pg.PoolClient, ch: CharacterRow, amount: number, satisfies = true) {
+  const now = indulgenceNow(ch.indulgence ?? 0, ch.indulgence_at ?? null, config.gameSpeed, Date.now(), !!ch.addicted_since) + amount;
   const becomes = !ch.addicted_since && now >= ADDICTION_THRESHOLD;
+  // satisfies: isteği giderir mi (büyük alışveriş evet, yemek hayır; CRAVING_SATISFY_SPEND)
   await c.query(
-    `UPDATE characters SET indulgence = $2, indulgence_at = now(), indulged_at = now(),
+    `UPDATE characters SET indulgence = $2, indulgence_at = now(), indulged_at = CASE WHEN $4 THEN now() ELSE indulged_at END,
             addicted_since = CASE WHEN $3 THEN now() ELSE addicted_since END WHERE id = $1`,
-    [ch.id, now, becomes],
+    [ch.id, now, becomes, satisfies],
   );
   if (!becomes) return;
   await notify(c, ch.id, 'addicted', {});
@@ -194,10 +195,11 @@ export async function indulge(c: pg.PoolClient, ch: CharacterRow, amount: number
 
 /** Tedavi düşkünlüğü azaltır; eşiğin altına inen kurtulur */
 export async function treatIndulgence(c: Db, ch: CharacterRow, reduce: number) {
-  const now = Math.max(0, indulgenceNow(ch.indulgence ?? 0, ch.indulgence_at ?? null, config.gameSpeed) - reduce);
+  const now = Math.max(0, indulgenceNow(ch.indulgence ?? 0, ch.indulgence_at ?? null, config.gameSpeed, Date.now(), !!ch.addicted_since) - reduce);
   const recovered = !!ch.addicted_since && now < ADDICTION_RECOVERY;
+  // Tedavi isteği de yatıştırır (canı çekmez)
   await c.query(
-    `UPDATE characters SET indulgence = $2, indulgence_at = now(), addicted_since = CASE WHEN $3 THEN NULL ELSE addicted_since END WHERE id = $1`,
+    `UPDATE characters SET indulgence = $2, indulgence_at = now(), indulged_at = now(), addicted_since = CASE WHEN $3 THEN NULL ELSE addicted_since END WHERE id = $1`,
     [ch.id, now, recovered],
   );
   if (recovered) await notify(c, ch.id, 'recovered', {});
@@ -209,7 +211,7 @@ export async function processAddiction(): Promise<number> {
   const rows = await many(pool, 'SELECT id, indulgence, indulgence_at FROM characters WHERE addicted_since IS NOT NULL LIMIT 500');
   let n = 0;
   for (const r of rows) {
-    if (indulgenceNow(r.indulgence, r.indulgence_at, config.gameSpeed) >= ADDICTION_RECOVERY) continue;
+    if (indulgenceNow(r.indulgence, r.indulgence_at, config.gameSpeed, Date.now(), true) >= ADDICTION_RECOVERY) continue;
     const res = await pool.query('UPDATE characters SET addicted_since = NULL WHERE id = $1 AND addicted_since IS NOT NULL', [r.id]);
     if (res.rowCount) {
       await notify(pool, r.id, 'recovered', {});

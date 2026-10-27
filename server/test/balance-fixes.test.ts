@@ -1,5 +1,5 @@
 // Denge düzeltmelerinin sunucu testleri (denge raporu maddeleri 1–14): gerçek API ve zamanlayıcıyla.
-import { BUSINESS_DAILY_REVENUE_HOURS, BUSINESS_RULES, STUDY_FOCUS_HOURS, UNFOCUSED_STUDY_MULT, diminishing, studyFocusFactor, studyGain, BUSK_MAX_PAY_PER_HOUR, BUSK_SKILL_CAP, buskDailyFactor, buskPayPerHour, CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
+import { ADDICTED_DECAY_PER_DAY, CHILD_WEEKLY_UPKEEP, CRAVING_SATISFY_SPEND, CRIME_BY_ID, FAME_GRACE_DAYS, FAMILIARITY_GRACE_DAYS, crimeChance, crimeFine, decayedFamiliarity, indulgenceNow, repeatSentenceMult, BUSINESS_DAILY_REVENUE_HOURS, BUSINESS_RULES, STUDY_FOCUS_HOURS, UNFOCUSED_STUDY_MULT, diminishing, studyFocusFactor, studyGain, BUSK_MAX_PAY_PER_HOUR, BUSK_SKILL_CAP, buskDailyFactor, buskPayPerHour, CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -263,4 +263,61 @@ describe('madde 7: işletme kasası para basmaz', () => {
     expect(results[2].gain).toBe(-5 * 8); // yalnızca maaş kasadan çıktı
     expect(BUSINESS_DAILY_REVENUE_HOURS).toBe(16);
   }
+});
+
+describe('madde 8: kayıp sistemleri göz ardı edilemez', () => {
+  it('bağımlılık: yemek isteği gidermez, $150+ alışveriş ya da tedavi giderir; bağımlıyken düşkünlük yavaş söner', async () => {
+    expect(indulgenceNow(18, new Date(Date.now() - 86_400_000), 1, Date.now(), true)).toBeCloseTo(18 - ADDICTED_DECAY_PER_DAY);
+    expect(indulgenceNow(18, new Date(Date.now() - 86_400_000), 1, Date.now(), false)).toBeCloseTo(14);
+    const p = await newPlayer();
+    const id = p.character.id;
+    await q(`UPDATE characters SET money = 2000, indulgence = 20, indulgence_at = now(), addicted_since = now(), indulged_at = now() - interval '30 days' WHERE id = $1`, [id]);
+    expect((await p.c.post('/api/meals', { locationId: 'istanbul-restaurant', mealId: 'soup' })).status).toBe(200);
+    const afterMeal = (await q('SELECT indulged_at FROM characters WHERE id = $1', [id])).rows[0].indulged_at;
+    expect(afterMeal.getTime()).toBeLessThan(Date.now() - 86_400_000);
+    // Küçük alışveriş de gidermez, $150+ giderir
+    expect((await p.c.post('/api/shop/buy', { locationId: 'istanbul-stage_shop', itemId: 'fx_smoke' })).status).toBe(200);
+    expect((await q('SELECT indulged_at FROM characters WHERE id = $1', [id])).rows[0].indulged_at.getTime()).toBeLessThan(Date.now() - 86_400_000);
+    expect(CRAVING_SATISFY_SPEND).toBe(150);
+    expect((await p.c.post('/api/shop/buy', { locationId: 'istanbul-music_store', itemId: 'guitar_1' })).status).toBe(200);
+    expect((await q('SELECT indulged_at FROM characters WHERE id = $1', [id])).rows[0].indulged_at.getTime()).toBeGreaterThan(Date.now() - 60_000);
+  });
+
+  it('sabıka: tekrarlayan suçlunun cezası ve para cezası büyür, başarı şansı düşer', async () => {
+    const def = CRIME_BY_ID.pickpocket;
+    expect(crimeChance(def, {}, 0, 5)).toBeCloseTo(crimeChance(def, {}, 0, 0) - 0.1);
+    expect(repeatSentenceMult(0)).toBe(1);
+    expect(repeatSentenceMult(4)).toBe(3);
+    expect(repeatSentenceMult(100)).toBe(5);
+    const p = await newPlayer();
+    const id = p.character.id;
+    await q('UPDATE characters SET money = 1000, convictions = 4 WHERE id = $1', [id]);
+    const crime = (await q(`INSERT INTO crimes(character_id, city_id, location_id, kind, success, loot, status) VALUES ($1, 'istanbul', 'istanbul-park', 'pickpocket', FALSE, 0, 'caught') RETURNING id`, [id])).rows[0].id;
+    await q(`INSERT INTO cases(crime_id, suspect_id, city_id, due_at) VALUES ($1, $2, 'istanbul', now() - interval '1 second')`, [crime, id]);
+    await advance(5);
+    const kase = (await q('SELECT sentence_hours, status FROM cases WHERE crime_id = $1', [crime])).rows[0];
+    expect(kase.status).toBe('convicted');
+    expect(Number(kase.sentence_hours)).toBe(def.sentenceHours * 3);
+    expect(Number((await q('SELECT money FROM characters WHERE id = $1', [id])).rows[0].money)).toBe(1000 - crimeFine(def, 4, 1));
+  });
+
+  it('çocuk bakım gideri cepte yoksa bankadan alınır', async () => {
+    const a = await newPlayer();
+    const b = await newPlayer();
+    await q('UPDATE characters SET money = 0, bank = 500 WHERE id = ANY($1::bigint[])', [[a.character.id, b.character.id]]);
+    await q(`INSERT INTO children(parent_a, parent_b, name, born_at, upkeep_due) VALUES ($1, $2, 'Banka', now(), now() - interval '1 second')`, [a.character.id, b.character.id]);
+    await advance(5);
+    const share = Math.round((CHILD_WEEKLY_UPKEEP * 1) / 2);
+    for (const p of [a, b]) {
+      const r = (await q('SELECT money, bank FROM characters WHERE id = $1', [p.character.id])).rows[0];
+      expect(Number(r.money) + Number(r.bank)).toBe(500 - share);
+    }
+  });
+
+  it('çürüme eşikleri: aşinalık 5 gün, şöhret 21 gün', () => {
+    expect(FAMILIARITY_GRACE_DAYS).toBe(5);
+    expect(FAME_GRACE_DAYS).toBe(21);
+    expect(decayedFamiliarity(80, 5)).toBe(80);
+    expect(decayedFamiliarity(80, 7)).toBeCloseTo(77);
+  });
 });

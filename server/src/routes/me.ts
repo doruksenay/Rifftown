@@ -20,6 +20,7 @@ import {
   isEquippable,
   startingSkills,
   indulgenceForSpend,
+  CRAVING_SATISFY_SPEND,
   seasonAt,
 } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
@@ -319,7 +320,8 @@ export async function meRoutes(app: FastifyInstance) {
       }
       await c.query('UPDATE characters SET money = money - $2, location_id = $3 WHERE id = $1', [id, total, loc!.id]);
       // Aşırı alışveriş bağımlılık yapar (kitap ve malzeme sayılmaz)
-      if (item!.slot !== 'material') await indulge(c, ch, indulgenceForSpend(total));
+      // Büyük alışveriş (CRAVING_SATISFY_SPEND+) bağımlının isteğini giderir; küçük alışveriş yalnızca düşkünlük ekler
+      if (item!.slot !== 'material') await indulge(c, ch, indulgenceForSpend(total), total >= CRAVING_SATISFY_SPEND);
       return { item: toInventoryDto(last), money: ch.money - total, qty };
     });
   });

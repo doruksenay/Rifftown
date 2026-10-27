@@ -73,9 +73,21 @@ const avgSkill = (s: Skills, ids: string[]) => ids.reduce((sum, id) => sum + lv(
 /** Görevdeki her polis başarı şansını bu kadar düşürür */
 export const POLICE_PRESSURE = 0.05;
 
-/** Suçun başarı şansı (0–1) */
-export function crimeChance(def: CrimeDef, skills: Skills, policeOnDuty: number): number {
-  return clamp(0.45 + avgSkill(skills, def.skills) * 0.006 - def.difficulty * 0.01 - policeOnDuty * POLICE_PRESSURE, 0.08, 0.92);
+/**
+ * Sabıka caydırır (denge raporu §6: dolandırıcı bot ayda 42 mahkûmiyetle yine kârdaydı):
+ * - Polis tanır: her mahkûmiyet başarı şansını −0,02 düşürür (en fazla −0,2)
+ * - Tekrarlayan suçlunun cezası × (1 + 0,5 × sabıka), en fazla ×5
+ * - Mahkûmiyette para cezası: suçun ganimet tavanı × (1 + 0,25 × sabıka) × şehir, cepten (banka korur, borç yazılmaz)
+ */
+export const PRIOR_CHANCE_PENALTY = 0.02;
+export const MAX_PRIOR_CHANCE_PENALTY = 0.2;
+export const repeatSentenceMult = (priors: number) => Math.min(5, 1 + 0.5 * Math.max(0, priors));
+export const crimeFine = (def: CrimeDef, priors: number, costMult: number) => Math.round(def.loot[1] * (1 + 0.25 * Math.max(0, priors)) * costMult);
+
+/** Suçun başarı şansı (0–1); priors: sabıka (mahkûmiyet sayısı) */
+export function crimeChance(def: CrimeDef, skills: Skills, policeOnDuty: number, priors = 0): number {
+  const known = Math.min(MAX_PRIOR_CHANCE_PENALTY, Math.max(0, priors) * PRIOR_CHANCE_PENALTY);
+  return clamp(0.45 + avgSkill(skills, def.skills) * 0.006 - def.difficulty * 0.01 - policeOnDuty * POLICE_PRESSURE - known, 0.08, 0.92);
 }
 
 /** Polis meslekleri: soruşturma yapabilir */

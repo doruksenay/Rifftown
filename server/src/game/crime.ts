@@ -22,6 +22,8 @@ import {
   careerPay,
   clamp,
   crimeChance,
+  crimeFine,
+  repeatSentenceMult,
   crimesAt,
   diminishing,
   gameHoursToMs,
@@ -72,9 +74,9 @@ export async function crimeOptions(characterId: number, locationId: string): Pro
     policeOnDuty: police,
     options: crimesAt(loc!.type).map((def) => ({
       id: def.id,
-      chance: Math.round(crimeChance(def, ch.skills, police) * 100) / 100,
+      chance: Math.round(crimeChance(def, ch.skills, police, ch.convictions ?? 0) * 100) / 100,
       loot: [Math.round(def.loot[0] * city.costMult), Math.round(def.loot[1] * city.costMult)],
-      sentenceHours: def.sentenceHours,
+      sentenceHours: def.sentenceHours * repeatSentenceMult(ch.convictions ?? 0),
       hours: def.hours,
       blocked: crimeBlocker(ch.skills, def.id),
     })),
@@ -93,7 +95,7 @@ export async function prepareCrime(c: Db, char: CharacterRow, crimeId: string, l
   const block = crimeBlocker(char.skills, crimeId);
   if (block) fail(block);
   const police = await policeOnDuty(c, char.city_id!);
-  return { hours: def!.hours, locationId: loc!.id, params: { crime: crimeId, chance: crimeChance(def!, char.skills, police) } };
+  return { hours: def!.hours, locationId: loc!.id, params: { crime: crimeId, chance: crimeChance(def!, char.skills, police, char.convictions ?? 0) } };
 }
 
 /** 'investigate' eylemini başlatırken */
@@ -215,12 +217,17 @@ export async function resolveInvestigation(c: pg.PoolClient, officer: CharacterR
 
 // ---------- Mahkeme ----------
 
-export async function convict(c: Db, kase: any, sentenceHours: number, judgeId: number | null) {
-  const until = new Date(Date.now() + hoursMs(sentenceHours));
-  const crime = await one(c, 'SELECT loot FROM crimes WHERE id = $1', [kase.crime_id]);
+/** baseHours: suçun cezası × yargıcın şiddeti; tekrarlayan suçluda sabıkaya göre büyür (repeatSentenceMult) */
+export async function convict(c: Db, kase: any, baseHours: number, judgeId: number | null) {
+  const crime = await one(c, 'SELECT loot, kind FROM crimes WHERE id = $1', [kase.crime_id]);
   const suspect = await lockCharacter(c, kase.suspect_id);
-  // Çalınan para geri alınır (cebinde ne kaldıysa)
-  const fine = Math.min(suspect.money, crime?.loot ?? 0);
+  const priors = suspect.convictions ?? 0;
+  const sentenceHours = Math.round(baseHours * repeatSentenceMult(priors) * 10) / 10;
+  const until = new Date(Date.now() + hoursMs(sentenceHours));
+  // Çalınan para geri alınır ve para cezası kesilir (cebinde ne kaldıysa; banka korur, borç yazılmaz)
+  const def = CRIME_BY_ID[crime?.kind];
+  const penalty = def ? crimeFine(def, priors, CITY_BY_ID[kase.city_id]?.costMult ?? 1) : 0;
+  const fine = Math.min(suspect.money, (crime?.loot ?? 0) + penalty);
   await c.query(
     `UPDATE actions SET status = 'cancelled', result = '{"jailed":true}' WHERE character_id = $1 AND status = 'active' AND kind <> 'travel'`,
     [suspect.id],

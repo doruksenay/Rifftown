@@ -245,8 +245,11 @@ export async function processChildren(): Promise<number> {
         const p = await lockCharacter(c, pid);
         if (p.dead_at) continue;
         const share = Math.round((CHILD_WEEKLY_UPKEEP * (CITY_BY_ID[p.city_id ?? '']?.costMult ?? 1)) / 2);
-        if (p.money >= share) {
-          await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [pid, share]);
+        // Bakım gideri önce cepten, yetmezse bankadan alınır: bankanın koruması (cezalara karşı) bakım giderini kapsamaz.
+        // Eskiden parayı bankada tutan hiç ödemiyordu (denge raporu §7 bakım gideri kaçağı).
+        if (p.money + (p.bank ?? 0) >= share) {
+          const fromPocket = Math.min(p.money, share);
+          await c.query('UPDATE characters SET money = money - $2, bank = bank - $3 WHERE id = $1', [pid, fromPocket, share - fromPocket]);
           await addMoodlet(c, pid, 'family_evening');
           await changeWellbeing(c, p, { inspiration: 3 });
           if (childStage(age) === 'baby') await addMoodlet(c, pid, 'sleepless');
