@@ -1,0 +1,207 @@
+{
+ "constants": {
+  "FLING_PREGNANCY_CHANCE": 0.015,
+  "TRY_PREGNANCY_CHANCE": 0.25,
+  "TRY_PAIR_COOLDOWN_DAYS": 3,
+  "PREGNANCY_DAYS": 20,
+  "POSTPARTUM_COOLDOWN_DAYS": 30,
+  "MAX_CHILDREN": 4,
+  "FLING_PAIR_COOLDOWN_DAYS": 7,
+  "CHILD_WEEKLY_UPKEEP": 40
+ },
+ "coupleOneCarrier": {
+  "daysToFirstChild": {
+   "n": 20000,
+   "mean": 28.99,
+   "median": 26,
+   "p10": 20,
+   "p90": 44,
+   "min": 20,
+   "max": 119
+  },
+  "daysToFourthChild": {
+   "n": 20000,
+   "mean": 206.01,
+   "median": 203,
+   "p10": 182,
+   "p90": 233,
+   "min": 170,
+   "max": 338
+  },
+  "childrenAfterDays": {
+   "56": {
+    "n": 20000,
+    "mean": 0.98,
+    "median": 1,
+    "p10": 1,
+    "p90": 1,
+    "min": 0,
+    "max": 1
+   },
+   "112": {
+    "n": 20000,
+    "mean": 1.94,
+    "median": 2,
+    "p10": 2,
+    "p90": 2,
+    "min": 0,
+    "max": 2
+   },
+   "224": {
+    "n": 20000,
+    "mean": 3.83,
+    "median": 4,
+    "p10": 3,
+    "p90": 4,
+    "min": 2,
+    "max": 4
+   },
+   "448": {
+    "n": 20000,
+    "mean": 4,
+    "median": 4,
+    "p10": 4,
+    "p90": 4,
+    "min": 4,
+    "max": 4
+   }
+  }
+ },
+ "coupleBothCarry": {
+  "daysToFirstChild": {
+   "n": 20000,
+   "mean": 29.04,
+   "median": 26,
+   "p10": 20,
+   "p90": 41,
+   "min": 20,
+   "max": 119
+  },
+  "daysToFourthChild": {
+   "n": 20000,
+   "mean": 105.4,
+   "median": 103,
+   "p10": 85,
+   "p90": 130,
+   "min": 73,
+   "max": 226
+  },
+  "childrenAfterDays": {
+   "56": {
+    "n": 20000,
+    "mean": 1.85,
+    "median": 2,
+    "p10": 1,
+    "p90": 2,
+    "min": 0,
+    "max": 2
+   },
+   "112": {
+    "n": 20000,
+    "mean": 3.65,
+    "median": 4,
+    "p10": 3,
+    "p90": 4,
+    "min": 0,
+    "max": 4
+   },
+   "224": {
+    "n": 20000,
+    "mean": 4,
+    "median": 4,
+    "p10": 4,
+    "p90": 4,
+    "min": 3,
+    "max": 4
+   },
+   "448": {
+    "n": 20000,
+    "mean": 4,
+    "median": 4,
+    "p10": 4,
+    "p90": 4,
+    "min": 4,
+    "max": 4
+   }
+  }
+ },
+ "flingDaysToPregnancy": {
+  "onePartner": {
+   "n": 20000,
+   "mean": 466.07,
+   "median": 315,
+   "p10": 49,
+   "p90": 1085,
+   "min": 0,
+   "max": 4193
+  },
+  "sevenPartners": {
+   "n": 20000,
+   "mean": 65.53,
+   "median": 45,
+   "p10": 6,
+   "p90": 153,
+   "min": 0,
+   "max": 680
+  }
+ },
+ "flingOutcomes": {
+  "bekâr, tanınmıyor": {
+   "regret": 0.24945,
+   "gossip": 0,
+   "discovered": 0,
+   "expectedFameLoss": 0
+  },
+  "bekâr, yerel yıldız": {
+   "regret": 0.25165,
+   "gossip": 0.30505,
+   "discovered": 0,
+   "expectedFameLoss": 0.153
+  },
+  "sevgilisi var, başka şehirde, tanınmıyor": {
+   "regret": 1,
+   "gossip": 0,
+   "discovered": 0.35215,
+   "expectedFameLoss": 0
+  },
+  "sevgilisi var, aynı şehirde, tanınmıyor": {
+   "regret": 1,
+   "gossip": 0,
+   "discovered": 0.54725,
+   "expectedFameLoss": 0
+  },
+  "sevgilisi var, aynı şehirde, yerel yıldız": {
+   "regret": 1,
+   "gossip": 0.2999,
+   "discovered": 0.64095,
+   "expectedFameLoss": 0.15
+  }
+ },
+ "childUpkeep": {
+  "istanbul": {
+   "perWeekPerParent": 20,
+   "perParentPerGameDay": 2.86,
+   "perChildToAdultTotal": 5760,
+   "fourChildrenPerParentPerDay": 11.43
+  },
+  "ankara": {
+   "perWeekPerParent": 18,
+   "perParentPerGameDay": 2.57,
+   "perChildToAdultTotal": 5184,
+   "fourChildrenPerParentPerDay": 10.29
+  },
+  "london": {
+   "perWeekPerParent": 34,
+   "perParentPerGameDay": 4.86,
+   "perChildToAdultTotal": 9792,
+   "fourChildrenPerParentPerDay": 19.43
+  },
+  "newyork": {
+   "perWeekPerParent": 36,
+   "perParentPerGameDay": 5.14,
+   "perChildToAdultTotal": 10368,
+   "fourChildrenPerParentPerDay": 20.57
+  }
+ },
+ "weeksToAdult": 144
+}

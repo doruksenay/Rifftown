@@ -1,0 +1,444 @@
+{
+ "assumptions": {
+  "MOOD": 70,
+  "HEALTH": 95,
+  "ENERGY": 60,
+  "energyFactor": 0.8799999999999999,
+  "sustainableStudyHoursPerDay": 20,
+  "note": "Oturumlar 2 saatlik; ruh hâli ve sağlık sabit varsayıldı; yaş etkisi yok (35 yaş = 952 oyun günü)"
+ },
+ "bestProfessorCap": 85,
+ "istanbulProfessorCap": 78,
+ "fromMain": {
+  "self": {
+   "label": "Kendi kendine (ücretsiz)",
+   "reached": {
+    "30": {
+     "hours": 30,
+     "cost": 0,
+     "days": 2
+    },
+    "45": {
+     "hours": 60,
+     "cost": 0,
+     "days": 3
+    },
+    "60": {
+     "hours": 98,
+     "cost": 0,
+     "days": 5
+    },
+    "75": {
+     "hours": 150,
+     "cost": 0,
+     "days": 8
+    },
+    "90": {
+     "hours": 230,
+     "cost": 0,
+     "days": 12
+    }
+   },
+   "finalLevel": 90
+  },
+  "school": {
+   "label": "Okulda grup dersi ($30/sa)",
+   "reached": {
+    "30": {
+     "hours": 14,
+     "cost": 420,
+     "days": 1
+    },
+    "45": {
+     "hours": 28,
+     "cost": 840,
+     "days": 2
+    },
+    "60": {
+     "hours": 44,
+     "cost": 1320,
+     "days": 3
+    },
+    "75": {
+     "hours": 68,
+     "cost": 2040,
+     "days": 4
+    },
+    "90": {
+     "hours": 104,
+     "cost": 3120,
+     "days": 6
+    }
+   },
+   "finalLevel": 90.1
+  },
+  "professor": {
+   "label": "Profesör ($90/sa, günde 4 sa, İstanbul tavanı 78)",
+   "reached": {
+    "30": {
+     "hours": 10,
+     "cost": 900,
+     "days": 3
+    },
+    "45": {
+     "hours": 20,
+     "cost": 1800,
+     "days": 5
+    },
+    "60": {
+     "hours": 30,
+     "cost": 2700,
+     "days": 8
+    },
+    "75": {
+     "hours": 46,
+     "cost": 4140,
+     "days": 12
+    },
+    "90": null
+   },
+   "finalLevel": 78
+  },
+  "teacher_r3": {
+   "label": "Oyuncu öğretmen 3. rütbe ($60/sa varsayım)",
+   "reached": {
+    "30": {
+     "hours": 10,
+     "cost": 600,
+     "days": 3
+    },
+    "45": {
+     "hours": 20,
+     "cost": 1200,
+     "days": 5
+    },
+    "60": {
+     "hours": 32,
+     "cost": 1920,
+     "days": 8
+    },
+    "75": {
+     "hours": 50,
+     "cost": 3000,
+     "days": 13
+    },
+    "90": {
+     "hours": 76,
+     "cost": 4560,
+     "days": 19
+    }
+   },
+   "finalLevel": 90.7
+  },
+  "friend_best": {
+   "label": "Can dostu/eş (×1,9, ücretsiz, günde 4 sa)",
+   "reached": {
+    "30": {
+     "hours": 16,
+     "cost": 0,
+     "days": 4
+    },
+    "45": {
+     "hours": 32,
+     "cost": 0,
+     "days": 8
+    },
+    "60": {
+     "hours": 52,
+     "cost": 0,
+     "days": 13
+    },
+    "75": {
+     "hours": 78,
+     "cost": 0,
+     "days": 20
+    },
+    "90": {
+     "hours": 122,
+     "cost": 0,
+     "days": 31
+    }
+   },
+   "finalLevel": 90.5
+  },
+  "prof_then_school": {
+   "label": "Profesör günde 4 sa + kalan saatler okul",
+   "reached": {
+    "30": {
+     "hours": 12,
+     "cost": 600,
+     "days": 1
+    },
+    "45": {
+     "hours": 24,
+     "cost": 1200,
+     "days": 2
+    },
+    "60": {
+     "hours": 42,
+     "cost": 1860,
+     "days": 3
+    },
+    "75": {
+     "hours": 62,
+     "cost": 2700,
+     "days": 4
+    },
+    "90": {
+     "hours": 98,
+     "cost": 3900,
+     "days": 5
+    }
+   },
+   "finalLevel": 90.5
+  }
+ },
+ "fromZero": {
+  "self": {
+   "label": "Kendi kendine (ücretsiz)",
+   "reached": {
+    "30": {
+     "hours": 48,
+     "cost": 0,
+     "days": 3
+    },
+    "45": {
+     "hours": 78,
+     "cost": 0,
+     "days": 4
+    },
+    "60": {
+     "hours": 116,
+     "cost": 0,
+     "days": 6
+    },
+    "75": {
+     "hours": 166,
+     "cost": 0,
+     "days": 9
+    },
+    "90": {
+     "hours": 248,
+     "cost": 0,
+     "days": 13
+    }
+   },
+   "finalLevel": 90.2
+  },
+  "school": {
+   "label": "Okulda grup dersi ($30/sa)",
+   "reached": {
+    "30": {
+     "hours": 22,
+     "cost": 660,
+     "days": 2
+    },
+    "45": {
+     "hours": 36,
+     "cost": 1080,
+     "days": 2
+    },
+    "60": {
+     "hours": 52,
+     "cost": 1560,
+     "days": 3
+    },
+    "75": {
+     "hours": 76,
+     "cost": 2280,
+     "days": 4
+    },
+    "90": {
+     "hours": 112,
+     "cost": 3360,
+     "days": 6
+    }
+   },
+   "finalLevel": 90.2
+  },
+  "professor": {
+   "label": "Profesör ($90/sa, günde 4 sa, İstanbul tavanı 78)",
+   "reached": {
+    "30": {
+     "hours": 16,
+     "cost": 1440,
+     "days": 4
+    },
+    "45": {
+     "hours": 24,
+     "cost": 2160,
+     "days": 6
+    },
+    "60": {
+     "hours": 36,
+     "cost": 3240,
+     "days": 9
+    },
+    "75": {
+     "hours": 52,
+     "cost": 4680,
+     "days": 13
+    },
+    "90": null
+   },
+   "finalLevel": 78
+  },
+  "teacher_r3": {
+   "label": "Oyuncu öğretmen 3. rütbe ($60/sa varsayım)",
+   "reached": {
+    "30": {
+     "hours": 16,
+     "cost": 960,
+     "days": 4
+    },
+    "45": {
+     "hours": 26,
+     "cost": 1560,
+     "days": 7
+    },
+    "60": {
+     "hours": 38,
+     "cost": 2280,
+     "days": 10
+    },
+    "75": {
+     "hours": 54,
+     "cost": 3240,
+     "days": 14
+    },
+    "90": {
+     "hours": 80,
+     "cost": 4800,
+     "days": 20
+    }
+   },
+   "finalLevel": 90.1
+  },
+  "friend_best": {
+   "label": "Can dostu/eş (×1,9, ücretsiz, günde 4 sa)",
+   "reached": {
+    "30": {
+     "hours": 26,
+     "cost": 0,
+     "days": 7
+    },
+    "45": {
+     "hours": 40,
+     "cost": 0,
+     "days": 10
+    },
+    "60": {
+     "hours": 60,
+     "cost": 0,
+     "days": 15
+    },
+    "75": {
+     "hours": 88,
+     "cost": 0,
+     "days": 22
+    },
+    "90": {
+     "hours": 130,
+     "cost": 0,
+     "days": 33
+    }
+   },
+   "finalLevel": 90.3
+  },
+  "prof_then_school": {
+   "label": "Profesör günde 4 sa + kalan saatler okul",
+   "reached": {
+    "30": {
+     "hours": 20,
+     "cost": 840,
+     "days": 1
+    },
+    "45": {
+     "hours": 32,
+     "cost": 1440,
+     "days": 2
+    },
+    "60": {
+     "hours": 46,
+     "cost": 2100,
+     "days": 3
+    },
+    "75": {
+     "hours": 68,
+     "cost": 3000,
+     "days": 4
+    },
+    "90": {
+     "hours": 104,
+     "cost": 4080,
+     "days": 6
+    }
+   },
+   "finalLevel": 90.1
+  }
+ },
+ "wide": {
+  "songwriting": {
+   "skills": 6,
+   "sumWeight": 0.22,
+   "allEqualLevel": 45.5,
+   "allEqualSchoolHours": 216,
+   "allEqualSchoolCost": 6755,
+   "top3": [
+    "music_theory",
+    "arranging",
+    "songcraft_hooks"
+   ],
+   "top3Level": 66.7,
+   "top3SchoolHours": 186
+  },
+  "stage": {
+   "skills": 13,
+   "sumWeight": 0.33,
+   "allEqualLevel": 30.3,
+   "allEqualSchoolHours": 286,
+   "allEqualSchoolCost": 9230,
+   "top3": [
+    "stage_banter",
+    "choreography",
+    "vocal_harmony"
+   ],
+   "top3Level": 90.9,
+   "top3SchoolHours": 348
+  },
+  "rehearsal": {
+   "skills": 3,
+   "sumWeight": 0.38,
+   "allEqualLevel": 26.3,
+   "allEqualSchoolHours": 54,
+   "allEqualSchoolCost": 1745,
+   "top3": [
+    "sight_reading",
+    "ear_training",
+    "hand_percussion"
+   ],
+   "top3Level": 26.3,
+   "top3SchoolHours": 54
+  },
+  "busking": {
+   "skills": 9,
+   "sumWeight": 1.6,
+   "allEqualLevel": 6.3,
+   "allEqualSchoolHours": 36,
+   "allEqualSchoolCost": 1575,
+   "top3": [
+    "acoustic_guitar",
+    "violin",
+    "jingle_writing"
+   ],
+   "top3Level": 14.3,
+   "top3SchoolHours": 30
+  }
+ },
+ "deep": {
+  "songwriting_composing_30to52": 22,
+  "songwriting_composing_60to82": 39,
+  "stage_showmanship_30to52": 22,
+  "stage_showmanship_60to82": 39
+ }
+}
