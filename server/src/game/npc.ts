@@ -107,6 +107,10 @@ async function writeSong(c: pg.PoolClient, bandId: number, leaderId: number, def
   return song.id as number;
 }
 
+/** NPC şöhretinin dalga dönemi (oyun günü) ve her turda hedefe çekilme oranı */
+const NPC_FAME_WAVE_DAYS = 40;
+const NPC_FAME_PULL = 0.02;
+
 let lastRun = 0;
 
 /**
@@ -151,18 +155,24 @@ async function runBand(c: pg.PoolClient, b: any, def: NpcBandDef, rand: () => nu
   const t = NPC_TIERS[def.tier];
   let acts = 0;
   // Yorgunluk tutmazlar, şehirden ayrılmazlar; becerileri konserlerle yükselmez (seviyeleri sabittir)
+  // Cüzdanları da sıfırlanır: konser gelirleri NPC'de ölü para olarak birikmez (denge raporu §10: 60 günde $7,6 milyon)
   await c.query(
-    'UPDATE characters SET mood = 80, health = 100, city_id = $2, location_id = NULL, jailed_until = NULL, skills = $3 WHERE id = $1',
+    'UPDATE characters SET mood = 80, health = 100, city_id = $2, location_id = NULL, jailed_until = NULL, skills = $3, money = 0, bank = 0 WHERE id = $1',
     [b.leader_id, def.cityId, JSON.stringify(npcSkills(def))],
   );
   // Veri dosyasında rol değiştiyse (ör. yeni roller eklenince) kadroyu eşitle
   await c.query('UPDATE band_members SET role = $3 WHERE band_id = $1 AND character_id = $2 AND role <> $3', [b.id, b.leader_id, def.role]);
   await c.query('UPDATE characters SET main_instrument = $2 WHERE id = $1 AND main_instrument <> $2', [b.leader_id, def.role]);
 
-  // Şöhreti kendi bandında tut
+  // Şöhreti kendi bandında tut. Bant içinde yavaşça dalgalanan bir hedefe doğru çekilir (her grubun kendi evresi, ~40 günlük
+  // dönem): gruplar 15. günde tavana yapışıp aylarca orada kalmasın, listeler hareketlensin (denge raporu §10).
+  const [lo, hi] = t.fameRange;
+  const phase = ((Number(b.id) * 2654435761) >>> 0) / 4294967296;
+  const days = (Date.now() * config.gameSpeed) / 86_400_000;
+  const target = lo + (hi - lo) * (0.5 + 0.4 * Math.sin(2 * Math.PI * (days / NPC_FAME_WAVE_DAYS + phase)));
   await c.query(
-    `UPDATE band_fame SET fame = LEAST($3::real, GREATEST($2::real, fame)) WHERE band_id = $1 AND city_id = $4`,
-    [b.id, t.fameRange[0], t.fameRange[1], def.cityId],
+    `UPDATE band_fame SET fame = LEAST($3::real, GREATEST($2::real, fame + ($5::real - fame) * $6::real)) WHERE band_id = $1 AND city_id = $4`,
+    [b.id, lo, hi, def.cityId, target, NPC_FAME_PULL],
   );
   await c.query(`UPDATE band_fame SET fame = LEAST($2::real, fame) WHERE band_id = $1 AND city_id <> $3`, [b.id, t.fameRange[1] * 0.6, def.cityId]);
 
@@ -189,8 +199,9 @@ async function runBand(c: pg.PoolClient, b: any, def: NpcBandDef, rand: () => nu
     const rules = RELEASE_RULES[kind];
     const last = await one(c, 'SELECT max(released_at) AS at FROM releases WHERE band_id = $1 AND kind = $2', [b.id, kind]);
     const pace = rules.cooldownDays * NPC_RELEASE_PACE * 24;
-    // İlk yayın kuruluştan kısa süre sonra; sonra düzenli aralıklarla
-    const firstDelay = kind === 'single' ? 12 : rules.cooldownDays * 24;
+    // İlk yayın kuruluştan kısa süre sonra; sonra düzenli aralıklarla. İlk albüm grup başına 7–60 gün arasında
+    // (eskiden herkesinki albüm beklemesi kadar, 112 gün: albüm listesi o güne kadar boştu)
+    const firstDelay = kind === 'single' ? 12 : (7 + (((Number(b.id) * 2246822519) >>> 0) % 54)) * 24;
     const created = await one(c, 'SELECT created_at FROM bands WHERE id = $1', [b.id]);
     const due = last?.at ? last.at.getTime() + hoursMs(pace) : created.created_at.getTime() + hoursMs(firstDelay);
     if (due > Date.now()) continue;

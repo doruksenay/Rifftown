@@ -296,7 +296,8 @@ Dünya gerçek oyuncu azken de canlı görünsün diye her şehirde üç yapay g
 
 - Oyuncu gruplarıyla aynı kurallarla yaşarlar: konserleri aynı hesapla sonuçlanır, yayınları aynı haftalık satış ve listelere girer. Konserlerde boş rolleri kiralık müzisyenler doldurur.
 - Zamanlayıcıdaki "yönetmen" onların yerine karar verir: şöhretlerinin yettiği en büyük mekânda konser ayarlar, 5–6 günde bir şarkı yazar, single'ları single bekleme süresinin 1,5 katında bir, albümleri albüm bekleme süresinin 1,5 katında bir çıkarır.
-- Şöhretleri kendi aralığında tutulur: oyuncuların önünü sonsuza kadar kesmezler, sönüp de gitmezler. En çok çalışan oyuncu grupları yıldızları geçebilir (şöhret 72'nin üstü).
+- Şöhretleri kendi aralığında tutulur: oyuncuların önünü sonsuza kadar kesmezler, sönüp de gitmezler. Bant içinde her grubun kendi evresiyle ~40 günlük dönemde dalgalanan bir hedefe doğru çekilirler (eskiden 15. günde tavana yapışıp orada kalıyorlardı; listeler donuktu). En çok çalışan oyuncu grupları yıldızları geçebilir (şöhret 72'nin üstü).
+- İlk albümleri kuruluştan 7–60 gün sonra (grup başına farklı; eskiden herkesinki 112 gün sonraydı ve albüm listesi o güne kadar boştu). Cüzdanları her turda sıfırlanır: konser gelirleri NPC'de ölü para olarak birikmez.
 - Kurulumları kendiliğinden yapılır; adları oyuncular tarafından alınmışsa o grup atlanır. Testlerde kapatılabilir (`NPC=0`).
 
 ## Oyunun kadrosu: sosyal ve ekonomik NPC'ler
@@ -307,8 +308,8 @@ Az oyunculu dönemde de seçim, mahkeme, pazar ve gazete boş çalışmasın diy
 |---|---|---|
 | Yedek yargıç | Davanın süresinin yarısı dolmuş ve şehirde VIP oyuncu yargıç yoksa normal cezayla karar verir. Oyuncu yargıç varsa son tarihe kadar ona bırakır (sonra eski kural: mahkeme kendisi karar verir). | İkramiye almaz. |
 | Aday | Açık bir seçimde NPC aday yoksa ve en fazla bir oyuncu adayı varsa adaylığını koyar; boş makamı doldurur. Eşit oyda ya da hiç oy yokken oyuncu aday kazanır. | Makam maaşı NPC'ye ödenmez. |
-| Muhabir | Son 48 oyun saatinde şehirde kalitesi 60'ı geçen oyuncu konserlerinden 8 şablonluk havuzdan (mekân, seyirci, gecenin şarkısı) iki dilli kısa haber yazar (şehir başına günde en fazla 2, aynı gruba bir turda 1). | Basın etkisi en fazla +2 ve haftalık 20 puanlık tavana tabi. |
-| İkinci el tüccarı | Bit pazarında atölye ürünlerini alır (dükkâna satılamadıkları için talep yaratır); dükkân eşyalarından ilanlar koyar. | Alış: nominal fiyatın en fazla %40'ı, bonusa göre, ama malzeme maliyetinin en fazla 1,25 katı; günde en fazla 2 satış; yeni hesaplar satamaz; EFSANEVİ eşya alınmaz. Satış: dükkân fiyatının %85'i (dükkâna geri satış %50 olduğundan al-sat zarar eder); VIP eşyası ve yüzük satmaz; satış parası oyundan çıkar (tüccarın parası her turda sıfırlanır). |
+| Muhabir | Son 48 oyun saatinde şehirde kalitesi 60'ı geçen konserlerden (önce oyuncular, yoksa oyunun grupları) parçalardan kurulan iki dilli kısa haber yazar (12 başlık × 10 giriş × 10 kapanış; şehir başına günde en fazla 2, aynı gruba bir turda 1). | Basın etkisi en fazla +2 ve haftalık 20 puanlık tavana tabi; oyunun gruplarına basın etkisi yok. |
+| İkinci el tüccarı | Bit pazarında atölye ürünlerini alır (dükkâna satılamadıkları için talep yaratır); dükkân eşyalarından ilanlar koyar. | Alış: nominal fiyatın en fazla %40'ı, bonusa göre, ama malzeme maliyetinin en fazla 1,25 katı; günde en fazla 2 satış; yeni hesaplar satamaz; EFSANEVİ eşya alınmaz. Satış: dükkân fiyatının %85'i (dükkâna geri satış %50 olduğundan al-sat zarar eder); VIP eşyası ve yüzük satmaz; satış parası oyundan çıkar (tüccarın parası her turda sıfırlanır). İlanlar 7 oyun gününde yenilenir (eskiden kimse almazsa hiç değişmiyordu). |
 
 ## Ev ve kira
 

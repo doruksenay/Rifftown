@@ -43,6 +43,8 @@ import { addPress } from './press';
 import { ringPledged } from './items';
 
 const hoursMs = (h: number) => gameHoursToMs(h, config.gameSpeed);
+/** Tüccar ilanlarının ömrü (oyun günü) */
+const NPC_LISTING_REFRESH_DAYS = 7;
 
 /** NPC kadrosunu kurar (zaten varsa dokunmaz) */
 export async function ensureNpcCivic(): Promise<number> {
@@ -136,16 +138,16 @@ export async function npcCandidates(): Promise<number> {
 
 // ---------- Muhabir ----------
 
-/** Şehirdeki iyi geçen oyuncu konserlerinden kısa haber; etkisi küçük ve haftalık tavana tabi */
+/** Şehirdeki iyi geçen konserlerden kısa haber (önce oyuncular, sonra oyunun grupları); etkisi küçük ve haftalık tavana tabi */
 export async function npcNews(): Promise<number> {
   const gigs = await many(
     pool,
-    `SELECT g.id, g.band_id, g.city_id, g.location_id, (g.result->>'quality')::int AS quality, (g.result->>'attendance')::int AS attendance, b.name AS band_name,
+    `SELECT g.id, g.band_id, g.city_id, g.location_id, (g.result->>'quality')::int AS quality, (g.result->>'attendance')::int AS attendance, b.name AS band_name, (b.npc_key IS NOT NULL) AS npc_band,
             (SELECT title FROM songs WHERE id = (g.result->>'bestSongId')::bigint) AS song
        FROM gigs g JOIN bands b ON b.id = g.band_id
-      WHERE g.status = 'done' AND b.npc_key IS NULL AND (g.result->>'quality')::int >= $1 AND g.starts_at > $2
+      WHERE g.status = 'done' AND (g.result->>'quality')::int >= $1 AND g.starts_at > $2
         AND NOT EXISTS (SELECT 1 FROM articles a WHERE a.npc AND a.band_id = g.band_id AND a.created_at > g.starts_at)
-      ORDER BY g.starts_at DESC LIMIT 30`,
+      ORDER BY (b.npc_key IS NULL) DESC, g.starts_at DESC LIMIT 30`,
     [NPC_NEWS_MIN_QUALITY, new Date(Date.now() - hoursMs(48))],
   );
   let n = 0;
@@ -166,7 +168,8 @@ export async function npcNews(): Promise<number> {
           new Date(Date.now() - hoursMs(7 * 24)),
         ]))?.n ?? 0,
       );
-      const impact = Math.max(0, Math.min(2, ARTICLE_WEEKLY_CAP - used));
+      // Oyunun kendi gruplarını da yazar (boş dünyada gazete boş kalmasın; denge raporu §10), ama basın etkisi yok
+      const impact = g.npc_band ? 0 : Math.max(0, Math.min(2, ARTICLE_WEEKLY_CAP - used));
       const city = CITY_BY_ID[g.city_id];
       // Şablon havuzundan (content/texts.ts); şarkı adı yoksa şarkı anmayan şablonlar
       const venue = LOCATION_BY_ID[g.location_id]?.name ?? city.name;
@@ -238,6 +241,15 @@ export async function npcStockMarkets(rand: () => number = Math.random): Promise
   for (const city of CITIES) {
     const trader = await npcId(pool, 'trader', city.id);
     if (!trader) continue;
+    // İlanlar haftada bir yenilenir: 7 oyun gününden eski ilanlar kaldırılır, yerine yenileri gelir (vitrin donmasın)
+    await tx(async (c) => {
+      const stale = await many(
+        c,
+        `UPDATE listings SET status = 'cancelled', closed_at = now() WHERE seller_id = $1 AND status = 'active' AND created_at < $2 RETURNING inventory_id`,
+        [trader, new Date(Date.now() - hoursMs(NPC_LISTING_REFRESH_DAYS * 24))],
+      );
+      if (stale.length) await c.query('DELETE FROM inventory WHERE id = ANY($1::bigint[]) AND character_id = $2', [stale.map((x) => x.inventory_id), trader]);
+    });
     const active = await one(pool, `SELECT count(*)::int AS n FROM listings WHERE seller_id = $1 AND status = 'active'`, [trader]);
     if (active.n >= NPC_MAX_LISTINGS) continue;
     const def = pool_[Math.floor(rand() * pool_.length)];

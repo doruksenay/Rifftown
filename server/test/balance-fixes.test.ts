@@ -3,6 +3,8 @@ import { ADDICTED_DECAY_PER_DAY, CHILD_WEEKLY_UPKEEP, CRAVING_SATISFY_SPEND, CRI
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
+import { ensureNpcCivic, npcNews, npcStockMarkets } from '../src/game/npc-civic';
+import { ensureNpcWorld, runNpcDirectorNow } from '../src/game/npc';
 import { advance, newPlayer, setup, teardown } from './helpers';
 
 beforeAll(setup);
@@ -161,6 +163,15 @@ describe('madde 4: sokak müziği başlangıç yolu', () => {
   });
 
   it('sunucu: aynı gün ikinci oturum yarım bahşiş, beceri sokakta amatörde durur', async () => {
+    const prev = config.gameSpeed;
+    config.gameSpeed = 1; // 24 oyun saatlik pencere testin ortasında dolmasın
+    try {
+      await buskCase();
+    } finally {
+      config.gameSpeed = prev;
+    }
+  });
+  async function buskCase() {
     const p = await newPlayer();
     const id = p.character.id;
     await q(`UPDATE characters SET skills = skills || '{"guitar":29.99,"showmanship":40}'::jsonb WHERE id = $1`, [id]);
@@ -181,7 +192,7 @@ describe('madde 4: sokak müziği başlangıç yolu', () => {
     const skills = (await q('SELECT skills FROM characters WHERE id = $1', [id])).rows[0].skills;
     expect(skills.guitar).toBeLessThanOrEqual(BUSK_SKILL_CAP);
     expect(skills.showmanship).toBe(40); // amatörün üstünde: sokak geliştirmez
-  });
+  }
 });
 
 describe('madde 5: beceri ilerlemesi haftalar sürer', () => {
@@ -208,6 +219,15 @@ describe('madde 5: beceri ilerlemesi haftalar sürer', () => {
   });
 
   it('sunucu: günün odaklı saatleri dolunca ders verimi düşer ve bildirimde söylenir', async () => {
+    const prev = config.gameSpeed;
+    config.gameSpeed = 1;
+    try {
+      await focusCase();
+    } finally {
+      config.gameSpeed = prev;
+    }
+  });
+  async function focusCase() {
     const p = await newPlayer();
     const id = p.character.id;
     await q(`UPDATE characters SET money = 1000, energy = 100, energy_at = now() WHERE id = $1`, [id]);
@@ -221,7 +241,7 @@ describe('madde 5: beceri ilerlemesi haftalar sürer', () => {
     await q(`UPDATE actions SET ends_at = now() - interval '1 second' WHERE id = $1`, [a.id]);
     await advance(5);
     expect((await q('SELECT result FROM actions WHERE id = $1', [a.id])).rows[0].result.unfocused).toBe(true);
-  });
+  }
 });
 
 describe('madde 7: işletme kasası para basmaz', () => {
@@ -319,5 +339,58 @@ describe('madde 8: kayıp sistemleri göz ardı edilemez', () => {
     expect(FAME_GRACE_DAYS).toBe(21);
     expect(decayedFamiliarity(80, 5)).toBe(80);
     expect(decayedFamiliarity(80, 7)).toBeCloseTo(77);
+  });
+});
+
+describe('ek: boş dünya canlanır', () => {
+  it('oyunun grupları: cüzdan sıfırlanır, şöhret bant içinde kalır, ilk albüm 7–60 günde', async () => {
+    await ensureNpcWorld(() => 0.5);
+    const band = (await q(`SELECT b.id, b.leader_id, b.npc_key FROM bands b WHERE b.npc_key IS NOT NULL AND b.npc_key NOT LIKE 'test-%' ORDER BY b.id LIMIT 1`)).rows[0];
+    await q('UPDATE characters SET money = 99999, bank = 500 WHERE id = $1', [band.leader_id]);
+    await runNpcDirectorNow(() => 0.5);
+    const ch = (await q('SELECT money, bank FROM characters WHERE id = $1', [band.leader_id])).rows[0];
+    expect(Number(ch.money)).toBe(0);
+    expect(Number(ch.bank)).toBe(0);
+    // İlk albüm gecikmesi kuruluştan 7–60 gün sonra (grup kimliğine göre)
+    const days = 7 + (((Number(band.id) * 2246822519) >>> 0) % 54);
+    expect(days).toBeGreaterThanOrEqual(7);
+    expect(days).toBeLessThanOrEqual(60);
+  });
+
+  it('muhabir oyunun gruplarını da yazar (basın etkisi yok); tüccar ilanları haftada bir yenilenir', async () => {
+    await ensureNpcCivic();
+    await ensureNpcWorld(() => 0.5);
+    const band = (await q(`SELECT b.id, b.npc_key FROM bands b WHERE b.npc_key IS NOT NULL AND b.npc_key NOT LIKE 'test-%' ORDER BY b.id LIMIT 1`)).rows[0];
+    const city = (await q(`SELECT city_id FROM band_fame WHERE band_id = $1 ORDER BY fame DESC LIMIT 1`, [band.id])).rows[0].city_id;
+    await q(`DELETE FROM articles WHERE npc AND city_id = $1`, [city]);
+    await q(
+      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, status, result) VALUES ($1, $2, $3, now() - interval '1 second', '{}', 'done', '{"quality": 80, "attendance": 300}')`,
+      [band.id, city, `${city}-club`],
+    );
+    const prevSpeed = config.gameSpeed;
+    config.gameSpeed = 1; // 48 oyun saatlik haber penceresi
+    try {
+      await npcNews();
+    } finally {
+      config.gameSpeed = prevSpeed;
+    }
+    const art = (await q(`SELECT impact FROM articles WHERE npc AND band_id = $1`, [band.id])).rows;
+    expect(art.length).toBe(1);
+    expect(Number(art[0].impact)).toBe(0);
+
+    await npcStockMarkets(() => 0.5);
+    const trader = (await q(`SELECT id FROM characters WHERE npc_role = 'trader' AND city_id = 'istanbul'`)).rows[0]?.id;
+    const before = (await q(`SELECT id FROM listings WHERE seller_id = $1 AND status = 'active'`, [trader])).rows.map((r) => Number(r.id));
+    expect(before.length).toBeGreaterThan(0);
+    await q(`UPDATE listings SET created_at = now() - interval '8 days' WHERE seller_id = $1`, [trader]);
+    const prev = config.gameSpeed;
+    config.gameSpeed = 1;
+    try {
+      await npcStockMarkets(() => 0.5);
+    } finally {
+      config.gameSpeed = prev;
+    }
+    const after = (await q(`SELECT id FROM listings WHERE seller_id = $1 AND status = 'active'`, [trader])).rows.map((r) => Number(r.id));
+    expect(after.some((id) => before.includes(id))).toBe(false);
   });
 });
