@@ -1,10 +1,11 @@
 // Başarımlar. Sunucu oyuncunun istatistiklerine bakarak kazanılanları açar (bkz. server/src/game/achievements.ts).
 // Puanlar profilde toplanır. Gizli başarımların adı ve açıklaması kazanılana kadar görünmez.
 
-import type { L } from './world';
+import { CITY_BY_ID, GENRE_NAMES, type L } from './world';
+import { CITY_IDENTITY } from './content/cities';
 import { STAT_ACHIEVEMENTS, type StatRule } from './content/progress';
 
-export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social' | 'media' | 'legacy' | 'discovery';
+export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social' | 'media' | 'legacy' | 'discovery' | 'cities';
 
 export const ACHIEVEMENT_CATEGORY_NAMES: Record<AchievementCategory, L> = {
   start: { tr: 'İlk adımlar', en: 'First steps' },
@@ -17,6 +18,7 @@ export const ACHIEVEMENT_CATEGORY_NAMES: Record<AchievementCategory, L> = {
   media: { tr: 'Basın ve medya', en: 'Press and media' },
   legacy: { tr: 'Efsaneden sonra', en: 'Beyond legend' },
   discovery: { tr: 'Keşifler', en: 'Discoveries' },
+  cities: { tr: 'Şehirler', en: 'Cities' },
 };
 
 export interface AchievementDef {
@@ -102,6 +104,21 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   A('front_page', 'discovery', 10, ['Gazete manşeti', 'Şehir gazetesinin muhabiri grubun hakkında haber yazsın.'], ['Front page', 'Have the city reporter write a story about your band.'], true),
   A('scene_hit', 'discovery', 15, ['Doğru yer, doğru şarkı', 'Alt türlerin o şehrin sahnesinde çok tuttuğu bir konser ver.'], ['Right place, right song', 'Play a gig where your subgenres really land in that city\'s scene.'], true),
 ];
+
+// Şehir başarımları: her şehrin imza türünde o şehirde iyi bir konser (content/cities.ts); ve 15 yerel lezzetin hepsi
+ACHIEVEMENTS.push(
+  ...CITY_IDENTITY.map((c) => ({
+    id: `city_${c.cityId}`,
+    category: 'cities' as const,
+    points: 15,
+    name: c.achievement,
+    about: {
+      tr: `${CITY_BY_ID[c.cityId].name.tr} şehrinde ${GENRE_NAMES[c.signatureGenre].tr} türünde en az iyi bir konser ver.`,
+      en: `Play a good or better ${GENRE_NAMES[c.signatureGenre].en} gig in ${CITY_BY_ID[c.cityId].name.en}.`,
+    },
+  })),
+  A('world_kitchen', 'cities', 25, ['Dünya mutfağı', '15 şehrin yerel lezzetinin hepsini tat.'], ['World kitchen', 'Taste the local dish of all 15 cities.']),
+);
 
 // Veri dosyasındaki istatistik kurallı başarımlar
 ACHIEVEMENTS.push(...STAT_ACHIEVEMENTS);

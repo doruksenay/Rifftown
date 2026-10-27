@@ -3,7 +3,7 @@
 // Eylem, konser ve liste sonuçlarından hemen sonra; diğer olaylar (oy, para gönderme, VIP) için /me çağrısında
 // en fazla dakikada bir kontrol edilir.
 
-import { INSTRUMENTS, ROLE_SKILLS, STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
+import { CITY_IDENTITY, INSTRUMENTS, ROLE_SKILLS, STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
 import { addMoodlet } from './wellbeing';
 import { type Db, many, one } from '../db';
 import { notify } from './common';
@@ -148,6 +148,17 @@ export async function evaluateAchievements(db: Db, characterId: number): Promise
     front_page: !!d?.front_page,
     all_roles: INSTRUMENTS.every((r) => typeof known[ROLE_SKILLS[r].specific] === 'number'),
   });
+
+  // Şehir başarımları: o şehirde imza türünde, kalitesi en az "iyi" (40) bir konser; dünya mutfağı: 15 yerel lezzet
+  const cityGigs = await many(
+    db,
+    `SELECT DISTINCT g.city_id, b.genre FROM gig_performers gp JOIN gigs g ON g.id = gp.gig_id JOIN bands b ON b.id = g.band_id
+      WHERE gp.character_id = $1 AND gp.present AND g.status = 'done' AND (g.result->>'quality')::int >= 40`,
+    [characterId],
+  );
+  for (const c of CITY_IDENTITY) earned[`city_${c.cityId}`] = cityGigs.some((g) => g.city_id === c.cityId && g.genre === c.signatureGenre);
+  const dishes = await one(db, `SELECT count(DISTINCT meal_id)::int AS n FROM meals WHERE character_id = $1 AND meal_id LIKE 'local_%'`, [characterId]);
+  earned.world_kitchen = Number(dishes?.n ?? 0) >= CITY_IDENTITY.length;
 
   // Veri odaklı başarımlar: istatistik eşiği (content/progress.ts)
   const stats = await lifetimeStats(db, characterId);

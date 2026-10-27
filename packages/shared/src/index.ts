@@ -32,3 +32,4 @@ export * from './npc-civic';
 export * from './perks';
 export * from './content/texts';
 export * from './content/rewards';
+export * from './content/cities';

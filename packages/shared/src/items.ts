@@ -2,6 +2,7 @@
 
 import { type Genre, INSTRUMENTS, type Instrument, type L, type ShopType } from './world';
 import { EXTRA_ITEMS, GEAR_SETS, REWARD_ITEMS, SEASONAL_ITEMS } from './content/items';
+import { CITY_IDENTITY } from './content/cities';
 
 export type ItemSlot = Instrument | 'outfit' | 'art' | 'vehicle' | 'pet' | 'fx' | 'material' | 'spray' | 'ring';
 
@@ -269,7 +270,8 @@ export const ITEMS: ItemDef[] = [
 ];
 
 // Veri dosyasındaki ek eşyalar (packages/shared/src/content/items.ts)
-ITEMS.push(...EXTRA_ITEMS, ...REWARD_ITEMS, ...SEASONAL_ITEMS);
+// Şehre özgü nadir eşyalar (content/cities.ts): yalnızca kendi şehrinin dükkânında
+ITEMS.push(...EXTRA_ITEMS, ...REWARD_ITEMS, ...SEASONAL_ITEMS, ...CITY_IDENTITY.map((c) => c.rareItem));
 
 export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
 /** Dükkân rafı; cityId verilirse yalnızca o şehre özgü nadir eşyalar da katılır (başka şehrinkiler çıkar) */

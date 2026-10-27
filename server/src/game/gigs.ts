@@ -49,6 +49,7 @@ import {
   ticketsSold,
   marketingAttendanceMult,
   stageEventAllowed,
+  cityEventActive,
 } from '@rifftown/shared';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import { bandPress } from './press';
@@ -376,6 +377,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     press,
     crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },
     cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
+    // Şehrin haftalık etkinliği (content/cities.ts): o gün uyan türdeki konsere daha çok seyirci
+    cityEvent: cityEventActive(gig.city_id, band.genre as Genre, gig.starts_at.getTime(), config.gameSpeed),
     // Haftanın modası açık liste haftasına göre döner
     weekId: Number((await one(c, `SELECT id FROM chart_weeks WHERE status = 'open' ORDER BY id DESC LIMIT 1`))?.id ?? 0),
   });

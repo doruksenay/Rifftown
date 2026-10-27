@@ -69,6 +69,8 @@ export async function eatMeal(characterId: number, locationId: string, mealId: s
     if (await activeAction(c, characterId)) fail('busy', 409);
     const meal = MEAL_BY_ID[mealId];
     if (!meal) fail('invalid_meal');
+    // Yerel lezzet yalnızca kendi şehrinde
+    if (meal!.cityId && meal!.cityId !== LOCATION_BY_ID[locationId]?.cityId) fail('invalid_meal');
     if (ch.last_meal && ch.last_meal.getTime() + hoursMs(MEAL_COOLDOWN_HOURS) > Date.now()) fail('still_full', 409);
     const price = await mealPrice(c, locationId, meal!);
     if (ch.money < price) fail('not_enough_money');
@@ -80,7 +82,7 @@ export async function eatMeal(characterId: number, locationId: string, mealId: s
     await c.query('INSERT INTO meals(character_id, location_id, meal_id, price) VALUES ($1, $2, $3, $4)', [ch.id, locationId, meal!.id, price]);
     await payBusinessForMeal(c, locationId, price, ch.id);
     await indulge(c, ch, INDULGENCE_PER_MEAL);
-    const energy = MEAL_ENERGY[meal!.id] ?? 0;
+    const energy = meal!.energy ?? MEAL_ENERGY[meal!.id] ?? 0;
     await changeWellbeing(c, ch, { energy });
     await addMoodlet(c, ch.id, meal!.id === 'chef' ? 'feast' : 'good_meal');
     return { price, mood: meal!.mood, health: meal!.health, energy };

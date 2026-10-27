@@ -17,6 +17,7 @@ import {
   stageEventChance,
   subgenreGigBonus,
 } from './performance';
+import { CITY_EVENT_ATTENDANCE } from './content/cities';
 import { CITY_BY_ID, type City, type Genre, INSTRUMENTS, type Instrument, VENUE_RULES, type VenueType } from './world';
 
 export type Rand = () => number;
@@ -244,6 +245,8 @@ export interface GigInput {
   cooldownEvents?: string[];
   /** Açık liste haftasının numarası (haftanın modası için) */
   weekId?: number;
+  /** Şehrin haftalık etkinliği bu gruba açık (content/cities.ts): seyirci ×1,1 */
+  cityEvent?: boolean;
 }
 
 /** Sahne olaylarının toplam kalite etkisi sınırı (±puan) */
@@ -299,7 +302,7 @@ export function computeGig(input: GigInput): GigResult {
   const genrePop = city.genrePopularity[genre];
   const attendance = Math.min(
     VENUE_RULES[venue].capacity,
-    Math.round(expectedAttendance(venue, fame, genrePop, rand) * pressAttendanceMult(input.press ?? PRESS_NEUTRAL) * (input.crew?.attendanceMult ?? 1)),
+    Math.round(expectedAttendance(venue, fame, genrePop, rand) * pressAttendanceMult(input.press ?? PRESS_NEUTRAL) * (input.crew?.attendanceMult ?? 1) * (input.cityEvent ? CITY_EVENT_ATTENDANCE : 1)),
   );
 
   // Grubun kendi üyelerinden kimse sahnede değilse (sadece kiralık müzisyenler) konser yapılmamış sayılır

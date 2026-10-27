@@ -120,6 +120,16 @@ Her şehirde aynı mekân türleri bulunur:
 | Kamu ve iş dünyası | belediye, emniyet müdürlüğü, adliye, iş merkezi, gazete, ibadethane |
 | Açık alan | park (sokak müziği) |
 
+### Şehir kimliği
+
+Mekân türleri her şehirde aynı kalır (oyuncu her şehirde ne bulacağını bilir); şehirleri ayıran veri `packages/shared/src/content/cities.ts` içindedir. Her şehrin:
+
+- **İmza türü ve şehir başarımı** (15 başarım, "Şehirler" kategorisi): o şehirde imza türde en az "iyi" (40) kalitede bir konser. Ör. İstanbul Anadolu rock ("Boğazın sesi"), Berlin elektronik ("Kapıdan geçtin"), Nashville country ("Music Row sahnesinin yeni sesi").
+- **Haftalık etkinliği:** oyun haftasının belli bir gününde (ör. İstanbul'da Boğaz Psikedelik Gecesi, Londra'da Camden Punk Cumartesisi, Münih'te Residenz Oda Konseri) uyan türlerdeki konserlere ×1,1 seyirci. Şehir sekmesinde etkinliğe kaç oyun günü kaldığı görünür.
+- **Yerel lezzeti:** yalnızca o şehrin restoranlarında (balık ekmek, boyoz, currywurst, fish and chips, bouillabaisse, hot chicken...); günün yemeğinden biraz iyi, şefin menüsünü geçmez (+22 enerji). 15'inin hepsini tatmak "Dünya mutfağı" başarımı.
+- **Nadir eşyası:** yalnızca o şehrin dükkânında satılır ve tür uyumludur (elektro bağlama, Mittenwald kemanı, manuş caz gitarı, Brooklyn breakbeat seti...); merdivenin ara basamağındadır.
+- **Yerel efsanesi:** şehir sekmesinde bir cümlelik hikâye. Konser eleştirileri de şehre özgü renk cümleleri kullanır (bkz. "Konser eleştirisi").
+
 ### Seyahat
 
 - Otobüs: aynı kıtada ve 2.500 km'ye kadar. Süre mesafe ÷ 70 km/sa, ücret $10 + km × 0,03.
@@ -257,7 +267,7 @@ Polis, ajan, özel harekât ve yargıç meslekleri bu sistemle gerçek bir oynan
 
 ## Başarımlar
 
-94 başarım, 10 kategoride: ilk adımlar, sahnede, kayıt ve listeler, ustalık, kariyer ve siyaset, suç ve adalet, sosyal, basın ve medya, efsaneden sonra, keşifler. Her başarımın puanı vardır (toplam 2.445); puanlar profilde görünür. Bir kısmı koddaki kurallarla, kalanı veri dosyasındaki istatistik eşikleriyle açılır (bkz. "İçerik hacmi"). 18 başarım gizlidir ve kazanılana kadar adı görünmez.
+110 başarım, 11 kategoride: ilk adımlar, sahnede, kayıt ve listeler, ustalık, kariyer ve siyaset, suç ve adalet, sosyal, basın ve medya, efsaneden sonra, keşifler, şehirler. Her başarımın puanı vardır (toplam 2.695); puanlar profilde görünür. Bir kısmı koddaki kurallarla, kalanı veri dosyasındaki istatistik eşikleriyle açılır (bkz. "İçerik hacmi"). 18 başarım gizlidir ve kazanılana kadar adı görünmez.
 
 **Keşifler (14, hepsi gizli):** sayaç değil, bir anı ya da tuhaf bir durumu ödüllendirir: en fazla 3 kişilik salona çalmak, pogo çağrısını başarmak, seyircinin üstüne atlayıp yere çakılmak, tutmayan cesur bis, bir konserde 3+ sahne efekti, tek başına (3+ kiralık müzisyenle) sahne, altı türde şarkı, efsanevi enstrümana sahip olmak, beş renge boyanmış eşya, evcil hayvana ad vermek, sekiz rolün hepsinin asıl becerisi, cepte ve bankada sıfır para, şehrin muhabirinin grup hakkında haber yazması, alt türlerin şehirde çok tuttuğu bir konser.
 
@@ -333,13 +343,13 @@ Oyunun takvimi tek dosyadadır: `packages/shared/src/pacing.ts` (`PACING`). Büt
 
 | İçerik | Önce | Şimdi | Dosya |
 |---|---|---|---|
-| Beceri | 41 | 99 | `content/skills.ts` (+ 7 yeni tür becerisi) |
-| Dükkân ve atölye eşyası | ~70 | 118 | `content/items.ts` |
-| Atölye tarifi | 6 | 16 | `content/items.ts` |
+| Beceri | 41 | 100 | `content/skills.ts` (+ 7 yeni tür becerisi) |
+| Dükkân ve atölye eşyası | ~70 | 167 (8 rol, 6 sezonluk, 15 şehre özgü, 3 ödül eşyası) | `content/items.ts` |
+| Atölye tarifi | 6 | 19 | `content/items.ts` |
 | Tür / alt tür | 7 / 0 | 14 / 72 | `world.ts` (popülerlik tablosu veriyle), `performance.ts` |
-| Başarım | 39 | 80 | `content/progress.ts` (istatistik eşikli) |
+| Başarım | 39 | 110 (14 gizli keşif, 16 şehir) | `content/progress.ts` (istatistik eşikli) |
 | Haftalık görev havuzu | 12 | 28 | `content/progress.ts` |
-| Görev zinciri | 0 | 6 zincir, 24 adım | `content/progress.ts` |
+| Görev zinciri | 0 | 9 zincir (3 karakterli, seçimli), 39 adım | `content/progress.ts` |
 | Efsane sonrası hedef | 0 | 7 + Onur Listesi | `content/progress.ts` |
 
 - **Yeni beceriler** genel etki ağırlıklarıyla çalışır (`effects`): şarkı yazma, prova hızı, kayıt kalitesi, sokak müziği bahşişi, sahne, atölye, arkadaşlık, romantizm, kondisyon. Etkiler toplanır ama tavanlıdır: şarkı yazma ve sahne puanına en fazla +10, çarpanlarda en fazla ×1,5. Böylece "her şeyi öğren" stratejisi sınırlı kalır.
@@ -543,7 +553,7 @@ Oyuncular birbirine takas teklif eder: her taraf en az bir, en fazla 6 eşya koy
 
 | Mekân | Ne yapılır |
 |---|---|
-| Restoran | Çorba ($6), günün yemeği ($15), şefin menüsü ($45): anında ruh hâli +4 – +15, sağlık +1 – +5. Yedikten sonra 2 saat tokluk. |
+| Restoran | Çorba ($6), günün yemeği ($15), şefin menüsü ($45) ve şehrin yerel lezzeti ($8–$20, yalnızca o şehirde): anında ruh hâli +4 – +15, sağlık +1 – +5. Yedikten sonra 2 saat tokluk. |
 | Otel | Gecesi $45 (1, 3 ya da 7 gece). Ev tutmadığın şehirde dinlenmeyi bir daire kadar rahat yapar (+%30), evcil hayvanın da gelir. |
 | Spor salonu | Saati $8. Antrenman kondisyon becerisini açar ve geliştirir. Kondisyon yorucu işlerde kaybedilen sağlığı %40'a kadar azaltır. |
 | Banka | Bankadaki para cezalardan ve el konulmaktan korunur. Haftalık %0,3 faiz ($50.000'a kadar); faiz o hafta boyunca hesapta hep duran paraya işler. |
