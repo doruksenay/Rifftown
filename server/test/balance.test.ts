@@ -296,8 +296,8 @@ describe('büyük sahnede beceri belirleyici (kurallar)', () => {
   it('şöhret kazancı azalan verimli: bar döneminde neredeyse aynı, üst şöhrette çok daha yavaş', () => {
     expect(fameGainMult(0)).toBe(1);
     expect(fameGainMult(10)).toBeGreaterThan(0.85);
-    expect(fameGainMult(60)).toBeLessThan(0.3);
-    expect(fameGainMult(70)).toBeLessThan(0.2);
+    expect(fameGainMult(60)).toBeLessThan(0.42);
+    expect(fameGainMult(70)).toBeLessThan(0.32);
     for (let f = 0; f < 100; f += 5) expect(fameGainMult(f + 5)).toBeLessThanOrEqual(fameGainMult(f));
     expect(fameGainMult(100)).toBeGreaterThan(0);
   });

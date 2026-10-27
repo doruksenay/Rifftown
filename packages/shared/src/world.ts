@@ -131,7 +131,7 @@ export const VENUE_RULES = {
   // production: konser ayarlanırken liderin peşin ödediği prodüksiyon gideri (sahne, ses, ışık, tanıtım; şehir çarpanıyla).
   // Eskiden büyük sahnede gider yoktu: 90 günde giderin gelire oranı %9'du (denge raporu §2). Bar ve festival muaf.
   bar: { capacity: 80, ticket: 10, minFame: 0, fameMult: 1.0, bandShare: 0.7, breakEven: 20, production: 0 },
-  club: { capacity: 350, ticket: 20, minFame: 15, fameMult: 1.6, bandShare: 0.45, breakEven: 35, production: 150 },
+  club: { capacity: 350, ticket: 20, minFame: 15, fameMult: 1.6, bandShare: 0.45, breakEven: 30, production: 150 },
   hall: { capacity: 2000, ticket: 40, minFame: 45, fameMult: 2.5, bandShare: 0.12, breakEven: 50, production: 1500 },
   stadium: { capacity: 20000, ticket: 40, minFame: 75, fameMult: 3.5, bandShare: 0.04, breakEven: 65, production: 9000 },
   /** Festival sahnesine sadece festival programıyla çıkılır (elle konser ayarlanamaz) */

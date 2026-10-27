@@ -416,7 +416,7 @@ Rehber bitince kartın yerini **sıradaki hedef** alır; her zaman tek, somut bi
 | Mekân | Kapasite | Bilet | Gereken şöhret | Şöhret çarpanı | Başa baş kalite | Prodüksiyon gideri |
 |---|---|---|---|---|---|---|
 | Bar | 80 | $10 | 0 | ×1 | 20 | yok |
-| Kulüp | 350 | $20 | 15 | ×1,6 | 35 | $150 |
+| Kulüp | 350 | $20 | 15 | ×1,6 | 30 | $150 |
 | Konser salonu | 2.000 | $40 | 45 | ×2,5 | 50 | $1.500 |
 | Stadyum | 20.000 | $40 | 75 | ×3,5 | 65 | $9.000 |
 
@@ -446,7 +446,7 @@ Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr 
 - Şarkı puanı = a × şarkı kalitesi + b × ortalama aşinalık + c × grup becerisi; ağırlıklar mekâna göre (`rules.ts` `SONG_SCORE_WEIGHTS`): bar 0,4 / 0,35 / 0,25, kulüp 0,42 / 0,32 / 0,26, salon 0,46 / 0,26 / 0,28, stadyum 0,5 / 0,2 / 0,3 (eskiden her yerde 0,4 / 0,35 / 0,25). Büyük sahnede yalnızca provayla kazanılan aşinalık daha az, şarkının kendisi ve çalım becerisi daha çok sayılır.
 - Kalite = şarkı puanı ortalaması × (0,85 + 0,15 × sahne / 100) × (0,5 + 0,5 × gelen üye oranı) × setlist uzunluğu çarpanı (1 şarkı 0,7, 4+ şarkı 1,0) × (0,92–1,08) × 1,15
 - Gelir = seyirci × bilet × şehir çarpanı × grubun payı. Pay sahne büyüdükçe küçülür (mekân, prodüksiyon, organizatör): bar %70, kulüp %45, salon %12, stadyum %4, festival %12. Böylece salon konseri $6–8 bin, stadyum $30 bin civarı getirir. Sahnedeki gerçek üyeler arasında eşit bölünür.
-- Şöhret değişimi = (kalite − mekânın başa baş kalitesi) / 100 × 6 × mekân çarpanı. Başa baş kalite bar 20, kulüp 35, salon 50, stadyum 65, festival 40 (eskiden hepsi 20): büyük sahnede vasat bir gece şöhret getirmez, kaybettirir. Artışlar şöhret yükseldikçe küçülür: × max(0,03; (1 − şöhret/110)^1,6) (eskiden × max(0,1; 1 − şöhret/120); şöhret 10'da ×0,86, 60'ta ×0,27, 70'te ×0,18). Bar dışındaki sahnelerde salon boş kaldıkça da küçülür. Barda kalitesi 10'u geçen her konser en az +0,2 şöhret getirir: ilk adımlar boşa gitmez. Orta düzey bir grup 10–17 iyi bar konseriyle kulübe çıkar.
+- Şöhret değişimi = (kalite − mekânın başa baş kalitesi) / 100 × 6 × mekân çarpanı. Başa baş kalite bar 20, kulüp 30, salon 50, stadyum 65, festival 40 (eskiden hepsi 20): büyük sahnede vasat bir gece şöhret getirmez, kaybettirir. Artışlar şöhret yükseldikçe küçülür: × max(0,03; (1 − şöhret/110)^1,2) (eskiden × max(0,1; 1 − şöhret/120); şöhret 10'da ×0,90, 60'ta ×0,39, 70'te ×0,30). Bar dışındaki sahnelerde salon boş kaldıkça da küçülür. Barda kalitesi 10'u geçen her konser en az +0,2 şöhret getirir: ilk adımlar boşa gitmez. Orta düzey bir grup 10–17 iyi bar konseriyle kulübe çıkar.
 - Raporda kiralık müzisyenler üye sayılmaz ("sahnede 1/1").
 - Aynı sahnede aynı saatlerde (±3 oyun saati) iki grup çalamaz; oyunun kendi grupları da boş saat arar ve oyuncuya her zaman yer açar (oyuncu rezervasyonu çakışan oyun grubu konserini iptal eder). Bir grubun aynı anda en fazla 2 ayarlı konseri olabilir (sahneler boş rezervasyonla kapatılamasın).
 - Grubun kendi üyelerinden kimse sahneye çıkmazsa konser sadece kiralık müzisyenlerle yapılmaz: gelir yok, şöhret düşer.
@@ -716,8 +716,8 @@ Kaynak: bot simülasyonlu denge raporu (`scripts/balance/BALANCE_REPORT.md`, `np
 | `PAIR_TRANSFER_CAP` (`items.ts`) | yok | ikili başına 7 günde net $5.000 | takas + pazar + VIP gönderme ile ek hesap aktarımı |
 | İstemci adresi (`client-ip.ts`) | `cf-connecting-ip` her zaman, `trustProxy: true` | `TRUST_PROXY_HOPS` (0; Render'da 1), `CLIENT_IP_HEADER` (boş; Render'da cf-connecting-ip) | sahte başlıkla kayıt ve istek sınırı aşılıyordu |
 | `SESSION_SKILL_MARGIN` (`items.ts`) | kiralık hep mekânın seviyesinde | kulüp +15, salon +10, stadyum +5 grubun kendi ortalamasının üstü | beceri 8/52 ile kiralıkların sırtında stadyum |
-| `VENUE_RULES.*.breakEven` (`world.ts`) | hepsi 20 | bar 20, kulüp 35, salon 50, stadyum 65, festival 40 | büyük sahnede vasat gece şöhret getiriyordu |
-| `fameGainMult` (`rules.ts`) | max(0,1; 1 − f/120) | max(0,03; (1 − f/110)^1,6) | şöhret kazanımı azalan verimli |
+| `VENUE_RULES.*.breakEven` (`world.ts`) | hepsi 20 | bar 20, kulüp 30, salon 50, stadyum 65, festival 40 | büyük sahnede vasat gece şöhret getiriyordu |
+| `fameGainMult` (`rules.ts`) | max(0,1; 1 − f/120) | max(0,03; (1 − f/110)^1,2) | şöhret kazanımı azalan verimli |
 | `SONG_SCORE_WEIGHTS` (`rules.ts`) | her yerde 0,4/0,35/0,25 | stadyumda 0,5/0,2/0,3 (mekâna göre) | büyük sahnede şarkı ve beceri, prova süresinden ağır |
 | `VENUE_RULES.*.production` (`world.ts`) | yok | kulüp $150, salon $1.500, stadyum $9.000 (× şehir) | 90 günde gider/gelir %9'du |
 | Ev kademesi `house` (`homes.ts`) | yok | $900/hafta, +%55 | orta oyunda harcama yeri |

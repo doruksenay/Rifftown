@@ -1,5 +1,6 @@
 import {
   REVIEW_TIERS,
+  REVIEW_PARTS,
   CITY_BY_ID,
   CRIME_BY_ID,
   RELEASE_RULES,
@@ -158,7 +159,9 @@ describe('oyun dengesi', () => {
     expect(r.en).toContain('Kadikoy Basement Bar');
     const tier = REVIEW_TIERS.find((t) => t.minQuality === 60)!;
     const fillLine = (x: string) => x.replace(/\{n\}/g, '72').replace(/\{venue\}/g, 'Kadıköy Bodrum Bar').replace(/\{city\}/g, 'İstanbul').replace(/\{song\}/g, 'Son Vapur');
-    expect(tier.lines.some((x) => r.tr.includes(fillLine(x.tr)))).toBe(true);
+    // Ana cümle ya klasik tam cümle ya da parçalardan (açılış; devam) kurulur (denge raporu madde 10)
+    const parts = REVIEW_PARTS.find((t) => t.minQuality === 60)!;
+    expect(tier.lines.some((x) => r.tr.includes(fillLine(x.tr))) || parts.openers.some((x) => r.tr.includes(`${fillLine(x.tr)}; `))).toBe(true);
     expect(r.tr).toContain('1 üye sahneye çıkmadı');
   });
 

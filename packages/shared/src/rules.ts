@@ -213,10 +213,10 @@ export const gameHoursToMs = (hours: number, speed: number) => (hours * 3600 * 1
 export const GIG_BREAK_EVEN_QUALITY = 20;
 /**
  * Şöhret kazancının azalan verimi: (1 − şöhret ÷ 110)^FAME_GAIN_EXPONENT, en az FAME_GAIN_FLOOR.
- * Eskiden max(0,1; 1 − şöhret ÷ 120): şöhret 60'ta ×0,5, 70'te ×0,42. Şimdi 60'ta ×0,27, 70'te ×0,18 (üs 1,6).
- * Bar dönemi (şöhret < 15) neredeyse aynı kalır (şöhret 10'da ×0,86 → eski ×0,92).
+ * Eskiden max(0,1; 1 − şöhret ÷ 120): şöhret 60'ta ×0,5, 70'te ×0,42. Şimdi 60'ta ×0,39, 70'te ×0,30 (üs 1,2).
+ * Bar dönemi (şöhret < 15) neredeyse aynı kalır (şöhret 10'da ×0,90, eski ×0,92).
  */
-export const FAME_GAIN_EXPONENT = 1.6;
+export const FAME_GAIN_EXPONENT = 1.2;
 export const FAME_GAIN_FLOOR = 0.03;
 export const fameGainMult = (fame: number) => Math.max(FAME_GAIN_FLOOR, Math.max(0, 1 - fame / 110) ** FAME_GAIN_EXPONENT);
 /** Barda bu kaliteye ulaşan konser en az BAR_MIN_FAME kadar şöhret getirir (ilk adımlar boşa gitmesin). */
