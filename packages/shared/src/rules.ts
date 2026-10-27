@@ -1,7 +1,7 @@
 // Oyun kuralları ve formüller. Tüm hesaplar sunucuda yapılır;
 // uygulama aynı fonksiyonları sadece önizleme (tahmini süre, ücret) için kullanır.
 
-import { type Skills, roleSkill, stageScore } from './skills';
+import { type Skills, genreSkillId, roleSkill, stageScore } from './skills';
 import { energyFactor, legendaryChance } from './wellbeing';
 import { PRESS_NEUTRAL, pressAttendanceMult, pressFameMult } from './press';
 import {
@@ -13,6 +13,7 @@ import {
   type Tempo,
   encoreOutcome,
   setlistFlow,
+  stageEventAllowed,
   stageEventChance,
 } from './performance';
 import { CITY_BY_ID, type City, type Genre, INSTRUMENTS, type Instrument, VENUE_RULES, type VenueType } from './world';
@@ -355,14 +356,19 @@ export function computeGig(input: GigInput): GigResult {
   for (const id of [...new Set(input.plan?.events ?? [])].slice(0, MAX_STAGE_EVENTS)) {
     const def = STAGE_EVENT_BY_ID[id];
     if (!def) continue;
-    if (cooldown.has(id)) {
+    if (cooldown.has(id) || !stageEventAllowed(def, genre)) {
       events.push({ id, outcome: 'skipped', by: null });
       continue;
     }
     let best: GigPerformer | null = null;
     let bestLevel = -1;
     for (const p of own) {
-      const level = def.skill === 'role' ? clamp(roleSkill(p.skills, p.role) + p.instrumentBonus, 0, 110) : (p.skills[def.skill] ?? -1);
+      const level =
+        def.skill === 'role'
+          ? clamp(roleSkill(p.skills, p.role) + p.instrumentBonus, 0, 110)
+          : def.skill === 'genre'
+            ? (p.skills[genreSkillId(genre)] ?? -1)
+            : (p.skills[def.skill] ?? -1);
       if (level > bestLevel) {
         best = p;
         bestLevel = level;

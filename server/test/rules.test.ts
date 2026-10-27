@@ -1,4 +1,5 @@
 import {
+  REVIEW_TIERS,
   CITY_BY_ID,
   CRIME_BY_ID,
   RELEASE_RULES,
@@ -152,10 +153,13 @@ describe('oyun dengesi', () => {
       venue: { tr: 'Kadıköy Bodrum Bar', en: 'Kadikoy Basement Bar' }, city: { tr: 'İstanbul', en: 'Istanbul' },
       bestSong: 'Son Vapur', seed: 0,
     });
-    expect(r.tr).toContain('Kadıköy Bodrum Bar tıklım tıklımdı.');
-    expect(r.tr).toContain('72 seyirci bis istedi');
+    // Doluluk cümlesi mekânı anar; ana cümle kalite basamağından gelir
+    expect(r.tr).toContain('Kadıköy Bodrum Bar');
+    expect(r.en).toContain('Kadikoy Basement Bar');
+    const tier = REVIEW_TIERS.find((t) => t.minQuality === 60)!;
+    const fillLine = (x: string) => x.replace(/\{n\}/g, '72').replace(/\{venue\}/g, 'Kadıköy Bodrum Bar').replace(/\{city\}/g, 'İstanbul').replace(/\{song\}/g, 'Son Vapur');
+    expect(tier.lines.some((x) => r.tr.includes(fillLine(x.tr)))).toBe(true);
     expect(r.tr).toContain('1 üye sahneye çıkmadı');
-    expect(r.en).toContain('72 people');
   });
 
   it('her şehirde tüm mekân türleri ve en az bir iş yeri var', () => {

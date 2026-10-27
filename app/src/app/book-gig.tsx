@@ -4,6 +4,7 @@ import {
   type EncorePlan,
   MAX_STAGE_EVENTS,
   STAGE_EVENTS,
+  type Genre,
   TEMPO_NAMES,
   type GigEstimateResponse,
   GIG_LEAD_HOURS,
@@ -227,7 +228,7 @@ function BookGigScreen() {
       <Heading>{t('performancePlan')}</Heading>
       <Small style={{ marginBottom: space.sm }}>{t('performancePlanHint')}</Small>
       <Row style={{ flexWrap: 'wrap' }}>
-        {STAGE_EVENTS.map((e) => (
+        {STAGE_EVENTS.filter((e) => !e.genres || e.genres.includes(band.data!.genre as Genre)).map((e) => (
           <Button key={e.id} small variant={events.includes(e.id) ? 'primary' : 'secondary'} title={p(e.name)} onPress={() => toggleEvent(e.id)} />
         ))}
       </Row>

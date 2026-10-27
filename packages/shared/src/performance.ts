@@ -151,7 +151,7 @@ export interface StageEventDef {
   id: string;
   name: L;
   about: L;
-  /** Gereken beceri; 'role' ise sahnedekinin kendi rol becerisi (enstrüman bonusu dahil) */
+  /** Gereken beceri; 'role' ise sahnedekinin kendi rol becerisi (enstrüman bonusu dahil), 'genre' ise grubun türündeki beceri */
   skill: string;
   min: number;
   /** Başarılı olursa kaliteye eklenen, başarısızsa düşülen puan */
@@ -159,10 +159,13 @@ export interface StageEventDef {
   penalty: number;
   /** Aynı grup bu olayı tekrar ne zaman deneyebilir (oyun saati) */
   cooldownHours: number;
+  /** Yalnızca bu türlerdeki gruplar planlayabilir (yoksa her tür) */
+  genres?: Genre[];
 }
 
-const E = (id: string, skill: string, min: number, bonus: number, penalty: number, cooldownHours: number, name: [string, string], about: [string, string]): StageEventDef => ({
+const E = (id: string, skill: string, min: number, bonus: number, penalty: number, cooldownHours: number, name: [string, string], about: [string, string], genres?: Genre[]): StageEventDef => ({
   id,
+  genres,
   skill,
   min,
   bonus,
@@ -179,7 +182,25 @@ export const STAGE_EVENTS: StageEventDef[] = [
   E('dance', 'dancing', 30, 4, 3, 24, ['Dans koreografisi', 'Dance routine'], ['Prova edilmiş bir dans gösterisi.', 'A rehearsed dance routine.']),
   E('unplugged', 'improvisation', 15, 3, 2, 24, ['Akustik ara', 'Unplugged break'], ['Ortada sade, akustik bir bölüm.', 'A stripped-back acoustic moment mid-set.']),
   E('stage_dive', 'stagediving', 5, 6, 5, 48, ['Seyircinin üstüne atlamak', 'Stage dive'], ['Riskli ama unutulmaz.', 'Risky but unforgettable.']),
+  // Beceriye ve türe bağlı olaylar (her biri bir becerinin sahnede ilk kez gerçek bir kullanımı)
+  E('cover', 'genre', 30, 3, 2, 24, ['Sürpriz cover', 'Surprise cover'], ['Türün klasiklerinden birini kendi yorumunla çalmak (grubun türündeki beceri).', 'Playing a classic of your genre your own way (your genre skill).']),
+  E('story', 'storytelling', 30, 3, 1, 12, ['Şarkının hikâyesi', 'The story behind the song'], ['Bir şarkıdan önce onun hikâyesini anlatmak.', 'Telling the story behind a song before playing it.']),
+  E('light_cue', 'stage_lighting', 30, 3, 2, 24, ['Işık senkronu', 'Light cue'], ['Işıklar ritme kilitlenir; büyük an büyür.', 'The lights lock to the beat; the big moment gets bigger.']),
+  E('sax_solo', 'saxophone', 45, 5, 3, 24, ['Saksofon solosu', 'Sax solo'], ['Saksofoncu sahnenin önüne çıkar.', 'The sax player steps to the front.']),
+  E('violin_solo', 'violin', 45, 5, 3, 24, ['Keman solosu', 'Violin solo'], ['Salonu bir anda susturan bir keman bölümü.', 'A violin passage that silences the room.']),
+  E('percussion_break', 'hand_percussion', 30, 4, 2, 24, ['Perküsyon arası', 'Percussion break'], ['Bütün grup susar, yalnızca ritim kalır.', 'The band drops out and only the rhythm remains.']),
+  E('drum_battle', 'drums', 45, 4, 3, 48, ['Davul düellosu', 'Drum battle'], ['Davulcu seyirciyle ritim düellosuna girer.', 'The drummer takes on the crowd in a rhythm duel.']),
+  E('mosh_pit', 'showmanship', 30, 5, 3, 24, ['Pogo çağrısı', 'Mosh pit call'], ['Salonun ortası açılır ve kıyamet kopar.', 'The middle of the room opens up and all hell breaks loose.'], ['rock', 'metal', 'punk']),
+  E('freestyle', 'genre', 30, 5, 3, 24, ['Serbest doğaçlama', 'Freestyle'], ['Seyircinin verdiği kelimelerle anında rap.', 'Rapping on the spot with words thrown by the crowd.'], ['hiphop']),
+  E('big_drop', 'synth_programming', 15, 5, 3, 24, ['Büyük drop', 'The big drop'], ['Uzun bir gerilimin ardından bas düşer.', 'After a long build-up, the bass drops.'], ['electronic']),
+  E('jam', 'improvisation', 45, 5, 3, 24, ['Doğaçlama atışması', 'Trading fours'], ['Çalgıcılar sırayla dörder ölçü doğaçlama yapar.', 'The players trade four-bar improvisations.'], ['jazz', 'blues', 'soul']),
+  E('call_response', 'vocal_harmony', 15, 4, 2, 24, ['Çağrı ve cevap', 'Call and response'], ['Vokal çağırır, salon cevap verir.', 'The singer calls, the room answers.'], ['soul', 'blues', 'country']),
+  E('campfire', 'acoustic_guitar', 15, 4, 2, 24, ['Kamp ateşi anı', 'Campfire moment'], ['Herkesin bildiği bir türkü, akustik gitar eşliğinde.', 'A song everyone knows, around an acoustic guitar.'], ['folk', 'country', 'anatolian']),
+  E('dub_echo', 'mixing', 15, 4, 2, 24, ['Dub yankısı', 'Dub echo'], ['Ses masasında canlı yankı ve boşluk.', 'Live echo and space from the mixing desk.'], ['reggae', 'electronic']),
+  E('hushed_hall', 'audience', 45, 4, 3, 24, ['Nefesler tutuldu', 'Hushed hall'], ['En sessiz bölümde salonun nefesini tutması.', 'Holding the whole room breathless in the quietest passage.'], ['classical', 'jazz']),
 ];
+/** Olay bu türdeki grup için planlanabilir mi? */
+export const stageEventAllowed = (def: StageEventDef, genre: Genre) => !def.genres || def.genres.includes(genre);
 export const STAGE_EVENT_BY_ID: Record<string, StageEventDef> = Object.fromEntries(STAGE_EVENTS.map((e) => [e.id, e]));
 /** Bir konserde planlanabilecek en fazla sahne olayı */
 export const MAX_STAGE_EVENTS = 3;

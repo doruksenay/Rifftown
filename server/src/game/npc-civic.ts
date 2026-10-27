@@ -21,6 +21,8 @@ import {
   NPC_CIVIC,
   NPC_JUDGE_AT,
   NPC_MAX_LISTINGS,
+  NEWS_TEMPLATES,
+  LOCATION_BY_ID,
   NPC_NEWS_MIN_QUALITY,
   NPC_NEWS_PER_DAY,
   NPC_PLATFORM,
@@ -138,7 +140,8 @@ export async function npcCandidates(): Promise<number> {
 export async function npcNews(): Promise<number> {
   const gigs = await many(
     pool,
-    `SELECT g.id, g.band_id, g.city_id, g.location_id, (g.result->>'quality')::int AS quality, (g.result->>'attendance')::int AS attendance, b.name AS band_name
+    `SELECT g.id, g.band_id, g.city_id, g.location_id, (g.result->>'quality')::int AS quality, (g.result->>'attendance')::int AS attendance, b.name AS band_name,
+            (SELECT title FROM songs WHERE id = (g.result->>'bestSongId')::bigint) AS song
        FROM gigs g JOIN bands b ON b.id = g.band_id
       WHERE g.status = 'done' AND b.npc_key IS NULL AND (g.result->>'quality')::int >= $1 AND g.starts_at > $2
         AND NOT EXISTS (SELECT 1 FROM articles a WHERE a.npc AND a.band_id = g.band_id AND a.created_at > g.starts_at)
@@ -165,8 +168,14 @@ export async function npcNews(): Promise<number> {
       );
       const impact = Math.max(0, Math.min(2, ARTICLE_WEEKLY_CAP - used));
       const city = CITY_BY_ID[g.city_id];
-      const tr = { t: `${g.band_name} ${city.name.tr} sahnesini salladı`, b: `${g.band_name}, ${g.attendance} kişinin önünde unutulmaz bir konser verdi. Şehrin müzik çevresi grubun adını konuşuyor.` };
-      const en = { t: `${g.band_name} rocked ${city.name.en}`, b: `${g.band_name} played an unforgettable show in front of ${g.attendance} people. The city's music crowd is talking about them.` };
+      // Şablon havuzundan (content/texts.ts); şarkı adı yoksa şarkı anmayan şablonlar
+      const venue = LOCATION_BY_ID[g.location_id]?.name ?? city.name;
+      const pool0 = g.song ? NEWS_TEMPLATES : NEWS_TEMPLATES.filter((x) => !x.title.tr.includes('{song}') && !x.body.tr.includes('{song}'));
+      const tpl = pool0[Number(g.id) % pool0.length];
+      const fillNews = (text: string, lang: 'tr' | 'en') =>
+        text.replace(/\{band\}/g, g.band_name).replace(/\{city\}/g, city.name[lang]).replace(/\{venue\}/g, venue[lang]).replace(/\{n\}/g, String(g.attendance)).replace(/\{song\}/g, g.song ?? '');
+      const tr = { t: fillNews(tpl.title.tr, 'tr'), b: fillNews(tpl.body.tr, 'tr') };
+      const en = { t: fillNews(tpl.title.en, 'en'), b: fillNews(tpl.body.en, 'en') };
       await c.query(
         `INSERT INTO articles(author_id, city_id, band_id, kind, tone, title, body, title_en, body_en, impact, npc) VALUES ($1, $2, $3, 'news', 'positive', $4, $5, $6, $7, $8, TRUE)`,
         [reporter, g.city_id, g.band_id, tr.t, tr.b, en.t, en.b, impact],

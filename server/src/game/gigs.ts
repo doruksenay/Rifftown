@@ -48,6 +48,7 @@ import {
   cancelFamePenalty,
   ticketsSold,
   marketingAttendanceMult,
+  stageEventAllowed,
 } from '@rifftown/shared';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import { bandPress } from './press';
@@ -161,7 +162,7 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     if (fx.length !== fxIds.length) fail('invalid_item');
     if (fx.length) await c.query('DELETE FROM inventory WHERE id = ANY($1::bigint[])', [fx.map((f) => f.id)]);
 
-    const plan = normalizePlan(req.plan);
+    const plan = normalizePlan(req.plan, m!.genre as Genre);
     await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee]);
     const gig = await one(
       c,
@@ -185,10 +186,12 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
 }
 
 /** Performans planını doğrular: bilinmeyen olay ya da bis seçeneği reddedilir */
-export function normalizePlan(plan: { events?: string[]; encore?: string } | undefined): { events: string[]; encore: EncorePlan } {
+export function normalizePlan(plan: { events?: string[]; encore?: string } | undefined, genre?: Genre): { events: string[]; encore: EncorePlan } {
   const events = [...new Set(plan?.events ?? [])];
   if (events.length > MAX_STAGE_EVENTS) fail('too_many_events');
   if (events.some((e) => !STAGE_EVENT_BY_ID[e])) fail('invalid_event');
+  // Türe bağlı olaylar (ör. pogo yalnızca rock, metal, punk)
+  if (genre && events.some((e) => !stageEventAllowed(STAGE_EVENT_BY_ID[e], genre))) fail('event_wrong_genre');
   const encore = (plan?.encore ?? 'none') as EncorePlan;
   if (!(ENCORE_PLANS as readonly string[]).includes(encore)) fail('invalid_encore');
   return { events, encore };
@@ -358,6 +361,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   const bestOf = (list: CharacterRow[], id: string) => Math.max(0, ...list.map((ch) => lv(ch.skills, id)));
   const marketing = bestOf(chars, 'marketing');
   const crew = await crewForGig(c, gig.band_id, gig.city_id, { accounting: bestOf(chars, 'accounting'), logistics: bestOf(ownChars, 'logistics') });
+  const press = await bandPress(c, gig.band_id, gig.city_id);
   const res = computeGig({
     venue,
     fame,
@@ -368,7 +372,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     rand: Math.random,
     fxBonus: Math.min(MAX_FX_BONUS, (gig.effects ?? []).reduce((sum: number, id: string) => sum + (ITEM_BY_ID[id]?.bonus ?? 0), 0)),
     plan: gig.plan ?? {},
-    press: await bandPress(c, gig.band_id, gig.city_id),
+    press,
     crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },
     cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
   });
@@ -455,7 +459,19 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
 
   const best = [...res.songScores].sort((a, b) => b.score - a.score)[0];
   const bestSong = best ? songs.find((x) => x.id === best.id) : null;
+  // Eleştirmen kıyas yapar: son 48 oyun saatinde aynı şehirde çalan başka bir grubun gecesi
+  const rival = await one(
+    c,
+    `SELECT b.name, (g.result->>'quality')::int AS quality FROM gigs g JOIN bands b ON b.id = g.band_id
+      WHERE g.city_id = $1 AND g.band_id <> $2 AND g.status = 'done' AND g.starts_at > $3 AND (g.result->>'presentCount')::int > 0
+      ORDER BY g.starts_at DESC LIMIT 1`,
+    [gig.city_id, gig.band_id, new Date(Date.now() - gameHoursToMs(48, config.gameSpeed))],
+  );
   const review = gigReview({
+    cityId: gig.city_id,
+    events: (res.events ?? []).map((e) => ({ id: e.id, outcome: e.outcome, name: STAGE_EVENT_BY_ID[e.id]?.name })),
+    press,
+    rival: rival ? { name: rival.name, quality: Number(rival.quality) } : null,
     quality: res.quality,
     attendance: res.attendance,
     capacity: VENUE_RULES[venue].capacity,
