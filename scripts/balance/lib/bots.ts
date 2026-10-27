@@ -5,7 +5,7 @@ import { wellbeingOf } from '../../../server/src/game/wellbeing';
 import { membership } from '../../../server/src/game/common';
 import { type Client, pool, measured, clock, newPlayer } from './world';
 
-export type Archetype = 'grinder' | 'grinder_solo' | 'busker' | 'crafter' | 'social' | 'recorder' | 'scammer' | 'worker';
+export type Archetype = 'grinder' | 'grinder_solo' | 'grinder_pro' | 'busker' | 'crafter' | 'social' | 'recorder' | 'scammer' | 'worker';
 
 export interface Bot {
   id: number;
@@ -282,6 +282,8 @@ export async function step(b: Bot) {
     case 'grinder':
     case 'grinder_solo':
       return grinder(b, b.arch === 'grinder');
+    case 'grinder_pro':
+      return grinderPro(b);
     case 'busker':
       return busker(b);
     case 'crafter':
@@ -311,6 +313,30 @@ async function grinder(b: Bot, hire: boolean) {
     // Konser ayarlandı; boşta kalmasın
   }
   if (!(await busy(b.id))) await work(b, 8);
+}
+
+/** Öğrenen grinder: grinder döngüsü (3 kiralık) + boş saatlerde okulda ders (beste, söz, ana enstrüman, şovmenlik:
+ *  en zayıfı). Parası azalınca mesai. Becerinin büyük sahnede belirleyici olduğunu ölçmek için (madde 1). */
+async function grinderPro(b: Bot) {
+  await maybeHome(b, 450);
+  await maybeGear(b, 1200, `${b.instrument}_1`, 'gear1', 'music_store');
+  await maybeGear(b, 2500, `${b.instrument}_2`, 'gear2', 'music_store');
+  if (await maintain(b, 45)) return;
+  const res = await musicianStep(b, { hire: true, minSongs: 4, gigGapH: 20, reserve: 60 });
+  if (res === true || (await busy(b.id))) return;
+  const r = await row(b.id);
+  if (r.money >= 400) {
+    const targets = ['composing', 'lyrics', b.instrument, 'showmanship'];
+    const weakest = targets.sort((x, y) => (r.skills[x] ?? 0) - (r.skills[y] ?? 0))[0];
+    if ((r.skills[weakest] ?? 0) < 95) {
+      const s = await act(b, { kind: 'study', skill: weakest, hours: 4, locationId: `${b.city}-school` });
+      if (s === true) {
+        first(b, 'study');
+        return;
+      }
+    }
+  }
+  await work(b, 8);
 }
 
 /** Sokak müzisyeni: parkta 4 saat çal, dinlen */

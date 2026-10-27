@@ -296,6 +296,22 @@ export const SESSION_MUSICIAN = {
   festival: { fee: 0, skill: 75, stage: 60 },
 } as const;
 
+/**
+ * Kiralık müzisyen grubun kendi sahnedeki üyelerinin ortalamasını en fazla bu kadar aşar (rol becerisi ve sahne puanı).
+ * Bar sınırsız (ilk konserler aynı kalsın). Eskiden kiralıklar mekânın sabit seviyesinde çalıyordu: beste 8, gitar 52
+ * olan bir oyuncu stadyumda 85'lik kadroyla 72. günde stadyuma çıkıyordu (denge raporu §1). Büyük sahnede kiralık
+ * kadro grubu ancak biraz yukarı çeker; beceri belirleyici olur.
+ */
+export const SESSION_SKILL_MARGIN = { bar: null, club: 15, hall: 10, stadium: 5, festival: 10 } as const satisfies Record<keyof typeof SESSION_MUSICIAN, number | null>;
+
+/** Kiralık müzisyenin o geceki seviyesi: mekânın seviyesi, grubun kendi ortalamasının SESSION_SKILL_MARGIN üstüyle sınırlı */
+export function sessionLevels(venue: keyof typeof SESSION_MUSICIAN, own: { skill: number; stage: number } | null) {
+  const sm = SESSION_MUSICIAN[venue];
+  const margin = SESSION_SKILL_MARGIN[venue];
+  if (margin === null || !own) return { skill: sm.skill, stage: sm.stage };
+  return { skill: Math.max(0, Math.min(sm.skill, own.skill + margin)), stage: Math.max(0, Math.min(sm.stage, own.stage + margin)) };
+}
+
 /** Bir konserde sahne efektlerinden gelebilecek en yüksek kalite artışı */
 export const MAX_FX_BONUS = 12;
 /** İkinci el pazarında satıştan alınan komisyon */

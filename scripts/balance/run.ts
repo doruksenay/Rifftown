@@ -18,7 +18,7 @@ interface Job {
 const jobs: Job[] = [];
 const add = (group: string, name: string, args: string[], db = true) => {
   if (ONLY && !ONLY.has(group)) return;
-  const m = /^(economy|career|npcworld)-(\d+)$/.exec(name);
+  const m = /^(economy|career|skilled|npcworld)-(\d+)$/.exec(name);
   if (RESUME && m && fs.existsSync(`scripts/balance/out/${m[1]}-seed-${m[2]}.json`)) return;
   jobs.push({ name, args, db });
 };
@@ -31,6 +31,7 @@ add('mc', 'texts', ['scripts/balance/texts.ts'], false);
 // Sunucuyla bot simülasyonları
 for (let s = 1; s <= SEEDS; s++) add('economy', `economy-${s}`, ['scripts/balance/sim-economy.ts', String(s), '30', 'economy']);
 for (let s = 1; s <= SEEDS; s++) add('career', `career-${s}`, ['scripts/balance/sim-economy.ts', String(s), '90', 'career']);
+for (let s = 1; s <= SEEDS; s++) add('skilled', `skilled-${s}`, ['scripts/balance/sim-economy.ts', String(s), '90', 'skilled']);
 for (let s = 1; s <= SEEDS; s++) add('npcworld', `npcworld-${s}`, ['scripts/balance/npc-world.ts', String(s), '60', '2']);
 add('exploits', 'exploits', ['scripts/balance/exploits/run-all.ts']);
 add('aggregate', 'aggregate', ['scripts/balance/aggregate.ts'], false);

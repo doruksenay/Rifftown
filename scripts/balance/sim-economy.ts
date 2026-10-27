@@ -37,6 +37,14 @@ if (scenario === 'economy') {
     ['recorder', 'london'],
   ] as const)
     bots.push(await makeBot(arch, city, t0));
+} else if (scenario === 'skilled') {
+  // Beceri büyük sahnede belirleyici mi (madde 1): okulda da çalışan grinder ile hiç çalışmayan grinder, aynı ülkede değil
+  for (const [arch, city] of [
+    ['grinder_pro', 'istanbul'],
+    ['grinder_pro', 'berlin'],
+    ['grinder', 'paris'],
+  ] as const)
+    bots.push(await makeBot(arch, city, t0));
 }
 track(bots.map((b) => b.id));
 const supply0 = await moneySupply();

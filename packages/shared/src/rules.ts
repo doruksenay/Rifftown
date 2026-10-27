@@ -189,8 +189,16 @@ export const gameHoursToMs = (hours: number, speed: number) => (hours * 3600 * 1
 
 // ---------- Konser ----------
 
-/** Bu kalitenin üstündeki konserler şöhret kazandırır, altındakiler kaybettirir. */
+/** Kötü konser eşiği (moodlet, rapor) ve barın başa baş kalitesi. Mekâna göre başa baş: VENUE_RULES[venue].breakEven. */
 export const GIG_BREAK_EVEN_QUALITY = 20;
+/**
+ * Şöhret kazancının azalan verimi: (1 − şöhret ÷ 110)^FAME_GAIN_EXPONENT, en az FAME_GAIN_FLOOR.
+ * Eskiden max(0,1; 1 − şöhret ÷ 120): şöhret 60'ta ×0,5, 70'te ×0,42. Şimdi 60'ta ×0,27, 70'te ×0,18 (üs 1,6).
+ * Bar dönemi (şöhret < 15) neredeyse aynı kalır (şöhret 10'da ×0,86 → eski ×0,92).
+ */
+export const FAME_GAIN_EXPONENT = 1.6;
+export const FAME_GAIN_FLOOR = 0.03;
+export const fameGainMult = (fame: number) => Math.max(FAME_GAIN_FLOOR, Math.max(0, 1 - fame / 110) ** FAME_GAIN_EXPONENT);
 /** Barda bu kaliteye ulaşan konser en az BAR_MIN_FAME kadar şöhret getirir (ilk adımlar boşa gitmesin). */
 export const BAR_FLOOR_QUALITY = 10;
 export const BAR_MIN_FAME = 0.2;
@@ -434,8 +442,9 @@ export function computeGig(input: GigInput): GigResult {
 
   const revenue = Math.round(attendance * rules.ticket * city.costMult * rules.bandShare);
 
-  let fameDelta = ((quality - GIG_BREAK_EVEN_QUALITY) / 100) * 6 * rules.fameMult;
-  if (fameDelta > 0) fameDelta *= Math.max(0.1, 1 - fame / 120);
+  // Başa baş kalite mekâna göre (bar 20 … stadyum 65): büyük sahnede vasat bir gece şöhret getirmez
+  let fameDelta = ((quality - rules.breakEven) / 100) * 6 * rules.fameMult;
+  if (fameDelta > 0) fameDelta *= fameGainMult(fame);
   // Kapasitenin çok altında kalan büyük mekân konserleri şöhreti az artırır (bar küçük sahnedir, sayılmaz).
   if (fameDelta > 0 && venue !== 'bar') fameDelta *= 0.5 + 0.5 * (attendance / rules.capacity);
   // Şehir doygunluğu: aynı şehirde üst üste çalmak şöhret kazancını küçültür (kayıplar küçülmez)

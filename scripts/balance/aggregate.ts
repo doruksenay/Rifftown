@@ -22,7 +22,7 @@ function economy(scenario: string, horizonH: number) {
   const runs = files(`${scenario}-seed-`);
   const byArch = new Map<string, any[]>();
   for (const run of runs) for (const b of run.bots) {
-    const key = b.arch === 'social' ? (b.lead ? 'social_lead' : 'social_student') : scenario === 'career' ? `${b.arch}@${b.city}` : b.arch;
+    const key = b.arch === 'social' ? (b.lead ? 'social_lead' : 'social_student') : scenario === 'career' || scenario === 'skilled' ? `${b.arch}@${b.city}` : b.arch;
     if (!byArch.has(key)) byArch.set(key, []);
     byArch.get(key)!.push({ ...b, run });
   }
@@ -78,7 +78,7 @@ function economy(scenario: string, horizonH: number) {
       hours,
       idleHours: Math.round((horizonH - busyH) * 10) / 10,
       restShare: Math.round(((hours.rest ?? 0) / horizonH) * 1000) / 10,
-      skills: { guitar: skills('guitar'), showmanship: skills('showmanship'), composing: skills('composing'), craftsmanship: skills('craftsmanship') },
+      skills: { guitar: skills('guitar'), showmanship: skills('showmanship'), composing: skills('composing'), lyrics: skills('lyrics'), craftsmanship: skills('craftsmanship') },
       homeFame: stats(bots.map((b) => (b.fame.find((f: any) => f[0] === b.city) ?? [0, 0])[1])),
       releases: bots.flatMap((b) => b.releases.map((r: any) => ({ kind: r.kind, quality: r.quality, units: r.total_units, revenue: r.total_revenue }))).slice(0, 60),
       releaseRevenue: stats(bots.map((b) => b.releases.reduce((a: number, r: any) => a + r.total_revenue, 0))),
@@ -145,6 +145,7 @@ const summary = {
   generated: new Date().toISOString(),
   economy: economy('economy', 720),
   career: economy('career', 2160),
+  skilled: economy('skilled', 2160),
   npcWorld: npcWorld(),
   gigsMC: read('mc-gigs.json'),
   family: read('mc-family.json'),

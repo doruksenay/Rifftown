@@ -16,6 +16,9 @@ import {
   ITEM_BY_ID,
   SESSION_FAMILIARITY,
   SESSION_MUSICIAN,
+  sessionLevels,
+  roleSkill,
+  stageScore,
   ROLE_SKILLS,
   type Skills,
   familiarityCap,
@@ -353,7 +356,16 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     };
   });
 
-  const sm = SESSION_MUSICIAN[venue];
+  // Kiralık müzisyenler: mekânın seviyesi, ama grubun sahnedeki kendi üyelerinin ortalamasını en fazla
+  // SESSION_SKILL_MARGIN kadar aşar (büyük sahnede kadroyu kiralayarak beceri satın alınamaz)
+  const ownOnStage = performers.filter((p) => p.present);
+  const own = ownOnStage.length
+    ? {
+        skill: ownOnStage.reduce((sum, p) => sum + roleSkill(p.skills, p.role), 0) / ownOnStage.length,
+        stage: ownOnStage.reduce((sum, p) => sum + stageScore(p.skills), 0) / ownOnStage.length,
+      }
+    : null;
+  const sm = sessionLevels(venue, own);
   for (const role of gig.session_roles as Instrument[]) {
     const skills: Skills = {
       [ROLE_SKILLS[role].basic]: sm.skill,

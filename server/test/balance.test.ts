@@ -22,6 +22,11 @@ import {
   songwritingScore,
   stageScore,
   studyGain,
+  VENUE_RULES,
+  SESSION_MUSICIAN,
+  SESSION_SKILL_MARGIN,
+  fameGainMult,
+  sessionLevels,
 } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { config } from '../src/config';
@@ -248,5 +253,43 @@ describe('şehir doygunluğu (sunucu)', () => {
       const again = await play(p, 'istanbul-club', setlist);
       expect(again.result.factors.saturation).toBeUndefined();
     });
+  });
+});
+
+// ---------- Kiralık müzisyen ve şöhret eğrisi (denge raporu madde 1) ----------
+
+describe('büyük sahnede beceri belirleyici (kurallar)', () => {
+  it('başa baş kalite mekâna göre artar: barda 30 kalite şöhret getirir, salonda ve stadyumda vasat gece getirmez', () => {
+    expect(VENUE_RULES.bar.breakEven).toBe(20);
+    expect(VENUE_RULES.club.breakEven).toBeGreaterThan(VENUE_RULES.bar.breakEven);
+    expect(VENUE_RULES.hall.breakEven).toBeGreaterThan(VENUE_RULES.club.breakEven);
+    expect(VENUE_RULES.stadium.breakEven).toBeGreaterThan(VENUE_RULES.hall.breakEven);
+    // Aynı vasat grup (kalite ~45): barda ve kulüpte kazanır, salonda kazanamaz
+    const mid = (venue: 'bar' | 'club' | 'hall' | 'stadium', fame: number) =>
+      computeGig({ venue, fame, genre: 'rock', city: istanbul, performers: band(40, 30, 55), setlist: setlist(40), rand: fixed(0.5) });
+    const bar = mid('bar', 5);
+    const hall = mid('hall', 50);
+    const stadium = mid('stadium', 80);
+    expect(bar.fameDelta).toBeGreaterThan(0);
+    expect(hall.quality).toBeLessThan(VENUE_RULES.hall.breakEven);
+    expect(hall.fameDelta).toBeLessThan(0);
+    expect(stadium.fameDelta).toBeLessThan(0);
+  });
+
+  it('şöhret kazancı azalan verimli: bar döneminde neredeyse aynı, üst şöhrette çok daha yavaş', () => {
+    expect(fameGainMult(0)).toBe(1);
+    expect(fameGainMult(10)).toBeGreaterThan(0.85);
+    expect(fameGainMult(60)).toBeLessThan(0.3);
+    expect(fameGainMult(70)).toBeLessThan(0.2);
+    for (let f = 0; f < 100; f += 5) expect(fameGainMult(f + 5)).toBeLessThanOrEqual(fameGainMult(f));
+    expect(fameGainMult(100)).toBeGreaterThan(0);
+  });
+
+  it('kiralık müzisyen barda mekânın seviyesinde, kulüp ve üstünde grubun kendi ortalamasının biraz üstünde çalar', () => {
+    expect(sessionLevels('bar', { skill: 10, stage: 5 })).toEqual({ skill: SESSION_MUSICIAN.bar.skill, stage: SESSION_MUSICIAN.bar.stage });
+    expect(sessionLevels('hall', { skill: 40, stage: 30 })).toEqual({ skill: 40 + SESSION_SKILL_MARGIN.hall, stage: 30 + SESSION_SKILL_MARGIN.hall });
+    expect(sessionLevels('stadium', { skill: 40, stage: 30 }).skill).toBe(40 + SESSION_SKILL_MARGIN.stadium);
+    // Grup zaten iyiyse mekânın seviyesini geçmez
+    expect(sessionLevels('club', { skill: 90, stage: 90 })).toEqual({ skill: SESSION_MUSICIAN.club.skill, stage: SESSION_MUSICIAN.club.stage });
   });
 });

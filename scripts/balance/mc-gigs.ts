@@ -16,6 +16,9 @@ import {
   ROLE_SKILLS,
   SESSION_MUSICIAN,
   SESSION_FAMILIARITY,
+  sessionLevels,
+  roleSkill,
+  stageScore,
   SUBGENRES,
   trendingSubgenre,
 } from '@rifftown/shared';
@@ -80,7 +83,9 @@ function performers(p: Profile, opts: { instBonus?: number; outfit?: number; ene
       familiarity: Object.fromEntries(songIds.map((id) => [id, p.fam])),
     });
   }
-  const sm = SESSION_MUSICIAN[p.venue];
+  // Kiralık müzisyen: sunucuyla aynı kural (grubun kendi ortalamasının SESSION_SKILL_MARGIN üstüyle sınırlı)
+  const own = out.length ? { skill: out.reduce((a, x) => a + roleSkill(x.skills, x.role), 0) / out.length, stage: out.reduce((a, x) => a + stageScore(x.skills), 0) / out.length } : null;
+  const sm = sessionLevels(p.venue, own);
   const sessRoles = (['vocals', 'bass', 'drums', 'keys', 'sax'] as Instrument[]).slice(0, p.session);
   for (const role of sessRoles) {
     out.push({
