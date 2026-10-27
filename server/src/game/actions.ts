@@ -46,6 +46,7 @@ import {
   restMoodGain,
   songQuality,
   studyGain,
+  studyFocusFactor,
   travelOptions,
   GYM_PRICE_PER_HOUR,
   HOTEL_HEALTH_PER_HOUR,
@@ -389,6 +390,8 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         fail('invalid_action');
     }
 
+    // Odaklı çalışma: son 24 oyun saatindeki ders ve çalışma saatlerine göre bu oturumun verimi (STUDY_FOCUS_HOURS)
+    if (req.kind === 'study' || req.kind === 'lesson') params.focus = studyFocusFactor(await recentActionHours(c, characterId, ['study', 'lesson'], 24), hours);
     if (char.money < cost) fail('not_enough_money');
     // Enerji yetmiyorsa yorucu iş başlamaz (dinlenmek, tedavi ve yolculuk her zaman serbest)
     if (!ENERGY_FREE_KINDS.includes(req.kind) && energyAfter(req.kind, hours, currentEnergy(char)) < 0) fail('too_tired', 409);
@@ -532,7 +535,9 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       const instBonus = Math.max(0, ...rolesForSkill(skill).map((r) => gear.instruments[r] ?? 0));
       if (result.learned) inspirationDelta += INSPIRATION_GAIN.learnSkill;
       // Yaş öğrenmeyi yavaşlatır (35 yaştan sonra)
-      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency * ageLearnFactor(characterAge(char.created_at));
+      const focus = typeof params.focus === 'number' ? params.focus : 1;
+      if (focus < 1) result.unfocused = true;
+      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency * focus * ageLearnFactor(characterAge(char.created_at));
       skills[skill] = clamp(lv(skills, skill) + gain, 0, 100);
       result.skill = skill;
       result.gain = Math.round(gain * 100) / 100;
@@ -544,7 +549,9 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       if (!knows(skills, skill)) break;
       const instBonus = Math.max(0, ...rolesForSkill(skill).map((r) => gear.instruments[r] ?? 0));
       const before = lv(skills, skill);
-      const gain0 = studyGain(before, hours, true, well.mood, char.health, instBonus, Number(params.rate)) * efficiency * ageLearnFactor(characterAge(char.created_at));
+      const focus = typeof params.focus === 'number' ? params.focus : 1;
+      if (focus < 1) result.unfocused = true;
+      const gain0 = studyGain(before, hours, true, well.mood, char.health, instBonus, Number(params.rate)) * efficiency * focus * ageLearnFactor(characterAge(char.created_at));
       const capped = Math.max(before, Math.min(before + gain0, Number(params.cap ?? 100)));
       skills[skill] = clamp(capped, 0, 100);
       result.skill = skill;

@@ -111,8 +111,28 @@ export const priceFor = (base: number, city: City, hours: number) => Math.round(
 /** Ruh hâli verimi çarpar: %0 ruh hâlinde 0.6, %100'de 1.0. */
 export const moodFactor = (mood: number) => 0.6 + 0.4 * (clamp(mood, 0, 100) / 100);
 
-/** Becerinin yükseldikçe zorlaşan artışı. */
-export const diminishing = (level: number) => Math.max(0, 1 - level / 110);
+/**
+ * Becerinin yükseldikçe zorlaşan artışı: (1 − seviye ÷ 110)^SKILL_DIMINISHING_EXPONENT. Eskiden üs 1'di ve okulda ana
+ * enstrüman 12'den 90'a (efsane) 104 oyun saatinde, 6 günde çıkıyordu (denge raporu §3). Üs 2 ile ilk seviyeler
+ * hâlâ hızlı (12 → 30 yalnızca ~%25 yavaş), usta (60) üstü belirgin biçimde zor. Bütün beceri artışları (ders, prova,
+ * konser, sokak, atölye) aynı eğriyi kullanır.
+ */
+export const SKILL_DIMINISHING_EXPONENT = 2;
+export const diminishing = (level: number) => Math.max(0, 1 - level / 110) ** SKILL_DIMINISHING_EXPONENT;
+
+/**
+ * Odaklı çalışma: kayan 24 oyun saatinde ilk STUDY_FOCUS_HOURS saat ders ve çalışma (okul, ev, özel ders, arkadaş dersi
+ * birlikte) tam verimli; sonrası UNFOCUSED_STUDY_MULT verimle (dikkat dağılır). Eskiden günde 20 saat tam verimle
+ * çalışılabiliyordu.
+ */
+export const STUDY_FOCUS_HOURS = 5;
+export const UNFOCUSED_STUDY_MULT = 0.3;
+/** Bugün `used` saat çalışmış biri için sonraki `hours` saatin ortalama verim çarpanı */
+export function studyFocusFactor(used: number, hours: number): number {
+  if (hours <= 0) return 1;
+  const focused = Math.max(0, Math.min(hours, STUDY_FOCUS_HOURS - Math.max(0, used)));
+  return (focused + (hours - focused) * UNFOCUSED_STUDY_MULT) / hours;
+}
 
 /** instrumentBonus: o beceri için kuşanılmış enstrümanın bonusu (ör. 7 → çalışma verimi %14 artar). */
 export function studyGain(

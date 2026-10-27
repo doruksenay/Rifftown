@@ -88,7 +88,8 @@ Bir eylem erken bitirilebilir (seyahat hariç). Sonuç geçen süreyle orantıl�
 
 ### Formüller
 
-- Çalışma artışı = saat × (okulda 2,2, değilse 1) × (1 − beceri / 110) × ruh hâli çarpanı × sağlık çarpanı × (1 + enstrüman bonusu × 2 / 100)
+- Çalışma artışı = saat × (okulda 2,2, değilse 1) × (1 − beceri / 110)² × ruh hâli çarpanı × sağlık çarpanı × (1 + enstrüman bonusu × 2 / 100) × odak. Azalan getirinin üssü 1'di (eskiden okulda 12'den efsaneye 104 oyun saati, 6 gün); şimdi 2 (bütün beceri artışları aynı eğriyi kullanır: ders, prova, konser, sokak, atölye).
+- Odak: kayan 24 oyun saatinde ilk 5 saat ders ve çalışma (okul, ev, özel ders, arkadaş dersi birlikte) tam verimli, sonrası ×0,3 (`STUDY_FOCUS_HOURS`, `UNFOCUSED_STUDY_MULT`; bildirim söyler). Ölçüm (`mc-skills.ts`, günde 20 saat çalışan bot): okulda 12 → usta 60 eskiden 3 gün / 44 saat, şimdi 8 gün / 144 saat; 12 → efsane 90 eskiden 6 gün, şimdi 31 gün; en hızlı yol (profesör + okul) usta 7, efsane 28 gün. 12 → amatör 30 hâlâ 2 gün.
 - Şarkı kalitesi = 15 + şarkı yazma puanı × 0,8 ± 10 (1–100 arası; `rules.ts` `songQuality`)
 - Prova aşinalık artışı = saat × 12 × (1 − aşinalık / 105) × ruh hâli çarpanı × (1 + doğaçlama / 200), tür sınırına kadar
 

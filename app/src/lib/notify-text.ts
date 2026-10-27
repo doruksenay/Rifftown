@@ -25,9 +25,14 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
     case 'welcome':
       return t('n_welcome');
     case 'action_done':
-      if (d.kind === 'lesson' && d.skill) return t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
+      if (d.kind === 'lesson' && d.skill) {
+        const text = t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
+        return d.unfocused ? `${text}. ${t('n_study_unfocused')}` : text;
+      }
       if (d.kind === 'study') {
-        return d.learned ? t('learnedSkill', { skill: skillName(d.skill) }) : t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
+        if (d.learned) return t('learnedSkill', { skill: skillName(d.skill) });
+        const text = t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
+        return d.unfocused ? `${text}. ${t('n_study_unfocused')}` : text;
       }
       if (d.kind === 'write_song' && d.title) {
         const base = `${t('n_action_done', { action: t('action_write_song') })}: "${d.title}", ${tierName('quality', d.quality, lang)}`;

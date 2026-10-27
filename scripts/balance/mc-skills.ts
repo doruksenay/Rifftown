@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import {
   studyGain,
+  studyFocusFactor,
   LESSON_RATES,
   PROFESSOR_PRICE_PER_HOUR,
   SCHOOL_PRICE_PER_HOUR,
@@ -70,7 +71,9 @@ function progress(path: Path, from: number, targets: number[]) {
         cap = profNow ? istProf : 100;
       }
       if (level >= cap) break outer;
-      const g = studyGain(level, 2, true, MOOD, HEALTH, 0, rate) * ef;
+      // Odaklı çalışma: günün ilk STUDY_FOCUS_HOURS saati tam verim (yoksa 1)
+      const focus = typeof studyFocusFactor === 'function' ? studyFocusFactor(h, 2) : 1;
+      const g = studyGain(level, 2, true, MOOD, HEALTH, 0, rate) * ef * focus;
       level = Math.min(cap, level + g);
       hours += 2;
       cost += price * 2;

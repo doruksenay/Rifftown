@@ -167,11 +167,13 @@ describe('uzmanlık payı (kurallar)', () => {
     expect(stageScore({ showmanship: 100, pro_showmanship: 100, dancing: 100, audience: 100, stagediving: 100, ...profile('stage', 13, 100) })).toBe(100);
   });
 
-  it('aynı çalışma saatiyle (240 saat) derin uzman geniş oyuncuyu geçer; eskiden ikisi de +10 tavanında eşitti', () => {
+  // Saat: 240 → 350. Beceri eğrisi sertleşti (diminishing üssü 2, denge raporu madde 5); 240 saatte geniş oyuncu artık
+  // +10 tavanına varmıyor. Testin konusu aynı: aynı saatle derin uzman geniş oyuncuyu geçer.
+  it('aynı çalışma saatiyle (350 saat) derin uzman geniş oyuncuyu geçer; eskiden ikisi de +10 tavanında eşitti', () => {
     for (const kind of ['stage', 'songwriting'] as SkillEffectKind[]) {
       const n = effectSkills(kind).length;
-      const broad = profile(kind, n, levelAfter(240 / n));
-      const deep = profile(kind, 3, levelAfter(240 / 3));
+      const broad = profile(kind, n, levelAfter(350 / n));
+      const deep = profile(kind, 3, levelAfter(350 / 3));
       // Eski kural: ikisi de en fazla tavan
       expect(Math.min(MAX_EFFECT_BONUS, skillBonus(broad, kind))).toBe(MAX_EFFECT_BONUS);
       expect(effectBonus(broad, kind)).toBe(MAX_EFFECT_BONUS);

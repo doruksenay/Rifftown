@@ -1,5 +1,5 @@
 // Denge düzeltmelerinin sunucu testleri (denge raporu maddeleri 1–14): gerçek API ve zamanlayıcıyla.
-import { BUSK_MAX_PAY_PER_HOUR, BUSK_SKILL_CAP, buskDailyFactor, buskPayPerHour, CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
+import { STUDY_FOCUS_HOURS, UNFOCUSED_STUDY_MULT, diminishing, studyFocusFactor, studyGain, BUSK_MAX_PAY_PER_HOUR, BUSK_SKILL_CAP, buskDailyFactor, buskPayPerHour, CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -181,5 +181,45 @@ describe('madde 4: sokak müziği başlangıç yolu', () => {
     const skills = (await q('SELECT skills FROM characters WHERE id = $1', [id])).rows[0].skills;
     expect(skills.guitar).toBeLessThanOrEqual(BUSK_SKILL_CAP);
     expect(skills.showmanship).toBe(40); // amatörün üstünde: sokak geliştirmez
+  });
+});
+
+describe('madde 5: beceri ilerlemesi haftalar sürer', () => {
+  /** Okulda, günde STUDY_FOCUS_HOURS odaklı + kalan saat dağınık (günde 20 saat), 12'den hedefe kaç oyun günü */
+  function schoolDays(target: number) {
+    let lvl = 12;
+    for (let day = 1; day < 400; day++) {
+      for (let h = 0; h < 20; h += 1) {
+        lvl += studyGain(lvl, 1, true, 80) * studyFocusFactor(h, 1);
+        if (lvl >= target) return day;
+      }
+    }
+    return Infinity;
+  }
+  it('kurallar: ilk seviyeler hızlı, usta bir haftadan uzun, efsane haftalar', () => {
+    expect(diminishing(0)).toBe(1);
+    expect(diminishing(12)).toBeGreaterThan(0.75);
+    expect(diminishing(80)).toBeLessThan(0.1);
+    expect(studyFocusFactor(0, 4)).toBe(1);
+    expect(studyFocusFactor(STUDY_FOCUS_HOURS, 2)).toBe(UNFOCUSED_STUDY_MULT);
+    expect(schoolDays(30)).toBeLessThanOrEqual(2);
+    expect(schoolDays(60)).toBeGreaterThanOrEqual(7);
+    expect(schoolDays(90)).toBeGreaterThanOrEqual(20);
+  });
+
+  it('sunucu: günün odaklı saatleri dolunca ders verimi düşer ve bildirimde söylenir', async () => {
+    const p = await newPlayer();
+    const id = p.character.id;
+    await q(`UPDATE characters SET money = 1000, energy = 100, energy_at = now() WHERE id = $1`, [id]);
+    await q(
+      `INSERT INTO actions(character_id, kind, params, location_id, started_at, ends_at, status) VALUES ($1, 'study', '{"hours":4,"skill":"guitar","atSchool":true}', 'istanbul-school', now(), now(), 'done')`,
+      [id],
+    );
+    expect((await p.c.post('/api/actions', { kind: 'study', skill: 'guitar', hours: 4, locationId: 'istanbul-school' })).status).toBe(200);
+    const a = (await q(`SELECT id, params FROM actions WHERE character_id = $1 AND status = 'active'`, [id])).rows[0];
+    expect(a.params.focus).toBeCloseTo(studyFocusFactor(4, 4));
+    await q(`UPDATE actions SET ends_at = now() - interval '1 second' WHERE id = $1`, [a.id]);
+    await advance(5);
+    expect((await q('SELECT result FROM actions WHERE id = $1', [a.id])).rows[0].result.unfocused).toBe(true);
   });
 });
