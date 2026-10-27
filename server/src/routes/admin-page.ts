@@ -28,7 +28,8 @@ export const ADMIN_HTML = /* html */ `<!doctype html>
   .deleted { opacity:.4; text-decoration:line-through; }
   #login { max-width:340px; margin:80px auto; display:grid; gap:10px; }
   .err { color:#ff7b7b; min-height:1em; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; margin-bottom:14px; }
+  [hidden] { display:none !important; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; margin-bottom:14px; align-items:start; }
   .fld { display:grid; gap:3px; } .fld span { color:var(--muted); font-size:12px; }
   .fld input, .fld select, .fld textarea { width:100%; font:inherit; border-radius:6px; border:1px solid var(--line); padding:7px 10px; background:#251a5e; color:var(--text); }
   .fld input[type=color] { padding:2px; height:34px; }
