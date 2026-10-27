@@ -17,6 +17,9 @@ const K = (
   vip?: boolean,
 ): SkillDef => ({ id, category, learn, bookPrice, name: { tr: tr[0], en: en[0] }, about: { tr: tr[1], en: en[1] }, effects, prereq, vip });
 
+/** Seviye atlama cümlesi ekler (grup rolü olan beceriler için) */
+const R = (d: SkillDef, levelUp: [string, string]): SkillDef => ({ ...d, levelUp: { tr: levelUp[0], en: levelUp[1] } });
+
 const APPRENTICE = 15;
 const AMATEUR = 30;
 
@@ -32,15 +35,15 @@ export const EXTRA_SKILLS: SkillDef[] = [
   K('songcraft_hooks', 'music', 'book', 60, ['Nakarat ustalığı', 'Unutulmayan nakaratlar yazarsın.'], ['Hook writing', 'You write choruses people can’t forget.'], { songwriting: 0.05 }, { skill: 'lyrics', min: APPRENTICE }),
   K('sampling', 'music', 'book', 55, ['Örnekleme', 'Eski kayıtlardan yeni şarkılar; şarkı ve kayıt kalitesine katkı.'], ['Sampling', 'New songs from old records; helps songs and recordings.'], { songwriting: 0.02, recording: 0.02 }),
   K('vocal_harmony', 'music', 'book', 50, ['Vokal armonisi', 'İkinci ses; sahnede ve kayıtta fark yaratır.'], ['Vocal harmony', 'Backing vocals that lift the stage and the record.'], { stage: 0.03, recording: 0.02 }, { skill: 'basic_singing', min: APPRENTICE }),
-  // ---------- Enstrümanlar (rol dışı) ----------
+  // ---------- Enstrümanlar (saksofon, keman ve el perküsyonu grup rolüdür; diğerleri sokakta ve provada işe yarar) ----------
   K('acoustic_guitar', 'instruments', 'book', 60, ['Akustik gitar', 'Parkta herkesi başına toplar.'], ['Acoustic guitar', 'Draws a crowd in the park.'], { busking: 0.25 }, { skill: 'basic_strings', min: APPRENTICE }),
   K('harmonica', 'instruments', 'book', 35, ['Mızıka', 'Cebe sığan blues.'], ['Harmonica', 'Blues that fits in a pocket.'], { busking: 0.15 }),
   K('ukulele', 'instruments', 'book', 35, ['Ukulele', 'Neşeli, küçük ve taşınabilir.'], ['Ukulele', 'Cheerful, small and portable.'], { busking: 0.15 }),
-  K('hand_percussion', 'instruments', 'book', 45, ['El perküsyonu', 'Konga, darbuka; ritmi sağlamlaştırır.'], ['Hand percussion', 'Congas and darbuka; tightens the rhythm.'], { rehearsal: 0.08, busking: 0.1 }, { skill: 'basic_percussion', min: APPRENTICE }),
+  R(K('hand_percussion', 'instruments', 'book', 80, ['El perküsyonu', 'Konga, darbuka, kaval kemik: grupta perküsyon rolünde ne kadar iyi olduğun; provada ritmi de sağlamlaştırır.'], ['Hand percussion', 'Congas, darbuka and shakers: how good you are in the percussion role; also tightens rehearsals.'], { rehearsal: 0.08, busking: 0.1 }, { skill: 'basic_percussion', min: APPRENTICE }), ['Artık {tier} bir perküsyoncusun!', "You're now {a} {tier} percussionist!"]),
   K('synth_programming', 'instruments', 'book', 70, ['Synth programlama', 'Kendi seslerini tasarlamak.'], ['Synth programming', 'Designing your own sounds.'], { songwriting: 0.03, recording: 0.02 }, { skill: 'basic_keyboard', min: APPRENTICE }),
   K('beatboxing', 'instruments', 'book', 30, ['Beatbox', 'Ağızla davul; sokakta ilgi çeker.'], ['Beatboxing', 'Drums with your mouth; turns heads on the street.'], { busking: 0.2, stage: 0.01 }),
-  K('violin', 'instruments', 'school', undefined, ['Keman', 'Zor ama büyüleyici.'], ['Violin', 'Hard, but enchanting.'], { busking: 0.25, recording: 0.01 }),
-  K('saxophone', 'instruments', 'school', undefined, ['Saksofon', 'Sahnede bir solo, sokakta bir şapka dolusu bahşiş.'], ['Saxophone', 'A solo on stage, a hatful of tips on the street.'], { busking: 0.2, stage: 0.02 }),
+  R(K('violin', 'instruments', 'book', 80, ['Keman', 'Zor ama büyüleyici: grupta keman rolünde ne kadar iyi olduğun; sokakta da çok bahşiş toplar.'], ['Violin', 'Hard, but enchanting: how good you are in the violin role; it also earns well on the street.'], { busking: 0.25, recording: 0.01 }, { skill: 'basic_strings', min: APPRENTICE }), ['Artık {tier} bir kemancısın!', "You're now {a} {tier} violinist!"]),
+  R(K('saxophone', 'instruments', 'book', 80, ['Saksofon', 'Grupta saksofon rolünde ne kadar iyi olduğun: sahnede bir solo, sokakta bir şapka dolusu bahşiş.'], ['Saxophone', 'How good you are in the sax role: a solo on stage, a hatful of tips on the street.'], { busking: 0.2, stage: 0.02 }, { skill: 'basic_winds', min: APPRENTICE }), ['Artık {tier} bir saksofoncusun!', "You're now {a} {tier} saxophonist!"]),
   K('turntablism', 'instruments', 'book', 65, ['Plak çalarla müzik', 'Scratch ve geçişler.'], ['Turntablism', 'Scratches and transitions.'], { stage: 0.03 }),
   // ---------- Sahne ----------
   K('mic_technique', 'stage', 'book', 45, ['Mikrofon tekniği', 'Sesin salonun en arkasına ulaşır.'], ['Mic technique', 'Your voice reaches the back of the room.'], { stage: 0.03 }, { skill: 'basic_singing', min: APPRENTICE }),

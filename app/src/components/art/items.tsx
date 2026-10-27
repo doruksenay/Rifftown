@@ -25,6 +25,9 @@ const FACTORY: Record<string, string> = {
   drums: '#8A2BFF',
   keys: '#1B1B1E',
   vocals: '#A7ADB8',
+  sax: '#D4A72C',
+  violin: '#8B5A2B',
+  percussion: '#F3722C',
   outfit: '#3B82FF',
   vehicle: '#E8E9F3',
 };
@@ -190,6 +193,9 @@ const ICON_BY_SLOT: Record<string, IconName> = {
   fx: 'spotlight-beam',
   material: 'cube-outline',
   vehicle: 'car-side',
+  sax: 'saxophone',
+  violin: 'violin',
+  percussion: 'music-circle',
 };
 
 /** Bir eşyanın çıkartması. color: boya rengi (yoksa fabrika rengi). */

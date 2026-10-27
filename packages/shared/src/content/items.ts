@@ -68,6 +68,10 @@ export const EXTRA_ITEMS: ItemDef[] = [
   I('mat_powder', 'hardware', 'material', 1, 60, 0, 'Sahne barutu', 'Stage powder', { stackable: true }),
   I('mat_amp_parts', 'hardware', 'material', 1, 85, 0, 'Amfi parçaları', 'Amp parts', { stackable: true }),
   I('mat_metal', 'hardware', 'material', 1, 40, 0, 'Metal levha', 'Metal sheet', { stackable: true }),
+  // Yeni roller için (saksofon, keman, perküsyon)
+  I('mat_brass', 'hardware', 'material', 1, 95, 0, 'Pirinç gövde', 'Brass body', { stackable: true }),
+  I('mat_reed', 'hardware', 'material', 1, 15, 0, 'Saksofon kamışı', 'Sax reed', { stackable: true }),
+  I('mat_bow', 'hardware', 'material', 1, 45, 0, 'Keman yayı', 'Violin bow', { stackable: true }),
   // Turne bakım malzemeleri (turne ekibi ve araç arızası için)
   I('repair_kit', 'hardware', 'material', 1, 120, 0, 'Tamir kiti', 'Repair kit', { stackable: true }),
   I('gear_service', 'stage_shop', 'material', 1, 200, 0, 'Ekipman bakım paketi', 'Gear service pack', { stackable: true }),

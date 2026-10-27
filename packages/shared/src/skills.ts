@@ -106,7 +106,7 @@ export const SKILL_DEFS: SkillDef[] = [
   {
     id: 'basic_strings', category: 'instruments', learn: 'book', bookPrice: 40,
     name: { tr: 'Temel telli çalgılar', en: 'Basic string instruments' },
-    about: { tr: 'Gitar ve bas gitarın ortak temeli.', en: 'The shared basis of guitar and bass.' },
+    about: { tr: 'Gitar, bas gitar ve kemanın ortak temeli.', en: 'The shared basis of guitar, bass and violin.' },
   },
   {
     id: 'guitar', category: 'instruments', learn: 'book', bookPrice: 80,
@@ -125,7 +125,7 @@ export const SKILL_DEFS: SkillDef[] = [
   {
     id: 'basic_percussion', category: 'instruments', learn: 'book', bookPrice: 40,
     name: { tr: 'Temel vurmalı çalgılar', en: 'Basic percussion' },
-    about: { tr: 'Ritim duygusu. Davulun temeli.', en: 'Sense of rhythm. The basis of drums.' },
+    about: { tr: 'Ritim duygusu. Davulun ve perküsyonun temeli.', en: 'Sense of rhythm. The basis of drums and percussion.' },
   },
   {
     id: 'drums', category: 'instruments', learn: 'book', bookPrice: 80,
@@ -145,6 +145,11 @@ export const SKILL_DEFS: SkillDef[] = [
     name: { tr: 'Klavye', en: 'Keyboards' },
     about: { tr: 'Grupta klavye rolünde ne kadar iyi olduğun.', en: 'How good you are in the keyboards role.' },
     levelUp: { tr: 'Artık {tier} bir klavyecisin!', en: "You're now {a} {tier} keyboardist!" },
+  },
+  {
+    id: 'basic_winds', category: 'instruments', learn: 'book', bookPrice: 40,
+    name: { tr: 'Temel nefesli çalgılar', en: 'Basic wind instruments' },
+    about: { tr: 'Nefes, dudak ve parmak düzeni. Saksofonun temeli.', en: 'Breath, embouchure and fingering. The basis of the saxophone.' },
   },
   // ---------- Müzik türleri ----------
   genreSkill('pop', 'Pop', 'Pop'),
@@ -326,6 +331,10 @@ export const ROLE_SKILLS: Record<Instrument, { basic: string; specific: string }
   bass: { basic: 'basic_strings', specific: 'bass' },
   drums: { basic: 'basic_percussion', specific: 'drums' },
   keys: { basic: 'basic_keyboard', specific: 'keys' },
+  // Yeni roller: asıl beceriler content/skills.ts içinde (saksofon, keman, el perküsyonu)
+  sax: { basic: 'basic_winds', specific: 'saxophone' },
+  violin: { basic: 'basic_strings', specific: 'violin' },
+  percussion: { basic: 'basic_percussion', specific: 'hand_percussion' },
 };
 
 /** Gruptaki rolde ne kadar iyi olduğun (0–100) */

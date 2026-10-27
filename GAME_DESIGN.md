@@ -48,13 +48,15 @@ Bir beceriyi geliştirmek için önce onu açmak gerekir: oyunun kitapçısında
 
 | Kategori | Beceriler |
 |---|---|
-| Enstrümanlar | Temel şan → Solo vokal · Temel telli çalgılar → Elektro gitar, Bas gitar · Temel vurmalı çalgılar → Davul · Temel klavyeli çalgılar → Klavye |
+| Enstrümanlar | Temel şan → Solo vokal · Temel telli çalgılar → Elektro gitar, Bas gitar, Keman · Temel vurmalı çalgılar → Davul, El perküsyonu · Temel klavyeli çalgılar → Klavye · Temel nefesli çalgılar → Saksofon |
 | Müzik | Temel beste · Temel söz yazımı · Doğaçlama (okulda, temel bestede en az amatör) · Kayıt yapımcılığı (temel bestede en az çırak) |
 | Sahne | Temel şovmenlik · Profesyonel şovmenlik (okulda, şovmenlikte en az amatör) · Temel dans · Seyirci farkındalığı (şovmenlikte en az çırak) |
 | Müzik türleri | Pop, Rock, Hip-hop, Elektronik, Metal, Caz, Anadolu rock |
 | Sokak | Sokak kurnazlığı → Gizlilik → Kilit açma (her biri bir öncekinde en az çırak; okulda öğretilmez) |
 
-Ok işaretli asıl enstrüman becerileri için temel becerinin en az "çırak" olması gerekir. Kitap fiyatları: temel beceriler $40, asıl enstrümanlar $80, türler $30, dans $50, seyirci farkındalığı $60.
+Ok işaretli asıl enstrüman becerileri için temel becerinin en az "çırak" olması gerekir.
+
+**Grup rolleri (8):** vokal, gitar, bas, davul, klavye ve yeni üç rol: saksofon, keman, perküsyon. Rol listesinin tek kaynağı `world.ts` `INSTRUMENTS`; dükkân rafları, eşya yuvaları, atölye tarifleri, rol becerisi, kiralık müzisyen ve bütün doğrulamalar buradan türer. Yeni roller karakter açarken ana enstrüman olarak da seçilebilir. Festival ve oyunun gruplarında eksik kalan roller yalnızca temel beş rolden (`CORE_ROLES`) kiralık müzisyenle doldurulur; nefesli, yaylı ve perküsyon isteğe bağlıdır (lider konser ayarlarken kiralayabilir). Veritabanında rol ve eşya yuvası için kısıt olmadığından yeni rol migration gerektirmedi. Oyunun grupları yeni rolleri kullanır (ör. Isar Kammerensemble keman, Pigalle Swing saksofon, Rhône Riddim perküsyon); veri dosyasında rol değişirse yönetmen kadroyu eşitler. Kitap fiyatları: temel beceriler $40, asıl enstrümanlar $80, türler $30, dans $50, seyirci farkındalığı $60.
 
 Becerilerin etkisi:
 
@@ -131,7 +133,7 @@ Fiyatlar her şehirde aynıdır. Dükkâna geri satış fiyatın %50'si.
 
 | Dükkân | Ürünler | Etki |
 |---|---|---|
-| Müzik mağazası | Her enstrüman için 3 seviye ($150 / $900 / $4.000) | Konserde rol becerisine +3 / +7 / +12; o beceride çalışma verimine +%6 / +%14 / +%24 |
+| Müzik mağazası | Her enstrüman için (saksofon, keman ve perküsyon dahil 8 rol) 3 seviye ($150 / $900 / $4.000) | Konserde rol becerisine +3 / +7 / +12; o beceride çalışma verimine +%6 / +%14 / +%24 |
 | Sahne butiği | Tişört ve kot ($80), deri ceket ($500), tasarım kostüm ($2.500) | Konserde sahne performansına +2 / +5 / +10 |
 | Sanat galerisi | 4 eser ($120 – $8.000) | Dinlenme verimine +%5 – +%25 (toplam en fazla +%40) |
 | Kitapçı | Beceri kitapları ($30 – $80) | Beceriyi açar |
@@ -154,7 +156,7 @@ Her şehrin bit pazarında oyuncular eşyalarını ilana koyar; fiyat en fazla d
 
 ### Atölye (zanaat)
 
-Hırdavatçının atölyesinde malzemelerden enstrüman (gitar, bas, davul, synthesizer, mikrofon) ya da sahne kostümü üretilir. Üretim 4 saat sürer. Bonus el işçiliği becerisine bağlıdır: acemi biri dükkânın ilk seviyesine yakın (+3), usta biri dükkânın en iyisini geçen (+14) eşya çıkarır. Yarıda kesilen üretimde malzemeler geri verilir. Üretilen eşyada üreticinin adı yazar. Üretilen eşyalar dükkâna satılmaz, ikinci el pazarında satılır.
+Hırdavatçının atölyesinde malzemelerden enstrüman (gitar, bas, davul, synthesizer, mikrofon, saksofon, keman, konga) ya da sahne kostümü üretilir. Yeni malzemeler: pirinç gövde, saksofon kamışı, keman yayı. Üretim 4 saat sürer. Bonus el işçiliği becerisine bağlıdır: acemi biri dükkânın ilk seviyesine yakın (+3), usta biri dükkânın en iyisini geçen (+14) eşya çıkarır. Yarıda kesilen üretimde malzemeler geri verilir. Üretilen eşyada üreticinin adı yazar. Üretilen eşyalar dükkâna satılmaz, ikinci el pazarında satılır.
 
 ## Meslekler
 

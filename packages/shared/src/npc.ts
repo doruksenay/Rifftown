@@ -84,7 +84,7 @@ export const NPC_BANDS: NpcBandDef[] = [
   B('manchester', 'rookie', 'Ancoats', 'electronic', 'Chloe Harris', 'keys', ['Ancoats', 'Warehouse', 'Hacienda Dreams', 'Bass Line', 'Loop', 'Strobe']),
   // Fransa
   B('paris', 'star', 'Les Nuits Bleues', 'pop', 'Camille Laurent', 'vocals', ['Nuit Bleue', 'Montmartre', 'Seine', 'Café Noir', 'Métro', 'Rive Gauche', 'Pluie']),
-  B('paris', 'local', 'Pigalle Swing', 'jazz', 'Hugo Moreau', 'keys', ['Pigalle', 'Swing Manouche', 'Cabaret', 'Minuit', 'Saxo', 'Bistro']),
+  B('paris', 'local', 'Pigalle Swing', 'jazz', 'Hugo Moreau', 'sax', ['Pigalle', 'Swing Manouche', 'Cabaret', 'Minuit', 'Saxo', 'Bistro']),
   B('paris', 'rookie', 'Banlieue Est', 'hiphop', 'Yanis Bernard', 'vocals', ['Banlieue', 'RER', 'Béton', 'Quartier', 'Tour', 'Néon']),
   B('lyon', 'star', 'Fourvière', 'rock', 'Lucas Petit', 'guitar', ['Fourvière', 'Deux Fleuves', 'Traboule', 'Croix-Rousse', 'Rhône', 'Lumières', 'Soie']),
   B('lyon', 'local', 'Presqu’île', 'electronic', 'Léa Garnier', 'keys', ['Presqu’île', 'Nuits Sonores', 'Confluence', 'Pulse', 'Saône', 'Écho']),
@@ -125,7 +125,7 @@ NPC_BANDS.push(
   G('newyork', 'rookie', 'Bowery Slide', 'blues', 'Ruby Coleman', 'guitar', ['Bowery Slide', 'Subway Moan', 'Five Dollar Guitar', 'Fire Escape Blues', 'Night Shift', 'Rent Party']),
   // Folk: İzmir, Ankara ve Manchester
   G('izmir', 'star', 'Kordon Akustik', 'folk', 'Defne Uçar', 'vocals', ['İmbat Türküsü', 'Zeytin Dalı', 'Kordonda Akşam', 'Tahta İskele', 'Ege Ninnisi', 'Karşıyaka Vapuru', 'Bademler Çiçek Açtı']),
-  G('manchester', 'local', 'Pennine Lanterns', 'folk', 'Rosie Ashworth', 'guitar', ['Pennine Way', 'Mill Chimney', 'Lantern Song', 'Moorland Rain', 'Weaver\'s Daughter', 'Canal Lock']),
+  G('manchester', 'local', 'Pennine Lanterns', 'folk', 'Rosie Ashworth', 'violin', ['Pennine Way', 'Mill Chimney', 'Lantern Song', 'Moorland Rain', 'Weaver\'s Daughter', 'Canal Lock']),
   G('ankara', 'rookie', 'Bozkır Akustik', 'folk', 'Yusuf Erdem', 'guitar', ['Bozkır', 'Gençlik Parkı', 'Hamamönü', 'Kuru Ayaz', 'Mogan Gölü', 'Kale Yolu']),
   // Punk: Londra, Berlin, Hamburg
   G('london', 'star', 'The Safety Pins', 'punk', 'Nicky Vane', 'vocals', ['No Future Tense', 'Camden Riot', 'Pins and Needles', 'Tower Block', 'Two Chords Left', 'Dole Queue Disco', 'Kings Road Spit']),
@@ -134,11 +134,11 @@ NPC_BANDS.push(
   // Soul: New York, Paris, Los Angeles
   G('newyork', 'star', 'Harlem Velvet', 'soul', 'Della Simmons', 'vocals', ['Velvet Morning', 'Lenox Avenue Prayer', 'Sweet Sugar Hill', 'Hold Me Uptown', 'Apollo Lights', 'Sunday Kind of Love', 'Brownstone Heart']),
   G('paris', 'local', 'Velours Noir', 'soul', 'Aïcha Diallo', 'vocals', ['Velours', 'Pigalle Soul', 'Mon Cœur Funky', 'Barbès', 'Rue des Martyrs', 'Minuit Doux']),
-  G('losangeles', 'rookie', 'Crenshaw Sunday', 'soul', 'Marvin Tate', 'keys', ['Crenshaw', 'Sunday Drive', 'Leimert Park', 'Golden State Groove', 'Slow Burn', 'Lowrider Love']),
+  G('losangeles', 'rookie', 'Crenshaw Sunday', 'soul', 'Marvin Tate', 'sax', ['Crenshaw', 'Sunday Drive', 'Leimert Park', 'Golden State Groove', 'Slow Burn', 'Lowrider Love']),
   // Reggae: Marsilya, Londra, Lyon
-  G('marseille', 'star', 'Soleil Dub Club', 'reggae', 'Moussa Keita', 'vocals', ['Soleil Dub', 'Mistral Riddim', 'Vieux-Port Skank', 'Calanques Rockers', 'Bonne Mère', 'Sun Is Shining Here', 'Planche à Voile']),
+  G('marseille', 'star', 'Soleil Dub Club', 'reggae', 'Moussa Keita', 'percussion', ['Soleil Dub', 'Mistral Riddim', 'Vieux-Port Skank', 'Calanques Rockers', 'Bonne Mère', 'Sun Is Shining Here', 'Planche à Voile']),
   G('london', 'local', 'Brixton Riddim Club', 'reggae', 'Delroy Campbell', 'bass', ['Brixton Riddim', 'Windrush Morning', 'Electric Avenue Dub', 'Sound System Sunday', 'Coldharbour', 'Carnival Road']),
-  G('lyon', 'rookie', 'Rhône Riddim', 'reggae', 'Bastien Faure', 'guitar', ['Rhône Riddim', 'Pentes Roots', 'Traboule Dub', 'Soleil Lyonnais', 'Deux Fleuves Skank', 'Fourvière Rockers']),
+  G('lyon', 'rookie', 'Rhône Riddim', 'reggae', 'Bastien Faure', 'percussion', ['Rhône Riddim', 'Pentes Roots', 'Traboule Dub', 'Soleil Lyonnais', 'Deux Fleuves Skank', 'Fourvière Rockers']),
   // Country: Nashville ve Los Angeles (Bakersfield sesi)
   G('nashville', 'local', 'Holler & Pine', 'country', 'Wyatt Combs', 'guitar', ['Holler & Pine', 'Gravel Road', 'Front Porch Light', 'Six String Sunday', 'Tennessee Moon', 'Dirt Road Gospel']),
   G('losangeles', 'star', 'Bakersfield Dust', 'country', 'Loretta Gaines', 'vocals', ['Bakersfield Dust', 'Highway 99', 'Telecaster Tears', 'Desert Rose Motel', 'Long Haul Heart', 'Honky Tonk Sunset', 'Golden State Line']),
@@ -147,8 +147,8 @@ NPC_BANDS.push(
   G('ankara', 'local', 'Hamamönü Psikedelik', 'anatolian', 'Barış Tunç', 'guitar', ['Hamamönü', 'Bağlama Fuzz', 'Kale Rüzgârı', 'Ankara Çayı', 'Dumanlı Bozkır', 'Uzun Yol']),
   G('berlin', 'rookie', 'Kreuzberg Bağlama', 'anatolian', 'Elif Yıldırım', 'guitar', ['Kottbusser Tor', 'Gurbet Fuzz', 'Landwehrkanal', 'Görlitzer Halay', 'U1 Türküsü', 'Spree Kenarı']),
   // Klasik: Münih, Paris, Ankara
-  G('munich', 'star', 'Isar Kammerensemble', 'classical', 'Clara Weißhaupt', 'keys', ['Isar-Suite', 'Nocturne für Schwabing', 'Föhn-Sonate', 'Herbst im Hofgarten', 'Alpenrhapsodie', 'Kammerstück Nr. 3', 'Residenz-Menuett']),
-  G('paris', 'rookie', 'Ensemble Rive Gauche', 'classical', 'Élise Marchand', 'keys', ['Rive Gauche', 'Prélude du Marais', 'Valse de la Seine', 'Nocturne Montmartre', 'Étude en Pluie', 'Jardin du Luxembourg']),
+  G('munich', 'star', 'Isar Kammerensemble', 'classical', 'Clara Weißhaupt', 'violin', ['Isar-Suite', 'Nocturne für Schwabing', 'Föhn-Sonate', 'Herbst im Hofgarten', 'Alpenrhapsodie', 'Kammerstück Nr. 3', 'Residenz-Menuett']),
+  G('paris', 'rookie', 'Ensemble Rive Gauche', 'classical', 'Élise Marchand', 'violin', ['Rive Gauche', 'Prélude du Marais', 'Valse de la Seine', 'Nocturne Montmartre', 'Étude en Pluie', 'Jardin du Luxembourg']),
   G('ankara', 'local', 'Başkent Oda Topluluğu', 'classical', 'Nevin Akyol', 'keys', ['Başkent Süiti', 'Atakule Noktürnü', 'Bozkırda Prelüd', 'Kuğulu Park Valsi', 'Konservatuvar Etüdü', 'Ulus Sonatı']),
 );
 

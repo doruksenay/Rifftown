@@ -7,9 +7,14 @@ export type L = { tr: string; en: string };
 /** İki dilli bir metinden istenen dili seçer. */
 export const pick = (l: L, lang: Lang) => l[lang] ?? l.tr;
 
-/** Grupta çalınabilen roller (enstrümanlar). */
-export const INSTRUMENTS = ['vocals', 'guitar', 'bass', 'drums', 'keys'] as const;
+/** Grupta çalınabilen roller (enstrümanlar). Rol listesinin tek kaynağı budur: dükkân, eşya yuvası, tarif,
+ *  rol becerisi, kiralık müzisyen ve doğrulamalar buradan türer. Yeni rol eklemek için burada, ROLE_NAMES,
+ *  skills.ts ROLE_SKILLS ve items.ts ad tablolarında bir satır yeter (TypeScript eksik olanı yakalar). */
+export const INSTRUMENTS = ['vocals', 'guitar', 'bass', 'drums', 'keys', 'sax', 'violin', 'percussion'] as const;
 export type Instrument = (typeof INSTRUMENTS)[number];
+/** Klasik rock kadrosu: festivalde ve oyunun gruplarında eksik kalan roller bunlardan kiralık müzisyenle doldurulur
+ *  (nefesli, yaylı ve perküsyon isteğe bağlı renk rolleridir; her gruba zorla eklenmez). */
+export const CORE_ROLES = ['vocals', 'guitar', 'bass', 'drums', 'keys'] as const satisfies readonly Instrument[];
 
 export const ROLE_NAMES: Record<Instrument, L> = {
   vocals: { tr: 'Vokal', en: 'Vocals' },
@@ -17,6 +22,9 @@ export const ROLE_NAMES: Record<Instrument, L> = {
   bass: { tr: 'Bas gitar', en: 'Bass' },
   drums: { tr: 'Davul', en: 'Drums' },
   keys: { tr: 'Klavye', en: 'Keyboards' },
+  sax: { tr: 'Saksofon', en: 'Saxophone' },
+  violin: { tr: 'Keman', en: 'Violin' },
+  percussion: { tr: 'Perküsyon', en: 'Percussion' },
 };
 
 /** İlk yedi tür şehir tablolarında elle ayarlandı; sonrakiler EXTRA_GENRE_POPULARITY ile (veri odaklı) eklenir */

@@ -165,7 +165,7 @@ describe('oyun dengesi', () => {
         expect(types.has(t as any), `${city.id} ${t}`).toBe(true);
       }
     }
-    expect(INSTRUMENTS.length).toBe(5);
+    expect(INSTRUMENTS.length).toBe(8); // 5 temel rol + saksofon, keman, perküsyon
   });
 });
 

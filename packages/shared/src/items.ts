@@ -63,6 +63,9 @@ const CRAFTED_NAMES: Record<Instrument, L> = {
   drums: { tr: 'El yapımı davul seti', en: 'Handmade drum kit' },
   keys: { tr: 'El yapımı synthesizer', en: 'Handmade synthesizer' },
   vocals: { tr: 'El yapımı mikrofon', en: 'Handmade microphone' },
+  sax: { tr: 'El yapımı saksofon', en: 'Handmade saxophone' },
+  violin: { tr: 'El yapımı keman', en: 'Handmade violin' },
+  percussion: { tr: 'El yapımı konga', en: 'Handmade conga' },
 };
 
 const VINTAGE_NAMES: Record<Instrument, L> = {
@@ -71,6 +74,9 @@ const VINTAGE_NAMES: Record<Instrument, L> = {
   drums: { tr: 'Efsanevi bir davulcunun eski seti', en: 'A legendary drummer\'s old kit' },
   keys: { tr: 'Vintage analog synthesizer', en: 'Vintage analogue synthesizer' },
   vocals: { tr: 'Efsanevi stüdyo mikrofonu', en: 'Legendary studio microphone' },
+  sax: { tr: '1954 vintage tenor saksofon', en: '1954 vintage tenor sax' },
+  violin: { tr: 'Asırlık usta işi keman', en: 'Century-old master violin' },
+  percussion: { tr: 'Efsanevi bir perküsyoncunun konga takımı', en: 'A legendary percussionist\'s conga set' },
 };
 
 const INSTRUMENT_ITEM_NAMES: Record<Instrument, [L, L, L]> = {
@@ -98,6 +104,21 @@ const INSTRUMENT_ITEM_NAMES: Record<Instrument, [L, L, L]> = {
     { tr: 'Başlangıç mikrofonu', en: 'Starter microphone' },
     { tr: 'Sahne mikrofonu', en: 'Stage microphone' },
     { tr: 'Stüdyo kalitesi kablosuz mikrofon', en: 'Studio-grade wireless mic' },
+  ],
+  sax: [
+    { tr: 'Öğrenci alto saksofonu', en: 'Student alto sax' },
+    { tr: 'Sahne tenor saksofonu', en: 'Stage tenor sax' },
+    { tr: 'El yapımı profesyonel saksofon', en: 'Handmade pro saxophone' },
+  ],
+  violin: [
+    { tr: 'Öğrenci kemanı', en: 'Student violin' },
+    { tr: 'Sahne kemanı (manyetikli)', en: 'Stage violin with pickup' },
+    { tr: 'Usta işi konser kemanı', en: 'Master-built concert violin' },
+  ],
+  percussion: [
+    { tr: 'Darbuka ve tef', en: 'Darbuka and frame drum' },
+    { tr: 'Konga ve bongo seti', en: 'Conga and bongo set' },
+    { tr: 'Profesyonel perküsyon kurulumu', en: 'Professional percussion rig' },
   ],
 };
 

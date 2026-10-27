@@ -13,7 +13,7 @@ import {
   FESTIVAL_SLOTS,
   FESTIVAL_SLOT_HOURS,
   type FestivalDto,
-  INSTRUMENTS,
+  CORE_ROLES,
   gameHoursToMs,
 } from '@rifftown/shared';
 import type pg from 'pg';
@@ -149,7 +149,8 @@ async function selectLineup(c: pg.PoolClient, f: any, rand: () => number) {
     await c.query('UPDATE festival_applications SET selected = TRUE, slot = $3 WHERE festival_id = $1 AND band_id = $2', [f.id, a.band_id, i + 1]);
     if (!songs.length) continue;
     const roles = await many(c, 'SELECT role FROM band_members WHERE band_id = $1', [a.band_id]);
-    const missing = INSTRUMENTS.filter((r) => !roles.some((x) => x.role === r));
+    // Eksik kalan temel roller kiralık müzisyenle dolar (saksofon, keman ve perküsyon isteğe bağlıdır)
+    const missing = CORE_ROLES.filter((r) => !roles.some((x) => x.role === r));
     const startsAt = new Date(f.starts_at.getTime() + hoursMs(i * FESTIVAL_SLOT_HOURS));
     await c.query(
       `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, festival_id)
