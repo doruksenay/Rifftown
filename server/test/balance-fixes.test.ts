@@ -1,5 +1,5 @@
 // Denge düzeltmelerinin sunucu testleri (denge raporu maddeleri 1–14): gerçek API ve zamanlayıcıyla.
-import { STUDY_FOCUS_HOURS, UNFOCUSED_STUDY_MULT, diminishing, studyFocusFactor, studyGain, BUSK_MAX_PAY_PER_HOUR, BUSK_SKILL_CAP, buskDailyFactor, buskPayPerHour, CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
+import { BUSINESS_DAILY_REVENUE_HOURS, BUSINESS_RULES, STUDY_FOCUS_HOURS, UNFOCUSED_STUDY_MULT, diminishing, studyFocusFactor, studyGain, BUSK_MAX_PAY_PER_HOUR, BUSK_SKILL_CAP, buskDailyFactor, buskPayPerHour, CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -222,4 +222,45 @@ describe('madde 5: beceri ilerlemesi haftalar sürer', () => {
     await advance(5);
     expect((await q('SELECT result FROM actions WHERE id = $1', [a.id])).rows[0].result.unfocused).toBe(true);
   });
+});
+
+describe('madde 7: işletme kasası para basmaz', () => {
+  it('günde en fazla 16 mesai saati kasaya gelir getirir; fazlası maaş alır ama gelir getirmez', async () => {
+    const prev = config.gameSpeed;
+    config.gameSpeed = 1; // 24 oyun saatlik pencere testin ortasında dolmasın
+    try {
+      await businessCapCase();
+    } finally {
+      config.gameSpeed = prev;
+    }
+  });
+  async function businessCapCase() {
+    const owner = await newPlayer({ cityId: 'izmir' });
+    const staff = [await newPlayer({ cityId: 'izmir' }), await newPlayer({ cityId: 'izmir' }), await newPlayer({ cityId: 'izmir' })];
+    await q('UPDATE characters SET money = 60000 WHERE id = $1', [owner.character.id]);
+    expect((await owner.c.post('/api/businesses/izmir-biz1/buy')).status).toBe(200);
+    for (const s of staff) {
+      await owner.c.post('/api/businesses/izmir-biz1/staff', { characterId: s.character.id, wage: 5 });
+      await s.c.post('/api/businesses/izmir-biz1/job', { accept: true });
+    }
+    await owner.c.post('/api/businesses/izmir-biz1/till', { amount: -500 });
+    const till = async () => Number((await q(`SELECT till FROM businesses WHERE location_id = 'izmir-biz1'`)).rows[0].till);
+    const results: any[] = [];
+    for (const s of staff) {
+      const before = await till();
+      expect((await s.c.post('/api/actions', { kind: 'work', locationId: 'izmir-biz1', hours: 8 })).status).toBe(200);
+      const a = (await q(`SELECT id FROM actions WHERE character_id = $1 AND status = 'active'`, [s.character.id])).rows[0];
+      await q(`UPDATE actions SET ends_at = now() - interval '1 second' WHERE id = $1`, [a.id]);
+      await advance(5);
+      results.push({ r: (await q('SELECT result FROM actions WHERE id = $1', [a.id])).rows[0].result, gain: (await till()) - before });
+    }
+    const perHour = BUSINESS_RULES.bar.revenuePerHour * CITY_BY_ID.izmir.costMult;
+    expect(results[0].r.revenue).toBe(Math.round(perHour * 8));
+    expect(results[1].r.revenue).toBe(Math.round(perHour * 8));
+    // Üçüncü mesai: tavan doldu, maaş ödendi ama gelir yok
+    expect(results[2].r.revenue).toBe(0);
+    expect(results[2].r.quiet).toBe(true);
+    expect(results[2].gain).toBe(-5 * 8); // yalnızca maaş kasadan çıktı
+    expect(BUSINESS_DAILY_REVENUE_HOURS).toBe(16);
+  }
 });

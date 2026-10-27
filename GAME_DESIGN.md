@@ -590,7 +590,7 @@ Her şehirde 2 bar ve 2 restoran ruhsatı oyunculara satılıktır (bar $20.000,
 
 - Sahip işletmeye isim verir; şehir listesinde ve mekânda bu isim görünür.
 - En fazla 5 çalışan. Sahip isimle iş teklifi gönderir ($5 – $60 saatlik), oyuncu kabul ederse orada mesai yapar. Maaş kasadan ödenir; kasada maaş yoksa mesai başlamaz.
-- Her mesai saati kasaya gelir getirir (bar saatte $20, restoran $24, şehir çarpanıyla; sahibin işletmecilik becerisiyle %50'ye kadar artar). Sahip kendi işletmesinde maaşsız çalışır, gelir kasaya gider.
+- Her mesai saati kasaya gelir getirir (bar saatte $12, restoran $14, şehir çarpanıyla; sahibin işletmecilik becerisiyle %20'ye kadar artar; eskiden $20 / $24 ve %50). Müşteri sınırlıdır: işletmede kayan 24 oyun saatinde en fazla 16 mesai saati gelir getirir (`BUSINESS_DAILY_REVENUE_HOURS`), fazlası maaş alır ama kasaya bir şey katmaz. Sahip kendi işletmesinde maaşsız çalışır, gelir kasaya gider. Eskiden 5 ek hesap en düşük maaşla çalışıp bara günde $1.650–5.078 net basıyor, ruhsat 7–12 günde geri ödeniyordu; şimdi en iyi düzende (sahip 8 + bir çalışan 8 saat) İstanbul'da günde ~$100–140, New York'ta ~$285, geri ödeme 126–196 gün; herkes sürekli çalışırsa kasa eksiye gider (`business-staff.ts`).
 - Bar: barda çalan oyuncu grupları bilet gelirinin sahip tarafından belirlenen payını (%0 – %30) öder. Oyunun kendi gruplarının konserinden pay alınmaz (eskiden NPC konserleri bar başına günde ~$50 yoktan para basıyordu).
 - Restoran: menü fiyatı ×0,8 – ×1,6 ayarlanır; yenen her yemeğin malzeme dışındaki %60'ı kasaya girer. Randevular da burada ödenir.
 - Haftalık gider (bar $350, restoran $300) önce kasadan, yetmezse sahibin cebinden alınır. İkisi de yetmezse işletme elden çıkar, çalışanlar işsiz kalır.
