@@ -27,6 +27,16 @@ async function progress(db: Db, characterId: number, kind: MissionKind, since: D
     records: `SELECT count(*)::int AS v FROM actions WHERE character_id = $1 AND kind = 'record' AND status = 'done' AND ends_at >= $2 AND result ? 'quality'`,
     meals: `SELECT count(*)::int AS v FROM meals WHERE character_id = $1 AND created_at >= $2`,
     hangouts: `SELECT count(*)::int AS v FROM social_log WHERE actor_id = $1 AND kind = 'hangout' AND created_at >= $2`,
+    gifts: `SELECT count(*)::int AS v FROM social_log WHERE actor_id = $1 AND kind = 'gift' AND created_at >= $2`,
+    stage_events: `SELECT count(*)::int AS v FROM gig_performers gp JOIN gigs g ON g.id = gp.gig_id,
+                     jsonb_array_elements(COALESCE(g.result->'events', '[]'::jsonb)) e
+                    WHERE gp.character_id = $1 AND gp.present AND g.status = 'done' AND g.starts_at >= $2 AND e->>'outcome' = 'success'`,
+    encores: `SELECT count(*)::int AS v FROM gig_performers gp JOIN gigs g ON g.id = gp.gig_id
+               WHERE gp.character_id = $1 AND gp.present AND g.status = 'done' AND g.starts_at >= $2 AND g.result->>'encore' = 'success'`,
+    press: `SELECT count(*)::int AS v FROM press_events WHERE character_id = $1 AND created_at >= $2`,
+    articles: `SELECT count(*)::int AS v FROM articles WHERE author_id = $1 AND kind = 'news' AND NOT removed AND created_at >= $2`,
+    cities_played: `SELECT count(DISTINCT g.city_id)::int AS v FROM gig_performers gp JOIN gigs g ON g.id = gp.gig_id
+                     WHERE gp.character_id = $1 AND gp.present AND g.status = 'done' AND g.starts_at >= $2`,
   };
   const r = await one(db, q[kind], [characterId, since]);
   return Number(r?.v ?? 0);

@@ -26,6 +26,7 @@ import {
   isShop,
   isVenue,
   itemsForShop,
+  seasonAt,
   priceFor,
   type VenueType,
   BUSK_HOURS,
@@ -49,10 +50,12 @@ import { Bank, FestivalPanel, Gym, Hotel, Restaurant, TattooStudio, Workshop } f
 import { ColorDot, FleaMarket } from '@/components/market';
 import { ProfessionsHere, VipTag } from '@/components/careers';
 import { Politics } from '@/components/politics';
-import { useIsVip } from '@/lib/session';
+import { Newspaper } from '@/components/newspaper';
+import { useGameSpeed, useIsVip } from '@/lib/session';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { HoursAction } from '@/components/action-form';
+import { PrivateLessons } from '@/components/lessons';
 import { Body, Button, Card, Choice, Empty, Heading, ListRow, Row, Screen, Small, Strong } from '@/components/ui';
 import { VenueProgress } from '@/components/progress';
 import { useGate } from '@/components/gate';
@@ -187,6 +190,8 @@ function LocationScreenScreen() {
             label={t('treatHere')}
           />
           <ProfessionsHere locationId={loc.id} zone="hospital" />
+          <Heading>{t('pharmacy')}</Heading>
+          <Shop locationId={loc.id} shop="hospital" />
         </View>
       ) : loc.type === 'bookstore' ? (
         <Bookstore locationId={loc.id} />
@@ -201,6 +206,7 @@ function LocationScreenScreen() {
         <View style={{ marginTop: space.lg }}>
           {loc.type === 'worship' ? <Body color={c.inkSoft}>{t('restIntroWorship')}</Body> : null}
           {loc.type === 'courthouse' ? <Courtroom cityId={loc.cityId} /> : null}
+          {loc.type === 'newspaper' ? <Newspaper locationId={loc.id} /> : null}
           <ProfessionsHere locationId={loc.id} zone={loc.type} />
           {loc.type === 'police' ? <PoliceDesk locationId={loc.id} cityId={loc.cityId} /> : null}
           <Politics cityId={loc.cityId} zone={loc.type as CivicType} />
@@ -327,6 +333,7 @@ function School({ locationId, cityMult, university = false }: { locationId: stri
         label={t('studyHere')}
         disabled={!skill}
       />
+      <PrivateLessons locationId={locationId} skill={skill} />
     </View>
   );
 }
@@ -439,20 +446,25 @@ function Shop({ locationId, shop }: { locationId: string; shop: ShopType }) {
   const vip = useIsVip();
   const c = useColors();
   const me = useMe();
+  const speed = useGameSpeed();
   const inv = useInventory();
   const { run, pending } = useRun();
   const moneyLeft = me.data?.character?.money ?? 0;
   // Atölyede üretilenler dükkâna satılmaz (pazarda satılır)
   const mine = (inv.data ?? []).filter((i) => ITEM_BY_ID[i.itemId]?.shop === shop && !ITEM_BY_ID[i.itemId]?.crafted);
+  // Nadir eşyalar yalnızca kendi şehrinde, sezonluk eşyalar yalnızca mevsiminde rafta
+  const cityId = LOCATION_BY_ID[locationId]?.cityId;
+  const season = seasonAt(Date.now(), speed);
+  const shelf = itemsForShop(shop, cityId).filter((i) => !i.season || i.season === season);
   const groups =
     shop === 'music_store'
-      ? INSTRUMENTS.map((inst) => ({ title: p(ROLE_NAMES[inst]), items: itemsForShop(shop).filter((i) => i.slot === inst) }))
+      ? INSTRUMENTS.map((inst) => ({ title: p(ROLE_NAMES[inst]), items: shelf.filter((i) => i.slot === inst) }))
       : shop === 'hardware'
         ? [
-            { title: t('materialsGroup'), items: itemsForShop(shop).filter((i) => i.slot === 'material') },
-            { title: t('spraysGroup'), items: itemsForShop(shop).filter((i) => i.slot === 'spray') },
+            { title: t('materialsGroup'), items: shelf.filter((i) => i.slot === 'material') },
+            { title: t('spraysGroup'), items: shelf.filter((i) => i.slot === 'spray') },
           ]
-        : [{ title: '', items: itemsForShop(shop) }];
+        : [{ title: '', items: shelf }];
   const countOf = (itemId: string) => mine.filter((m) => m.itemId === itemId).length;
   // Yığılabilir eşyalar (malzeme, sprey, efekt) tek satırda gösterilir
   const mineRows = mine.filter((m, i, arr) => !ITEM_BY_ID[m.itemId].stackable || arr.findIndex((x) => x.itemId === m.itemId && !x.listed) === i);

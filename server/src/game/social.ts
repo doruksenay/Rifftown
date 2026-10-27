@@ -9,6 +9,7 @@ import {
   ITEM_BY_ID,
   type PersonDto,
   maskProfanity,
+  isBoundItem,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
@@ -37,8 +38,8 @@ export const toPerson = (r: any, prefix = ''): PersonDto => ({
 
 /** Hedef gerçek bir oyuncu mu (yapay karakterlerle sosyal etkileşim yok) */
 export async function requirePlayer(db: Db, id: number) {
-  const r = await one(db, 'SELECT id, name, npc, city_id FROM characters WHERE id = $1', [id]);
-  if (!r) fail('character_not_found', 404);
+  const r = await one(db, 'SELECT id, name, npc, city_id, dead_at FROM characters WHERE id = $1', [id]);
+  if (!r || r.dead_at) fail('character_not_found', 404);
   if (r.npc) fail('npc_target', 403);
   return r as { id: number; name: string; npc: boolean; city_id: string | null };
 }
@@ -262,13 +263,19 @@ export async function deleteGuestbook(id: number, viewer: number, isAdmin: boole
 
 // ---------- Şikâyet ----------
 
-export async function report(reporter: number, kind: 'message' | 'guestbook' | 'profile', targetId: number, text: string) {
+export async function report(reporter: number, kind: 'message' | 'guestbook' | 'profile' | 'article', targetId: number, text: string) {
   const exists =
     kind === 'message'
       ? await one(pool, 'SELECT 1 FROM direct_messages WHERE id = $1 AND to_id = $2', [targetId, reporter])
       : kind === 'guestbook'
         ? await one(pool, 'SELECT 1 FROM guestbook WHERE id = $1', [targetId])
-        : await one(pool, 'SELECT 1 FROM characters WHERE id = $1', [targetId]);
+        : kind === 'article'
+          ? await one(pool, 'SELECT 1 FROM articles WHERE id = $1 AND NOT removed', [targetId])
+          : await one(pool, 'SELECT 1 FROM characters WHERE id = $1', [targetId]);
+  // Aynı kişi aynı içeriği bir kez şikâyet eder (kuyruk şişmesin)
+  if (await one(pool, `SELECT 1 FROM reports WHERE reporter_id = $1 AND kind = $2 AND target_id = $3 AND status = 'open'`, [reporter, kind, targetId])) {
+    return { ok: true };
+  }
   if (!exists) fail('not_found', 404);
   await pool.query('INSERT INTO reports(reporter_id, kind, target_id, text) VALUES ($1, $2, $3, $4)', [reporter, kind, targetId, cleanText(text ?? '').slice(0, 300)]);
   return { ok: true };
@@ -290,6 +297,7 @@ export async function giveGift(fromId: number, toId: number, inventoryId: number
     if (!inv) fail('not_found', 404);
     if (inv.listed) fail('item_listed', 409);
     if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
+    if (isBoundItem(inv.item_id)) fail('item_bound', 409);
     if (returnsTooSoon(inv, toId)) fail('item_recently_yours', 409);
     // VIP eşyası sadece VIP üyeye verilebilir (pazardaki kuralın aynısı)
     if (ITEM_BY_ID[inv.item_id]?.vip) {

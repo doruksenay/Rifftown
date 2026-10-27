@@ -60,6 +60,7 @@ export default function MeTab() {
           {ch.headline ? <Small color={c.ink}>{ch.headline}</Small> : null}
           <Small>
             {band ? t('inBand', { band: band.name, role: p(ROLE_NAMES[band.role]) }) : t('memberSince', { date: new Date(ch.createdAt).toLocaleDateString(locale) })}
+            {` · ${t('ageValue', { n: ch.age })}`}
           </Small>
         </View>
       </Row>

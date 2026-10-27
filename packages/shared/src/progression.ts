@@ -27,7 +27,7 @@ export function venueProgress(fame: number): number {
 /** Turne hedefi: bu kadar şehirde kulüp seviyesine ulaş */
 export const TOUR_CITIES = 3;
 
-export type GoalId = 'band' | 'songs' | 'club' | 'hall' | 'tour' | 'stadium' | 'legend';
+export type GoalId = 'band' | 'songs' | 'club' | 'hall' | 'tour' | 'stadium' | 'legend' | 'legacy' | 'hall_of_fame';
 
 export interface NextGoal {
   id: GoalId;
@@ -39,6 +39,8 @@ export interface NextGoal {
   /** Sayılan hedeflerde ilerleme (şarkı, şehir) */
   n?: number;
   total?: number;
+  /** Efsane sonrası hedefin kimliği (content/progress.ts LEGACY_GOALS) */
+  legacyId?: string;
 }
 
 export interface GoalInput {

@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { RefreshControl, Text, View } from 'react-native';
 import { VipUpsell } from '@/components/careers';
 import { useGate } from '@/components/gate';
-import { Choice, Empty, ListRow, Screen, Small } from '@/components/ui';
+import { Heading, Choice, Empty, ListRow, Screen, Small } from '@/components/ui';
 import { api } from '@/lib/api';
 import { duration } from '@/lib/format';
 import { useI18n } from '@/lib/i18n';
@@ -90,7 +90,30 @@ function ChartsScreen() {
           <Empty text={t('chartEmpty')} />
         )}
       </View>
+      <VideoChart />
       {!vip ? <VipUpsell text={t('chartHistoryVip')} /> : null}
     </Screen>
+  );
+}
+
+/** Klip listesi (dünya, son hafta) */
+function VideoChart() {
+  const { t, lang } = useI18n();
+  const q = useQuery({
+    queryKey: ['videoChart'],
+    queryFn: () => api.get<{ entries: { position: number; views: number; videoId: number; title: string; bandId: number; bandName: string }[] }>('/charts/videos'),
+  });
+  const nf = (n: number) => n.toLocaleString(lang === 'en' ? 'en-US' : 'tr-TR');
+  return (
+    <View style={{ marginTop: space.lg }}>
+      <Heading>{t('videoChart')}</Heading>
+      {q.data?.entries.length ? (
+        q.data.entries.map((e, i, arr) => (
+          <ListRow key={e.videoId} left={<Small>{String(e.position)}</Small>} title={e.title} subtitle={`${e.bandName} · ${t('viewsN', { n: nf(e.views) })}`} onPress={() => router.push(`/band/${e.bandId}`)} last={i === arr.length - 1} />
+        ))
+      ) : (
+        <Empty text={t('chartEmpty')} />
+      )}
+    </View>
   );
 }

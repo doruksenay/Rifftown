@@ -21,6 +21,8 @@ import {
   ITEM_RETURN_COOLDOWN_HOURS,
   gameHoursToMs,
   maxResalePrice,
+  skillBonus,
+  isBoundItem,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
@@ -37,6 +39,7 @@ export const toInventoryDto = (r: any): InventoryItemDto => ({
   color: r.color ?? null,
   nickname: r.nickname ?? null,
   bonus: itemBonus(r),
+  wear: Math.round(Number(r.wear ?? 0)),
   listed: !!r.listed,
   craftedBy: r.crafted_by_name ?? null,
   legendary: r.legendary_at
@@ -132,6 +135,7 @@ export async function listItem(characterId: number, locationId: string, inventor
     const inv = await lockOwnItem(c, characterId, inventoryId);
     if (inv.listed) fail('item_listed', 409);
     if (!ITEM_BY_ID[inv.item_id]) fail('invalid_item');
+    if (isBoundItem(inv.item_id)) fail('item_bound', 409);
     if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
     await requireEstablished(c, characterId);
     // Fiyat tavanı: dükkân fiyatının iki katı (EFSANEVİ eşyada beş katı)
@@ -253,7 +257,7 @@ export async function resolveCraft(c: pg.PoolClient, ch: CharacterRow, params: R
     }
     return { cancelled: true, refunded: true };
   }
-  const bonus = craftBonus(recipe, lv(skills, 'craftsmanship'), rand);
+  const bonus = craftBonus(recipe, Math.min(100, lv(skills, 'craftsmanship') + skillBonus(skills, 'crafting')), rand);
   const def = ITEM_BY_ID[recipe.itemId];
   const r = await one(c, 'INSERT INTO inventory(character_id, item_id, slot, bonus, crafted_by) VALUES ($1, $2, $3, $4, $1) RETURNING id', [
     ch.id,

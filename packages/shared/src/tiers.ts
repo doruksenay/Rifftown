@@ -2,6 +2,7 @@
 // Sunucu her şeyi sayıyla hesaplar; bu dosya sadece gösterim içindir.
 // En üst kalite seviyesi büyük harfle (DESTANSI / EPIC), diğerleri küçük harfle yazılır.
 
+import { REVIEW_CITY, REVIEW_CROWD, REVIEW_EVENT, REVIEW_EVENT_GENERIC, REVIEW_LEGENDARY, REVIEW_PRESS, REVIEW_RIVAL, REVIEW_TIERS } from './content/texts';
 import type { L, Lang } from './world';
 
 export interface Tier {
@@ -10,7 +11,7 @@ export interface Tier {
   name: L;
 }
 
-export type ScaleName = 'quality' | 'skill' | 'familiarity' | 'fame' | 'mood' | 'health' | 'friendship' | 'romance' | 'energy' | 'inspiration';
+export type ScaleName = 'quality' | 'skill' | 'familiarity' | 'fame' | 'mood' | 'health' | 'friendship' | 'romance' | 'energy' | 'inspiration' | 'press';
 
 const t = (min: number, tr: string, en: string): Tier => ({ min, name: { tr, en } });
 
@@ -88,6 +89,15 @@ export const SCALES: Record<ScaleName, Tier[]> = {
     t(70, 'coşkun', 'brimming'),
     t(90, 'ilham perisi yanında', 'touched by the muse'),
   ],
+  /** Bir grubun bir şehirdeki basın desteği. Nötr 20. */
+  press: [
+    t(0, 'basın düşman', 'hostile press'),
+    t(10, 'basın soğuk', 'cold press'),
+    t(20, 'basın nötr', 'neutral press'),
+    t(40, 'basın ilgili', 'press interested'),
+    t(60, 'basın sıcak', 'warm press'),
+    t(80, 'basının gözdesi', 'press darling'),
+  ],
   /** İki oyuncu arasındaki arkadaşlık. Flört 30'da açılır. */
   friendship: [
     t(0, 'yabancı', 'stranger'),
@@ -140,73 +150,20 @@ export const tierChange = (scale: ScaleName, before: number, after: number) =>
 
 // ---------- Konser eleştirileri ----------
 // Sunucu konser bittiğinde bir kez üretir ve sonuçla birlikte saklar.
-// Metin o konseri bilir: mekân, şehir, gerçek seyirci sayısı ve gecenin en iyi şarkısı.
+// Metin o konseri bilir: mekân, şehir, gerçek seyirci sayısı, gecenin en iyi şarkısı, sahne olayları,
+// basın desteği ve aynı şehirde son günlerde çalan rakip grup. Metin havuzları content/texts.ts içinde.
 // Türkçe cümlelerde özel adlara ek getirmiyoruz (ünlü uyumu hatası olmasın diye).
 
-type ReviewVars = { n: number; venue: string; city: string; song: string };
-
-const REVIEWS: { minQuality: number; lines: L[] }[] = [
-  {
-    minQuality: 0,
-    lines: [
-      { tr: '{n} seyircinin çoğu şarkılar arasında saatine baktı.', en: 'Most of the {n} people kept checking the time between songs.' },
-      { tr: 'Yerel bir blog, setin ortasında dağıldığınızı yazdı.', en: 'A local blog wrote that the band fell apart halfway through the set.' },
-    ],
-  },
-  {
-    minQuality: 20,
-    lines: [
-      { tr: '{n} seyirci kibarca alkışladı ve barın yolunu tuttu.', en: 'The {n} people clapped politely and headed for the bar.' },
-      { tr: '"{song}" sırasında birkaç kişi ritim tuttu; gerisi çabuk unutuldu.', en: 'A few people tapped along to "{song}"; the rest was soon forgotten.' },
-    ],
-  },
-  {
-    minQuality: 40,
-    lines: [
-      { tr: '{n} seyirciden birkaçı çıkışta grubun adını sordu.', en: 'A few of the {n} people asked the band\'s name on the way out.' },
-      { tr: '"{song}" çalarken herkes ayaktaydı.', en: 'Everyone was on their feet during "{song}".' },
-    ],
-  },
-  {
-    minQuality: 60,
-    lines: [
-      { tr: '{n} seyirci bis istedi; {venue} yerinden oynadı.', en: '{n} people demanded an encore and {venue} shook.' },
-      { tr: 'Gece bittiğinde herkes "{song}" şarkısını mırıldanıyordu.', en: 'By the end of the night, everyone was humming "{song}".' },
-    ],
-  },
-  {
-    minQuality: 80,
-    lines: [
-      { tr: 'Yerel basın bu {venue} konserinden haftalarca bahsedecek.', en: 'The local press will talk about this {venue} show for weeks.' },
-      { tr: '"{song}", {n} kişinin hep bir ağızdan söylediği bir marşa dönüştü.', en: '"{song}" became an anthem sung by all {n} people.' },
-    ],
-  },
-  {
-    minQuality: 90,
-    lines: [
-      { tr: '{n} seyirci bu geceyi torunlarına anlatacak.', en: 'The {n} people there will tell their grandchildren about this night.' },
-      { tr: '{city} böyle bir konseri yıllardır görmedi.', en: '{city} has not seen a show like this in years.' },
-    ],
-  },
-];
-
-/** EFSANEVİ geceler için (çok nadir) */
-const LEGENDARY_REVIEWS = {
-  minQuality: 100,
-  lines: [
-    {
-      tr: 'EFSANEVİ bir gece. {n} kişi aynı anda sustu, sonra {song} ile birlikte bütün {city} şarkı söyledi.',
-      en: 'A LEGENDARY night. {n} people fell silent at once, then all of {city} sang along to {song}.',
-    },
-    {
-      tr: 'Bu EFSANEVİ konserin kaydı yıllarca elden ele dolaşacak. {song} sırasında sahnede bir şey oldu ve herkes bunu hissetti.',
-      en: 'Bootlegs of this LEGENDARY show will circulate for years. Something happened on stage during {song}, and everyone felt it.',
-    },
-  ],
-};
+type ReviewVars = { n: number; venue: string; city: string; song: string; rival?: string; event?: string };
 
 const fill = (s: string, v: ReviewVars) =>
-  s.replace(/\{n\}/g, String(v.n)).replace(/\{venue\}/g, v.venue).replace(/\{city\}/g, v.city).replace(/\{song\}/g, v.song);
+  s
+    .replace(/\{n\}/g, String(v.n))
+    .replace(/\{venue\}/g, v.venue)
+    .replace(/\{city\}/g, v.city)
+    .replace(/\{song\}/g, v.song)
+    .replace(/\{rival\}/g, v.rival ?? '')
+    .replace(/\{event\}/g, v.event ?? '');
 
 export interface GigReviewInput {
   quality: number;
@@ -221,36 +178,53 @@ export interface GigReviewInput {
   seed: number;
   /** EFSANEVİ gece */
   legendary?: boolean;
+  /** Şehrin kimliği (şehre özgü renk cümlesi için) */
+  cityId?: string;
+  /** Sahne olaylarının sonucu ve olayların adları */
+  events?: { id: string; outcome: string; name?: L }[];
+  /** Grubun o şehirdeki basın desteği (0–100) */
+  press?: number;
+  /** Son günlerde aynı şehirde çalan başka bir grup ve gecesinin kalitesi */
+  rival?: { name: string; quality: number } | null;
 }
+
+/** Tohumdan deterministik seçim (aynı konser hep aynı metni üretir) */
+const pickBy = <T>(xs: T[], seed: number, salt: number) => xs[Math.abs(Math.imul(seed + 1, 2654435761) ^ (salt * 40503)) % xs.length];
 
 /** Konser eleştirisi; iki dilde birden üretilir ve konserle birlikte saklanır. */
 export function gigReview(r: GigReviewInput): L {
+  // En çok bir olay cümlesi: varsa başarısız olan (eleştirmen hatayı yazar), yoksa başarılı olan
+  const tried = (r.events ?? []).filter((e) => e.outcome === 'success' || e.outcome === 'fail');
+  const ev = tried.find((e) => e.outcome === 'fail') ?? tried.find((e) => e.outcome === 'success');
   const make = (lang: Lang) => {
-    const v: ReviewVars = { n: r.attendance, venue: r.venue[lang], city: r.city[lang], song: r.bestSong };
+    const v: ReviewVars = { n: r.attendance, venue: r.venue[lang], city: r.city[lang], song: r.bestSong, rival: r.rival?.name, event: ev?.name?.[lang] ?? ev?.id };
     if (r.presentCount === 0) {
       return lang === 'en'
         ? `The band never showed up at ${v.venue}. The audience went home angry.`
         : 'Grup sahneye hiç çıkmadı. Seyirci öfkeyle evine döndü.';
     }
-    let band = REVIEWS[0];
-    for (const b of REVIEWS) if (r.quality >= b.minQuality) band = b;
-    if (r.legendary) band = LEGENDARY_REVIEWS;
-    const line = fill(band.lines[Math.abs(r.seed) % band.lines.length][lang], v);
+    let tier = REVIEW_TIERS[0];
+    for (const b of REVIEW_TIERS) if (r.quality >= b.minQuality) tier = b;
+    const main = r.legendary ? pickBy(REVIEW_LEGENDARY, r.seed, 1) : pickBy(tier.lines, r.seed, 1);
     const ratio = r.capacity > 0 ? r.attendance / r.capacity : 0;
-    const crowd =
-      ratio >= 0.85
-        ? { tr: `${v.venue} tıklım tıklımdı.`, en: `${v.venue} was packed.` }
-        : ratio >= 0.4
-          ? { tr: `${v.venue} yarı yarıya doluydu.`, en: `${v.venue} was about half full.` }
-          : { tr: `${v.venue} neredeyse boştu.`, en: `${v.venue} was almost empty.` };
+    const crowd = pickBy(REVIEW_CROWD[ratio >= 0.85 ? 'packed' : ratio >= 0.4 ? 'half' : 'empty'], r.seed, 2);
+    const parts = [fill(crowd[lang], v), fill(main[lang], v)];
+    // Bağlam cümleleri: olay, rakip, basın, şehir (en fazla ikisi, metin uzamasın)
+    const extra: L[] = [];
+    if (ev) {
+      const own = REVIEW_EVENT[ev.id];
+      extra.push(own ? own[ev.outcome as 'success' | 'fail'] : pickBy(REVIEW_EVENT_GENERIC[ev.outcome as 'success' | 'fail'], r.seed, 3));
+    }
+    if (r.rival && Math.abs(r.quality - r.rival.quality) >= 8) extra.push(pickBy(REVIEW_RIVAL[r.quality > r.rival.quality ? 'beat' : 'lost'], r.seed, 4));
+    if (typeof r.press === 'number' && (r.press >= 60 || r.press <= 10)) extra.push(pickBy(REVIEW_PRESS[r.press >= 60 ? 'hot' : 'cold'], r.seed, 5));
+    const cityLines = r.cityId ? REVIEW_CITY[r.cityId] : undefined;
+    if (cityLines && r.quality >= 40 && Math.abs(r.seed) % 3 === 0) extra.push(pickBy(cityLines, r.seed, 6));
+    for (const x of extra.slice(0, 2)) parts.push(fill(x[lang], v));
     const missingCount = r.memberCount - r.presentCount;
-    const missing =
-      missingCount > 0
-        ? lang === 'en'
-          ? ` ${missingCount} band member${missingCount > 1 ? 's' : ''} never made it to the stage.`
-          : ` ${missingCount} üye sahneye çıkmadı.`
-        : '';
-    return `${crowd[lang]} ${line}${missing}`;
+    if (missingCount > 0) {
+      parts.push(lang === 'en' ? `${missingCount} band member${missingCount > 1 ? 's' : ''} never made it to the stage.` : `${missingCount} üye sahneye çıkmadı.`);
+    }
+    return parts.join(' ');
   };
   return { tr: make('tr'), en: make('en') };
 }

@@ -1,5 +1,7 @@
-import { ACHIEVEMENT_BY_ID, CITY_BY_ID, HOME_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, type PublicCharacterDto, ROLE_NAMES, SKILL_BY_ID, TATTOO_BY_ID, VIP } from '@rifftown/shared';
-import { Guestbook, ProfileActions, RelationshipPanel } from '@/components/social';
+import { ACHIEVEMENT_BY_ID, TITLE_BY_ID, CITY_BY_ID, HOME_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, type PublicCharacterDto, ROLE_NAMES, SKILL_BY_ID, TATTOO_BY_ID, VIP } from '@rifftown/shared';
+import { FamilySettings, Guestbook, ProfileActions, RelationshipPanel } from '@/components/social';
+import { FriendLessons } from '@/components/lessons';
+import { BlogList } from '@/components/newspaper';
 import { useState } from 'react';
 import { TierText } from '@/components/tier';
 import { useQuery } from '@tanstack/react-query';
@@ -40,7 +42,11 @@ function CharacterProfileScreen() {
   const isMe = me.data?.character?.id === ch.id;
   const family = [
     ch.partner ? t('partnerLine', { stage: t(`partnerStage_${ch.partner.stage}` as StringKey), name: ch.partner.name }) : null,
-    ch.children.length ? t('childrenLine', { names: ch.children.map((k) => k.name).join(', ') }) : null,
+    ch.children.length
+      ? t('childrenLine', {
+          names: ch.children.map((k) => (k.stage ? t('childAgeShort', { name: k.name, age: k.age ?? 0, stage: t(`childStage_${k.stage}` as StringKey) }) : k.name)).join(', '),
+        })
+      : null,
     ch.tattoos.length ? t('tattoosLine', { list: ch.tattoos.map((x) => (TATTOO_BY_ID[x] ? p(TATTOO_BY_ID[x].name) : x)).join(', ') }) : null,
   ].filter(Boolean) as string[];
   return (
@@ -54,6 +60,7 @@ function CharacterProfileScreen() {
           <Avatar name={ch.name} color={ch.avatarColor} uri={ch.avatarUrl} size={112} />
         </View>
         <Title style={{ textAlign: 'center', marginTop: space.md }}>{ch.name}</Title>
+        {ch.titleId && TITLE_BY_ID[ch.titleId] ? <Small color={c.purple} style={{ textAlign: 'center' }}>{p(TITLE_BY_ID[ch.titleId].name)}</Small> : null}
         {ch.headline ? <Body style={{ textAlign: 'center' }}>{ch.headline}</Body> : null}
         <Row style={{ flexWrap: 'wrap', justifyContent: 'center', marginTop: space.xs }}>
           {ch.isVip ? <Badge text={t('vipMember')} color={c.pink} /> : null}
@@ -93,6 +100,8 @@ function CharacterProfileScreen() {
       ) : null}
 
       {!isMe && !ch.npc ? <RelationshipPanel id={ch.id} name={ch.name} /> : null}
+      {isMe ? <FamilySettings /> : null}
+      {!isMe && !ch.npc ? <FriendLessons otherId={ch.id} sameCity={!!ch.cityId && ch.cityId === me.data?.character?.cityId} /> : null}
 
       {ch.band ? (
         <>
@@ -148,6 +157,7 @@ function CharacterProfileScreen() {
         />
       ))}
       {!isMe && !ch.npc ? <SendMoney name={ch.name} /> : null}
+      {!ch.npc ? <BlogList id={ch.id} /> : null}
       {!ch.npc ? <Guestbook id={ch.id} canSign={!isMe} /> : null}
     </Screen>
   );

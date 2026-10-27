@@ -2,6 +2,7 @@
 import { NPC_BANDS, NPC_TIERS, TUTORIAL } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { pool } from '../src/db';
+import { processDueGigs } from '../src/game/gigs';
 import { ensureNpcWorld, runNpcDirectorNow } from '../src/game/npc';
 import { tick } from '../src/worker';
 import { advance, inject, me, newPlayer, raw, setMoney, setVip, setup, teardown } from './helpers';
@@ -50,8 +51,10 @@ describe('oyunun kendi grupları', () => {
 
     // Konserler oyuncu konserleriyle aynı kurallarla sonuçlanır
     await q(`UPDATE gigs SET starts_at = now() - interval '1 second' WHERE status = 'scheduled'`);
+    // Zamanlayıcı bir turda en fazla 50 konser sonuçlandırır; kalanlar sonraki turda (burada hepsi birden)
     await tick();
-    const done = await q(`SELECT result FROM gigs WHERE status = 'done'`);
+    await processDueGigs(500);
+    const done = await q(`SELECT result FROM gigs WHERE status = 'done' AND festival_id IS NULL`);
     expect(done.rows.length).toBe(NPC_BANDS.length);
     expect(done.rows.every((r) => r.result.attendance > 0)).toBe(true);
 

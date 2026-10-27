@@ -6,7 +6,7 @@
 import {
   CITIES,
   CITY_BY_ID,
-  INSTRUMENTS,
+  CORE_ROLES,
   type Instrument,
   MAX_SETLIST,
   NPC_BANDS,
@@ -155,6 +155,9 @@ async function runBand(c: pg.PoolClient, b: any, def: NpcBandDef, rand: () => nu
     'UPDATE characters SET mood = 80, health = 100, city_id = $2, location_id = NULL, jailed_until = NULL, skills = $3 WHERE id = $1',
     [b.leader_id, def.cityId, JSON.stringify(npcSkills(def))],
   );
+  // Veri dosyasında rol değiştiyse (ör. yeni roller eklenince) kadroyu eşitle
+  await c.query('UPDATE band_members SET role = $3 WHERE band_id = $1 AND character_id = $2 AND role <> $3', [b.id, b.leader_id, def.role]);
+  await c.query('UPDATE characters SET main_instrument = $2 WHERE id = $1 AND main_instrument <> $2', [b.leader_id, def.role]);
 
   // Şöhreti kendi bandında tut
   await c.query(
@@ -225,7 +228,7 @@ async function bookNpcGig(c: pg.PoolClient, b: any, def: NpcBandDef, rand: () =>
     if (!busy) startsAt = at;
   }
   if (!startsAt) return;
-  const session = INSTRUMENTS.filter((r) => r !== def.role) as Instrument[];
+  const session = CORE_ROLES.filter((r) => r !== def.role) as Instrument[];
   await c.query(
     `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles) VALUES ($1, $2, $3, $4, $5, $6)`,
     [b.id, def.cityId, venue.id, startsAt, songs.map((s) => s.id), session],

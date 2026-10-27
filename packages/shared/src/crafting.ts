@@ -4,6 +4,7 @@
 
 import type { L } from './world';
 import { clamp } from './rules';
+import { EXTRA_RECIPES } from './content/items';
 
 export const CRAFT_HOURS = 4;
 
@@ -32,8 +33,13 @@ export const RECIPES: RecipeDef[] = [
   instrument('drums', 'Davul seti', 'Drum kit', { mat_wood: 1, mat_drumhead: 2 }),
   instrument('keys', 'Synthesizer', 'Synthesizer', { mat_circuit: 1, mat_keys: 1 }),
   instrument('vocals', 'Mikrofon', 'Microphone', { mat_capsule: 1, mat_circuit: 1 }),
+  instrument('sax', 'Saksofon', 'Saxophone', { mat_brass: 1, mat_reed: 2 }),
+  instrument('violin', 'Keman', 'Violin', { mat_wood: 1, mat_strings: 1, mat_bow: 1 }),
+  instrument('percussion', 'Konga', 'Conga', { mat_wood: 1, mat_drumhead: 1, mat_leather: 1 }),
   { id: 'outfit', itemId: 'outfit_crafted', name: { tr: 'Sahne kostümü', en: 'Stage costume' }, materials: { mat_fabric: 2, mat_sequins: 1 }, bonus: [2, 13] },
 ];
+// Veri dosyasındaki ek tarifler
+RECIPES.push(...EXTRA_RECIPES);
 export const RECIPE_BY_ID: Record<string, RecipeDef> = Object.fromEntries(RECIPES.map((r) => [r.id, r]));
 
 /** Üretilen eşyanın bonusu */

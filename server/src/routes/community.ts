@@ -4,6 +4,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { fail } from '../errors';
 import { charId, requireUser } from '../auth';
+import { answerFamilyTry, answerFling, familyState, flingState, offerFamilyTry, offerFling, setFamilyOpen } from '../game/family';
 import { answerAdoption, answerProposal, breakUp, cancelProposal, date, flirt, hangout, propose, relationship, requestAdoption, wedding } from '../game/relations';
 import {
   answerFriend,
@@ -68,7 +69,7 @@ export async function communityRoutes(app: FastifyInstance) {
 
   // ---------- Şikâyet ve hediye ----------
   app.post('/reports', async (req) => {
-    const body = parse(z.object({ kind: z.enum(['message', 'guestbook', 'profile']), targetId: z.number().int(), text: z.string().max(300).default('') }), req.body);
+    const body = parse(z.object({ kind: z.enum(['message', 'guestbook', 'profile', 'article']), targetId: z.number().int(), text: z.string().max(300).default('') }), req.body);
     return report(charId(req), body.kind, body.targetId, body.text);
   });
   app.post('/gifts', async (req) => {
@@ -106,6 +107,24 @@ export async function communityRoutes(app: FastifyInstance) {
   app.get('/characters/:id/relationship', async (req) => relationship(charId(req), parse(other, req.params).id));
   app.post('/relationships/:id/hangout', async (req) => hangout(charId(req), parse(other, req.params).id));
   app.post('/relationships/:id/flirt', async (req) => flirt(charId(req), parse(other, req.params).id));
+  // Tek gecelik macera: teklif, kabul ya da ret (karşılıklı onay)
+  app.get('/relationships/:id/fling', async (req) => flingState(pool, charId(req), parse(other, req.params).id));
+  const prot = z.object({ protected: z.boolean().default(true) });
+  app.post('/relationships/:id/fling', async (req) => offerFling(charId(req), parse(other, req.params).id, parse(prot, req.body ?? {}).protected));
+  app.post('/relationships/:id/fling/:answer', async (req) => {
+    const { id, answer } = parse(z.object({ id: z.coerce.number().int(), answer: z.enum(['accept', 'decline']) }), req.params);
+    return answerFling(charId(req), id, answer === 'accept', parse(prot, req.body ?? {}).protected);
+  });
+  // Aile planlaması: ayar, durum ve "çocuk sahibi olmayı dene" (sevgili/evli çift, karşılıklı onay)
+  app.get('/family', async (req) => familyState(pool, charId(req)));
+  app.post('/family/open', async (req) => setFamilyOpen(charId(req), parse(z.object({ open: z.boolean() }), req.body).open));
+  app.post('/relationships/:id/family-try', async (req) =>
+    offerFamilyTry(charId(req), parse(other, req.params).id, parse(z.object({ carrier: z.enum(['me', 'them']) }), req.body).carrier),
+  );
+  app.post('/relationships/:id/family-try/:answer', async (req) => {
+    const { id, answer } = parse(z.object({ id: z.coerce.number().int(), answer: z.enum(['accept', 'decline']) }), req.params);
+    return answerFamilyTry(charId(req), id, answer === 'accept');
+  });
   app.post('/relationships/:id/date', async (req) => {
     const body = parse(z.object({ locationId: z.string() }), req.body);
     return date(charId(req), parse(other, req.params).id, body.locationId);

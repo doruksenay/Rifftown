@@ -1,6 +1,7 @@
 // Bildirimleri Expo push servisi üzerinden telefonlara gönderir.
 
-import { ACHIEVEMENT_BY_ID, CITY_BY_ID, CRIME_BY_ID, LOCATION_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, SKILL_BY_ID, type Lang, gainText, levelUpText, pick, tierName } from '@rifftown/shared';
+import { ACHIEVEMENT_BY_ID,
+  TITLE_BY_ID, CITY_BY_ID, CRIME_BY_ID, LOCATION_BY_ID, OFFICE_BY_ID, PROFESSION_BY_ID, SKILL_BY_ID, type Lang, gainText, levelUpText, pick, tierName } from '@rifftown/shared';
 
 const skillName = (id: string, l: Lang) => (SKILL_BY_ID[id] ? pick(SKILL_BY_ID[id].name, l) : id);
 import { config } from './config';
@@ -19,6 +20,7 @@ const ACTION_TEXT: Record<string, Tpl> = {
   }),
   work: (d, l) => ({ title: T(l, 'Mesai bitti', 'Shift finished'), body: T(l, `${d.pay} $ kazandın`, `You earned $${d.pay}`) }),
   rest: (_d, l) => ({ title: T(l, 'Dinlendin', 'Rested'), body: T(l, 'Ruh hâlin yerine geldi.', 'Your mood is back up.') }),
+  lesson: (d, l) => (d.skill ? { title: T(l, 'Ders bitti', 'Lesson finished'), body: `${skillName(d.skill, l)}: ${gainText(d.gain, l)}.` } : null),
   busk: (d, l) => ({
     title: T(l, 'Sokak müziği bitti', 'Busking finished'),
     body: T(l, `Şapkada ${d.pay} $ birikti.`, `You collected $${d.pay} in tips.`),
@@ -57,6 +59,20 @@ const TEMPLATES: Record<string, Tpl> = {
   achievement: (d, l) => {
     const a = ACHIEVEMENT_BY_ID[d.id];
     return a ? { title: T(l, 'Başarım açıldı!', 'Achievement unlocked!'), body: `${pick(a.name, l)} · +${a.points}` } : null;
+  },
+  fling_offer: (d, l) => ({ title: T(l, 'Bir teklif', 'An offer'), body: T(l, `${d.from} geceyi seninle geçirmek istiyor.`, `${d.from} would like to spend the night with you.`) }),
+  fling_accepted: (d, l) => ({ title: T(l, 'Evet dedi', 'They said yes'), body: T(l, `${d.from} teklifini kabul etti.`, `${d.from} accepted.`) }),
+  pregnancy: (_d, l) => ({ title: T(l, 'Müjde', 'Big news'), body: T(l, 'Aileniz büyüyor!', 'Your family is growing!') }),
+  baby_born: (d, l) => ({ title: T(l, 'Hoş geldin bebek', 'Welcome, baby'), body: T(l, `Bebeğiniz dünyaya geldi: ${d.name}.`, `Your baby has arrived: ${d.name}.`) }),
+  family_try_offer: (d, l) => ({ title: T(l, 'Aile', 'Family'), body: T(l, `${d.from} seninle çocuk sahibi olmayı denemek istiyor.`, `${d.from} would like to try for a baby with you.`) }),
+  cheated_on: (d, l) => ({ title: T(l, 'Kötü bir haber', 'Bad news'), body: T(l, `${d.from} sana sadık kalmadı.`, `${d.from} wasn't faithful to you.`) }),
+  child_upkeep: (d, l) =>
+    d.paid ? null : { title: T(l, 'Aile bütçesi', 'Family budget'), body: T(l, `${d.name} için bu hafta bakım giderini karşılayamadın.`, `You couldn't cover ${d.name}'s care this week.`) },
+  lesson_given: (d, l) => ({ title: T(l, 'Ders verdin', 'You gave a lesson'), body: T(l, `${d.student} senden ders aldı: ${skillName(d.skill, l)}.`, `${d.student} took a lesson from you: ${skillName(d.skill, l)}.`) }),
+  lesson_invite: (d, l) => ({ title: T(l, 'Ders teklifi', 'Lesson offer'), body: T(l, `${d.from} sana ${skillName(d.skill, l)} öğretmek istiyor.`, `${d.from} wants to teach you ${skillName(d.skill, l)}.`) }),
+  title_earned: (d, l) => {
+    const t = TITLE_BY_ID[d.titleId];
+    return t ? { title: T(l, 'Yeni ünvan!', 'New title!'), body: pick(t.name, l) } : null;
   },
   release_out: (d, l) => ({ title: T(l, 'Yeni yayın!', 'New release!'), body: `${d.bandName} · "${d.title}"` }),
   sales_report: (d, l) => ({
@@ -143,6 +159,9 @@ const TEMPLATES: Record<string, Tpl> = {
   business_seized: (d, l) => ({ title: T(l, 'İşletmeni kaybettin', 'Business lost'), body: T(l, `${d.name} giderleri ödenemediği için elinden alındı.`, `${d.name} was taken over because of unpaid costs.`) }),
   trade_offer: (d, l) => ({ title: T(l, 'Takas teklifi', 'Trade offer'), body: T(l, `${d.from} sana takas teklif etti.`, `${d.from} offered you a trade.`) }),
   trade_accepted: (d, l) => ({ title: T(l, 'Takas tamam', 'Trade done'), body: T(l, `${d.from} takası kabul etti.`, `${d.from} accepted your trade.`) }),
+  hospitalized: (_d, l) => ({ title: T(l, 'Hastaneye kaldırıldın', 'Taken to hospital'), body: T(l, 'Sağlığın çok düştü; seni hastaneye götürdüler.', 'Your health dropped too low and you were taken to hospital.') }),
+  scandal: (_d, l) => ({ title: T(l, 'Skandal!', 'Scandal!'), body: T(l, 'Grubun kötü bir haberle gazetelerde.', 'Your band is in the papers for the wrong reasons.') }),
+  addicted: (_d, l) => ({ title: T(l, 'Bağımlı oldun', 'You are hooked'), body: T(l, 'Aşırı harcamalar bağımlılık yaptı. Hastanede tedavi olabilirsin.', 'Overindulging got you hooked. The hospital can help.') }),
   festival_selected: (d, l) => ({ title: T(l, 'Festivale seçildiniz!', 'You made the festival!'), body: T(l, `${d.slot}. sıradasınız.`, `You play slot ${d.slot}.`) }),
 };
 

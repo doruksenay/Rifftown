@@ -12,6 +12,7 @@ import {
   type TradeDto,
   type TradeItemDto,
   type TradesResponse,
+  isBoundItem,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
@@ -77,7 +78,7 @@ export async function tradeableItems(db: Db, characterId: number) {
     [characterId],
   );
   const blocked = new Set(pledged.map((p) => Number(p.proposal_ring)));
-  return items.filter((i) => !i.listed && !blocked.has(i.id));
+  return items.filter((i) => !i.listed && !blocked.has(i.id) && !isBoundItem(i.itemId));
 }
 
 export async function proposeTrade(
@@ -111,6 +112,8 @@ export async function proposeTrade(
         if (!r) fail('item_not_found', 404);
         if (r.listed) fail('item_listed', 409);
         if (await ringPledged(c, r.id)) fail('ring_pledged', 409);
+        // Kişiye bağlı ödül eşyası el değiştiremez
+        if (isBoundItem(r.item_id)) fail('item_bound', 409);
         // Kısa süre önce karşı taraftan gelen eşya ona geri gidemez
         if (returnsTooSoon(r, side === 'give' ? body.toId : fromId)) fail('item_recently_yours', 409);
         rows.push({ side, r });
@@ -178,6 +181,7 @@ export async function acceptTrade(viewer: number, tradeId: number) {
       )
         broken = 'trade_items_changed';
       else if (ITEM_BY_ID[r.item_id]?.vip && !vip.get(to)) broken = 'vip_required';
+      else if (isBoundItem(r.item_id)) broken = 'item_bound';
       else if (returnsTooSoon(r, to)) broken = 'item_recently_yours';
       else locked.push({ id: Number(r.id), from: owner, to });
     }

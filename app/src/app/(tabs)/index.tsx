@@ -4,6 +4,7 @@ import { RefreshControl, View } from 'react-native';
 import { GuideCard } from '@/components/guide';
 import { JailBanner } from '@/components/justice';
 import { MissionsCard } from '@/components/missions';
+import { ChainsCard } from '@/components/chains';
 import { MoodletList } from '@/components/moodlets';
 import { ActionTicket } from '@/components/ticket';
 import { TierMeter } from '@/components/tier';
@@ -62,6 +63,11 @@ export default function Home() {
           <Body>{t('lowMoodWarning')}</Body>
         </Card>
       ) : null}
+      {ch.addicted ? (
+        <Card style={{ marginTop: space.lg, borderColor: c.danger }}>
+          <Body color={c.danger}>{t('addictedWarning')}</Body>
+        </Card>
+      ) : null}
 
       {data.pendingInvites > 0 ? (
         <Card style={{ marginTop: space.lg, borderColor: c.pink }}>
@@ -96,6 +102,7 @@ export default function Home() {
       </View>
 
       <MissionsCard />
+      <ChainsCard />
 
       <Row style={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
         <Heading>{t('recent')}</Heading>

@@ -1,6 +1,8 @@
 // Oyunun kendi dükkânlarında satılan eşyalar. Fiyatlar her şehirde aynıdır.
 
-import { INSTRUMENTS, type Instrument, type L, type ShopType } from './world';
+import { type Genre, INSTRUMENTS, type Instrument, type L, type ShopType } from './world';
+import { EXTRA_ITEMS, GEAR_SETS, REWARD_ITEMS, SEASONAL_ITEMS } from './content/items';
+import { CITY_IDENTITY } from './content/cities';
 
 export type ItemSlot = Instrument | 'outfit' | 'art' | 'vehicle' | 'pet' | 'fx' | 'material' | 'spray' | 'ring';
 
@@ -32,6 +34,55 @@ export interface ItemDef {
   color?: PaintColor;
   /** Tek seferde birden çok alınabilir (malzeme, boya, efekt) */
   stackable?: boolean;
+  /** Ödül eşyası: dükkânda satılmaz (zincir, başarım, şehir ödülü) */
+  reward?: boolean;
+  /** Kişiye bağlı: dükkâna satılamaz, pazara konamaz, takas ve hediye edilemez */
+  bound?: boolean;
+  /** Tür uyumu: grubun türü bunlardan biriyse konserde bonusa genreBonus eklenir */
+  genres?: Genre[];
+  genreBonus?: number;
+  /** Sezonluk: dükkânda yalnızca bu mevsimde satılır (oyun yılı 56 gün, mevsim 14 gün) */
+  season?: Season;
+  /** Nadir: yalnızca bu şehrin dükkânında satılır */
+  cityOnly?: string;
+}
+
+export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
+export const SEASONS: Season[] = ['spring', 'summer', 'autumn', 'winter'];
+export const SEASON_NAMES: Record<Season, L> = {
+  spring: { tr: 'İlkbahar', en: 'Spring' },
+  summer: { tr: 'Yaz', en: 'Summer' },
+  autumn: { tr: 'Sonbahar', en: 'Autumn' },
+  winter: { tr: 'Kış', en: 'Winter' },
+};
+/** Oyun takvimindeki mevsim: oyun yılı 56 gün (consequences.ts GAME_YEAR_DAYS), her mevsim 14 gün */
+export function seasonAt(nowMs: number, gameSpeed: number): Season {
+  const gameDay = Math.floor((nowMs * gameSpeed) / 86_400_000);
+  return SEASONS[Math.floor((((gameDay % 56) + 56) % 56) / 14)];
+}
+
+/** Tür uyumu tavanı: uyumlu eşya en fazla bu kadar ek bonus alır */
+export const MAX_GENRE_BONUS = 3;
+/** Eşyanın bu türdeki ek bonusu */
+export const genreAffinity = (def: ItemDef | undefined, genre: Genre | undefined) =>
+  def && genre && def.genres?.includes(genre) ? Math.min(MAX_GENRE_BONUS, def.genreBonus ?? 0) : 0;
+
+/** Set bonusları: her gruptan bir eşya kuşanılınca sahne performansına eklenir; yalnızca en iyi set sayılır */
+export interface GearSetDef {
+  id: string;
+  name: L;
+  /** Her grup için kuşanılmış olması gereken eşyalardan biri */
+  groups: string[][];
+  stage: number;
+}
+export const MAX_SET_BONUS = 3;
+export function gearSetBonus(equipped: Iterable<string>): { setId: string; stage: number } | null {
+  const have = new Set(equipped);
+  let best: { setId: string; stage: number } | null = null;
+  for (const set of GEAR_SETS) {
+    if (set.groups.every((g) => g.some((id) => have.has(id))) && (!best || set.stage > best.stage)) best = { setId: set.id, stage: Math.min(MAX_SET_BONUS, set.stage) };
+  }
+  return best;
 }
 
 // ---------- Boya renkleri ----------
@@ -62,6 +113,9 @@ const CRAFTED_NAMES: Record<Instrument, L> = {
   drums: { tr: 'El yapımı davul seti', en: 'Handmade drum kit' },
   keys: { tr: 'El yapımı synthesizer', en: 'Handmade synthesizer' },
   vocals: { tr: 'El yapımı mikrofon', en: 'Handmade microphone' },
+  sax: { tr: 'El yapımı saksofon', en: 'Handmade saxophone' },
+  violin: { tr: 'El yapımı keman', en: 'Handmade violin' },
+  percussion: { tr: 'El yapımı konga', en: 'Handmade conga' },
 };
 
 const VINTAGE_NAMES: Record<Instrument, L> = {
@@ -70,6 +124,9 @@ const VINTAGE_NAMES: Record<Instrument, L> = {
   drums: { tr: 'Efsanevi bir davulcunun eski seti', en: 'A legendary drummer\'s old kit' },
   keys: { tr: 'Vintage analog synthesizer', en: 'Vintage analogue synthesizer' },
   vocals: { tr: 'Efsanevi stüdyo mikrofonu', en: 'Legendary studio microphone' },
+  sax: { tr: '1954 vintage tenor saksofon', en: '1954 vintage tenor sax' },
+  violin: { tr: 'Asırlık usta işi keman', en: 'Century-old master violin' },
+  percussion: { tr: 'Efsanevi bir perküsyoncunun konga takımı', en: 'A legendary percussionist\'s conga set' },
 };
 
 const INSTRUMENT_ITEM_NAMES: Record<Instrument, [L, L, L]> = {
@@ -97,6 +154,21 @@ const INSTRUMENT_ITEM_NAMES: Record<Instrument, [L, L, L]> = {
     { tr: 'Başlangıç mikrofonu', en: 'Starter microphone' },
     { tr: 'Sahne mikrofonu', en: 'Stage microphone' },
     { tr: 'Stüdyo kalitesi kablosuz mikrofon', en: 'Studio-grade wireless mic' },
+  ],
+  sax: [
+    { tr: 'Öğrenci alto saksofonu', en: 'Student alto sax' },
+    { tr: 'Sahne tenor saksofonu', en: 'Stage tenor sax' },
+    { tr: 'El yapımı profesyonel saksofon', en: 'Handmade pro saxophone' },
+  ],
+  violin: [
+    { tr: 'Öğrenci kemanı', en: 'Student violin' },
+    { tr: 'Sahne kemanı (manyetikli)', en: 'Stage violin with pickup' },
+    { tr: 'Usta işi konser kemanı', en: 'Master-built concert violin' },
+  ],
+  percussion: [
+    { tr: 'Darbuka ve tef', en: 'Darbuka and frame drum' },
+    { tr: 'Konga ve bongo seti', en: 'Conga and bongo set' },
+    { tr: 'Profesyonel perküsyon kurulumu', en: 'Professional percussion rig' },
   ],
 };
 
@@ -197,8 +269,15 @@ export const ITEMS: ItemDef[] = [
   { id: 'outfit_crafted', shop: 'hardware', slot: 'outfit', tier: 2, price: 300, bonus: 0, crafted: true, name: { tr: 'El yapımı sahne kostümü', en: 'Handmade stage costume' } },
 ];
 
+// Veri dosyasındaki ek eşyalar (packages/shared/src/content/items.ts)
+// Şehre özgü nadir eşyalar (content/cities.ts): yalnızca kendi şehrinin dükkânında
+ITEMS.push(...EXTRA_ITEMS, ...REWARD_ITEMS, ...SEASONAL_ITEMS, ...CITY_IDENTITY.map((c) => c.rareItem));
+
 export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
-export const itemsForShop = (shop: ShopType) => ITEMS.filter((i) => i.shop === shop && !i.crafted);
+/** Dükkân rafı; cityId verilirse yalnızca o şehre özgü nadir eşyalar da katılır (başka şehrinkiler çıkar) */
+export const itemsForShop = (shop: ShopType, cityId?: string) => ITEMS.filter((i) => i.shop === shop && !i.crafted && !i.reward && (!i.cityOnly || i.cityOnly === cityId));
+/** Kişiye bağlı eşya el değiştiremez (satış, pazar, takas, hediye) */
+export const isBoundItem = (itemId: string) => !!ITEM_BY_ID[itemId]?.bound;
 
 // ---------- Hastane ----------
 
@@ -234,3 +313,4 @@ export const NEW_ACCOUNT_TRADE_HOURS = 72;
 export const ITEM_RETURN_COOLDOWN_HOURS = 168;
 /** Kiralık müzisyenler setlisti önceden öğrenir. */
 export const SESSION_FAMILIARITY = 70;
+export { GEAR_SETS } from './content/items';

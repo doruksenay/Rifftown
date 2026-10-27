@@ -5,6 +5,14 @@
 import type { Genre, Instrument, L, Lang } from './world';
 import { GENRES } from './world';
 import { tierOf } from './tiers';
+import { EXTRA_SKILLS } from './content/skills';
+
+/**
+ * Becerilerin genel etkileri (veri dosyalarındaki beceriler için). Değer, beceri 100 iken etkinin büyüklüğüdür:
+ * songwriting/recording/stage/crafting/fitness: o puana eklenen (beceri × ağırlık);
+ * rehearsal/busking/social/romance: çarpana eklenen (beceri ÷ 100 × ağırlık).
+ */
+export type SkillEffectKind = 'songwriting' | 'rehearsal' | 'recording' | 'busking' | 'stage' | 'crafting' | 'social' | 'romance' | 'fitness';
 
 export type SkillCategory = 'music' | 'instruments' | 'genres' | 'stage' | 'career' | 'social' | 'sports' | 'crafts' | 'crime';
 
@@ -44,6 +52,8 @@ export interface SkillDef {
   bookPrice?: number;
   /** Seviye atlayınca kurulan cümle: {tier} yerine seviye adı gelir */
   levelUp?: L;
+  /** Genel etkiler (bkz. SkillEffectKind) */
+  effects?: Partial<Record<SkillEffectKind, number>>;
 }
 
 const PREREQ_LEVEL = 15; // "çırak"
@@ -96,7 +106,7 @@ export const SKILL_DEFS: SkillDef[] = [
   {
     id: 'basic_strings', category: 'instruments', learn: 'book', bookPrice: 40,
     name: { tr: 'Temel telli çalgılar', en: 'Basic string instruments' },
-    about: { tr: 'Gitar ve bas gitarın ortak temeli.', en: 'The shared basis of guitar and bass.' },
+    about: { tr: 'Gitar, bas gitar ve kemanın ortak temeli.', en: 'The shared basis of guitar, bass and violin.' },
   },
   {
     id: 'guitar', category: 'instruments', learn: 'book', bookPrice: 80,
@@ -115,7 +125,7 @@ export const SKILL_DEFS: SkillDef[] = [
   {
     id: 'basic_percussion', category: 'instruments', learn: 'book', bookPrice: 40,
     name: { tr: 'Temel vurmalı çalgılar', en: 'Basic percussion' },
-    about: { tr: 'Ritim duygusu. Davulun temeli.', en: 'Sense of rhythm. The basis of drums.' },
+    about: { tr: 'Ritim duygusu. Davulun ve perküsyonun temeli.', en: 'Sense of rhythm. The basis of drums and percussion.' },
   },
   {
     id: 'drums', category: 'instruments', learn: 'book', bookPrice: 80,
@@ -136,6 +146,11 @@ export const SKILL_DEFS: SkillDef[] = [
     about: { tr: 'Grupta klavye rolünde ne kadar iyi olduğun.', en: 'How good you are in the keyboards role.' },
     levelUp: { tr: 'Artık {tier} bir klavyecisin!', en: "You're now {a} {tier} keyboardist!" },
   },
+  {
+    id: 'basic_winds', category: 'instruments', learn: 'book', bookPrice: 40,
+    name: { tr: 'Temel nefesli çalgılar', en: 'Basic wind instruments' },
+    about: { tr: 'Nefes, dudak ve parmak düzeni. Saksofonun temeli.', en: 'Breath, embouchure and fingering. The basis of the saxophone.' },
+  },
   // ---------- Müzik türleri ----------
   genreSkill('pop', 'Pop', 'Pop'),
   genreSkill('rock', 'Rock', 'Rock'),
@@ -144,6 +159,13 @@ export const SKILL_DEFS: SkillDef[] = [
   genreSkill('metal', 'Metal', 'Metal'),
   genreSkill('jazz', 'Caz', 'Jazz'),
   genreSkill('anatolian', 'Anadolu rock', 'Anatolian rock'),
+  genreSkill('blues', 'Blues', 'Blues'),
+  genreSkill('folk', 'Folk', 'Folk'),
+  genreSkill('punk', 'Punk', 'Punk'),
+  genreSkill('soul', 'Soul', 'Soul'),
+  genreSkill('reggae', 'Reggae', 'Reggae'),
+  genreSkill('country', 'Country', 'Country'),
+  genreSkill('classical', 'Klasik', 'Classical'),
   // ---------- Sahne ----------
   {
     id: 'showmanship', category: 'stage', learn: 'book', bookPrice: 40,
@@ -275,7 +297,23 @@ export const SKILL_DEFS: SkillDef[] = [
   },
 ];
 
+// Veri dosyasındaki ek beceriler (packages/shared/src/content/skills.ts)
+SKILL_DEFS.push(...EXTRA_SKILLS);
+
 export const SKILL_BY_ID: Record<string, SkillDef> = Object.fromEntries(SKILL_DEFS.map((s) => [s.id, s]));
+
+const EFFECT_SKILLS = SKILL_DEFS.filter((d) => d.effects);
+/** Bir etki türüne bütün bilinen becerilerden gelen toplam (bkz. SkillEffectKind) */
+export function skillBonus(s: Skills, kind: SkillEffectKind): number {
+  let sum = 0;
+  for (const d of EFFECT_SKILLS) {
+    const w = d.effects![kind];
+    if (w && typeof s[d.id] === 'number') sum += s[d.id] * w;
+  }
+  return sum;
+}
+/** Çarpan türündeki etkiler için: 1 + beceri ÷ 100 × ağırlık, en fazla ×1,5 */
+export const skillMult = (s: Skills, kind: SkillEffectKind) => Math.min(1.5, 1 + skillBonus(s, kind) / 100);
 export const SKILLS = SKILL_DEFS.map((s) => s.id);
 export type Skill = string;
 /** Sadece açılmış beceriler anahtar olarak bulunur. */
@@ -293,6 +331,10 @@ export const ROLE_SKILLS: Record<Instrument, { basic: string; specific: string }
   bass: { basic: 'basic_strings', specific: 'bass' },
   drums: { basic: 'basic_percussion', specific: 'drums' },
   keys: { basic: 'basic_keyboard', specific: 'keys' },
+  // Yeni roller: asıl beceriler content/skills.ts içinde (saksofon, keman, el perküsyonu)
+  sax: { basic: 'basic_winds', specific: 'saxophone' },
+  violin: { basic: 'basic_strings', specific: 'violin' },
+  percussion: { basic: 'basic_percussion', specific: 'hand_percussion' },
 };
 
 /** Gruptaki rolde ne kadar iyi olduğun (0–100) */
@@ -303,12 +345,13 @@ export const roleSkill = (s: Skills, role: Instrument) =>
 export const stageScore = (s: Skills) =>
   Math.min(
     100,
-    0.45 * lv(s, 'showmanship') + 0.25 * lv(s, 'pro_showmanship') + 0.15 * lv(s, 'dancing') + 0.15 * lv(s, 'audience') + 0.1 * lv(s, 'stagediving'),
+    0.45 * lv(s, 'showmanship') + 0.25 * lv(s, 'pro_showmanship') + 0.15 * lv(s, 'dancing') + 0.15 * lv(s, 'audience') + 0.1 * lv(s, 'stagediving') +
+      Math.min(10, skillBonus(s, 'stage')),
   );
 
 /** Şarkı yazarken kullanılan beceri (0–100) */
 export const songwritingScore = (s: Skills, genre: Genre) =>
-  0.45 * lv(s, 'composing') + 0.35 * lv(s, 'lyrics') + 0.2 * lv(s, genreSkillId(genre));
+  Math.min(100, 0.45 * lv(s, 'composing') + 0.35 * lv(s, 'lyrics') + 0.2 * lv(s, genreSkillId(genre)) + Math.min(10, skillBonus(s, 'songwriting')));
 
 /** Tür becerisine göre bir şarkıda ulaşılabilecek en yüksek aşinalık (50–100) */
 export const familiarityCap = (s: Skills, genre: Genre) => 50 + lv(s, genreSkillId(genre)) / 2;

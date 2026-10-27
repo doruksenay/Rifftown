@@ -6,6 +6,7 @@ import { fail } from '../errors';
 import { ADMIN_HTML } from './admin-page';
 import { adminPlayerRoutes } from './admin-players';
 import { extendVip } from '../game/vip';
+import { removeArticle } from '../game/press';
 import { idParam, parse } from './util';
 
 export async function adminPage(app: FastifyInstance) {
@@ -96,6 +97,23 @@ export async function adminRoutes(app: FastifyInstance) {
     return { ok: true };
   });
 
+  // ---------- Haber ve topluluk yazıları ----------
+
+  app.get('/admin/articles', async () => {
+    const rows = await many(
+      pool,
+      `SELECT a.id, a.kind, a.city_id, a.title, a.body, a.tone, a.removed, a.npc, a.created_at, c.name AS author, c.user_id
+         FROM articles a LEFT JOIN characters c ON c.id = a.author_id WHERE NOT a.npc ORDER BY a.id DESC LIMIT 100`,
+    );
+    return { articles: rows };
+  });
+
+  app.delete('/admin/articles/:id', async (req) => {
+    const { id } = parse(idParam, req.params);
+    await removeArticle(id);
+    return { ok: true };
+  });
+
   app.get('/admin/chat', async () => {
     const rows = await many(
       pool,
@@ -117,10 +135,10 @@ export async function adminRoutes(app: FastifyInstance) {
     const rows = await many(
       pool,
       `SELECT r.id, r.kind, r.target_id, r.text AS note, r.created_at, rc.name AS reporter,
-              CASE r.kind WHEN 'message' THEN dm.text WHEN 'guestbook' THEN g.text ELSE concat_ws(' · ', pc.headline, pc.bio) END AS content,
-              CASE r.kind WHEN 'message' THEN dmc.name WHEN 'guestbook' THEN gc.name ELSE pc.name END AS author,
-              CASE r.kind WHEN 'message' THEN dmc.user_id WHEN 'guestbook' THEN gc.user_id ELSE pc.user_id END AS author_user_id,
-              CASE r.kind WHEN 'message' THEN dmc.id WHEN 'guestbook' THEN gc.id ELSE pc.id END AS author_character_id
+              CASE r.kind WHEN 'message' THEN dm.text WHEN 'guestbook' THEN g.text WHEN 'article' THEN concat_ws(' · ', ar.title, ar.body) ELSE concat_ws(' · ', pc.headline, pc.bio) END AS content,
+              CASE r.kind WHEN 'message' THEN dmc.name WHEN 'guestbook' THEN gc.name WHEN 'article' THEN arc.name ELSE pc.name END AS author,
+              CASE r.kind WHEN 'message' THEN dmc.user_id WHEN 'guestbook' THEN gc.user_id WHEN 'article' THEN arc.user_id ELSE pc.user_id END AS author_user_id,
+              CASE r.kind WHEN 'message' THEN dmc.id WHEN 'guestbook' THEN gc.id WHEN 'article' THEN arc.id ELSE pc.id END AS author_character_id
          FROM reports r
          JOIN characters rc ON rc.id = r.reporter_id
          LEFT JOIN direct_messages dm ON r.kind = 'message' AND dm.id = r.target_id
@@ -128,6 +146,8 @@ export async function adminRoutes(app: FastifyInstance) {
          LEFT JOIN guestbook g ON r.kind = 'guestbook' AND g.id = r.target_id
          LEFT JOIN characters gc ON gc.id = g.author_id
          LEFT JOIN characters pc ON r.kind = 'profile' AND pc.id = r.target_id
+         LEFT JOIN articles ar ON r.kind = 'article' AND ar.id = r.target_id
+         LEFT JOIN characters arc ON arc.id = ar.author_id
         WHERE r.status = 'open'
         ORDER BY r.id DESC LIMIT 100`,
     );
@@ -143,6 +163,7 @@ export async function adminRoutes(app: FastifyInstance) {
     if (body.remove) {
       if (r.kind === 'message') await pool.query('DELETE FROM direct_messages WHERE id = $1', [r.target_id]);
       else if (r.kind === 'guestbook') await pool.query('DELETE FROM guestbook WHERE id = $1', [r.target_id]);
+      else if (r.kind === 'article') await removeArticle(Number(r.target_id));
       else await pool.query(`UPDATE characters SET headline = '', bio = '' WHERE id = $1`, [r.target_id]);
     }
     // Aynı içeriğe yapılan diğer şikâyetler de kapanır

@@ -1,4 +1,4 @@
-import { BAND_NAME_RE, CITY_BY_ID, containsProfanity, GENRES, INSTRUMENTS, MAX_BAND_MEMBERS, VIP, roleSkill } from '@rifftown/shared';
+import { ENCORE_PLANS, MAX_STAGE_EVENTS, BAND_NAME_RE, CITY_BY_ID, containsProfanity, GENRES, INSTRUMENTS, MAX_BAND_MEMBERS, VIP, roleSkill } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { charId, requireUser } from '../auth';
@@ -7,6 +7,9 @@ import { fail } from '../errors';
 import { avatarUrl, gateGig, getCharacter, membership, notify, toGigDto } from '../game/common';
 import { config } from '../config';
 import { bookGig, cancelGig, estimateAttendance } from '../game/gigs';
+import { memberLeaveFameLoss } from '../game/consequences';
+import { bandPressAll } from '../game/press';
+import { addMoodlet } from '../game/wellbeing';
 import { bandReleases, createRelease, getChart, nextReleaseAt } from '../game/music';
 import { idParam, parse } from './util';
 
@@ -31,6 +34,8 @@ async function songsFor(db: Db, characterId: number, bandId: number | null) {
     id: r.id,
     title: r.title,
     genre: r.genre,
+    subgenre: r.subgenre ?? null,
+    tempo: r.tempo ?? 'mid',
     quality: r.quality,
     authorId: r.author_id,
     authorName: r.author_name,
@@ -94,6 +99,7 @@ export async function bandDetail(db: Db, bandId: number, viewerId: number, isVip
     })),
     songs: allSongs.filter((s) => s.inBand),
     fame: Object.fromEntries(fame.map((f) => [f.city_id, Math.round(f.fame * 10) / 10])),
+    press: await bandPressAll(db, bandId),
     upcomingGigs: gigs.filter((g) => g.status === 'scheduled').map((g) => toGigDto({ ...g, band_name: band.name })),
     pastGigs: gigs
       .filter((g) => g.status === 'done')
@@ -161,7 +167,7 @@ export async function bandRoutes(app: FastifyInstance) {
     const body = parse(z.object({ name: z.string().trim(), role: z.enum(INSTRUMENTS) }), req.body);
     return tx(async (c) => {
       const m = await requireBand(c, id, true);
-      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc', [body.name]);
+      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL', [body.name]);
       if (!target) fail('character_not_found', 404);
       if (target.id === id) fail('invalid_target');
       if (await membership(c, target.id)) fail('target_in_band', 409);
@@ -250,18 +256,21 @@ export async function bandRoutes(app: FastifyInstance) {
     return tx(async (c) => {
       const m = await requireBand(c, id);
       await c.query('SELECT 1 FROM bands WHERE id = $1 FOR UPDATE', [m.band_id]);
-      await c.query('DELETE FROM band_members WHERE character_id = $1', [id]);
+      const left = await one(c, 'DELETE FROM band_members WHERE character_id = $1 RETURNING joined_at', [id]);
       const rest = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1 ORDER BY joined_at', [m.band_id]);
       if (rest.length === 0) {
         await c.query('DELETE FROM bands WHERE id = $1', [m.band_id]);
         return { ok: true, disbanded: true };
       }
+      // Ayrılan üye grubun şöhretinden bir parça götürür
+      const fameLost = left ? await memberLeaveFameLoss(c, m.band_id, left.joined_at) : false;
+      await addMoodlet(c, id, 'band_split');
       if (m.leader_id === id) {
         await c.query('UPDATE bands SET leader_id = $2 WHERE id = $1', [m.band_id, rest[0].character_id]);
       }
       const me = await getCharacter(c, id);
       for (const mem of rest) await notify(c, mem.character_id, 'member_left', { name: me.name });
-      return { ok: true, disbanded: false };
+      return { ok: true, disbanded: false, fameLost };
     });
   });
 
@@ -271,10 +280,14 @@ export async function bandRoutes(app: FastifyInstance) {
     return tx(async (c) => {
       const m = await requireBand(c, id, true);
       if (body.characterId === id) fail('invalid_target');
-      const r = await c.query('DELETE FROM band_members WHERE band_id = $1 AND character_id = $2', [m.band_id, body.characterId]);
-      if (!r.rowCount) fail('not_found', 404);
+      await c.query('SELECT 1 FROM bands WHERE id = $1 FOR UPDATE', [m.band_id]);
+      const r = await one(c, 'DELETE FROM band_members WHERE band_id = $1 AND character_id = $2 RETURNING joined_at', [m.band_id, body.characterId]);
+      if (!r) fail('not_found', 404);
+      // Üye çıkarmak da şöhrete mal olur (deneme süresinde değilse)
+      const fameLost = await memberLeaveFameLoss(c, m.band_id, r.joined_at);
+      await addMoodlet(c, body.characterId, 'band_split');
       await notify(c, body.characterId, 'kicked', { bandName: m.name });
-      return { ok: true };
+      return { ok: true, fameLost };
     });
   });
 
@@ -331,6 +344,12 @@ export async function bandRoutes(app: FastifyInstance) {
         setlist: z.array(z.number().int()).min(1),
         sessionRoles: z.array(z.enum(INSTRUMENTS)).max(5).optional(),
         effects: z.array(z.number().int()).max(6).optional(),
+        plan: z
+          .object({
+            events: z.array(z.string().max(30)).max(MAX_STAGE_EVENTS).optional(),
+            encore: z.enum(ENCORE_PLANS).optional(),
+          })
+          .optional(),
       }),
       req.body,
     );

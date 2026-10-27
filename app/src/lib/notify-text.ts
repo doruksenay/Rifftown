@@ -1,5 +1,6 @@
 import {
   ACHIEVEMENT_BY_ID,
+  TITLE_BY_ID,
   CITY_BY_ID,
   OFFICE_BY_ID,
   PROFESSION_BY_ID,
@@ -24,18 +25,24 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
     case 'welcome':
       return t('n_welcome');
     case 'action_done':
+      if (d.kind === 'lesson' && d.skill) return t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
       if (d.kind === 'study') {
         return d.learned ? t('learnedSkill', { skill: skillName(d.skill) }) : t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
       }
       if (d.kind === 'write_song' && d.title) {
         const base = `${t('n_action_done', { action: t('action_write_song') })}: "${d.title}", ${tierName('quality', d.quality, lang)}`;
-        return d.inspirationBonus ? `${base}. ${t('n_song_inspired', { n: d.inspirationBonus })}` : base;
+        const withInspo = d.inspirationBonus ? `${base}. ${t('n_song_inspired', { n: d.inspirationBonus })}` : base;
+        return d.fatigued ? `${withInspo}. ${t('n_song_fatigued')}` : withInspo;
       }
       if (d.kind === 'record' && d.title) return t('n_record', { title: d.title, q: tierName('quality', d.quality, lang) });
       if (d.kind === 'crime' && d.success) return t('n_crime_ok', { money: `$${Number(d.loot).toLocaleString('en-US')}` });
       if (d.kind === 'investigate' && !d.cancelled) {
         return d.solved ? t('n_investigate_solved', { money: `$${Number(d.bonus).toLocaleString('en-US')}` }) : t('n_investigate_none');
       }
+      if (d.kind === 'video' && typeof d.quality === 'number') return t('n_video_done', { q: tierName('quality', d.quality, lang) });
+      if (d.kind === 'travel' && d.breakdown) return d.usedKit ? t('n_breakdown_kit') : t('n_breakdown');
+      if (d.kind === 'press' && !d.cancelled) return d.defused ? t('n_press_defused') : d.success ? t('n_press_ok') : t('n_press_bad');
+      if (d.kind === 'write_article' && d.title) return t('n_article_published', { title: d.title });
       if (d.kind === 'rehearse' && typeof d.familiarity === 'number') {
         return `${t('n_action_done', { action: t('action_rehearse') })}: ${tierName('familiarity', d.familiarity, lang)}`;
       }
@@ -83,6 +90,14 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       const a = ACHIEVEMENT_BY_ID[d.id];
       return a ? t('n_achievement', { name: p(a.name), points: a.points }) : n.kind;
     }
+    case 'lesson_given':
+      return t('n_lesson_given', { student: d.student ?? '', skill: skillName(d.skill) });
+    case 'lesson_invite':
+      return t('n_lesson_invite', { from: d.from ?? '', skill: skillName(d.skill) });
+    case 'title_earned': {
+      const ti = TITLE_BY_ID[d.titleId];
+      return ti ? t('n_title_earned', { name: p(ti.name) }) : n.kind;
+    }
     case 'release_out':
       return t('n_release_out', { band: d.bandName, title: d.title });
     case 'sales_report': {
@@ -121,6 +136,22 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
     case 'adoption_request':
     case 'adoption_done':
       return t(`n_${n.kind}` as StringKey, { name: d.name ?? '' });
+    case 'fling_offer':
+    case 'fling_accepted':
+    case 'fling_declined':
+      return t(`n_${n.kind}` as StringKey, { from: d.from ?? '' });
+    case 'pregnancy':
+      return t('n_pregnancy');
+    case 'baby_born':
+      return t('n_baby_born', { name: d.name ?? '' });
+    case 'family_try_offer':
+      return t('n_family_try_offer', { from: d.from ?? '' });
+    case 'family_try_done':
+      return t('n_family_try_done');
+    case 'cheated_on':
+      return t(d.ended ? 'n_cheated_on_ended' : 'n_cheated_on', { from: d.from ?? '' });
+    case 'child_upkeep':
+      return t(d.paid ? 'n_child_upkeep_paid' : 'n_child_upkeep_unpaid', { name: d.name ?? '', money: `$${Number(d.amount ?? 0).toLocaleString('en-US')}` });
     case 'item_sold':
       return t('n_item_sold', { money: money(d.earned ?? 0) });
     case 'job_offer':
@@ -138,6 +169,31 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       return t(`n_${n.kind}` as StringKey, { from: d.from ?? '' });
     case 'trade_failed':
       return t('n_trade_failed');
+    case 'crew_quit':
+    case 'label_counter':
+    case 'label_declined':
+    case 'label_signed':
+      return t(`n_${n.kind}` as StringKey);
+    case 'tour_done':
+    case 'tour_failed':
+      return t(`n_${n.kind}` as StringKey, { name: d.name ?? '', n: d.played ?? 0, total: d.total ?? 0 });
+    case 'video_chart':
+      return t('n_video_chart', { pos: d.position ?? '' });
+    case 'label_offer':
+      return t('n_label_offer', { label: d.label ?? '' });
+    case 'label_closed':
+      return t('n_label_closed', { name: d.name ?? '' });
+    case 'press_article':
+      return t('n_press_article', { by: d.by ?? '', title: d.title ?? '' });
+    case 'scandal':
+      return t('n_scandal', { kind: t(`scandal_${d.kind}` as StringKey), city: CITY_BY_ID[d.cityId] ? p(CITY_BY_ID[d.cityId].name) : '' });
+    case 'addicted':
+    case 'recovered':
+    case 'hospitalized':
+      return t(`n_${n.kind}` as StringKey);
+    case 'member_died':
+    case 'partner_died':
+      return t(`n_${n.kind}` as StringKey, { name: d.name ?? '' });
     case 'festival_selected':
       return t('n_festival_selected', { slot: d.slot ?? '' });
     default:
@@ -155,6 +211,8 @@ export function notificationHref(n: NotificationDto, myId?: number): string | nu
   if ((n.kind === 'election_won' || n.kind === 'election_lost' || n.kind === 'office_lost') && d.cityId) return `/location/${d.cityId}-city_hall`;
   if (n.kind === 'action_done' && d.kind === 'write_song') return '/me';
   if (n.kind === 'achievement') return '/achievements';
+  if (n.kind === 'lesson_invite' && d.fromId) return `/character/${d.fromId}`;
+  if ((n.kind === 'fling_offer' || n.kind === 'fling_accepted') && d.fromId) return `/character/${d.fromId}`;
   if ((n.kind === 'evicted' || n.kind === 'rent_paid') && d.cityId) return `/location/${d.cityId}-real_estate`;
   if (n.kind === 'release_out' || n.kind === 'sales_report' || (n.kind === 'action_done' && d.kind === 'record')) return '/releases';
   if (n.kind === 'arrested' || n.kind === 'convicted' || n.kind === 'acquitted') return '/';
@@ -166,6 +224,11 @@ export function notificationHref(n: NotificationDto, myId?: number): string | nu
   if (n.kind.startsWith('job_') && d.locationId) return `/location/${d.locationId}`;
   if (n.kind === 'item_sold') return '/me';
   if (n.kind.startsWith('trade_')) return '/trades';
+  if (n.kind.startsWith('label_')) return '/label';
+  if (n.kind.startsWith('tour_') || n.kind === 'crew_quit') return '/tour';
+  if (n.kind === 'video_chart') return '/charts';
+  if (n.kind === 'hospitalized' && d.cityId) return `/location/${d.cityId}-hospital`;
+  if (n.kind === 'scandal' || n.kind === 'member_died') return '/band';
   if (n.kind === 'festival_selected' && d.cityId) return `/location/${d.cityId}-festival`;
   return null;
 }

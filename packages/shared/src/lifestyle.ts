@@ -2,10 +2,11 @@
 
 import type { L } from './world';
 import { clamp } from './rules';
+import { CITY_IDENTITY } from './content/cities';
 
 // ---------- Restoran ----------
 
-export type MealId = 'soup' | 'daily' | 'chef';
+export type MealId = string;
 export interface MealDef {
   id: MealId;
   name: L;
@@ -13,13 +14,21 @@ export interface MealDef {
   price: number;
   mood: number;
   health: number;
+  /** Yerel lezzet: yalnızca bu şehrin restoranlarında */
+  cityId?: string;
+  /** Anında enerji (yoksa wellbeing.ts MEAL_ENERGY) */
+  energy?: number;
 }
 export const MEALS: MealDef[] = [
   { id: 'soup', name: { tr: 'Mercimek çorbası', en: 'Lentil soup' }, price: 6, mood: 4, health: 1 },
   { id: 'daily', name: { tr: 'Günün yemeği', en: 'Dish of the day' }, price: 15, mood: 8, health: 3 },
   { id: 'chef', name: { tr: 'Şefin menüsü', en: "Chef's menu" }, price: 45, mood: 15, health: 5 },
 ];
+// Her şehrin yerel lezzeti (content/cities.ts): günün yemeğinden biraz iyi, şefin menüsünden ucuz ve zayıf
+MEALS.push(...CITY_IDENTITY.map((c) => ({ ...c.dish, cityId: c.cityId, energy: 22 })));
 export const MEAL_BY_ID: Record<string, MealDef> = Object.fromEntries(MEALS.map((m) => [m.id, m]));
+/** Bir şehrin restoranında yenebilecek yemekler */
+export const mealsIn = (cityId: string) => MEALS.filter((m) => !m.cityId || m.cityId === cityId);
 /** İki yemek arasında en az bu kadar oyun saati geçmeli (tokluk) */
 export const MEAL_COOLDOWN_HOURS = 2;
 /** Oyuncu restoranında satılan yemeğin maliyeti (malzeme): fiyatın bu kadarı kasaya girmez */

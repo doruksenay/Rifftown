@@ -1,4 +1,5 @@
 import {
+  REVIEW_TIERS,
   CITY_BY_ID,
   CRIME_BY_ID,
   RELEASE_RULES,
@@ -152,10 +153,13 @@ describe('oyun dengesi', () => {
       venue: { tr: 'Kadıköy Bodrum Bar', en: 'Kadikoy Basement Bar' }, city: { tr: 'İstanbul', en: 'Istanbul' },
       bestSong: 'Son Vapur', seed: 0,
     });
-    expect(r.tr).toContain('Kadıköy Bodrum Bar tıklım tıklımdı.');
-    expect(r.tr).toContain('72 seyirci bis istedi');
+    // Doluluk cümlesi mekânı anar; ana cümle kalite basamağından gelir
+    expect(r.tr).toContain('Kadıköy Bodrum Bar');
+    expect(r.en).toContain('Kadikoy Basement Bar');
+    const tier = REVIEW_TIERS.find((t) => t.minQuality === 60)!;
+    const fillLine = (x: string) => x.replace(/\{n\}/g, '72').replace(/\{venue\}/g, 'Kadıköy Bodrum Bar').replace(/\{city\}/g, 'İstanbul').replace(/\{song\}/g, 'Son Vapur');
+    expect(tier.lines.some((x) => r.tr.includes(fillLine(x.tr)))).toBe(true);
     expect(r.tr).toContain('1 üye sahneye çıkmadı');
-    expect(r.en).toContain('72 people');
   });
 
   it('her şehirde tüm mekân türleri ve en az bir iş yeri var', () => {
@@ -165,7 +169,7 @@ describe('oyun dengesi', () => {
         expect(types.has(t as any), `${city.id} ${t}`).toBe(true);
       }
     }
-    expect(INSTRUMENTS.length).toBe(5);
+    expect(INSTRUMENTS.length).toBe(8); // 5 temel rol + saksofon, keman, perküsyon
   });
 });
 
@@ -201,5 +205,25 @@ describe('kayıt, satış ve suç dengesi', () => {
     expect(solveChance({ law: 100, investigation: 100 }, 'agent', {})).toBe(0.9);
     expect(solveChance({}, 'police', { stealth: 100 })).toBe(0.1);
     expect(bailCost(10, 1)).toBe(400);
+  });
+});
+
+describe('tempo', () => {
+  it('takvim tek yerde: single 28, albüm 112 gün; liste haftası 7 gün; şöhret ödülü günlük aynı', async () => {
+    const { PACING, RELEASE_RULES: R, CHART_WEEK_DAYS, chartFameBonus: bonus } = await import('@rifftown/shared');
+    expect(R.single.cooldownDays).toBe(PACING.singleCooldownDays);
+    expect(R.album.cooldownDays).toBe(112);
+    expect(CHART_WEEK_DAYS).toBe(7);
+    // Satış süresi liste haftası cinsinden ve bekleme süresinden uzun
+    expect(R.single.weeks * CHART_WEEK_DAYS).toBeGreaterThanOrEqual(R.single.cooldownDays);
+    expect(R.album.weeks * CHART_WEEK_DAYS).toBeGreaterThanOrEqual(R.album.cooldownDays);
+    // Liste birinciliğinin günlük şöhret değeri eski 3 günlük haftayla aynı (0,7 / 3 ≈ 1,6 / 7)
+    expect(bonus(1, 0) / CHART_WEEK_DAYS).toBeCloseTo(0.7 / 3, 1);
+    // Yayın başına toplam satış artar ama zaman başına yayın geliri azalır (enflasyon freni)
+    const total = (k: 'single' | 'album') => R[k].base * (1 - R[k].decay ** R[k].weeks) / (1 - R[k].decay);
+    const perDayNew = total('single') / R.single.cooldownDays;
+    const perDayOld = (140 * (1 - 0.86 ** 19)) / (1 - 0.86) / 7;
+    expect(perDayNew).toBeLessThan(perDayOld);
+    expect(total('single')).toBeGreaterThan(1000);
   });
 });

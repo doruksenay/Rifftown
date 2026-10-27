@@ -38,7 +38,22 @@ import {
   gigAdvice,
   GIG_ENERGY_COST,
   INSPIRATION_GAIN,
+  MAX_STAGE_EVENTS,
+  STAGE_EVENTS,
+  STAGE_EVENT_BY_ID,
+  ENCORE_PLANS,
+  type EncorePlan,
+  CANCEL_SCANDAL_RATIO,
+  DISASTER_QUALITY,
+  cancelFamePenalty,
+  ticketsSold,
+  marketingAttendanceMult,
+  stageEventAllowed,
+  cityEventActive,
 } from '@rifftown/shared';
+import { createScandal, markFameActive, touchFamiliarity } from './consequences';
+import { bandPress } from './press';
+import { afterGigCrew, crewForGig, wearGigGear } from './touring';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
@@ -148,12 +163,13 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     if (fx.length !== fxIds.length) fail('invalid_item');
     if (fx.length) await c.query('DELETE FROM inventory WHERE id = ANY($1::bigint[])', [fx.map((f) => f.id)]);
 
+    const plan = normalizePlan(req.plan, m!.genre as Genre);
     await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee]);
     const gig = await one(
       c,
-      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id)],
+      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan)],
     );
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
@@ -170,6 +186,38 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
   });
 }
 
+/** Performans planını doğrular: bilinmeyen olay ya da bis seçeneği reddedilir */
+export function normalizePlan(plan: { events?: string[]; encore?: string } | undefined, genre?: Genre): { events: string[]; encore: EncorePlan } {
+  const events = [...new Set(plan?.events ?? [])];
+  if (events.length > MAX_STAGE_EVENTS) fail('too_many_events');
+  if (events.some((e) => !STAGE_EVENT_BY_ID[e])) fail('invalid_event');
+  // Türe bağlı olaylar (ör. pogo yalnızca rock, metal, punk)
+  if (genre && events.some((e) => !stageEventAllowed(STAGE_EVENT_BY_ID[e], genre))) fail('event_wrong_genre');
+  const encore = (plan?.encore ?? 'none') as EncorePlan;
+  if (!(ENCORE_PLANS as readonly string[]).includes(encore)) fail('invalid_encore');
+  return { events, encore };
+}
+
+/** Grubun bekleme süresi dolmamış sahne olayları (son konserlerde denenmiş olanlar) */
+export async function eventsOnCooldown(db: Db, bandId: number, at = Date.now()): Promise<string[]> {
+  const longest = Math.max(...STAGE_EVENTS.map((e) => e.cooldownHours));
+  const rows = await many(
+    db,
+    `SELECT starts_at, result->'events' AS events FROM gigs
+      WHERE band_id = $1 AND status = 'done' AND starts_at > $2 AND result ? 'events'`,
+    [bandId, new Date(at - gameHoursToMs(longest, config.gameSpeed))],
+  );
+  const out = new Set<string>();
+  for (const r of rows) {
+    for (const e of (r.events ?? []) as { id: string; outcome: string }[]) {
+      const def = STAGE_EVENT_BY_ID[e.id];
+      if (!def || e.outcome === 'skipped') continue;
+      if (r.starts_at.getTime() + gameHoursToMs(def.cooldownHours, config.gameSpeed) > at) out.add(e.id);
+    }
+  }
+  return [...out];
+}
+
 export async function cancelGig(characterId: number, gigId: number) {
   return tx(async (c) => {
     const m = await membership(c, characterId);
@@ -181,18 +229,29 @@ export async function cancelGig(characterId: number, gigId: number) {
     const venue = LOCATION_BY_ID[gig.location_id].type as VenueType;
     const refund = SESSION_MUSICIAN[venue].fee * gig.session_roles.length;
     if (gig.festival_id) fail('festival_gig');
-    await c.query(`UPDATE gigs SET status = 'cancelled' WHERE id = $1`, [gigId]);
+    // Ceza satılan biletle büyür: rezervasyondan bu yana geçen süreye göre beklenen seyircinin bir kısmı bilet almıştır
+    const fame = await bandFame(c, m!.band_id, gig.city_id);
+    const pop = CITY_BY_ID[gig.city_id].genrePopularity[m!.genre as Genre] ?? 1;
+    const expected = expectedAttendance(venue, fame, pop, () => 0.5);
+    const leadHours = Math.max(0.01, (gig.starts_at.getTime() - gig.created_at.getTime()) / gameHoursToMs(1, config.gameSpeed));
+    const elapsedHours = (Date.now() - gig.created_at.getTime()) / gameHoursToMs(1, config.gameSpeed);
+    const sold = ticketsSold(expected, elapsedHours, leadHours);
+    const penalty = cancelFamePenalty(venue, sold);
+    await c.query(`UPDATE gigs SET status = 'cancelled', result = $2 WHERE id = $1`, [gigId, JSON.stringify({ cancelled: true, ticketsSold: sold, famePenalty: penalty })]);
     await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [characterId, refund]);
     for (const itemId of gig.effects ?? []) {
       await c.query(`INSERT INTO inventory(character_id, item_id, slot) VALUES ($1, $2, 'fx')`, [characterId, itemId]);
     }
-    // Son dakika iptali şöhret kaybettirir
-    await addFame(c, m!.band_id, gig.city_id, -1);
+    // İptal şöhret kaybettirir; biletlerin çoğu satılmışsa skandala dönüşür
+    await addFame(c, m!.band_id, gig.city_id, -penalty);
+    if (sold >= VENUE_RULES[venue].capacity * CANCEL_SCANDAL_RATIO) {
+      await createScandal(c, { bandId: m!.band_id, characterId: null, cityId: gig.city_id, kind: 'cancel' });
+    }
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
       if (mem.character_id !== characterId) await notify(c, mem.character_id, 'gig_cancelled', { gigId, bandName: m!.name });
     }
-    return { ok: true, refund };
+    return { ok: true, refund, ticketsSold: sold, famePenalty: penalty };
   });
 }
 
@@ -237,13 +296,14 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   const ids = chars.map((ch) => ch.id);
   // Konser şehrinde olmayan ya da cezaevindeki üye sahneye çıkamaz
   const onStage = (ch: CharacterRow) => ch.city_id === gig.city_id && !isJailed(ch);
-  const gear = await gearBonuses(c, ids);
+  // Tür uyumlu eşyalar ve set bonusu grubun türüne göre
+  const gear = await gearBonuses(c, ids, band.genre as Genre);
   const famRows = await many(
     c,
     'SELECT character_id, song_id, value FROM familiarity WHERE character_id = ANY($1::bigint[]) AND song_id = ANY($2::bigint[])',
     [ids, gig.setlist],
   );
-  const songs = await many(c, 'SELECT id, title, genre, quality FROM songs WHERE id = ANY($1::bigint[])', [gig.setlist]);
+  const songs = await many(c, 'SELECT id, title, genre, quality, tempo, subgenre FROM songs WHERE id = ANY($1::bigint[])', [gig.setlist]);
   const fame = await bandFame(c, gig.band_id, gig.city_id);
   // Görünen ruh hâli (moodlet'lerle), enerji ve ilham
   const wells = new Map<number, Wellbeing>();
@@ -269,7 +329,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       inspiration: wells.get(ch.id)!.inspiration,
       present: onStage(ch),
       instrumentBonus: g.instruments[role] ?? 0,
-      outfitBonus: g.outfit + g.tattoos,
+      outfitBonus: g.outfit + g.tattoos + g.setStage,
       familiarity,
     };
   });
@@ -297,6 +357,13 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     });
   }
 
+  // Turne ekibi (oyunun kendi grupları ekip tutmaz)
+  // Kariyer becerileri (perks.ts): pazarlama ve muhasebe grubun en iyisinden, lojistik sahnedekilerin en iyisinden
+  const ownChars = chars.filter(onStage);
+  const bestOf = (list: CharacterRow[], id: string) => Math.max(0, ...list.map((ch) => lv(ch.skills, id)));
+  const marketing = bestOf(chars, 'marketing');
+  const crew = await crewForGig(c, gig.band_id, gig.city_id, { accounting: bestOf(chars, 'accounting'), logistics: bestOf(ownChars, 'logistics') });
+  const press = await bandPress(c, gig.band_id, gig.city_id);
   const res = computeGig({
     venue,
     fame,
@@ -306,10 +373,21 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     setlist: gig.setlist.map((id: number) => songs.find((s) => s.id === id)).filter(Boolean),
     rand: Math.random,
     fxBonus: Math.min(MAX_FX_BONUS, (gig.effects ?? []).reduce((sum: number, id: string) => sum + (ITEM_BY_ID[id]?.bonus ?? 0), 0)),
+    plan: gig.plan ?? {},
+    press,
+    crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },
+    cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
+    // Şehrin haftalık etkinliği (content/cities.ts): o gün uyan türdeki konsere daha çok seyirci
+    cityEvent: cityEventActive(gig.city_id, band.genre as Genre, gig.starts_at.getTime(), config.gameSpeed),
+    // Haftanın modası açık liste haftasına göre döner
+    weekId: Number((await one(c, `SELECT id FROM chart_weeks WHERE status = 'open' ORDER BY id DESC LIMIT 1`))?.id ?? 0),
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür
   const ownerShare = await barGigShare(c, gig.location_id, res.revenue, ids);
   res.revenue -= ownerShare;
+  // Ekip ücreti bilet gelirinden ödenir; yetmezse ödenmez ve moral çöker
+  const crewPaid = crew.roles.length > 0 && res.revenue >= crew.fee;
+  if (crewPaid) res.revenue -= crew.fee;
 
   const presentChars = chars.filter(onStage);
   const perMember = presentChars.length ? Math.floor(res.revenue / presentChars.length) : 0;
@@ -337,7 +415,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     await notifySkillUps(c, ch.id, ch.skills, skills);
     // Sahne yorar ama ilham verir; iyi ya da kötü bir gece ruh hâlinde iz bırakır
     const inspiration = res.legendary ? INSPIRATION_GAIN.legendaryGig : INSPIRATION_GAIN.gig + Math.max(0, (res.quality - 50) / 8);
-    await changeWellbeing(c, ch, { energy: -GIG_ENERGY_COST, inspiration });
+    await changeWellbeing(c, ch, { energy: -Math.max(0, GIG_ENERGY_COST - crew.energySaved) - (res.encoreEnergy ?? 0), inspiration });
     if (res.legendary) await addMoodlet(c, ch.id, 'legendary_gig');
     else if (res.quality >= 70) await addMoodlet(c, ch.id, 'great_gig');
     else if (res.quality < GIG_BREAK_EVEN_QUALITY) await addMoodlet(c, ch.id, 'bad_gig');
@@ -365,6 +443,16 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     res.fameDelta = Math.round(res.fameDelta * (1 + media / 400) * 10) / 10;
   }
   await addFame(c, gig.band_id, gig.city_id, res.fameDelta);
+  // Konser verilen şehirde şöhret canlı kalır; sahnede çalınan şarkılar unutulmaz
+  await markFameActive(c, gig.band_id, gig.city_id);
+  await touchFamiliarity(c, presentChars.map((x) => x.id), gig.setlist);
+  // Sahnedeki enstrümanlar yıpranır; ekip morali güncellenir
+  await wearGigGear(c, presentChars.map((x) => x.id), presentChars.map((x) => memberRows[chars.indexOf(x)].role), crew.wearMult);
+  if (crew.roles.length && res.presentCount > 0) await afterGigCrew(c, gig.band_id, crewPaid, res.quality, crew.moraleLoss);
+  // Kulüp ve üstünde felaket bir gece haber olur
+  if (res.presentCount > 0 && venue !== 'bar' && res.quality < DISASTER_QUALITY && !band.npc_key) {
+    await createScandal(c, { bandId: gig.band_id, characterId: null, cityId: gig.city_id, kind: 'disaster' });
+  }
   const fameAfter = await bandFame(c, gig.band_id, gig.city_id);
   const fameUp = tierChange('fame', fame, fameAfter) > 0;
   if (res.fameDelta > 0) {
@@ -377,7 +465,19 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
 
   const best = [...res.songScores].sort((a, b) => b.score - a.score)[0];
   const bestSong = best ? songs.find((x) => x.id === best.id) : null;
+  // Eleştirmen kıyas yapar: son 48 oyun saatinde aynı şehirde çalan başka bir grubun gecesi
+  const rival = await one(
+    c,
+    `SELECT b.name, (g.result->>'quality')::int AS quality FROM gigs g JOIN bands b ON b.id = g.band_id
+      WHERE g.city_id = $1 AND g.band_id <> $2 AND g.status = 'done' AND g.starts_at > $3 AND (g.result->>'presentCount')::int > 0
+      ORDER BY g.starts_at DESC LIMIT 1`,
+    [gig.city_id, gig.band_id, new Date(Date.now() - gameHoursToMs(48, config.gameSpeed))],
+  );
   const review = gigReview({
+    cityId: gig.city_id,
+    events: (res.events ?? []).map((e) => ({ id: e.id, outcome: e.outcome, name: STAGE_EVENT_BY_ID[e.id]?.name })),
+    press,
+    rival: rival ? { name: rival.name, quality: Number(rival.quality) } : null,
     quality: res.quality,
     attendance: res.attendance,
     capacity: VENUE_RULES[venue].capacity,
@@ -405,9 +505,14 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     songScores: res.songScores,
     factors: res.factors,
     advice: res.factors ? gigAdvice(res.factors) : [],
+    flow: res.flow ?? 0,
+    events: res.events ?? [],
+    encore: res.encore ?? 'none',
     fame: fameAfter,
     effects: gig.effects ?? [],
     ownerShare,
+    crewFee: crewPaid ? crew.fee : 0,
+    crewUnpaid: crew.roles.length > 0 && !crewPaid,
     festivalId: gig.festival_id ?? null,
   };
   await c.query(`UPDATE gigs SET status = 'done', result = $2, legendary = $3 WHERE id = $1`, [gig.id, JSON.stringify(result), !!res.legendary]);

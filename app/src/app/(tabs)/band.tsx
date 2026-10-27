@@ -154,7 +154,7 @@ function MyBand() {
                 small
                 variant="ghost"
                 onPress={() =>
-                  confirmThen(t('kick'), `${t('kick')}: ${m.name}?`, t('confirm'), t('cancel'), () =>
+                  confirmThen(t('kick'), `${t('kick')}: ${m.name}? ${t('leaveBandFameNote')}`, t('confirm'), t('cancel'), () =>
                     run(() => api.post('/bands/mine/kick', { characterId: m.characterId }), { invalidate: ['band'] }),
                   )
                 }
@@ -252,6 +252,10 @@ function MyBand() {
         <Button title={t('releases')} variant="secondary" onPress={() => router.push('/releases')} style={{ flex: 1 }} />
         <Button title={t('charts')} variant="secondary" onPress={() => router.push('/charts')} style={{ flex: 1 }} />
       </Row>
+      <Row style={{ marginTop: space.sm }}>
+        <Button title={t('tourTitle')} variant="secondary" onPress={() => router.push('/tour')} style={{ flex: 1 }} />
+        <Button title={t('labelTitle')} variant="secondary" onPress={() => router.push('/label')} style={{ flex: 1 }} />
+      </Row>
 
       <Heading>{t('upcomingGigs')}</Heading>
       {band.upcomingGigs.length ? (
@@ -274,7 +278,12 @@ function MyBand() {
       {fame.length ? (
         fame.map(([cityId, f], i) => (
           <View key={cityId}>
-            <ListRow title={p(CITY_BY_ID[cityId].name)} right={<TierText scale="fame" value={f} />} last />
+            <ListRow
+              title={p(CITY_BY_ID[cityId].name)}
+              subtitle={band.press?.[cityId] !== undefined ? tierName('press', band.press[cityId], lang) : undefined}
+              right={<TierText scale="fame" value={f} />}
+              last
+            />
             <VenueProgress fame={f} />
             {i === fame.length - 1 ? null : <View style={{ height: 1, backgroundColor: c.line }} />}
           </View>
@@ -308,7 +317,7 @@ function MyBand() {
         variant="ghost"
         style={{ marginTop: space.xxl, alignSelf: 'flex-start', paddingHorizontal: 0 }}
         onPress={() =>
-          confirmThen(t('leaveBand'), t('leaveConfirm'), t('confirm'), t('cancel'), () =>
+          confirmThen(t('leaveBand'), `${t('leaveConfirm')} ${t('leaveBandFameNote')}`, t('confirm'), t('cancel'), () =>
             run(() => api.post('/bands/mine/leave'), { invalidate: ['band', 'me', 'songs'] }),
           )
         }

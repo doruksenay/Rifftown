@@ -16,6 +16,12 @@ import {
   gameHoursToMs,
   tierChange,
   tierOf,
+  ageOf,
+  START_AGE,
+  wornBonus,
+  type Genre,
+  gearSetBonus,
+  genreAffinity,
 } from '@rifftown/shared';
 import type { Db } from '../db';
 import { many, one } from '../db';
@@ -40,6 +46,8 @@ export interface CharacterRow {
   profession: string | null;
   career_hours: number;
   career_rank: number;
+  /** Müzik öğretmeninin saatlik ders ücreti (NULL: ders vermiyor) */
+  lesson_price?: number | null;
   jailed_until: Date | null;
   convictions: number;
   npc: boolean;
@@ -51,6 +59,12 @@ export interface CharacterRow {
   energy_at: Date;
   inspiration: number;
   inspiration_at: Date;
+  indulgence: number;
+  indulgence_at: Date;
+  indulged_at: Date | null;
+  addicted_since: Date | null;
+  critical_since: Date | null;
+  dead_at: Date | null;
 }
 
 /** Profil fotoğrafının adresi (/api'ye göre); fotoğraf yoksa null */
@@ -102,6 +116,8 @@ export const toCharacterDto = (
   bank: r.bank ?? 0,
   hotel: extra.hotel ?? null,
   business: extra.business ?? null,
+  age: Math.floor(config.agingEnabled ? ageOf(r.created_at, config.gameSpeed) : START_AGE),
+  addicted: !!r.addicted_since,
   };
 };
 
@@ -148,6 +164,7 @@ export const toGigDto = (r: any): GigDto => ({
   setlist: r.setlist,
   sessionRoles: r.session_roles ?? [],
   result: r.result,
+  plan: r.plan ?? {},
 });
 
 export async function lockCharacter(db: Db, id: number): Promise<CharacterRow> {
@@ -193,16 +210,24 @@ export interface GearBonuses {
   vehicleSpeed: number;
   /** Dövmelerden gelen sahne imajı */
   tattoos: number;
+  /** Tamamlanan eşya setinin sahne bonusu ve kimliği (items.ts gearSetBonus) */
+  setStage: number;
+  setId: string | null;
 }
 
 /** Karakterin kuşandığı eşyalardan ve dövmelerinden gelen bonuslar. */
-export async function gearBonuses(db: Db, characterIds: number[]): Promise<Map<number, GearBonuses>> {
+/** genre: konser veren grubun türü; verilirse tür uyumlu eşyalar ek bonus alır (items.ts genreAffinity) */
+export async function gearBonuses(db: Db, characterIds: number[], genre?: Genre): Promise<Map<number, GearBonuses>> {
   const out = new Map<number, GearBonuses>();
-  for (const id of characterIds) out.set(id, { instruments: {}, outfit: 0, art: 0, pet: 0, vehicleSpeed: 0, tattoos: 0 });
+  const equippedIds = new Map<number, string[]>();
+  for (const id of characterIds) {
+    out.set(id, { instruments: {}, outfit: 0, art: 0, pet: 0, vehicleSpeed: 0, tattoos: 0, setStage: 0, setId: null });
+    equippedIds.set(id, []);
+  }
   if (characterIds.length === 0) return out;
   const rows = await many(
     db,
-    `SELECT character_id, item_id, slot, equipped, bonus, legendary_at FROM inventory WHERE character_id = ANY($1::bigint[]) AND NOT listed`,
+    `SELECT character_id, item_id, slot, equipped, bonus, legendary_at, wear FROM inventory WHERE character_id = ANY($1::bigint[]) AND NOT listed`,
     [characterIds],
   );
   for (const r of rows) {
@@ -213,10 +238,17 @@ export async function gearBonuses(db: Db, characterIds: number[]): Promise<Map<n
     const bonus = (r.bonus ?? def.bonus) + (r.legendary_at ? LEGENDARY_ITEM_BONUS : 0);
     if (def.slot === 'art') g.art += bonus;
     else if (!r.equipped) continue;
-    else if (def.slot === 'outfit') g.outfit = bonus;
+    else if (def.slot === 'outfit') g.outfit = bonus + genreAffinity(def, genre);
     else if (def.slot === 'pet') g.pet = bonus;
     else if (def.slot === 'vehicle') g.vehicleSpeed = def.speed ?? 0;
-    else if ((INSTRUMENTS as readonly string[]).includes(def.slot)) g.instruments[def.slot as Instrument] = bonus;
+    // Yıpranmış enstrüman bonusunun bir kısmını kaybeder (tamirle geri gelir)
+    else if ((INSTRUMENTS as readonly string[]).includes(def.slot)) g.instruments[def.slot as Instrument] = wornBonus(bonus, Number(r.wear ?? 0)) + genreAffinity(def, genre);
+    if (r.equipped) equippedIds.get(r.character_id)?.push(r.item_id);
+  }
+  // Set bonusu: kuşanılmış eşyalar bir seti tamamlıyorsa sahneye küçük katkı (en iyi set, tavanlı)
+  for (const [id, items] of equippedIds) {
+    const set = gearSetBonus(items);
+    if (set) Object.assign(out.get(id)!, { setStage: set.stage, setId: set.setId });
   }
   const tattoos = await many(db, 'SELECT character_id, count(*)::int AS n FROM tattoos WHERE character_id = ANY($1::bigint[]) GROUP BY character_id', [
     characterIds,
@@ -246,4 +278,18 @@ export async function requireEstablished(db: Db, characterId: number) {
   if (!r) return;
   const until = r.created_at.getTime() + gameHoursToMs(hours, config.gameSpeed);
   if (until > Date.now()) throw new GameError('account_too_new', 403, new Date(until).toISOString());
+}
+
+/** Grupların üyeleri arasında becerilerin en yüksek değeri (kariyer becerilerinin grup etkisi için, perks.ts) */
+export async function bandBestSkills(db: Db, bandIds: number[], skills: string[]): Promise<Map<number, Record<string, number>>> {
+  const out = new Map<number, Record<string, number>>();
+  const ids = [...new Set(bandIds.map(Number))];
+  for (const id of ids) out.set(id, Object.fromEntries(skills.map((s) => [s, 0])));
+  if (!ids.length) return out;
+  const rows = await many(db, 'SELECT bm.band_id, c.skills FROM band_members bm JOIN characters c ON c.id = bm.character_id WHERE bm.band_id = ANY($1::bigint[])', [ids]);
+  for (const r of rows) {
+    const best = out.get(Number(r.band_id))!;
+    for (const s of skills) best[s] = Math.max(best[s], Number((r.skills ?? {})[s] ?? 0));
+  }
+  return out;
 }

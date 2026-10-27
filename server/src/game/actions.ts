@@ -63,12 +63,28 @@ import {
   energyAfter,
   energyFactor,
   songInspirationBonus,
+  SONG_FATIGUE_WINDOW_DAYS,
+  SUBGENRE_BY_ID,
+  isTempo,
+  songFatigueFactor,
+  styleBonus,
+  ADDICTION_TREAT_PER_HOUR,
+  ageLearnFactor,
+  skillBonus,
+  skillMult,
+  PRODUCERS,
 } from '@rifftown/shared';
+import { characterAge, treatIndulgence } from './consequences';
+import { prepareArticle, preparePress, resolveArticle, resolvePress } from './press';
+import { prepareVideo, resolveVideo } from './media';
+import { rollBreakdown } from './touring';
 import type pg from 'pg';
 import { config } from '../config';
 import { one, tx } from '../db';
 import { fail } from '../errors';
 import { evaluateAchievements } from './achievements';
+import { prepareLesson } from './lessons';
+import { pair } from './social';
 import { prepareCrime, prepareInvestigation, prisonOf, resolveCrime, resolveInvestigation } from './crime';
 import { prepareBusinessShift, resolveBusinessShift } from './business';
 import { homeRestBonus } from './homes';
@@ -89,7 +105,7 @@ import {
   toActionDto,
 } from './common';
 
-const ACTIVITY_KINDS = new Set(['study', 'work', 'write_song', 'rehearse', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft']);
+const ACTIVITY_KINDS = new Set(['study', 'work', 'write_song', 'rehearse', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article', 'video']);
 
 function requireHours(kind: keyof typeof HOUR_OPTIONS, hours: unknown): number {
   const opts = HOUR_OPTIONS[kind] as readonly number[];
@@ -107,6 +123,10 @@ function requireLocation(char: CharacterRow, locationId: unknown, type: Location
 export async function startAction(characterId: number, req: StartActionRequest, opts: { isVip?: boolean } = {}) {
   const isVip = !!opts.isVip;
   return tx(async (c) => {
+    // Özel derste karşı taraf da değişir (ücret, pekiştirme): iki karakter id sırasıyla kilitlenir
+    if (req.kind === 'lesson' && req.tutorId && Number(req.tutorId) !== characterId) {
+      for (const id of pair(characterId, Number(req.tutorId))) await lockCharacter(c, id);
+    }
     const char = await lockCharacter(c, characterId);
     if (await activeAction(c, characterId)) fail('busy', 409);
     if (!char.city_id) fail('traveling', 409);
@@ -221,9 +241,14 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         const title = typeof req.title === 'string' ? req.title.trim() : '';
         if (title.length < 1 || title.length > 40) fail('invalid_title');
         if (!(GENRES as readonly string[]).includes(req.genre)) fail('invalid_genre');
+        // Alt tür ve tempo isteğe bağlı; alt tür seçilen türe ait olmalı
+        if (req.subgenre != null && SUBGENRE_BY_ID[req.subgenre]?.genre !== req.genre) fail('invalid_subgenre');
+        if (req.tempo != null && !isTempo(req.tempo)) fail('invalid_tempo');
         hours = 2;
         params.title = title;
         params.genre = req.genre;
+        params.subgenre = req.subgenre ?? null;
+        params.tempo = req.tempo ?? SUBGENRE_BY_ID[req.subgenre ?? '']?.tempo ?? 'mid';
         break;
       }
       case 'rehearse': {
@@ -252,8 +277,23 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         hours = RECORD_HOURS;
         locationId = loc.id;
         cost = priceFor(RECORDING_PRICE_PER_HOUR, city, hours);
+        // Dışarıdan prodüktör tutmak: ücret kayıt başında ödenir (şehir çarpanıyla)
+        if (req.producer) {
+          const pr = PRODUCERS[req.producer];
+          if (!pr) fail('invalid_producer');
+          cost += priceFor(pr.fee, city, 1);
+          params.producer = req.producer;
+        }
         params.songId = req.songId;
         params.bandId = m!.band_id;
+        break;
+      }
+      case 'video': {
+        const p = await prepareVideo(c, char, req.songId, req.locationId, req.director ?? 'none');
+        hours = p.hours;
+        cost = p.cost;
+        locationId = p.locationId;
+        Object.assign(params, p.params);
         break;
       }
       case 'crime': {
@@ -276,6 +316,21 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         cost = priceFor(GYM_PRICE_PER_HOUR, city, hours);
         break;
       }
+      case 'press': {
+        const p = await preparePress(c, char, req.mode, req.locationId);
+        hours = p.hours;
+        cost = p.cost;
+        locationId = p.locationId;
+        Object.assign(params, p.params);
+        break;
+      }
+      case 'write_article': {
+        const p = await prepareArticle(c, char, req.locationId, req);
+        hours = p.hours;
+        locationId = p.locationId;
+        Object.assign(params, p.params);
+        break;
+      }
       case 'craft': {
         const p = await prepareCraft(c, char, req.recipe, req.locationId);
         hours = p.hours;
@@ -289,10 +344,26 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         if (!opt) fail('invalid_route');
         hours = opt!.hours;
         cost = opt!.cost;
+        if (req.mode === 'car') {
+          const b = await rollBreakdown(c, char, char.city_id!, req.toCityId, hours);
+          hours = b.hours;
+          if (b.breakdown) {
+            params.breakdown = true;
+            params.usedKit = !!b.usedKit;
+          }
+        }
         params.from = char.city_id;
         params.to = req.toCityId;
         params.mode = req.mode;
         locationId = null;
+        break;
+      }
+      case 'lesson': {
+        const l = await prepareLesson(c, char, req);
+        hours = l.hours;
+        cost = l.cost;
+        locationId = l.locationId;
+        Object.assign(params, l.params);
         break;
       }
       default:
@@ -409,7 +480,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   } else mood += MOOD_PER_HOUR[a.kind as keyof typeof MOOD_PER_HOUR] * hours;
   let healthChange = HEALTH_PER_HOUR[a.kind as keyof typeof HEALTH_PER_HOUR] * hours;
   // Kondisyon yorucu işlerdeki sağlık kaybını azaltır
-  if (healthChange < 0) healthChange *= 1 - fitnessShield(lv(char.skills, 'fitness'));
+  if (healthChange < 0) healthChange *= 1 - fitnessShield(lv(char.skills, 'fitness') + skillBonus(char.skills, 'fitness'));
   health += healthChange;
   if (a.kind === 'rest' && params.homeHealth) health += (params.homeHealth as number) * hours;
   if (a.kind === 'rest') {
@@ -441,10 +512,25 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       }
       const instBonus = Math.max(0, ...rolesForSkill(skill).map((r) => gear.instruments[r] ?? 0));
       if (result.learned) inspirationDelta += INSPIRATION_GAIN.learnSkill;
-      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency;
+      // Yaş öğrenmeyi yavaşlatır (35 yaştan sonra)
+      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency * ageLearnFactor(characterAge(char.created_at));
       skills[skill] = clamp(lv(skills, skill) + gain, 0, 100);
       result.skill = skill;
       result.gain = Math.round(gain * 100) / 100;
+      break;
+    }
+    case 'lesson': {
+      // Özel ders: verim çarpanı derse göre; öğrenci öğretmenin (profesörün) seviyesini geçemez
+      const skill = params.skill as string;
+      if (!knows(skills, skill)) break;
+      const instBonus = Math.max(0, ...rolesForSkill(skill).map((r) => gear.instruments[r] ?? 0));
+      const before = lv(skills, skill);
+      const gain0 = studyGain(before, hours, true, well.mood, char.health, instBonus, Number(params.rate)) * efficiency * ageLearnFactor(characterAge(char.created_at));
+      const capped = Math.max(before, Math.min(before + gain0, Number(params.cap ?? 100)));
+      skills[skill] = clamp(capped, 0, 100);
+      result.skill = skill;
+      result.gain = Math.round((skills[skill] - before) * 100) / 100;
+      result.tutor = params.tutor;
       break;
     }
     case 'work': {
@@ -470,7 +556,7 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
     case 'busk': {
       const role = params.role as Instrument;
       const base = buskPayPerHour(roleSkill(skills, role), stageScore(skills), (params.costMult as number) ?? 1);
-      const pay = Math.floor(base * hours * (0.7 + Math.random() * 0.6));
+      const pay = Math.floor(base * skillMult(skills, 'busking') * hours * (0.7 + Math.random() * 0.6));
       money += pay;
       result.pay = pay;
       inspirationDelta += INSPIRATION_GAIN.buskPerHour * hours;
@@ -487,13 +573,23 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       const genre = params.genre as Genre;
       // İlham şarkıyı güçlendirir ve yarısı harcanır
       const inspirationBonus = songInspirationBonus(well.inspiration);
-      const quality = clamp(songQuality(songwritingScore(skills, genre), Math.random) + inspirationBonus, 0, 100);
+      const tempo = isTempo(params.tempo) ? params.tempo : 'mid';
+      const subgenre = (params.subgenre as string | null) ?? null;
+      // Kısa sürede çok şarkı yazmak kaliteyi düşürür (Popmundo: 3 günde birden fazla şarkı)
+      const recent = await one(c, 'SELECT count(*)::int AS n FROM songs WHERE author_id = $1 AND created_at > $2', [
+        char.id,
+        new Date(Date.now() - gameHoursToMs(SONG_FATIGUE_WINDOW_DAYS * 24, config.gameSpeed)),
+      ]);
+      const fatigue = songFatigueFactor(recent?.n ?? 0);
+      const raw = songQuality(songwritingScore(skills, genre), Math.random) + styleBonus(skills, genre, subgenre, tempo);
+      const quality = Math.round(clamp(raw * fatigue + inspirationBonus, 1, 100));
       setInspiration = well.inspiration * (1 - SONG_INSPIRATION_SPEND);
       result.inspirationBonus = inspirationBonus;
+      if (fatigue < 1) result.fatigued = true;
       const song = await one(
         c,
-        'INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, $2, $3, $4) RETURNING id',
-        [char.id, params.title, params.genre, quality],
+        'INSERT INTO songs(author_id, title, genre, quality, subgenre, tempo) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+        [char.id, params.title, params.genre, quality, subgenre, tempo],
       );
       for (const [id, amount] of [['composing', 0.4], ['lyrics', 0.4], [genreSkillId(genre), 0.2]] as const) {
         if (knows(skills, id)) skills[id] = clamp(skills[id] + amount * diminishing(skills[id]), 0, 100);
@@ -515,13 +611,13 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
         ]);
         const fam = famRow?.value ?? 0;
         const cap = familiarityCap(skills, params.songGenre as Genre);
-        const gain = rehearsalGain(fam, hours, well.mood, lv(skills, 'improvisation')) * efficiency;
+        const gain = rehearsalGain(fam, hours, well.mood, lv(skills, 'improvisation')) * efficiency * skillMult(skills, 'rehearsal');
         // Tür becerisi düşükse şarkı belli bir noktadan sonra öğrenilemez (Popmundo'daki gibi)
         const next = fam >= cap ? fam : Math.min(cap, fam + gain);
         result.capped = next >= cap;
         await c.query(
           `INSERT INTO familiarity(character_id, song_id, value) VALUES ($1, $2, $3)
-           ON CONFLICT (character_id, song_id) DO UPDATE SET value = EXCLUDED.value`,
+           ON CONFLICT (character_id, song_id) DO UPDATE SET value = EXCLUDED.value, touched_at = now(), decayed_at = NULL`,
           [char.id, params.songId, next],
         );
         const role = (m!.role ?? params.role) as Instrument;
@@ -569,6 +665,13 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       Object.assign(result, r.result);
       break;
     }
+    case 'treat': {
+      // Hastanede tedavi bağımlılığı da hafifletir
+      if (char.addicted_since || (char.indulgence ?? 0) > 0) {
+        if (await treatIndulgence(c, char, ADDICTION_TREAT_PER_HOUR * hours)) result.recovered = true;
+      }
+      break;
+    }
     case 'workout': {
       // İlk antrenman kondisyonu açar
       if (!knows(skills, 'fitness')) {
@@ -585,10 +688,38 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       Object.assign(result, await resolveCraft(c, char, params, skills, fraction));
       break;
     }
+    case 'video': {
+      if (fraction < 1) {
+        result.cancelled = true;
+        break;
+      }
+      Object.assign(result, await resolveVideo(c, { ...char, skills }, params));
+      break;
+    }
+    case 'press': {
+      if (fraction < 1) {
+        result.cancelled = true;
+        break;
+      }
+      Object.assign(result, await resolvePress(c, { ...char, skills }, params));
+      break;
+    }
+    case 'write_article': {
+      if (fraction < 1) {
+        result.cancelled = true;
+        break;
+      }
+      Object.assign(result, await resolveArticle(c, { ...char, skills }, params));
+      break;
+    }
     case 'travel': {
       cityId = params.to;
       locationId = null;
       result.to = params.to;
+      if (params.breakdown) {
+        result.breakdown = true;
+        result.usedKit = !!params.usedKit;
+      }
       // Yeni bir şehir: heyecan ve ilham
       if (params.to !== params.from) {
         inspirationDelta += INSPIRATION_GAIN.travel;

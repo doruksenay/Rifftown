@@ -6,6 +6,9 @@ import type { RelationStage } from './relations';
 import type { BusinessType } from './world';
 import type { ActionKind, GigFactorId, GigFactors, TravelMode } from './rules';
 import type { NextGoal } from './progression';
+import type { EncoreOutcome, EncorePlan, StageEventOutcome, Tempo } from './performance';
+import type { ArticleTone, PressMode } from './press';
+import type { ProducerTier, VideoDirector } from './broadcast';
 import type { Skills } from './skills';
 import type { Genre, Instrument, Lang } from './world';
 
@@ -88,6 +91,10 @@ export interface CharacterDto {
   /** Yüklenmiş profil fotoğrafı (/api'ye göre yol) ya da null */
   avatarUrl: string | null;
   home: HomeDto | null;
+  /** Oyun yılıyla yaş */
+  age: number;
+  /** Bağımlı mı (alışveriş/tüketim) */
+  addicted: boolean;
 }
 
 export interface HomeDto {
@@ -118,12 +125,16 @@ export interface MeResponse {
   unreadMessages: number;
   /** Bekleyen gelen takas teklifleri */
   pendingTrades: number;
+  /** Karakteri yoksa ve önceki karakteri öldüyse (PERMADEATH) */
+  death?: { characterId: number; name: string; cause: string; at: string; inheritance: number } | null;
 }
 
 export interface SongDto {
   id: number;
   title: string;
   genre: Genre;
+  subgenre: string | null;
+  tempo: Tempo;
   quality: number;
   authorId: number;
   authorName: string;
@@ -174,7 +185,13 @@ export interface GigDto {
     advice?: GigFactorId[];
     /** Konserden sonra o şehirdeki şöhret (sıradaki sahneye ne kaldığını göstermek için; VIP değilse kaba) */
     fame?: number;
+    /** Setlist sırasının etkisi (VIP olmayanlara işareti) */
+    flow?: number;
+    events?: { id: string; outcome: StageEventOutcome; by: number | null }[];
+    encore?: EncoreOutcome;
   } | null;
+  /** Performans planı (sahne olayları ve bis) */
+  plan?: { events?: string[]; encore?: EncorePlan };
   /** Normal üyelerde rapor süresi dolduysa true (VIP'te hiç dolmaz) */
   reportExpired?: boolean;
 }
@@ -188,6 +205,8 @@ export interface BandDetailDto {
   members: BandMemberDto[];
   songs: SongDto[];
   fame: Record<string, number>; // şehir id → şöhret (0–100)
+  /** şehir id → basın desteği (0–100, nötr 20; listede olmayan şehir nötr) */
+  press: Record<string, number>;
   upcomingGigs: GigDto[];
   pastGigs: GigDto[];
   pendingInvites: { id: number; characterId: number; name: string }[];
@@ -217,6 +236,8 @@ export interface PublicCharacterDto {
   mainInstrument: Instrument;
   cityId: string | null;
   bio: string;
+  /** Seçili ünvan (content/rewards.ts TITLES) */
+  titleId?: string | null;
   createdAt: string;
   band: { id: number; name: string; role: Instrument } | null;
   topSkills: { skill: string; level: number }[];
@@ -234,7 +255,7 @@ export interface PublicCharacterDto {
   home: { homeId: HomeId; cityId: string } | null;
   convictions: number;
   partner: { characterId: number; name: string; stage: 'engaged' | 'married' } | null;
-  children: { name: string; bornAt: string }[];
+  children: { name: string; bornAt: string; age?: number; stage?: 'baby' | 'child' | 'teen' | 'adult' }[];
   tattoos: string[];
   friendsCount: number;
 }
@@ -285,18 +306,23 @@ export interface LeaderboardResponse {
 
 export type StartActionRequest =
   | { kind: 'study'; skill: string; hours: number; locationId?: string }
+  /** Özel ders: profesör (okul/üniversite mekânında), oyuncu öğretmen (tutorId, okulda) ya da arkadaş/sevgili (tutorId) */
+  | { kind: 'lesson'; skill: string; hours: number; tutor: 'professor' | 'teacher' | 'friend'; locationId?: string; tutorId?: number }
   | { kind: 'work'; locationId: string; hours: number }
   | { kind: 'rest'; hours: number }
-  | { kind: 'write_song'; title: string; genre: Genre }
+  | { kind: 'write_song'; title: string; genre: Genre; subgenre?: string | null; tempo?: Tempo }
   | { kind: 'rehearse'; songId: number; hours: number; locationId: string }
   | { kind: 'travel'; toCityId: string; mode: TravelMode }
   | { kind: 'treat'; hours: number; locationId: string }
   | { kind: 'busk'; role: Instrument; hours: number; locationId: string }
-  | { kind: 'record'; songId: number; locationId: string }
+  | { kind: 'record'; songId: number; locationId: string; producer?: ProducerTier | null }
+  | { kind: 'video'; songId: number; locationId: string; director?: VideoDirector }
   | { kind: 'crime'; crime: string; locationId: string }
   | { kind: 'investigate'; locationId: string }
   | { kind: 'workout'; hours: number; locationId: string }
-  | { kind: 'craft'; recipe: string; locationId: string };
+  | { kind: 'craft'; recipe: string; locationId: string }
+  | { kind: 'press'; mode: PressMode; locationId: string }
+  | { kind: 'write_article'; locationId: string; title: string; body: string; bandId?: number | null; tone?: ArticleTone };
 
 export interface ElectionDto {
   id: number;
@@ -333,6 +359,8 @@ export interface BookGigRequest {
   sessionRoles?: Instrument[];
   /** Konserde kullanılacak sahne efektleri (envanter satırları; konserde tüketilir) */
   effects?: number[];
+  /** Performans planı: en fazla 3 sahne olayı ve bis kararı */
+  plan?: { events?: string[]; encore?: EncorePlan };
 }
 
 export interface InventoryItemDto {
@@ -344,6 +372,8 @@ export interface InventoryItemDto {
   nickname: string | null;
   /** Geçerli bonus (üretilen eşyalarda üretime göre) */
   bonus: number;
+  /** Yıpranma (0–100): enstrüman bonusunu düşürür, araçta arıza riskini artırır */
+  wear: number;
   /** İkinci el pazarında satışta */
   listed: boolean;
   craftedBy: string | null;

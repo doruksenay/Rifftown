@@ -16,7 +16,10 @@ import {
   TATTOO_REMOVAL_PRICE,
   MEAL_ENERGY,
   gameHoursToMs,
+  INDULGENCE_PER_MEAL,
+  PACING,
 } from '@rifftown/shared';
+import { indulge } from './consequences';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
@@ -66,6 +69,8 @@ export async function eatMeal(characterId: number, locationId: string, mealId: s
     if (await activeAction(c, characterId)) fail('busy', 409);
     const meal = MEAL_BY_ID[mealId];
     if (!meal) fail('invalid_meal');
+    // Yerel lezzet yalnızca kendi şehrinde
+    if (meal!.cityId && meal!.cityId !== LOCATION_BY_ID[locationId]?.cityId) fail('invalid_meal');
     if (ch.last_meal && ch.last_meal.getTime() + hoursMs(MEAL_COOLDOWN_HOURS) > Date.now()) fail('still_full', 409);
     const price = await mealPrice(c, locationId, meal!);
     if (ch.money < price) fail('not_enough_money');
@@ -76,7 +81,8 @@ export async function eatMeal(characterId: number, locationId: string, mealId: s
     );
     await c.query('INSERT INTO meals(character_id, location_id, meal_id, price) VALUES ($1, $2, $3, $4)', [ch.id, locationId, meal!.id, price]);
     await payBusinessForMeal(c, locationId, price, ch.id);
-    const energy = MEAL_ENERGY[meal!.id] ?? 0;
+    await indulge(c, ch, INDULGENCE_PER_MEAL);
+    const energy = meal!.energy ?? MEAL_ENERGY[meal!.id] ?? 0;
     await changeWellbeing(c, ch, { energy });
     await addMoodlet(c, ch.id, meal!.id === 'chef' ? 'feast' : 'good_meal');
     return { price, mood: meal!.mood, health: meal!.health, energy };
@@ -125,7 +131,7 @@ export async function bankMove(characterId: number, locationId: string, amount: 
                 bank_interest_at = CASE WHEN bank = 0 OR bank_interest_at IS NULL OR bank_interest_at <= now() THEN $4 ELSE bank_interest_at END,
                 bank_min = CASE WHEN bank = 0 THEN 0 ELSE bank_min END
           WHERE id = $1`,
-        [ch.id, amount, locationId, new Date(Date.now() + hoursMs(7 * 24))],
+        [ch.id, amount, locationId, new Date(Date.now() + hoursMs(PACING.interestPeriodDays * 24))],
       );
     } else {
       if (ch.bank < amount) fail('not_enough_money');
@@ -146,7 +152,7 @@ export async function processBankInterest(): Promise<number> {
     `UPDATE characters SET bank = bank + floor(LEAST(bank_min, bank, $1::int) * $2::real)::int,
             bank_min = bank + floor(LEAST(bank_min, bank, $1::int) * $2::real)::int, bank_interest_at = $3
       WHERE bank > 0 AND bank_interest_at IS NOT NULL AND bank_interest_at <= now()`,
-    [BANK_INTEREST_CAP, BANK_WEEKLY_INTEREST, new Date(Date.now() + hoursMs(7 * 24))],
+    [BANK_INTEREST_CAP, BANK_WEEKLY_INTEREST, new Date(Date.now() + hoursMs(PACING.interestPeriodDays * 24))],
   );
   return r.rowCount ?? 0;
 }

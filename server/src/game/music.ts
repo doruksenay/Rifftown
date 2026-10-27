@@ -23,14 +23,24 @@ import {
   recordingQuality,
   roleSkill,
   weeklyUnits,
+  skillBonus,
+  LABEL_SALES_BOOST,
+  labelSplit,
+  radioSalesBoost,
+  videoSalesBoost,
+  PRODUCERS,
+  type ProducerTier,
+  marketingSalesMult,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { evaluateMany } from './achievements';
-import { type CharacterRow, isJailed, lockCharacter, membership, notify } from './common';
+import { type CharacterRow, bandBestSkills, isJailed, lockCharacter, membership, notify } from './common';
 import { addFame } from './gigs';
+import { touchFamiliarity } from './consequences';
+import { videoQualityFor, weeklyRadio, weeklyVideoChart } from './media';
 
 const weekMs = () => gameHoursToMs(CHART_WEEK_DAYS * 24, config.gameSpeed);
 const dayMs = () => gameHoursToMs(24, config.gameSpeed);
@@ -62,15 +72,24 @@ export async function resolveRecording(c: pg.PoolClient, char: CharacterRow, par
   const players = here.length ? here : members.filter((x) => x.id === char.id);
   const avgFam = players.reduce((s, x) => s + Math.min(x.fam ?? 0, familiarityCap(x.skills, song.genre)), 0) / players.length;
   const avgSkill = players.reduce((s, x) => s + roleSkill(x.skills, x.role as Instrument), 0) / players.length;
-  const quality = recordingQuality(song.quality, avgFam, avgSkill, lv(skills, 'production'), Math.random);
+  // Prodüktör: dışarıdan tutulduysa onun becerisi, değilse şehirdeki üyelerin en iyi yapımcısı (kaydı başlatan dahil)
+  const bandProducer = Math.max(
+    lv(skills, 'production') + skillBonus(skills, 'recording') * 2,
+    ...players.filter((x) => x.id !== char.id).map((x) => lv(x.skills, 'production') + skillBonus(x.skills, 'recording') * 2),
+  );
+  const hired = params.producer ? PRODUCERS[params.producer as ProducerTier] : null;
+  const production = hired ? Math.max(hired.skill, bandProducer) : bandProducer;
+  const quality = recordingQuality(song.quality, avgFam, avgSkill, production, Math.random);
+  await touchFamiliarity(c, players.map((x) => Number(x.id)), [song.id]);
 
   const prev = await one(c, 'SELECT quality FROM recordings WHERE band_id = $1 AND song_id = $2', [m.band_id, song.id]);
   await c.query(
-    `INSERT INTO recordings(band_id, song_id, quality, recorded_by) VALUES ($1, $2, $3, $4)
+    `INSERT INTO recordings(band_id, song_id, quality, recorded_by, producer) VALUES ($1, $2, $3, $4, $5)
      ON CONFLICT (band_id, song_id) DO UPDATE SET
        quality = GREATEST(recordings.quality, EXCLUDED.quality),
-       recorded_by = CASE WHEN EXCLUDED.quality > recordings.quality THEN EXCLUDED.recorded_by ELSE recordings.recorded_by END`,
-    [m.band_id, song.id, quality, char.id],
+       recorded_by = CASE WHEN EXCLUDED.quality > recordings.quality THEN EXCLUDED.recorded_by ELSE recordings.recorded_by END,
+       producer = CASE WHEN EXCLUDED.quality > recordings.quality THEN EXCLUDED.producer ELSE recordings.producer END`,
+    [m.band_id, song.id, quality, char.id, params.producer ?? null],
   );
   if (knows(skills, 'production')) skills.production = clamp(skills.production + 0.6 * diminishing(skills.production), 0, 100);
   return {
@@ -79,6 +98,7 @@ export async function resolveRecording(c: pg.PoolClient, char: CharacterRow, par
     quality,
     previous: prev?.quality ?? null,
     improved: !prev || quality > prev.quality,
+    producer: params.producer ?? null,
     players: players.length,
   };
 }
@@ -120,7 +140,8 @@ export async function createRelease(characterId: number, req: { kind: ReleaseKin
     await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, rules.pressingCost]);
     const r = await one(
       c,
-      `INSERT INTO releases(band_id, kind, title, song_ids, quality) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      `INSERT INTO releases(band_id, kind, title, song_ids, quality, contract_id)
+       VALUES ($1, $2, $3, $4, $5, (SELECT id FROM label_contracts WHERE band_id = $1 AND status = 'active')) RETURNING *`,
       [m!.band_id, req.kind, title, songIds, quality],
     );
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
@@ -227,7 +248,22 @@ async function closeWeek(c: pg.PoolClient, week: any, rand: () => number) {
       FOR UPDATE OF r`,
     [week.ends_at, RELEASE_RULES.single.weeks, RELEASE_RULES.album.weeks],
   );
+  // Radyo ve klip listesi her hafta ayrı hesaplanır (satışı olmayan hafta da)
+  const radio = await weeklyRadio(c, week.id, rand);
+  await weeklyVideoChart(c, week.id, rand);
   if (!releases.length) return;
+
+  // Plak şirketi sözleşmeleri, klip etkisi
+  const contracts = new Map<number, any>();
+  for (const r of releases) {
+    if (r.contract_id && !contracts.has(r.contract_id)) {
+      contracts.set(r.contract_id, await one(c, 'SELECT * FROM label_contracts WHERE id = $1 FOR UPDATE', [r.contract_id]));
+    }
+  }
+  const videoQ = new Map<number, number>();
+  for (const r of releases) videoQ.set(r.id, await videoQualityFor(c, r.band_id, r.song_ids));
+  // Pazarlama: grubun en iyi pazarlamacısı satışı en fazla %5 artırır (perks.ts)
+  const perkSkills = await bandBestSkills(c, releases.map((r) => r.band_id), ['marketing']);
 
   const fameRows = await many(c, 'SELECT band_id, city_id, fame FROM band_fame WHERE band_id = ANY($1::bigint[])', [
     [...new Set(releases.map((r) => r.band_id))],
@@ -239,7 +275,10 @@ async function closeWeek(c: pg.PoolClient, week: any, rand: () => number) {
   for (const r of releases) {
     const byCity = new Map<string, number>();
     for (const city of CITIES) {
-      const units = weeklyUnits(r.kind, r.quality, fameOf(r.band_id, city.id), city.genrePopularity[r.genre as Genre], city, r.weeks_on_sale, rand);
+      const base = weeklyUnits(r.kind, r.quality, fameOf(r.band_id, city.id), city.genrePopularity[r.genre as Genre], city, r.weeks_on_sale, rand);
+      // Radyoda çalınan, klibi olan ve plak şirketinin pazarladığı yayın daha çok satar
+      const label = r.contract_id && contracts.get(r.contract_id) ? LABEL_SALES_BOOST : 1;
+      const units = Math.round(base * radioSalesBoost(radio.get(r.id)?.get(city.id) ?? 0) * videoSalesBoost(videoQ.get(r.id) ?? 0) * label * marketingSalesMult(perkSkills.get(Number(r.band_id))?.marketing ?? 0));
       if (units > 0) byCity.set(city.id, units);
     }
     sales.set(r.id, byCity);
@@ -280,7 +319,17 @@ async function closeWeek(c: pg.PoolClient, week: any, rand: () => number) {
   const touched: number[] = [];
   for (const r of releases) {
     const units = [...(sales.get(r.id)?.values() ?? [])].reduce((a, b) => a + b, 0);
-    const revenue = Math.round(units * RELEASE_RULES[r.kind as ReleaseKind].price * BAND_SHARE);
+    const gross = units * RELEASE_RULES[r.kind as ReleaseKind].price;
+    let revenue = Math.round(gross * BAND_SHARE);
+    // Plak şirketli yayın: havuz sözleşmeyle bölünür, avans grubun payından geri alınır
+    const contract = r.contract_id ? contracts.get(r.contract_id) : null;
+    if (contract) {
+      const split = labelSplit(gross, contract.band_share, contract.advance - contract.recouped);
+      revenue = split.band;
+      await c.query('UPDATE label_contracts SET recouped = recouped + $2 WHERE id = $1', [contract.id, split.recouped]);
+      contract.recouped += split.recouped;
+      await c.query('UPDATE labels SET till = till + $2, total_revenue = total_revenue + $2 WHERE id = $1', [contract.label_id, split.label]);
+    }
     await c.query(
       `UPDATE releases SET weeks_on_sale = weeks_on_sale + 1, total_units = total_units + $2, total_revenue = total_revenue + $3 WHERE id = $1`,
       [r.id, units, revenue],

@@ -1,10 +1,21 @@
-import { INSTRUMENTS, type ItemDef, type L, LEGENDARY_ITEM_PREFIX, PAINT_COLORS, type PaintColor, ROLE_NAMES, type Instrument } from '@rifftown/shared';
+import { CITY_BY_ID, GENRE_NAMES, SEASON_NAMES, INSTRUMENTS, type ItemDef, type L, LEGENDARY_ITEM_PREFIX, PAINT_COLORS, type PaintColor, ROLE_NAMES, type Instrument } from '@rifftown/shared';
 import type { StringKey } from './strings';
 
 type T = (k: StringKey, v?: Record<string, string | number>) => string;
 
 /** Eşyanın sağladığı bonusu tek satırla anlatır. bonus: üretilmiş eşyalarda kendi bonusu */
 export function itemBonusText(item: ItemDef, t: T, p: (l: L) => string, bonus = item.bonus) {
+  const base = baseBonusText(item, t, p, bonus);
+  // Tür uyumu, sezon ve nadirlik eşyanın kararını anlatır
+  const extra = [
+    item.genres?.length && item.genreBonus ? t('genreAffinity', { n: item.genreBonus, genres: item.genres.map((g) => p(GENRE_NAMES[g])).join(', ') }) : null,
+    item.season ? t('seasonalItem', { season: p(SEASON_NAMES[item.season]) }) : null,
+    item.cityOnly && CITY_BY_ID[item.cityOnly] ? t('cityOnlyItem', { city: p(CITY_BY_ID[item.cityOnly].name) }) : null,
+  ].filter(Boolean);
+  return extra.length ? `${base} · ${extra.join(' · ')}` : base;
+}
+
+function baseBonusText(item: ItemDef, t: T, p: (l: L) => string, bonus = item.bonus) {
   switch (item.slot) {
     case 'outfit':
       return t('bonusOutfit', { n: bonus });

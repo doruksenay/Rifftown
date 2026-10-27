@@ -17,6 +17,8 @@ import {
   gameHoursToMs,
   lv,
   staffedRevenue,
+  PACING,
+  accountingCostMult,
 } from '@rifftown/shared';
 import type pg from 'pg';
 import { config } from '../config';
@@ -26,7 +28,7 @@ import { type CharacterRow, isJailed, lockCharacter, notify, requireEstablished 
 import { cleanText, isBlocked, requirePlayer } from './social';
 import { addMoodlet } from './wellbeing';
 
-const weekMs = () => gameHoursToMs(7 * 24, config.gameSpeed);
+const weekMs = () => gameHoursToMs(PACING.upkeepPeriodDays * 24, config.gameSpeed);
 
 function lot(locationId: string) {
   const loc = LOCATION_BY_ID[locationId];
@@ -35,11 +37,12 @@ function lot(locationId: string) {
 }
 
 export const businessPrice = (kind: BusinessType, costMult: number) => Math.round(BUSINESS_RULES[kind].price * costMult);
-export const businessUpkeep = (kind: BusinessType, costMult: number) => Math.round(BUSINESS_RULES[kind].upkeep * costMult);
+/** accounting: sahibinin muhasebe becerisi; haftalık gideri en fazla %10 düşürür (perks.ts) */
+export const businessUpkeep = (kind: BusinessType, costMult: number, accounting = 0) => Math.round(BUSINESS_RULES[kind].upkeep * costMult * accountingCostMult(accounting));
 
 export async function businessView(db: Db, locationId: string, viewer: number): Promise<BusinessDto> {
   const { loc, kind, city } = lot(locationId);
-  const b = await one(db, 'SELECT b.*, c.name AS owner_name FROM businesses b JOIN characters c ON c.id = b.owner_id WHERE b.location_id = $1', [locationId]);
+  const b = await one(db, 'SELECT b.*, c.name AS owner_name, c.skills AS owner_skills FROM businesses b JOIN characters c ON c.id = b.owner_id WHERE b.location_id = $1', [locationId]);
   const isOwner = !!b && Number(b.owner_id) === viewer;
   const mine = await one(db, 'SELECT status, wage FROM business_staff WHERE location_id = $1 AND character_id = $2', [locationId, viewer]);
   const staff = isOwner
@@ -71,7 +74,7 @@ export async function businessView(db: Db, locationId: string, viewer: number): 
     staffStatus: mine?.status ?? null,
     myWage: mine?.wage ?? null,
     till: isOwner ? b.till : null,
-    upkeep: businessUpkeep(kind, city.costMult),
+    upkeep: businessUpkeep(kind, city.costMult, isOwner ? lv(b.owner_skills ?? {}, 'accounting') : 0),
     upkeepDue: isOwner ? b.upkeep_due.toISOString() : null,
     totalRevenue: isOwner ? b.total_revenue : null,
     staff: staff ? staff.map((s) => ({ characterId: Number(s.character_id), name: s.name, wage: s.wage, status: s.status })) : null,
@@ -311,7 +314,7 @@ export async function processUpkeep(): Promise<number> {
       const b = await one(c, 'SELECT * FROM businesses WHERE location_id = $1 AND owner_id = $2 AND upkeep_due <= now() FOR UPDATE', [cand.location_id, owner.id]);
       if (!b) return true; // bu arada el değiştirdi ya da ödendi: döngü yeniden bakar
       const { kind, city } = lot(b.location_id);
-      const upkeep = businessUpkeep(kind, city.costMult);
+      const upkeep = businessUpkeep(kind, city.costMult, lv(owner.skills, 'accounting'));
       const fromTill = Math.min(b.till, upkeep);
       const fromPocket = upkeep - fromTill;
       if (owner.money >= fromPocket) {

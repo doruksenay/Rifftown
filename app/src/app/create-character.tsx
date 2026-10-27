@@ -3,7 +3,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { Avatar, Body, Button, Choice, Field, Heading, Loading, Screen, ScreenHeader, useToast } from '@/components/ui';
+import { Avatar, Body, Button, Card, Choice, Field, Heading, Loading, Screen, ScreenHeader, Small, useToast } from '@/components/ui';
+import { money } from '@/lib/format';
 import { api } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
 import { useMe, useSession } from '@/lib/session';
@@ -51,6 +52,13 @@ export default function CreateCharacter() {
   return (
     <Screen edges={['top', 'bottom']}>
       <ScreenHeader title={t('createTitle')} />
+      {me.data?.death ? (
+        <Card style={{ marginBottom: space.lg, borderColor: c.danger }}>
+          <Body>{t('deathTitle', { name: me.data.death.name })}</Body>
+          <Small>{t(me.data.death.cause === 'old_age' ? 'deathCause_old_age' : 'deathCause_neglect')}</Small>
+          {me.data.death.inheritance > 0 ? <Small>{t('deathInheritance', { money: money(me.data.death.inheritance) })}</Small> : null}
+        </Card>
+      ) : null}
       <Body color={c.inkSoft} style={{ marginBottom: space.xl }}>
         {t('createIntro')}
       </Body>

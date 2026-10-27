@@ -24,7 +24,15 @@ const KEY_RULES: Record<string, Rule[]> = {
   myFamiliarity: [{ scale: 'familiarity' }],
   familiarity: [{ scale: 'familiarity' }, { scale: 'familiarity', map: true }],
   fame: [{ scale: 'fame' }, { scale: 'fame', map: true }],
+  press: [{ scale: 'press' }, { scale: 'press', map: true }],
+  // Profesörün götürebileceği en yüksek seviye bir beceri değeridir
+  maxLevel: [{ scale: 'skill' }],
 };
+
+/** Bu anahtarlarda VIP olmayanlara 10'luk adımlarla */
+const COARSE_10 = new Set(['wear', 'morale']);
+/** Bu anahtarlarda VIP olmayanlara yalnızca işaret (-1, 0, 1) gider */
+const SIGN_ONLY = new Set(['flow', 'pressDelta', 'impact']);
 
 function blurNode(node: unknown, depth = 0): unknown {
   if (depth > 12 || node === null || typeof node !== 'object') return node;
@@ -43,6 +51,21 @@ function blurNode(node: unknown, depth = 0): unknown {
     } else if (k === 'chance' && typeof v === 'number') {
       // Suç başarı şansı: VIP olmayanlara sadece düşük / orta / yüksek (uygulamadaki eşiklerle aynı)
       out[k] = v < 0.35 ? 0.2 : v < 0.65 ? 0.5 : 0.8;
+    } else if (COARSE_10.has(k) && typeof v === 'number') {
+      // Yıpranma ve moral: VIP olmayanlara 10'luk adımlarla
+      out[k] = Math.floor(v / 10) * 10;
+    } else if (SIGN_ONLY.has(k) && typeof v === 'number') {
+      // Etkinin yalnızca yönü gösterilir (setlist sırası, basın etkisi vb.)
+      out[k] = Math.sign(v);
+    } else if (k === 'dueDays' && typeof v === 'number') {
+      // Doğuma kalan süre: VIP olmayanlara beşer günlük adımlarla
+      out[k] = Math.ceil(v / 5) * 5;
+    } else if (k === 'lessonRate' && typeof v === 'number') {
+      // Ders verimi: VIP olmayanlara yarımlık adımlarla (öğretmenin rütbesi ve ilişki seviyesi tam okunamasın)
+      out[k] = Math.floor(v * 2) / 2;
+    } else if (k === 'maxBandShare' && typeof v === 'number') {
+      // Liderin sözleşme hukukunu ele vermesin: yüzde puanına aşağı yuvarlanır
+      out[k] = Math.floor(v * 100 + 1e-6) / 100;
     } else if (k === 'totalFame' && typeof v === 'number') {
       out[k] = Math.round(v);
     } else {

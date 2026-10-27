@@ -74,6 +74,11 @@ export const ADMIN_HTML = /* html */ `<!doctype html>
       <table><thead><tr><th>Zaman</th><th>Tür</th><th>Şikâyet eden</th><th>Yazan</th><th>İçerik</th><th></th></tr></thead><tbody id="reports"></tbody></table>
     </section>
     <section>
+      <h2>Son haberler ve yazılar</h2>
+      <p style="color:var(--muted);margin:0 0 12px">Gazetecilerin haberleri, bloglar ve şehir panosu. Kaldırılan haberin basın etkisi geri alınır.</p>
+      <table><thead><tr><th>Zaman</th><th>Tür</th><th>Şehir</th><th>Yazan</th><th>İçerik</th><th></th></tr></thead><tbody id="articles"></tbody></table>
+    </section>
+    <section>
       <h2>Son profil değişiklikleri</h2>
       <p style="color:var(--muted);margin:0 0 12px">Uygunsuz fotoğraf, başlık ya da açıklamayı buradan kaldırabilirsin.</p>
       <div id="profiles" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px"></div>
@@ -297,7 +302,7 @@ async function loadChat() {
     tr.append(a); tb.append(tr);
   }
 }
-const REPORT_KINDS = { message: 'Özel mesaj', guestbook: 'Defter notu', profile: 'Profil' };
+const REPORT_KINDS = { message: 'Özel mesaj', guestbook: 'Defter notu', profile: 'Profil', article: 'Haber / yazı' };
 async function loadReports() {
   const { reports } = await api('/admin/reports');
   const tb = $('reports'); tb.replaceChildren();
@@ -336,12 +341,26 @@ async function loadProfiles() {
     card.append(row); box.append(card);
   }
 }
+async function loadArticles() {
+  const { articles } = await api('/admin/articles');
+  const tb = $('articles'); tb.replaceChildren();
+  if (!articles.length) { const tr = el('tr'); const td = el('td', 'Yazı yok.'); td.colSpan = 6; tr.append(td); tb.append(tr); return; }
+  for (const a of articles) {
+    const tr = el('tr');
+    const text = el('td', (a.removed ? '[kaldırıldı] ' : '') + a.title + ' · ' + a.body.slice(0, 200));
+    tr.append(el('td', new Date(a.created_at).toLocaleString('tr-TR')), el('td', a.kind), el('td', a.city_id), el('td', a.author ?? '—'), text);
+    const td = el('td');
+    if (!a.removed) td.append(btn('Kaldır', async () => { await api('/admin/articles/' + a.id, { method:'DELETE' }); loadArticles(); }));
+    if (a.user_id) td.append(' ', btn('Banla', async () => { if (!confirm('Yazan banlansın mı?')) return; await api('/admin/users/' + a.user_id + '/ban', { method:'POST', body: JSON.stringify({ banned: true }) }); loadUsers(); }));
+    tr.append(td); tb.append(tr);
+  }
+}
 async function show() {
   try {
     const me = await api('/me');
     if (!me.user.isAdmin) throw new Error('Bu hesap yönetici değil');
     $('login').hidden = true; $('panel').hidden = false;
-    await Promise.all([loadStats(), loadOnline(), loadUsers(), loadReports(), loadProfiles(), loadChat()]);
+    await Promise.all([loadStats(), loadOnline(), loadUsers(), loadReports(), loadArticles(), loadProfiles(), loadChat()]);
     if (!window.__onlineTimer) window.__onlineTimer = setInterval(() => { if (token) { loadOnline().catch(() => {}); loadStats().catch(() => {}); } }, 30000);
   } catch (e) { token = null; localStorage.removeItem('rifftown_admin_token'); $('login').hidden = false; $('panel').hidden = true; $('loginErr').textContent = e.message === 'unauthorized' ? '' : e.message; }
 }

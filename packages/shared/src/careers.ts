@@ -1,6 +1,7 @@
 // Meslekler, siyasi makamlar, VIP avantajları ve sokak müziği.
 
 import { type Skills, lv } from './skills';
+import { PACING } from './pacing';
 import type { CivicType, Instrument, L, LocationType } from './world';
 
 // ---------- Meslekler ----------
@@ -170,7 +171,7 @@ export const OFFICES: Office[] = [
 
 export const OFFICE_BY_ID: Record<string, Office> = Object.fromEntries(OFFICES.map((o) => [o.id, o]));
 /** Bir seçim dönemi kaç oyun günü sürer */
-export const ELECTION_DAYS = 7;
+export const ELECTION_DAYS = PACING.electionDays;
 
 // ---------- VIP ----------
 

@@ -5,13 +5,15 @@ import {
   ACHIEVEMENT_CATEGORY_NAMES,
   type AchievementCategory,
   type AchievementsResponse,
+  TITLE_BY_ID,
   TOTAL_ACHIEVEMENT_POINTS,
 } from '@rifftown/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { RefreshControl, Text, View } from 'react-native';
 import { useGate } from '@/components/gate';
-import { Heading, ListRow, Meter, Screen, Small } from '@/components/ui';
+import { Choice, Heading, ListRow, Meter, Screen, Small } from '@/components/ui';
+import { useRun } from '@/lib/hooks';
 import { api } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
 import { fonts, space, type, useColors } from '@/theme';
@@ -31,6 +33,9 @@ function AchievementsScreen() {
   const q = useQuery({ queryKey: ['achievements'], queryFn: () => api.get<AchievementsResponse>('/achievements') });
   const unlocked = new Map((q.data?.unlocked ?? []).map((u) => [u.id, u.unlockedAt]));
   const points = q.data?.points ?? 0;
+  // Ünvanlar: kazanılanlardan biri profilde adın altında görünür
+  const titles = useQuery({ queryKey: ['titles'], queryFn: () => api.get<{ earned: string[]; current: string | null }>('/titles') });
+  const { run } = useRun();
 
   return (
     <Screen edges={[]} refreshing={<RefreshControl refreshing={q.isRefetching} onRefresh={() => { q.refetch(); }} tintColor={c.pink} />}>
@@ -47,6 +52,17 @@ function AchievementsScreen() {
           right={t('achievementPointsN', { n: points })}
         />
       </View>
+      <Heading>{t('titlesTitle')}</Heading>
+      <Small style={{ marginBottom: space.sm }}>{t('titlesHint')}</Small>
+      {titles.data?.earned.length ? (
+        <Choice
+          options={[{ value: '', label: t('titleNone') }, ...titles.data.earned.filter((id) => TITLE_BY_ID[id]).map((id) => ({ value: id, label: p(TITLE_BY_ID[id].name) }))]}
+          value={titles.data.current ?? ''}
+          onChange={(v) => run(() => api.post('/titles', { titleId: v || null }), { invalidate: ['titles'] })}
+        />
+      ) : (
+        <Small>{t('noTitlesYet')}</Small>
+      )}
       {CATS.map((cat) => {
         const list = ACHIEVEMENTS.filter((a) => a.category === cat);
         return (

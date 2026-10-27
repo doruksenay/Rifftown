@@ -1,4 +1,4 @@
-import { CITY_BY_ID, LOCATION_BY_ID, type LocationType, LOCATION_TYPE_NAMES, VENUE_RULES, isVenue } from '@rifftown/shared';
+import { CITY_BY_ID, CITY_IDENTITY_BY_ID, GENRE_NAMES, ITEM_BY_ID, gameWeekday, LOCATION_BY_ID, type LocationType, LOCATION_TYPE_NAMES, VENUE_RULES, isVenue } from '@rifftown/shared';
 import { router } from 'expo-router';
 import { RefreshControl, View } from 'react-native';
 import { Body, Button, Empty, Heading, ListRow, Row, Screen, ScreenHeader, Small } from '@/components/ui';
@@ -8,7 +8,7 @@ import { MayorAnnouncement } from '@/components/politics';
 import { useCity } from '@/lib/hooks';
 import { useI18n } from '@/lib/i18n';
 import type { StringKey } from '@/lib/strings';
-import { useMe } from '@/lib/session';
+import { useGameSpeed, useMe } from '@/lib/session';
 import { space, useColors } from '@/theme';
 import { Bleed } from '@/components/art/hero';
 import { PlaceIcon } from '@/components/art/place';
@@ -33,6 +33,7 @@ export default function CityTab() {
   const ch = me.data!.character!;
   const city = ch.cityId ? CITY_BY_ID[ch.cityId] : null;
   const info = useCity(ch.cityId);
+  const speed = useGameSpeed();
 
   if (!city) {
     return (
@@ -55,14 +56,15 @@ export default function CityTab() {
         <CitySkyline cityId={city.id} height={140} />
       </Bleed>
       <MayorAnnouncement cityId={city.id} />
+      <CityIdentityCard cityId={city.id} speed={speed} />
 
       <ListRow
         title={t('seePlayers')}
         subtitle={info.data ? t('players', { n: info.data.playersHere }) : undefined}
         right="›"
         onPress={() => router.push({ pathname: '/people', params: { city: city.id } })}
-        last
       />
+      <ListRow title={t('communityTitle')} subtitle={t('communitySub')} right="›" onPress={() => router.push('/community')} last />
 
       {GROUPS.map((g) => {
         const locs = city.locations.filter((l) => g.types.includes(l.type) && !l.business);
@@ -135,5 +137,26 @@ export default function CityTab() {
         <Empty text={t('noFame')} />
       )}
     </Screen>
+  );
+}
+
+/** Şehrin kimliği: haftalık etkinlik, yerel lezzet, nadir eşya, yerel efsane (content/cities.ts) */
+function CityIdentityCard({ cityId, speed }: { cityId: string; speed: number }) {
+  const { t, p } = useI18n();
+  const c = useColors();
+  const id = CITY_IDENTITY_BY_ID[cityId];
+  if (!id) return null;
+  const today = gameWeekday(Date.now(), speed);
+  const inDays = (id.event.weekday - today + 7) % 7;
+  const genres = id.event.genres.map((g) => p(GENRE_NAMES[g])).join(', ');
+  return (
+    <View style={{ marginVertical: space.md, gap: space.xs }}>
+      <Heading>{t('cityIdentity')}</Heading>
+      <Body>{`${p(id.event.name)} · ${inDays === 0 ? t('cityEventToday') : t('cityEventInDays', { n: inDays })}`}</Body>
+      <Small>{t('cityEventHint', { genres })}</Small>
+      <Small>{t('cityDish', { dish: p(id.dish.name) })}</Small>
+      {ITEM_BY_ID[id.rareItem.id] ? <Small>{t('cityRareItem', { item: p(ITEM_BY_ID[id.rareItem.id].name) })}</Small> : null}
+      <Small style={{ fontStyle: 'italic' }} color={c.inkSoft}>{p(id.legend)}</Small>
+    </View>
   );
 }

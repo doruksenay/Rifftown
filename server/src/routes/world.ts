@@ -1,6 +1,7 @@
 import { CITY_BY_ID, LOCATION_BY_ID, isVenue } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
+import { childrenOf } from '../game/family';
 import { requireUser } from '../auth';
 import { config } from '../config';
 import { many, one, pool } from '../db';
@@ -26,7 +27,7 @@ export async function worldRoutes(app: FastifyInstance) {
   app.get('/cities/:cityId', async (req) => {
     const { cityId } = parse(z.object({ cityId: z.string() }), req.params);
     if (!CITY_BY_ID[cityId]) fail('not_found', 404);
-    const players = await one(pool, 'SELECT count(*)::int AS n FROM characters WHERE city_id = $1 AND NOT npc', [cityId]);
+    const players = await one(pool, 'SELECT count(*)::int AS n FROM characters WHERE city_id = $1 AND NOT npc AND dead_at IS NULL', [cityId]);
     const gigs = await many(
       pool,
       `SELECT g.*, b.name AS band_name FROM gigs g JOIN bands b ON b.id = g.band_id
@@ -134,7 +135,7 @@ export async function worldRoutes(app: FastifyInstance) {
     const rows = await many(
       pool,
       `SELECT c.id, c.name, c.avatar_color, c.avatar_version, c.main_instrument, c.city_id FROM characters c
-        WHERE lower(c.name) LIKE lower($1) || '%' AND NOT c.npc
+        WHERE lower(c.name) LIKE lower($1) || '%' AND NOT c.npc AND c.dead_at IS NULL
           AND NOT EXISTS (SELECT 1 FROM blocks x WHERE (x.blocker_id = $2 AND x.blocked_id = c.id) OR (x.blocker_id = c.id AND x.blocked_id = $2))
         ORDER BY c.name LIMIT 20`,
       [q.search.replace(/[%_\\]/g, ''), me],
@@ -172,6 +173,7 @@ export async function worldRoutes(app: FastifyInstance) {
         mainInstrument: ch.main_instrument,
         cityId: ch.city_id,
         bio: ch.bio,
+        titleId: ch.title_id ?? null,
         createdAt: ch.created_at.toISOString(),
         band: band ? { id: band.id, name: band.name, role: band.role } : null,
         topSkills,
@@ -201,9 +203,8 @@ export async function worldRoutes(app: FastifyInstance) {
           );
           return p ? { characterId: Number(p.id), name: p.name, stage: p.stage } : null;
         })(),
-        children: (
-          await many(pool, 'SELECT name, born_at FROM children WHERE parent_a = $1 OR parent_b = $1 ORDER BY born_at', [ch.id])
-        ).map((k) => ({ name: k.name, bornAt: k.born_at.toISOString() })),
+        // Çocuklar oyun takvimiyle büyür: yaş ve yaş basamağıyla
+        children: await childrenOf(pool, ch.id),
         tattoos: (await many(pool, 'SELECT tattoo_id FROM tattoos WHERE character_id = $1 ORDER BY id', [ch.id])).map((t) => t.tattoo_id),
         friendsCount: (await one(pool, 'SELECT count(*)::int AS n FROM relationships WHERE (a_id = $1 OR b_id = $1) AND friends', [ch.id]))!.n,
       },

@@ -174,7 +174,8 @@ describe('EFSANEVİ konser', () => {
     const g = (await inv(p.c)).find((i) => i.id === guitar.id);
     expect(g.legendary).toMatchObject({ gigId: gig.body.gig.id, bandName: 'Efsane Grup' });
     expect(g.bonus).toBe(guitar.bonus + 3);
-    expect((await me(p.c)).character.moodlets.map((m: any) => m.id)).toContain('legendary_gig');
+    // Moodlet 72 oyun saati sürer (test hızında birkaç milisaniye): süresinden bağımsız olarak kaydı kontrol et
+    expect((await q(`SELECT 1 FROM moodlets WHERE character_id = $1 AND kind = 'legendary_gig'`, [p.character.id])).rowCount).toBe(1);
   });
 });
 

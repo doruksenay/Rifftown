@@ -9,6 +9,9 @@ import {
   energyNow,
   gameHoursToMs,
   inspirationNow,
+  CRAVING_HOURS,
+  ageOf,
+  START_AGE,
 } from '@rifftown/shared';
 import { config } from '../config';
 import { type Db, many, one } from '../db';
@@ -22,7 +25,12 @@ export interface Wellbeing {
   mood: number;
 }
 
-type WellRow = Pick<CharacterRow, 'mood' | 'health' | 'energy' | 'energy_at' | 'inspiration' | 'inspiration_at' | 'jailed_until'>;
+type WellRow = Pick<CharacterRow, 'mood' | 'health' | 'energy' | 'energy_at' | 'inspiration' | 'inspiration_at' | 'jailed_until'> &
+  Partial<Pick<CharacterRow, 'addicted_since' | 'indulged_at' | 'created_at' | 'npc'>>;
+
+/** Bağımlı ve son CRAVING_HOURS içinde isteğini gidermemiş mi */
+export const isCraving = (r: Partial<Pick<CharacterRow, 'addicted_since' | 'indulged_at'>>) =>
+  !!r.addicted_since && (!r.indulged_at || r.indulged_at.getTime() + gameHoursToMs(CRAVING_HOURS, config.gameSpeed) < Date.now());
 
 export const currentEnergy = (r: Pick<CharacterRow, 'energy' | 'energy_at'>) => energyNow(r.energy ?? 100, r.energy_at ?? null, config.gameSpeed);
 export const currentInspiration = (r: Pick<CharacterRow, 'inspiration' | 'inspiration_at'>) =>
@@ -40,7 +48,8 @@ export async function storedMoodlets(db: Db, characterId: number): Promise<Moodl
 export function wellbeingFrom(r: WellRow, stored: MoodletDto[]): Wellbeing {
   const energy = currentEnergy(r);
   const inspiration = currentInspiration(r);
-  const derived: MoodletDto[] = derivedMoodlets({ energy, inspiration, health: r.health, jailed: isJailed(r) }).map((id) => ({
+  const age = r.created_at && !r.npc && config.agingEnabled ? ageOf(r.created_at, config.gameSpeed) : START_AGE;
+  const derived: MoodletDto[] = derivedMoodlets({ energy, inspiration, health: r.health, jailed: isJailed(r), craving: isCraving(r), age }).map((id) => ({
     id,
     effect: MOODLET_BY_ID[id].value,
     endsAt: null,

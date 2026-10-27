@@ -2,6 +2,7 @@
 // Kira her 7 oyun gününde bir kendiliğinden ödenir; para yetmezse oyuncu evden çıkarılır.
 // Evi olmayan oyuncu arkadaşının kanepesinde kalır: ücretsiz, bonussuz.
 
+import { PACING } from './pacing';
 import type { L } from './world';
 
 export type HomeId = 'room' | 'flat' | 'loft' | 'penthouse';
@@ -58,6 +59,6 @@ export const HOMES: HomeDef[] = [
 export const HOME_BY_ID: Record<string, HomeDef> = Object.fromEntries(HOMES.map((h) => [h.id, h]));
 
 /** Bir kira dönemi (oyun günü) */
-export const RENT_PERIOD_DAYS = 7;
+export const RENT_PERIOD_DAYS = PACING.rentPeriodDays;
 
 export const rentFor = (home: HomeDef, costMult: number) => Math.round(home.rent * costMult);

@@ -10,7 +10,7 @@ import {
   HOUR_OPTIONS,
   ITEM_BY_ID,
   LOCATION_BY_ID,
-  MEALS,
+  mealsIn,
   RECIPES,
   TATTOOS,
   TATTOO_BY_ID,
@@ -50,13 +50,13 @@ export function Restaurant({ locationId, menuMult = 1 }: { locationId: string; m
     <View style={{ marginTop: space.lg }}>
       <Body color={c.inkSoft}>{t('restaurantIntro')}</Body>
       <View style={{ height: space.md }} />
-      {MEALS.map((m, i) => {
+      {mealsIn(city.id).map((m, i, list) => {
         const price = Math.max(1, Math.round(m.price * city.costMult * menuMult));
         return (
           <ListRow
             key={m.id}
             title={p(m.name)}
-            subtitle={`${t('mealEffect', { m: m.mood, h: m.health })}, ${t('mealEnergy', { n: MEAL_ENERGY[m.id] ?? 0 })}`}
+            subtitle={`${m.cityId ? `${t('localDish')} · ` : ''}${t('mealEffect', { m: m.mood, h: m.health })}, ${t('mealEnergy', { n: m.energy ?? MEAL_ENERGY[m.id] ?? 0 })}`}
             right={
               <View style={{ alignItems: 'flex-end', gap: 2 }}>
                 <Strong>{money(price)}</Strong>
@@ -69,7 +69,7 @@ export function Restaurant({ locationId, menuMult = 1 }: { locationId: string; m
                 />
               </View>
             }
-            last={i === MEALS.length - 1}
+            last={i === list.length - 1}
           />
         );
       })}

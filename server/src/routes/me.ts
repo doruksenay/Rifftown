@@ -19,6 +19,8 @@ import {
   isShop,
   isEquippable,
   startingSkills,
+  indulgenceForSpend,
+  seasonAt,
 } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
@@ -26,6 +28,7 @@ import { storedMoodlets } from '../game/wellbeing';
 import { charId, requireUser, requireVip } from '../auth';
 import { many, one, pool, tx } from '../db';
 import { fail } from '../errors';
+import { config } from '../config';
 import { activeAction, getCharacter, isJailed, lockCharacter, membership, notify, officesOf, requireEstablished, toActionDto, toCharacterDto } from '../game/common';
 import { achievementPoints, evaluateThrottled } from '../game/achievements';
 import { bailQuote, inCustody } from '../game/crime';
@@ -35,6 +38,7 @@ import { inventoryOf, toInventoryDto, ringPledged } from '../game/items';
 import { hotelOf } from '../game/lifestyle';
 import { unreadMessages } from '../game/social';
 import { idParam, parse } from './util';
+import { indulge, lastDeath } from '../game/consequences';
 
 /** Kontrol karakterlerini atar; tek satırlık alanlarda satır sonlarını da */
 const clean = (v: string | undefined, singleLine = false) => {
@@ -64,7 +68,11 @@ export async function meRoutes(app: FastifyInstance) {
       },
     };
     if (!u.characterId) {
-      return { ...base, character: null, action: null, band: null, unreadNotifications: 0, pendingInvites: 0, bailCost: null, unreadMessages: 0 };
+      // Karakteri öldüyse (yalnızca PERMADEATH açıkken) yeni karakter ekranında anılır
+      return {
+        ...base, character: null, action: null, band: null, unreadNotifications: 0, pendingInvites: 0, bailCost: null, unreadMessages: 0,
+        death: await lastDeath(pool, u.id),
+      };
     }
     await evaluateThrottled(pool, u.characterId);
     const ch = await getCharacter(pool, u.characterId);
@@ -122,15 +130,22 @@ export async function meRoutes(app: FastifyInstance) {
     );
     if (await one(pool, 'SELECT 1 FROM characters WHERE lower(name) = lower($1)', [body.name])) fail('name_taken', 409);
     const color = body.avatarColor ?? AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
-    const ch = await one(
-      pool,
-      `INSERT INTO characters(user_id, name, avatar_color, main_instrument, money, mood, health, city_id, skills)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-      [req.user!.id, body.name, color, body.mainInstrument, START_MONEY, START_MOOD, START_HEALTH, body.cityId,
-        JSON.stringify(startingSkills(body.mainInstrument, body.favoriteGenre))],
-    );
-    await pool.query(`INSERT INTO notifications(character_id, kind, data) VALUES ($1, 'welcome', '{}')`, [ch.id]);
-    return { character: toCharacterDto(ch) };
+    return tx(async (c) => {
+      // Ölen karakterin mirası bir kez, yeni karaktere geçer (para yalnızca taşınır, basılmaz). Aynı işlemde: kayıt
+      // başarısız olursa miras kaybolmaz.
+      const heirs = await many(c, 'SELECT id, inherited FROM characters WHERE former_user_id = $1 AND inherited > 0 FOR UPDATE', [req.user!.id]);
+      const inheritance = heirs.reduce((s, h) => s + Number(h.inherited), 0);
+      if (heirs.length) await c.query('UPDATE characters SET inherited = 0 WHERE id = ANY($1::bigint[])', [heirs.map((h) => h.id)]);
+      const ch = await one(
+        c,
+        `INSERT INTO characters(user_id, name, avatar_color, main_instrument, money, mood, health, city_id, skills)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+        [req.user!.id, body.name, color, body.mainInstrument, START_MONEY + inheritance, START_MOOD, START_HEALTH, body.cityId,
+          JSON.stringify(startingSkills(body.mainInstrument, body.favoriteGenre))],
+      );
+      await c.query(`INSERT INTO notifications(character_id, kind, data) VALUES ($1, 'welcome', '{}')`, [ch.id]);
+      return { character: toCharacterDto(ch) };
+    });
   });
 
   app.get('/character/avatar-colors', async () => ({ colors: AVATAR_COLORS }));
@@ -248,7 +263,7 @@ export async function meRoutes(app: FastifyInstance) {
       const from = await lockCharacter(c, id);
       if (isJailed(from)) fail('in_jail', 409);
       await requireEstablished(c, id);
-      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc', [body.toName]);
+      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL', [body.toName]);
       if (!target) fail('character_not_found', 404);
       if (target.id === id) fail('invalid_target');
       if (from.money < body.amount) fail('not_enough_money');
@@ -276,6 +291,10 @@ export async function meRoutes(app: FastifyInstance) {
       if (!loc || !isShop(loc.type) || !item || item.shop !== loc.type || item.crafted) fail('invalid_item');
       if (item!.vip && !req.user!.isVip) fail('vip_required', 403);
       if (loc!.cityId !== ch.city_id) fail('not_in_city');
+      // Ödül eşyası dükkânda satılmaz; nadir eşya yalnızca kendi şehrinde; sezonluk eşya yalnızca mevsiminde
+      if (item!.reward) fail('invalid_item');
+      if (item!.cityOnly && item!.cityOnly !== loc!.cityId) fail('invalid_item');
+      if (item!.season && item!.season !== seasonAt(Date.now(), config.gameSpeed)) fail('out_of_season', 409);
       const qty = item!.stackable ? body.qty : 1;
       const total = item!.price * qty;
       if (ch.money < total) fail('not_enough_money');
@@ -292,6 +311,8 @@ export async function meRoutes(app: FastifyInstance) {
         ]);
       }
       await c.query('UPDATE characters SET money = money - $2, location_id = $3 WHERE id = $1', [id, total, loc!.id]);
+      // Aşırı alışveriş bağımlılık yapar (kitap ve malzeme sayılmaz)
+      if (item!.slot !== 'material') await indulge(c, ch, indulgenceForSpend(total));
       return { item: toInventoryDto(last), money: ch.money - total, qty };
     });
   });
@@ -312,6 +333,8 @@ export async function meRoutes(app: FastifyInstance) {
       if (loc!.cityId !== ch.city_id) fail('not_in_city');
       // Atölyede üretilen eşyalar dükkâna satılmaz (malzemeden ucuza üretip satarak para basılmasın); ikinci el pazarında satılabilir
       if (item!.crafted) fail('crafted_not_sellable');
+      // Ödül eşyaları kişiye bağlıdır: dükkâna satılıp paraya çevrilemez
+      if (item!.bound) fail('item_bound', 409);
       if (await ringPledged(c, inv.id)) fail('ring_pledged', 409);
       const price = Math.floor(item!.price * SELL_BACK_RATE);
       await c.query('DELETE FROM inventory WHERE id = $1', [inv.id]);
