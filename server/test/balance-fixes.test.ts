@@ -1,5 +1,5 @@
 // Denge düzeltmelerinin sunucu testleri (denge raporu maddeleri 1–14): gerçek API ve zamanlayıcıyla.
-import { CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
+import { BUSK_MAX_PAY_PER_HOUR, BUSK_SKILL_CAP, buskDailyFactor, buskPayPerHour, CITY_BY_ID, GIG_PRODUCTION_REFUND, HANGOUT_UPLIFTS_PER_DAY, MAX_CHILDREN, VENUE_RULES, gigProductionCost } from '@rifftown/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -145,5 +145,41 @@ describe('madde 3: büyük sahnede prodüksiyon gideri', () => {
     // Parası yetmeyen salon konseri ayarlayamaz
     const poor = await bandAt('berlin', 50, cost - 1);
     expect((await poor.p.c.post('/api/gigs', { locationId: 'berlin-hall', inHours: 12, setlist: [poor.song] })).body.error).toBe('not_enough_money');
+  });
+});
+
+describe('madde 4: sokak müziği başlangıç yolu', () => {
+  it('günlük azalan getiri ve saatlik tavan (kurallar)', () => {
+    expect(buskDailyFactor(0, 4)).toBe(1);
+    expect(buskDailyFactor(4, 4)).toBe(0.5);
+    expect(buskDailyFactor(2, 4)).toBe(0.75);
+    expect(buskDailyFactor(8, 2)).toBe(0.25);
+    expect(buskDailyFactor(6, 4)).toBeCloseTo((2 * 0.5 + 2 * 0.25) / 4);
+    // Virtüöz bile parkta tavanı aşamaz
+    expect(buskPayPerHour(90, 85, 1, 1.5)).toBe(BUSK_MAX_PAY_PER_HOUR);
+    expect(buskPayPerHour(10, 5, 1)).toBeLessThan(BUSK_MAX_PAY_PER_HOUR);
+  });
+
+  it('sunucu: aynı gün ikinci oturum yarım bahşiş, beceri sokakta amatörde durur', async () => {
+    const p = await newPlayer();
+    const id = p.character.id;
+    await q(`UPDATE characters SET skills = skills || '{"guitar":29.99,"showmanship":40}'::jsonb WHERE id = $1`, [id]);
+    // Bugün 4 saat çalmış
+    await q(
+      `INSERT INTO actions(character_id, kind, params, location_id, started_at, ends_at, status) VALUES ($1, 'busk', '{"hours":4,"role":"guitar"}', 'istanbul-park', now(), now(), 'done')`,
+      [id],
+    );
+    const r = await p.c.post('/api/actions', { kind: 'busk', role: 'guitar', hours: 4, locationId: 'istanbul-park' });
+    expect(r.status).toBe(200);
+    const a = (await q(`SELECT id, params FROM actions WHERE character_id = $1 AND status = 'active'`, [id])).rows[0];
+    expect(a.params.tipFactor).toBe(0.5);
+    await q(`UPDATE actions SET ends_at = now() - interval '1 second' WHERE id = $1`, [a.id]);
+    await advance(5);
+    const done = (await q('SELECT result FROM actions WHERE id = $1', [a.id])).rows[0].result;
+    expect(done.tired).toBe(true);
+    expect(done.pay).toBeLessThanOrEqual(BUSK_MAX_PAY_PER_HOUR * 4 * 0.5 * 1.3);
+    const skills = (await q('SELECT skills FROM characters WHERE id = $1', [id])).rows[0].skills;
+    expect(skills.guitar).toBeLessThanOrEqual(BUSK_SKILL_CAP);
+    expect(skills.showmanship).toBe(40); // amatörün üstünde: sokak geliştirmez
   });
 });

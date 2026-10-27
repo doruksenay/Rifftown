@@ -35,6 +35,7 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
         return d.fatigued ? `${withInspo}. ${t('n_song_fatigued')}` : withInspo;
       }
       if (d.kind === 'record' && d.title) return t('n_record', { title: d.title, q: tierName('quality', d.quality, lang) });
+      if (d.kind === 'busk' && d.tired) return `${t('n_action_done', { action: t('action_busk') })}. ${t('busk_tired')}`;
       if (d.kind === 'crime' && d.success) return t('n_crime_ok', { money: `$${Number(d.loot).toLocaleString('en-US')}` });
       if (d.kind === 'investigate' && !d.cancelled) {
         return d.solved ? t('n_investigate_solved', { money: `$${Number(d.bonus).toLocaleString('en-US')}` }) : t('n_investigate_none');

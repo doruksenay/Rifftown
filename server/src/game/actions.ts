@@ -27,6 +27,9 @@ import {
   INSTRUMENTS,
   PROFESSION_BY_ID,
   buskPayPerHour,
+  buskDailyFactor,
+  BUSK_SKILL_CAP,
+  BUSK_SKILL_GAIN,
   careerPay,
   knows,
   learnBlocker,
@@ -80,7 +83,7 @@ import { prepareVideo, resolveVideo } from './media';
 import { rollBreakdown } from './touring';
 import type pg from 'pg';
 import { config } from '../config';
-import { one, tx } from '../db';
+import { type Db, one, tx } from '../db';
 import { fail } from '../errors';
 import { evaluateAchievements } from './achievements';
 import { prepareLesson } from './lessons';
@@ -106,6 +109,20 @@ import {
 } from './common';
 
 const ACTIVITY_KINDS = new Set(['study', 'work', 'write_song', 'rehearse', 'busk', 'record', 'crime', 'investigate', 'workout', 'craft', 'press', 'write_article', 'video']);
+
+/**
+ * Son `windowHours` oyun saatinde bitmiş ya da yarıda kesilmiş eylemlerin süresi (saat). Günlük azalan getiri
+ * (sokak müziği) ve odaklı çalışma sınırı (ders) bundan hesaplanır.
+ */
+export async function recentActionHours(c: Db, characterId: number, kinds: string[], windowHours: number) {
+  const r = await one(
+    c,
+    `SELECT coalesce(sum((params->>'hours')::float8 * CASE WHEN status = 'done' THEN 1 ELSE coalesce((result->>'fraction')::float8, 0) END), 0)::float8 AS h
+       FROM actions WHERE character_id = $1 AND kind = ANY($2::text[]) AND status IN ('done', 'cancelled') AND ends_at > $3`,
+    [characterId, kinds, new Date(Date.now() - gameHoursToMs(windowHours, config.gameSpeed))],
+  );
+  return Number(r?.h ?? 0);
+}
 
 function requireHours(kind: keyof typeof HOUR_OPTIONS, hours: unknown): number {
   const opts = HOUR_OPTIONS[kind] as readonly number[];
@@ -235,6 +252,8 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         locationId = loc.id;
         params.role = req.role;
         params.costMult = city.costMult;
+        // Günlük azalan getiri: son 24 oyun saatinde çalınan saatlere göre bu oturumun bahşiş çarpanı
+        params.tipFactor = buskDailyFactor(await recentActionHours(c, characterId, ['busk'], 24), hours);
         break;
       }
       case 'write_song': {
@@ -555,13 +574,16 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
     }
     case 'busk': {
       const role = params.role as Instrument;
-      const base = buskPayPerHour(roleSkill(skills, role), stageScore(skills), (params.costMult as number) ?? 1);
-      const pay = Math.floor(base * skillMult(skills, 'busking') * hours * (0.7 + Math.random() * 0.6));
+      const base = buskPayPerHour(roleSkill(skills, role), stageScore(skills), (params.costMult as number) ?? 1, skillMult(skills, 'busking'));
+      const tipFactor = typeof params.tipFactor === 'number' ? params.tipFactor : 1;
+      const pay = Math.floor(base * tipFactor * hours * (0.7 + Math.random() * 0.6));
       money += pay;
       result.pay = pay;
+      if (tipFactor < 1) result.tired = true;
       inspirationDelta += INSPIRATION_GAIN.buskPerHour * hours;
-      for (const [id, amount] of [[ROLE_SKILLS[role].specific, 0.2], ['showmanship', 0.3]] as const) {
-        if (knows(skills, id)) skills[id] = clamp(skills[id] + amount * hours * diminishing(skills[id]), 0, 100);
+      // Sokakta beceri yavaş ve yalnızca amatöre kadar gelişir (daha ötesi okulda, provada ve sahnede)
+      for (const [id, amount] of [[ROLE_SKILLS[role].specific, BUSK_SKILL_GAIN.role], ['showmanship', BUSK_SKILL_GAIN.showmanship]] as const) {
+        if (knows(skills, id) && skills[id] < BUSK_SKILL_CAP) skills[id] = clamp(skills[id] + amount * hours * diminishing(skills[id]), 0, BUSK_SKILL_CAP);
       }
       break;
     }

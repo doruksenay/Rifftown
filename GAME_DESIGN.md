@@ -202,7 +202,11 @@ Her şehirde üç makam vardır: belediye başkanı (günlük $600), vali ($500)
 
 ## Sokak müziği
 
-Parkta 1, 2 ya da 4 saat çalınarak bahşiş toplanır. Saatlik bahşiş ≈ (4 + rol becerisi × 0,35 + sahne puanı × 0,15) × şehir çarpanı. Grubu ya da parası olmayan yeni oyuncular için bir başlangıç yoludur.
+Parkta 1, 2 ya da 4 saat çalınarak bahşiş toplanır. Saatlik bahşiş ≈ min($20, (4 + rol becerisi × 0,35 + sahne puanı × 0,15) × sokak becerileri çarpanı) × şehir çarpanı. Grubu ya da parası olmayan yeni oyuncular için bir başlangıç yoludur, kariyer değil (`careers.ts`):
+
+- Günlük azalan getiri: kayan 24 oyun saatinde ilk 4 saat tam, sonraki 4 saat yarım, sonrası çeyrek bahşiş (bildirim söyler).
+- Beceri artışı saatte rol 0,08, şovmenlik 0,1 (eskiden 0,2 ve 0,3) ve sokakta yalnızca amatöre (30) kadar.
+- Eskiden 30 günde sokak müzisyeni $10.527 kazanıp şovmenliğini 82'ye (virtüöz), gitarını 69'a taşıyordu; konser odaklı oyuncudan fazla (denge raporu §2–3).
 
 ## VIP üyelik
 

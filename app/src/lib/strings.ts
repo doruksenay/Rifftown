@@ -432,6 +432,8 @@ export const tr = {
   // Park ve üniversite
   busk: 'Sokakta çal',
   buskIntro: 'Parkta çalıp geçenlerden bahşiş toplarsın. Ne kadar iyi çalarsan o kadar çok kazanırsın.',
+  buskLimits: 'Sokak kalabalığı ancak bu kadar bahşiş bırakır: günde ilk 4 saatten sonra bahşiş yarıya, 8 saatten sonra çeyreğe iner. Sokakta becerin ancak amatör seviyesine kadar gelişir.',
+  busk_tired: 'Bugün çok çaldın; geçenler seni artık tanıyor, bahşiş azaldı.',
   instrumentToPlay: 'Çalacağın enstrüman',
   universityIntro: 'Kariyer becerileri üniversitede çalışılır. Retorik ve medya ilişkileri sadece burada öğrenilir.',
   publicLife: 'Kamu ve iş dünyası',
@@ -1739,6 +1741,8 @@ export const en: Record<StringKey, string> = {
 
   busk: 'Play on the street',
   buskIntro: 'Play in the park and collect tips from passers-by. The better you play, the more you earn.',
+  buskLimits: 'A street crowd only tips so much: after the first 4 hours a day tips halve, after 8 hours they drop to a quarter. On the street your skills only grow up to amateur level.',
+  busk_tired: 'You have played a lot today; passers-by know you by now and tip less.',
   instrumentToPlay: 'Instrument to play',
   universityIntro: 'Career skills are studied at university. Rhetoric and media relations can only be learned here.',
   publicLife: 'Public life and business',
