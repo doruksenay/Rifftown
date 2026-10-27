@@ -22,6 +22,33 @@ Bu belgedeki tüm sayılar `packages/shared/src/` altında tek yerde tanımlıd�
 | Ruh hâli | 80 / 100 | Çalışma verimini ve konser performansını etkiler (%0'da ×0,6, %100'de ×1,0) |
 | Sağlık | 100 / 100 | 15'in altında çalışma, iş, şarkı yazma ve prova yapılamaz. Verime etkisi: %0'da ×0,5 |
 | Beceriler | Seçilen enstrümanın temel becerisi 20, kendisi 12; beste, söz ve şovmenlik 5; sevilen tür 10 | 0–100 arası; yükseldikçe artış yavaşlar |
+| Nitelikler | Her biri 10; ilk enstrüman bir niteliğe +10 (vokal → ses, diğerleri → el becerisi); 20 başlangıç puanı oyuncunun seçimiyle (bir niteliğe en fazla 10). Toplam 90 | 0–100 arası; yalnızca XP harcayarak yükselir |
+| XP | 0 | Oynayarak kazanılır, niteliklere harcanır |
+
+Yaş da karakterin parçasıdır (bkz. "Kayıp ve sonuç").
+
+### Nitelikler ve XP
+
+Beceriler "ne bildiğin"dir, nitelikler "kim olduğun". İki karakter aynı becerileri okusa bile nitelikleri onları ayırır. Kurallar `packages/shared/src/attributes.ts`, sunucu `server/src/game/attributes.ts`, migration 021.
+
+| Nitelik | Etki (nitelik 100'de; doğrusal, 0'da etkisiz) | Nerede |
+|---|---|---|
+| Çekicilik | Takılma, flört ve randevuda arkadaşlık/romantizm kazancı ×1,15; basın toplantısı ve röportajın tutma şansı +0,05 (üst sınır %95 aynı) | `relations.ts`, `press.ts` |
+| Ses | Vokal rolünde rol becerisine +4 (konser ve sokak müziği) | `gigs.ts`, `actions.ts` |
+| Yaratıcılık | Şarkı yazma puanına +4 (şarkı kalitesine +3,2); eylemlerden kazanılan ilham ×1,1 | `actions.ts` |
+| Zekâ | Kendi kendine çalışma, okul ve özel ders kazancı ×1,12 (özel derste öğretmenin tavanı aynı) | `actions.ts` |
+| Bünye | Yorucu işlerde sağlık kaybı −%15 (kondisyonla çarpılarak, ikisi birlikte en fazla −%49); dinlenme ve tedavide sağlık kazancı ×1,15 | `actions.ts` |
+| El becerisi | Vokal dışındaki rollerde rol becerisine +4 (konser ve sokak müziği); atölyede el işçiliğine +6 (toplam 100'ü geçmez) | `gigs.ts`, `actions.ts`, `items.ts` |
+
+- **Seçim:** niteliklerin toplamı en fazla **330** olabilir (6 × 100 = 600'ün çok altında): ya üç niteliği tavana çıkarırsın ya da altısını ~55'te tutarsın. Bir puanın bedeli seviyeyle artar: 0–24 arası 1 XP, 25–49 arası 2, 50–74 arası 3, 75–99 arası 4. Bir niteliği 10'dan 100'e çıkarmak 240 XP'dir; aynı 90 puanı altı niteliğe 15'er dağıtmak 90 XP. Geniş-sığ ucuz ve her yere biraz etki eder; dar-derin pahalıdır ama seçtiği alanda (ör. vokalist için ses ve çekicilik) tam etkiyi verir. Harcanan puan geri alınmaz (yalnızca yönetici düzeltebilir).
+- **Etkilerin tavanı:** her etki nitelik 100'de durur ve çekirdek becerilerin yanında küçüktür: rol becerisinde +4 (asıl enstrüman 0'dan 100'e +75), şarkı yazmada +4 (temel beste 0'dan 100'e +45), öğrenmede ×1,12 (okul ×2,2). Yan becerilerin şarkı yazma ve sahne tavanı (+10, uzmanlık payıyla +15) ayrı kalır; nitelik bu tavanları büyütmez, yanına küçük bir pay ekler. Denge ölçümündeki sıralama değişmez: çekirdek beceri > yan beceri tavanı > nitelik (bkz. [docs/DENGE_OLCUMU.md](docs/DENGE_OLCUMU.md) "Nitelikler").
+- **XP kazanma:** her eylem oyun saati başına 1 XP verir (çalışma, ders, mesai, şarkı yazma, prova, kayıt, sokak müziği, antrenman, atölye, basın, haber, klip, soruşturma); yarıda kesilen eylem geçen saat kadar. Dinlenme, tedavi, yolculuk ve suç XP vermez. Sahneye çıkılan her konser 3 XP, kalitesi "harika" (60) ve üstüyse 4.
+- **Tavanlar:** son 24 oyun saatinde en fazla 10 XP, son 7 oyun gününde en fazla 50 XP (`xp_log`). Günde 4 saat okul ve 4 saat mesai yapan, bir konser veren oyuncu günlük tavana dayanır; haftada ~50 XP ile bir nitelik 10'dan 100'e ~5 haftada çıkar, üç niteliği tavana çıkarmak ~14 hafta sürer.
+- **İstismara karşı:** para ile XP alınamaz (hiçbir uç para karşılığı XP vermez); XP takas, hediye, para gönderme ya da miras ile başka karaktere geçmez; XP yalnızca karakterin kendi eyleminden ve sahneye çıktığı konserden gelir (takılma, flört, başkasına ders vermek XP vermez); yeni hesapların (ilk 72 oyun saati, `TRADE_MIN_ACCOUNT_HOURS`) tavanı yarıdır, böylece ek hesapları hızla güçlü grup arkadaşına çevirmek yavaşlar; oyunun kendi müzisyenleri XP almaz ve niteliksizdir (eski davranış aynen). Harcama karakter satırı kilitliyken yapılır: eşzamanlı istekler XP'yi eksiye düşüremez (test).
+- **Karakter açarken** oyuncu 20 başlangıç puanını dağıtır (uygulama ilk enstrümana göre bir öneriyle açılır: vokal → çekicilik + yaratıcılık, davul/perküsyon → bünye + çekicilik, diğerleri → yaratıcılık + zekâ). Ölen karakterin yerine açılan yeni karakter XP ya da nitelik devralmaz.
+- **Mevcut oyuncular (migration 021):** yeni karakterle aynı başlangıç dağılımı (role göre) ve başlangıç XP'si: 20 + şimdiye kadarki her 4 eylem saati için 1 + sahneye çıkılan her konser için 1, en fazla 150. Bu XP tavana sayılmaz. Beceri, para ve diğer ilerleme olduğu gibi kalır.
+- **Görünürlük:** nitelikler yeni "nitelik" kelime ölçeğiyle gösterilir (aşağıdaki tablo); VIP olmayanlara sunucu bulanık değer gönderir (`visibility.ts` `attributes`), toplam tavana kalan puan 10'luk adımlarla (`attributeRoom`). Bedel basamakları (25, 50, 75) ölçeğin sınırlarına denk geldiği için bulanık değerle hesaplanan bedel de doğrudur. XP para gibi harcanan bir bakiye olduğundan tam sayı olarak gösterilir. Not: nitelikler yalnızca harcamayla değiştiğinden oyuncu kendi kesin değerini sayarak bulabilir; bulanıklık başkasının ekranında ya da yanıtlarda sayı sızmasın diyedir.
+- **Arayüz:** "Ben" sekmesinde nitelikler bölümü ve "Nitelikler ve XP" ekranı (bir puan, bedeli, bugünkü/haftalık XP, toplam tavan); karakter açarken başlangıç puanı dağıtımı; eylem ve konser bildirimlerinde kazanılan XP. Yönetim panelinde nitelikler ve harcanmamış XP düzenlenir (elle verilen XP tavanlara ve ömür boyu toplama sayılmaz).
 
 ## Oyuncunun gördüğü: sayı yerine kelime
 
@@ -37,6 +64,7 @@ Kesin sayılar VIP avantajıdır (Popmundo'daki gibi). VIP üyeler kelimenin yan
 | Şöhret | kimse tanımıyor 0 · mahallede bilinir 5 · şehirde konuşuluyor 15 · yerel yıldız 30 · şehrin gözdesi 45 · süperstar 75 |
 | Ruh hâli | bunalımda 0 · keyifsiz 25 · normal 45 · neşeli 70 · coşkulu 90 |
 | Sağlık | yatağa düşmüş 0 · hasta 15 · yorgun 40 · iyi 70 · zinde 90 |
+| Nitelik | zayıf 0 · sıradan 15 · iyi 25 · güçlü 40 · çok güçlü 50 · olağanüstü 75 · eşsiz 90 |
 
 En üst kalite seviyesi büyük harfle (DESTANSI / EPIC), diğerleri küçük harfle yazılır. Renkler: düşük seviyeler soluk, orta seviyeler mürekkep, üst seviyeler pembe; DESTANSI ana ekrandaki bilet gibi iki mürekkeple basılır. Ruh hâli ve sağlıkta düşük seviyeler tehlike rengindedir.
 
@@ -88,7 +116,7 @@ Bir eylem erken bitirilebilir (seyahat hariç). Sonuç geçen süreyle orantıl�
 
 ### Formüller
 
-- Çalışma artışı = saat × (okulda 2,2, değilse 1) × (1 − beceri / 110) × ruh hâli çarpanı × sağlık çarpanı × (1 + enstrüman bonusu × 2 / 100)
+- Çalışma artışı = saat × (okulda 2,2, değilse 1) × (1 − beceri / 110) × ruh hâli çarpanı × sağlık çarpanı × (1 + enstrüman bonusu × 2 / 100) × zekâ çarpanı (en fazla ×1,12)
 - Şarkı kalitesi = 15 + şarkı yazma puanı × 0,8 ± 10 (1–100 arası; `rules.ts` `songQuality`)
 - Prova aşinalık artışı = saat × 12 × (1 − aşinalık / 105) × ruh hâli çarpanı × (1 + doğaçlama / 200), tür sınırına kadar
 
@@ -168,7 +196,7 @@ Her şehrin bit pazarında oyuncular eşyalarını ilana koyar; fiyat en fazla d
 
 ### Atölye (zanaat)
 
-Hırdavatçının atölyesinde malzemelerden enstrüman (gitar, bas, davul, synthesizer, mikrofon, saksofon, keman, konga ve 17 türe yatkın model), kıyafet, sanat eseri, sahne efekti, tüketim eşyası, hediyelik, yüzük ve bakım seti üretilir (81 tarif, `content/recipes.ts`). Bazı tarifler önce ara malzeme ister (tonewood, el sarımı manyetik, sahne kumaşı). Üretim varsayılan 4 saat sürer; tarif kendi süresini (1 – 10 saat) ve bir beceri eşiğini (ör. kuyumculukta usta) taşıyabilir. Bonus el işçiliği becerisine bağlıdır: acemi biri dükkânın ilk seviyesine yakın (+3), usta biri dükkânın en iyisini geçen (+14) eşya çıkarır. Yarıda kesilen üretimde malzemeler geri verilir. Üretilen eşyada üreticinin adı yazar. Üretilen eşyalar dükkâna satılmaz, ikinci el pazarında satılır. Ürünü dükkânda da satılan tarifler (tamir kiti, bakım setleri, bakım paketi) için malzeme maliyeti dükkân fiyatının en az yarısıdır; tüccarın atölye ürününe ödediği para malzemenin en fazla %25 fazlası ve günde 2 ürünle sınırlı (her tarif için test).
+Hırdavatçının atölyesinde malzemelerden enstrüman (gitar, bas, davul, synthesizer, mikrofon, saksofon, keman, konga ve 17 türe yatkın model), kıyafet, sanat eseri, sahne efekti, tüketim eşyası, hediyelik, yüzük ve bakım seti üretilir (81 tarif, `content/recipes.ts`). Bazı tarifler önce ara malzeme ister (tonewood, el sarımı manyetik, sahne kumaşı). Üretim varsayılan 4 saat sürer; tarif kendi süresini (1 – 10 saat) ve bir beceri eşiğini (ör. kuyumculukta usta) taşıyabilir. Bonus el işçiliği becerisine bağlıdır: acemi biri dükkânın ilk seviyesine yakın (+3), usta biri dükkânın en iyisini geçen (+14) eşya çıkarır. El becerisi niteliği el işçiliğine en fazla +6 ekler (toplam 100'ü geçmez; tarifin beceri eşiği yalnızca beceriye bakar). Yarıda kesilen üretimde malzemeler geri verilir. Üretilen eşyada üreticinin adı yazar. Üretilen eşyalar dükkâna satılmaz, ikinci el pazarında satılır. Ürünü dükkânda da satılan tarifler (tamir kiti, bakım setleri, bakım paketi) için malzeme maliyeti dükkân fiyatının en az yarısıdır; tüccarın atölye ürününe ödediği para malzemenin en fazla %25 fazlası ve günde 2 ürünle sınırlı (her tarif için test).
 
 ## Meslekler
 
@@ -446,7 +474,7 @@ Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr 
 ### Konser hesabı
 
 - Seyirci = kapasite × (0,04 + şöhret / 100 × 1,1) × tür popülerliği × (0,85–1,15) + arkadaşlar (barda 4–10, diğer sahnelerde 2–8; kapasiteyi aşmaz)
-- Grup becerisi = sahnedekilerin (rol becerisi + enstrüman bonusu) × ruh hâli × sağlık ortalaması
+- Grup becerisi = sahnedekilerin (rol becerisi + enstrüman bonusu + nitelik payı) × ruh hâli × sağlık ortalaması. Nitelik payı vokalde ses, diğer rollerde el becerisidir (en fazla +4).
 - Şarkı puanı = 0,4 × şarkı kalitesi + 0,35 × ortalama aşinalık + 0,25 × grup becerisi
 - Kalite = şarkı puanı ortalaması × (0,85 + 0,15 × sahne / 100) × (0,5 + 0,5 × gelen üye oranı) × setlist uzunluğu çarpanı (1 şarkı 0,7, 4+ şarkı 1,0) × (0,92–1,08) × 1,15
 - Gelir = seyirci × bilet × şehir çarpanı × grubun payı. Pay sahne büyüdükçe küçülür (mekân, prodüksiyon, organizatör): bar %70, kulüp %45, salon %12, stadyum %4, festival %12. Böylece salon konseri $6–8 bin, stadyum $30 bin civarı getirir. Sahnedeki gerçek üyeler arasında eşit bölünür.
@@ -563,7 +591,7 @@ Kayıtta prodüktörlük artık bir rol: kaydın yapımcılık değeri, kaydı b
 Şöhretin yanında ikinci bir eksen. Kurallar `packages/shared/src/press.ts`, sunucu `server/src/game/press.ts`.
 
 - **Basın desteği:** her grubun her şehirde ayrı bir basın desteği vardır (0–100, nötr 20): basın düşman 0 · soğuk 10 · nötr 20 · ilgili 40 · sıcak 60 · basının gözdesi 80. Konser seyircisini ×0,95–×1,2, şöhret kazancını ×0,94–×1,25 etkiler. Her oyun günü nötre olan mesafenin %3'ü kapanır. Grup ekranında şehrin altında kelimeyle görünür; VIP olmayanlara bulanık.
-- **Basın toplantısı:** yalnızca lider, şehir gazetesinde, 2 saat, $100 × şehir çarpanı; grup ve şehir başına 72 oyun saatinde bir. **Röportaj:** her üye, 1 saat, ücretsiz, kişi başına 24 saatte bir. Başarı şansı = 0,4 + medya × 0,004 + retorik × 0,003 + karizma × 0,002 + şöhret ÷ 300 (%15–%95). Başarı: toplantı +6 (+medya ÷ 20) ve +0,3 şöhret, röportaj +3 (+karizma ÷ 40); başarısızlık −3 / −1. Başarılı toplantı son 7 gündeki yatıştırılmamış skandalın şöhret ve basın kaybının yarısını geri getirir.
+- **Basın toplantısı:** yalnızca lider, şehir gazetesinde, 2 saat, $100 × şehir çarpanı; grup ve şehir başına 72 oyun saatinde bir. **Röportaj:** her üye, 1 saat, ücretsiz, kişi başına 24 saatte bir. Başarı şansı = 0,4 + medya × 0,004 + retorik × 0,003 + karizma × 0,002 + şöhret ÷ 300 (%15–%95) + çekicilik niteliği × 0,0005 (en fazla +0,05, üst sınır %95). Başarı: toplantı +6 (+medya ÷ 20) ve +0,3 şöhret, röportaj +3 (+karizma ÷ 40); başarısızlık −3 / −1. Başarılı toplantı son 7 gündeki yatıştırılmamış skandalın şöhret ve basın kaybının yarısını geri getirir.
 - **Skandallar** basın desteğini düşürür: mahkûmiyet −15, iptal −8, felaket konser −10, bağımlılık −10.
 - **Gazetecilik:** gazeteci mesleğindeki oyuncu gazetede 2 saatlik "haber yaz" eylemiyle başlık (3–80) ve metin (20–2.000 karakter) yazar, isteğe bağlı bir grup ve ton (olumlu, tarafsız, eleştirel) seçer. Etki = 2 + gazetecilik × 0,05 + söz yazımı × 0,02 + rütbe (eleştirel haberde %80'i). Kendi grubu hakkında haber etkisizdir; aynı gruba 72 saatte bir yazılır; bir grubun bir şehirdeki basın desteği haberlerle 7 günde toplam en fazla 20 puan oynar (toplu karalama ya da şişirme olmasın). Haber şehir gazetesi akışında yayınlanır, grubun üyelerine bildirim gider. Gazetecilik kitapçıdaki yeni bir beceridir (söz yazımında çırak).
 - **Moderasyon:** başlık ve metin kontrol karakterlerinden temizlenir, küfür yıldızlanır. Haberler şikâyet edilebilir; yönetim panelinde "Son haberler ve yazılar" listesi ve şikâyet kuyruğundan kaldırılır, kaldırılan haberin basın etkisi geri alınır. Engellenen ya da engelleyen kişinin yazıları akışta görünmez.
@@ -613,7 +641,7 @@ Her şehirde 2 bar ve 2 restoran ruhsatı oyunculara satılıktır (bar $20.000,
 - **Ziyaretçi defteri:** herkes başkasının profiline not bırakabilir (aynı kişiye 30 saniyede bir). Defter sahibi notları silebilir.
 - **Hediye:** aynı şehirdeki arkadaşa eşya verilebilir (ilandaki eşya hariç; VIP eşyası sadece VIP üyeye).
 - **Engelleme ve şikâyet:** engellenen kişi mesaj yazamaz, deftere yazamaz, ilişki eylemi yapamaz. Mesaj, defter notu ve profil şikâyet edilebilir.
-- **İlişki:** aynı şehirde *takıl* (4 saatte bir) arkadaşlığı artırır, karizma hızlandırır. Arkadaşlık "arkadaş" seviyesine (30) gelince *flört* açılır (4 saatte bir); iki taraf da flört etmeden romantizm "hoşlanıyor" seviyesini (20) geçemez. Romantizm 20'de *restorana davet* (12 saatte bir, iki günün yemeği ödenir), 40'ta ilişki "sevgili" olur.
+- **İlişki:** aynı şehirde *takıl* (4 saatte bir) arkadaşlığı artırır, karizma hızlandırır (çekicilik niteliği takılma, flört ve randevu kazancını en fazla ×1,15 yapar). Arkadaşlık "arkadaş" seviyesine (30) gelince *flört* açılır (4 saatte bir); iki taraf da flört etmeden romantizm "hoşlanıyor" seviyesini (20) geçemez. Romantizm 20'de *restorana davet* (12 saatte bir, iki günün yemeği ödenir), 40'ta ilişki "sevgili" olur.
 - **Nişan ve evlilik:** romantizm 70'te sevgiliye yüzükle evlilik teklif edilir; kabul edilirse yüzük karşı tarafa geçer. Teklif beklerken yüzük satılamaz, ilana konamaz, hediye edilemez. Düğün ibadethanede yapılır ($500). Evli çiftin evde birlikte dinlenmesi +%10 verim verir. Ayrılık bir tıkla, boşanma adliyede ($300).
 - **Aile:** evli çift belediyede evlat edinebilir ($1.000, eşin onayı gerekir, en fazla 4 çocuk). Eş ve çocuklar profilde görünür.
 - **Tek gecelik macera** (`relations.ts`, sunucu `server/src/game/family.ts`): arayüz ve metinler imalı, genel izleyici seviyesinde; yalnızca mekanik. İki taraf da aynı bar, kulüp ya da oteldeyken biri teklif eder ("Geceyi birlikte geçirmeyi teklif et"), diğeri 2 oyun saati içinde kabul eder ya da reddeder. Flörtün arkadaşlık eşiğinden bağımsızdır ama engelleme ve yeni hesap kısıtı geçerlidir; iki taraf da yetişkin olmalıdır (oyun karakterleri 18 yaşında başlar, kural sunucuda ayrıca denetlenir; çocuklar oynanabilir karakter değildir). Aynı ikili 7 oyun gününde bir, bir karakter günde bir kez; iki taraftan 15 enerji. Verdikleri: "Tek gecelik macera" moodlet'i (+8, 12 saat) ve +5 ilham; arkadaşlığa +0,5, romantizme hiç (flört yerine geçmez); para, beceri ya da eşya yok. Bedelleri: %25 "Pişmanlık" (−6, 24 saat); taraflardan biri o şehirde en az yerel yıldızsa %30 olasılıkla magazin dedikodusu (küçük "affair" skandalı: −0,5 şöhret, −6 basın); sevgilisi, nişanlısı ya da eşi olan katılırsa pişmanlık kesin ve aldatma %35 (+%30 dedikodu olduysa, +%20 partner aynı şehirdeyse, en fazla %90) olasılıkla ortaya çıkar: partnere "Aldatıldı" (−18, 72 saat) ve bildirim, romantizm −25, arkadaşlık −10; sevgililik ya da nişanda romantizm 30'un altına düşerse ilişki biter (iki tarafa kalp kırıklığı); evlilik kendiliğinden bitmez. Üç macera gizli "Çapkın" başarımı ve ünvanı. Kayıtlar `fling_offers` ve `flings` (migration 018).
@@ -697,6 +725,7 @@ Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. 
 - Pazarda fiyat tavanı dükkân fiyatının iki katıdır; takasta eklenen para, karşılığında alınan eşyaların bu tavan değerini geçemez (en fazla $5.000).
 - Aynı adresten 24 saatte en fazla 3 hesap açılır (`REGISTER_PER_IP_DAY`). Adres Cloudflare'in yazdığı başlıktan alınır, IPv6'da /64 bloğu tek adres sayılır.
 - Rehber ve görev ödülleri küçüktür; API'de dakikada 300 istek sınırı vardır.
+- XP para ile alınmaz ve karakterler arasında taşınmaz; günde 10, haftada 50 ile sınırlıdır ve yeni hesaplarda bu tavanlar yarıdır (bkz. "Nitelikler ve XP").
 
 ## Oyuncular
 

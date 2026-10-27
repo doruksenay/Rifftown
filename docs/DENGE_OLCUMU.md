@@ -198,6 +198,22 @@ Yeni gelir kaynağı yok: tüketim eşyaları ve hediyelikler para üretmez; at�
 
 Ölçülmedi (tahmin): tüketim eşyalarının ve ilham becerilerinin şarkı kalitesine etkisi. İlham en fazla 100'dür ve şarkıya en fazla +15 katar; ilham defteri 3 saatte bir +5 verir. Zengin bir oyuncu ilhamı sürekli yüksek tutabilir; bu, parayı tavanlı bir kaliteye çeviren bilinçli bir harcama yeridir (öneri 1'in yönünde).
 
+## Ek ölçüm: nitelikler (27 Ekim 2026, 3. iş)
+
+Karakter nitelikleri ve XP (`packages/shared/src/attributes.ts`, GAME_DESIGN.md "Nitelikler ve XP"). Ölçüm yalnızca paylaşılan formüllerle yapıldı (`computeGig` 400 sabit tohumla, 4 kişilik rock grubu, İstanbul, setlist 6 şarkı, aşinalık 70, enerji 70); denge betiğinin kendisi nitelikleri modellemiyor, yukarıdaki tablolar değişmedi.
+
+| Etki (nitelik 100'de) | Ölçüm | Kıyas |
+|---|---|---|
+| Rol becerisi +4 (ses / el becerisi), dört üyenin hepsi tavanda | Konser kalitesi +0,82 – +0,85 (rol 30 – 80, kulüp ve salonda aynı); konser başına şöhret +0,04 (kulüp) / +0,06 (salon) | Sahne yan becerilerinin +10 tavanı kaliteye +0,9 katıyordu; nitelik aynı büyüklükte. Asıl enstrümanı 0'dan 100'e çıkarmak rol becerisine +75. |
+| Şarkı yazma +4 (yaratıcılık) | Şarkı kalitesi +3,2 (yuvarlanmış örnekte +3) | Yan becerilerin tavanı +8, uzmanlık payıyla +12; temel beste 45 → 100 +19,8. |
+| Öğrenme ×1,12 (zekâ) | Yan beceri tavanına en ucuz yol 146 → 130 okul saati (zekâ 30'da 141) | Okul ×2,2, profesör ×3,2. |
+| Bünye, çekicilik | Sağlık kaybı −%15, ilişki kazancı ×1,15, basın şansı +0,05 | Para ya da şöhret üretmez. |
+
+- **Tempo:** tavandaki bir grup konser başına ~0,05 daha fazla şöhret alır; günde 1 konserle 11 haftada (stadyuma varış, profil A) toplam ~+4 şöhret puanı, yani stadyuma birkaç gün erken (tahmin, azalan getiri hesaba katılmadan üst sınır). Bu da ancak dört üyenin de ilgili niteliği 100'deyse; bir niteliği 10'dan 100'e çıkarmak 240 XP, haftalık tavanla ~5 hafta.
+- **XP hızı:** günlük 10, haftalık 50 tavan. Üç niteliği başlangıçtan tavana çıkarmak 700 XP (~14 hafta), altı niteliği 25'e çıkarmak 90 XP (~2 hafta). Çoğu oyuncu 6–12. haftada kimliğini seçmiş olur; kimse çekirdek becerileri geçen bir strateji kuramaz çünkü her etkinin tavanı bir yan beceri tavanı kadar ya da altında.
+- **Para:** nitelikler para üretmez; sokak müziğinde rol becerisi +4 saatlik bahşişe ~$1,4 ekler (×0,35). Atölye bonusu +6 el işçiliği, tüccarın alış tavanı (malzemenin 1,25 katı) değişmediği için atölye-tüccar döngüsü para basmaz.
+- **Risk:** zekâ ×1,12 bütün öğrenmeyi hızlandırır; yaş çarpanı (35'ten sonra yavaşlama) ile birlikte çarpılır. Gerçek oyuncu verisiyle bakılmalı.
+
 ## Ek: betik çıktısı
 
 Aşağıdaki bölüm `npx tsx scripts/balance/measure.ts` çıktısının kendisidir.
