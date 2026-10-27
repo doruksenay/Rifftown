@@ -40,7 +40,7 @@ const S = (id: string, genre: Genre, tr: string, en: string, tempo: Tempo, minGe
   bonus,
 });
 
-/** Veri dosyası: yeni alt tür eklemek için buraya bir satır eklemek yeter (packages/shared/src/content.ts daha fazlasını ekler) */
+/** Veri dosyası: yeni alt tür eklemek için buraya bir satır eklemek yeter (diğer içerik veri dosyaları packages/shared/src/content/ klasöründedir) */
 export const SUBGENRES: SubgenreDef[] = [
   S('dance_pop', 'pop', 'Dans pop', 'Dance pop', 'fast', 15, 2),
   S('synth_pop', 'pop', 'Synth pop', 'Synth pop', 'mid', 30, 3),

@@ -11,6 +11,7 @@ import {
   MISSIONS,
   NPC_BANDS,
   NPC_CIVIC,
+  PLATINUM_UNITS,
   RECIPES,
   SKILL_BY_ID,
   SKILL_DEFS,
@@ -111,6 +112,19 @@ describe('veri dosyaları', () => {
       expect(CITIES.some((c) => c.id === b.cityId), b.key).toBe(true);
       expect(b.songs.length, b.key).toBeGreaterThanOrEqual(6);
     }
+  });
+
+  it('efsane sonrası hedefler başarımlara işaret eder: eşik ve metin kopyası yok, kimlikler korunur', () => {
+    expect(LEGACY_GOALS.map((g) => g.id)).toEqual(['legend_night', 'superstar_3', 'platinum', 'festival_5', 'superstar_8', 'diamond', 'superstar_all']);
+    for (const g of LEGACY_GOALS) {
+      const a = ACHIEVEMENTS.find((x) => x.id === g.achievementId)!;
+      expect(a, g.id).toBeDefined();
+      expect(a.rule).toEqual(g.rule);
+    }
+    expect(LEGACY_GOALS.find((g) => g.id === 'platinum')!.rule).toEqual({ stat: 'best_units', min: PLATINUM_UNITS });
+    // Aynı istatistik eşiğini ödüllendiren iki ayrı başarım yok
+    const keys = ACHIEVEMENTS.filter((a) => a.rule).map((a) => `${a.rule!.stat}:${a.rule!.min}`);
+    expect(unique(keys)).toBe(true);
   });
 
   it('efsane sonrası hedefler sırayla gelir, hepsi bitince boş', () => {

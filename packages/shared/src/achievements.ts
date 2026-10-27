@@ -65,7 +65,6 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   A('chart_top10', 'records', 20, ['İlk on', 'Bir şehir listesinde ilk 10\'a gir.'], ['Top ten', 'Reach the top 10 of a city chart.']),
   A('chart_no1', 'records', 40, ['Bir numara', 'Bir şehir listesinde 1 numara ol.'], ['Number one', 'Reach number one on a city chart.']),
   A('gold', 'records', 30, ['Altın plak', 'Bir yayının toplam satışı 1.000\'i geçsin.'], ['Gold record', 'Sell 1,000 copies of one release.']),
-  A('platinum', 'records', 50, ['Platin plak', 'Bir yayının toplam satışı 10.000\'i geçsin.'], ['Platinum record', 'Sell 10,000 copies of one release.']),
   // Ustalık
   A('skilled', 'skills', 10, ['Yetenekli', 'Bir beceride yetenekli seviyesine çık.'], ['Skilled', 'Reach skilled in a skill.']),
   A('master', 'skills', 25, ['Usta', 'Bir beceride usta ol.'], ['Master', 'Become a master of a skill.']),

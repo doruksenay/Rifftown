@@ -87,6 +87,8 @@ export const STAT_ACHIEVEMENTS: StatAchievement[] = [
   A('recordings_25', 'records', 25, 'recordings', 25, ['Stüdyo faresi', '25 kayıt yap.'], ['Studio rat', 'Make 25 recordings.']),
   A('singles_5', 'records', 25, 'singles', 5, ['Single makinesi', '5 single yayınla.'], ['Singles machine', 'Release 5 singles.']),
   A('albums_3', 'records', 40, 'albums', 3, ['Diskografi', '3 albüm yayınla.'], ['Discography', 'Release 3 albums.']),
+  // Eskiden achievements.ts içinde kodla açılıyordu; efsane sonrası hedef de bunu kullandığı için eşik buraya taşındı (kimlik aynı)
+  A('platinum', 'records', 50, 'best_units', 10000, ['Platin plak', 'Bir yayının toplam satışı 10.000\'i geçsin.'], ['Platinum record', 'Sell 10,000 copies of one release.']),
   A('no1_4weeks', 'records', 50, 'chart_no1_weeks', 4, ['Listelerin tepesinde', 'Şehir listelerinde toplam 4 hafta 1 numara ol.'], ['Top of the charts', 'Spend 4 weeks at number one on city charts.']),
   A('radio_100', 'media', 25, 'radio_plays', 100, ['Radyo dostu', 'Şarkıların radyoda 100 kez çalınsın.'], ['Radio friendly', 'Get 100 radio plays.']),
   A('video_1', 'media', 15, 'videos', 1, ['Kayıt, motor, kamera', 'Bir müzik klibi çek.'], ['Lights, camera', 'Shoot a music video.']),
@@ -250,27 +252,32 @@ export const CHAIN_BY_ID: Record<string, ChainDef> = Object.fromEntries(CHAINS.m
 
 export interface LegacyGoal {
   id: string;
+  /** Hedefin kendisi olan başarım: eşik ve metin tek yerde (STAT_ACHIEVEMENTS) */
+  achievementId: string;
   rule: StatRule;
   title: L;
   about: L;
 }
-const G = (id: string, stat: StatId, min: number, tr: [string, string], en: [string, string]): LegacyGoal => ({
-  id,
-  rule: { stat, min },
-  title: { tr: tr[0], en: en[0] },
-  about: { tr: tr[1], en: en[1] },
-});
 
-/** "Efsane ol"dan sonra sırayla gelen uzun vadeli hedefler; hepsi bitince grup Onur Listesi'ndedir */
-export const LEGACY_GOALS: LegacyGoal[] = [
-  G('legend_night', 'legendary_gigs', 1, ['EFSANEVİ bir gece', 'DESTANSI bir konserde ilhamın yanındaysa gece EFSANEVİ olur.'], ['A LEGENDARY night', 'An EPIC gig with inspiration on your side can become LEGENDARY.']),
-  G('superstar_3', 'superstar_cities', 3, ['Üç şehrin yıldızı', '3 şehirde süperstar ol.'], ['Star of three cities', 'Be a superstar in 3 cities.']),
-  G('platinum', 'best_units', 10000, ['Platin plak', 'Bir yayının toplam satışı 10.000\'i geçsin.'], ['Platinum', 'Sell 10,000 copies of one release.']),
-  G('festival_5', 'festival_gigs', 5, ['Festival manşeti', '5 festivalde çal.'], ['Festival headliner', 'Play 5 festivals.']),
-  G('superstar_8', 'superstar_cities', 8, ['Dünya yıldızı', '8 şehirde süperstar ol.'], ['Global star', 'Be a superstar in 8 cities.']),
-  G('diamond', 'best_units', 50000, ['Elmas plak', 'Bir yayının toplam satışı 50.000\'i geçsin.'], ['Diamond record', 'Sell 50,000 copies of one release.']),
-  G('superstar_all', 'superstar_cities', 15, ['Ölümsüz', 'Dünyanın 15 şehrinin hepsinde süperstar ol.'], ['Immortal', 'Be a superstar in all 15 cities.']),
+/**
+ * "Efsane ol"dan sonra sırayla gelen uzun vadeli hedefler; hepsi bitince grup Onur Listesi'ndedir.
+ * Hedefler ayrı bir tanım değil, başarımlara işaret eder: eşik ve metin kopyalanmaz, başarım kimlikleri
+ * (oyuncu kayıtları) değişmez. Hedef kimlikleri de eski sürümle aynıdır (uygulama legacyId ile arar).
+ */
+const LEGACY_SEQUENCE: { id: string; achievement: string; title?: L }[] = [
+  { id: 'legend_night', achievement: 'legendary_night', title: { tr: 'EFSANEVİ bir gece', en: 'A LEGENDARY night' } },
+  { id: 'superstar_3', achievement: 'superstar_3' },
+  { id: 'platinum', achievement: 'platinum' },
+  { id: 'festival_5', achievement: 'festival_5', title: { tr: 'Festival manşeti', en: 'Festival headliner' } },
+  { id: 'superstar_8', achievement: 'superstar_8' },
+  { id: 'diamond', achievement: 'diamond' },
+  { id: 'superstar_all', achievement: 'superstar_all' },
 ];
+export const LEGACY_GOALS: LegacyGoal[] = LEGACY_SEQUENCE.map((x) => {
+  const a = STAT_ACHIEVEMENTS.find((s) => s.id === x.achievement);
+  if (!a) throw new Error(`efsane sonrası hedef: başarım yok (${x.achievement})`);
+  return { id: x.id, achievementId: a.id, rule: a.rule, title: x.title ?? a.name, about: a.about };
+});
 
 /** Sıradaki efsane sonrası hedef (hepsi bittiyse null) */
 export function nextLegacyGoal(stats: Partial<Record<StatId, number>>): { goal: LegacyGoal; n: number } | null {

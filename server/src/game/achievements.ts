@@ -3,7 +3,7 @@
 // Eylem, konser ve liste sonuçlarından hemen sonra; diğer olaylar (oy, para gönderme, VIP) için /me çağrısında
 // en fazla dakikada bir kontrol edilir.
 
-import { STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, PLATINUM_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
+import { STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
 import { addMoodlet } from './wellbeing';
 import { type Db, many, one } from '../db';
 import { notify } from './common';
@@ -90,7 +90,7 @@ export async function evaluateAchievements(db: Db, characterId: number): Promise
     chart_top10: !!band?.best_position && band.best_position <= 10,
     chart_no1: band?.best_position === 1,
     gold: !!band && band.best_units >= GOLD_UNITS,
-    platinum: !!band && band.best_units >= PLATINUM_UNITS,
+    // platinum: veri dosyasında (best_units eşiği), efsane sonrası hedefle ortak
     skilled: maxSkill >= 45,
     master: maxSkill >= 60,
     legend: maxSkill >= 90,
