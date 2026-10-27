@@ -705,6 +705,41 @@ Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. 
 - Oyuncu ve grup profilleri, dünya ve şehir liderlik tabloları.
 - Bildirimler: mesaj, arkadaşlık isteği ve kabulü, defter notu, hediye, takılma, flört, randevu, evlilik teklifi ve cevabı, düğün, ayrılık, boşanma, evlat edinme, pazarda satış, iş teklifi ve cevabı, işten çıkarılma, işletmeye el konulması, festivale seçilme, eylem bitti, konser ayarlandı, iptal edildi, sonuçlandı, davet geldi, üye katıldı veya ayrıldı, seviye atlandı, şöhret arttı, terfi edildi, seçim kazanıldı veya kaybedildi, makam sona erdi, para geldi, başarım açıldı, yeni yayın, haftalık satış raporu, tutuklama, mahkûmiyet, beraat, tahliye, kira ödendi, evden çıkarıldı.
 
+## Denge düzeltmeleri (Ekim 2026): değişen sabitler
+
+Kaynak: bot simülasyonlu denge raporu (`scripts/balance/BALANCE_REPORT.md`, `npm run balance`). Ölçümler ve önce/sonra rakamları dalın raporunda. Bütün değişiklikler ileriye dönüktür: mevcut oyuncuların becerisi, parası, şöhreti ya da eşyası dönüştürülmedi; migration'lar yalnızca ekleme (020, 021).
+
+| Sabit (dosya) | Eski | Yeni | Gerekçe |
+|---|---|---|---|
+| `ITEM_RETURN_COOLDOWN_HOURS` kapsamı (`items.ts`, `item_handoffs`) | yalnız bir önceki sahip | o hafta elinden geçen herkes | A → B → C → A takas rotasyonu ek hesabın parasını kayıpsız taşıyordu |
+| `TRADE_MONEY_VALUE_MULT` (`items.ts`) | 2 × dükkân değeri | 1 × | takas parası eşya karşılığı olmalı |
+| `PAIR_TRANSFER_CAP` (`items.ts`) | yok | ikili başına 7 günde net $5.000 | takas + pazar + VIP gönderme ile ek hesap aktarımı |
+| İstemci adresi (`client-ip.ts`) | `cf-connecting-ip` her zaman, `trustProxy: true` | `TRUST_PROXY_HOPS` (0; Render'da 1), `CLIENT_IP_HEADER` (boş; Render'da cf-connecting-ip) | sahte başlıkla kayıt ve istek sınırı aşılıyordu |
+| `SESSION_SKILL_MARGIN` (`items.ts`) | kiralık hep mekânın seviyesinde | kulüp +15, salon +10, stadyum +5 grubun kendi ortalamasının üstü | beceri 8/52 ile kiralıkların sırtında stadyum |
+| `VENUE_RULES.*.breakEven` (`world.ts`) | hepsi 20 | bar 20, kulüp 35, salon 50, stadyum 65, festival 40 | büyük sahnede vasat gece şöhret getiriyordu |
+| `fameGainMult` (`rules.ts`) | max(0,1; 1 − f/120) | max(0,03; (1 − f/110)^1,6) | şöhret kazanımı azalan verimli |
+| `SONG_SCORE_WEIGHTS` (`rules.ts`) | her yerde 0,4/0,35/0,25 | stadyumda 0,5/0,2/0,3 (mekâna göre) | büyük sahnede şarkı ve beceri, prova süresinden ağır |
+| `VENUE_RULES.*.production` (`world.ts`) | yok | kulüp $150, salon $1.500, stadyum $9.000 (× şehir) | 90 günde gider/gelir %9'du |
+| Ev kademesi `house` (`homes.ts`) | yok | $900/hafta, +%55 | orta oyunda harcama yeri |
+| `BUSK_MAX_PAY_PER_HOUR`, `BUSK_DAILY_TIERS`, `BUSK_SKILL_CAP`, `BUSK_SKILL_GAIN` (`careers.ts`) | tavan yok; rol 0,2 / şovmenlik 0,3 sa | $20/sa; 4 sa tam, 8 sa yarım, sonra çeyrek; beceri 30'da durur; 0,08 / 0,1 | sokak müziği konserden çok kazandırıyor, beceriyi virtüöze taşıyordu |
+| `SKILL_DIMINISHING_EXPONENT` (`rules.ts`) | 1 | 2 | okulda efsane 6 günde |
+| `STUDY_FOCUS_HOURS`, `UNFOCUSED_STUDY_MULT` (`rules.ts`) | yok | 5 saat, sonra ×0,3 | günde 20 saat tam verimle ders |
+| `MAX_FX_BONUS`, `FX_STACK_DECAY` (`items.ts`) | +12, toplanır | +6, tür başına bir, ½ azalır | 6 sis makinesi $480'a +12 |
+| Sahne olayı cezası, `EVENT_FATIGUE_CHANCE`, `EVENT_STACK_MULT`, `EVENT_VENUE_MULT` (`performance.ts`) | ceza ≈ bonusun yarısı, yorgunluk yok | ceza = bonus; ek olay −0,12 şans, ×0,7/×0,4; tarz × mekân | "3 olay + cesur bis" her yerde en iyi plandı |
+| `ENCORE_RULES.bold`, `boldEncoreChance` (`performance.ts`) | +3/×1,15, −3/×0,95; 0,3+0,6e+(q−40)/200 | +3/×1,12, −6/×0,9; 0,2+0,6e+(q−40)/300 | cesur bis risksizdi |
+| `gearQualityBonus` (`items.ts`), `FLOW_MULT` (`performance.ts`) | kaliteye <1 puan; 2 | üye başına en fazla +2; 5 | set, tür uyumu ve sıra süstü |
+| `BUSINESS_RULES.*.revenuePerHour`, `BUSINESS_DAILY_REVENUE_HOURS`, `BUSINESS_SKILL_MAX_BONUS` (`business.ts`) | 20/24, tavan yok, %50 | 12/14, günde 16 saat, %20 | ek hesaplı bar günde $1.650–5.078 basıyordu |
+| `HANGOUT_UPLIFTS_PER_DAY`, `HANGOUT_PAIR_UPLIFTS_PER_DAY` (`relations.ts`) | sınırsız | günde 3, aynı kişiyle 1 | takılma pompası |
+| NPC konserinden bar payı (`gigs.ts`) | var | yok | yoktan para |
+| `MAX_CHILDREN` kapsamı, `CHILD_WEEKLY_UPKEEP` (`relations.ts`) | çift başına 4; $40 | karakter başına 4; $100 | farklı eşlerle sınırsız çocuk; gider caydırmıyordu |
+| `CRAVING_SATISFY_SPEND`, `ADDICTED_DECAY_PER_DAY` (`consequences.ts`) | her yemek ve alışveriş; 4/gün | $150+ alışveriş ya da tedavi; 2/gün | $6 çorba bağımlılığı siliyordu |
+| Bakım gideri (`family.ts`) | yalnız cepten | cep, yetmezse banka | bankada tutan ödemiyordu |
+| `repeatSentenceMult`, `crimeFine`, `PRIOR_CHANCE_PENALTY` (`crime.ts`) | sabit ceza, para cezası yok | ×(1+0,5×sabıka) ≤ ×5; ganimet tavanı × (1+0,25×sabıka); −0,02 şans/sabıka | ayda 42 mahkûmiyetle kâr |
+| `FAMILIARITY_GRACE_DAYS`, `FAME_GRACE_DAYS` (`consequences.ts`) | 12, 54 | 5, 21 | çürüme aktif oyuncuya dokunmuyordu |
+| `RELEASE_RULES.*.price`, `BAND_SHARE`, `SALES_FAN_FLOOR`, `SALES_FAME_EXPONENT` (`music.ts`) | $3,5/$15; %50; 0,04; 1,2 | $5/$25; %60; 0,06; 1 | plaklar gelirin %2–7'si |
+| Eleştiri ve haber havuzları (`content/review-parts.ts`) | basamak başına 8 cümle; 8 haber şablonu | basamak başına 12 × 12 parça; 12 × 10 × 10 haber | 10. konserden sonra yeni cümle %8–9,5 |
+| NPC: şöhret dalgası, ilk albüm, cüzdan, muhabir, tüccar (`npc.ts`, `npc-civic.ts`) | tavanda donuk; 112 gün; birikir; yalnız oyuncu; ilan değişmez | ~40 günlük dalga; 7–60 gün; her tur sıfır; NPC de; 7 günde yenilenir | boş dünya donuktu |
+
 ## Sonraki adımlar için öneriler
 
 Henüz eklenmemiş olanlar, önem sırasıyla (Popmundo karşılaştırmasındaki 8 boşluk kapatıldı; kalanlar):
