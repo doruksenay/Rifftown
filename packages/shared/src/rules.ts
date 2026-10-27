@@ -15,6 +15,7 @@ import {
   setlistFlow,
   stageEventAllowed,
   stageEventChance,
+  subgenreGigBonus,
 } from './performance';
 import { CITY_BY_ID, type City, type Genre, INSTRUMENTS, type Instrument, VENUE_RULES, type VenueType } from './world';
 
@@ -219,6 +220,8 @@ export interface GigSong {
   quality: number;
   /** Şarkının temposu (setlist akışını etkiler); eski şarkılarda yok */
   tempo?: Tempo;
+  /** Şarkının alt türü (şehir sahnesi, haftanın modası, niş; performance.ts subgenreGigBonus) */
+  subgenre?: string | null;
 }
 
 export interface GigInput {
@@ -239,6 +242,8 @@ export interface GigInput {
   plan?: { events?: string[]; encore?: EncorePlan };
   /** Bekleme süresi dolmamış sahne olayları (denenmez) */
   cooldownEvents?: string[];
+  /** Açık liste haftasının numarası (haftanın modası için) */
+  weekId?: number;
 }
 
 /** Sahne olaylarının toplam kalite etkisi sınırı (±puan) */
@@ -265,7 +270,7 @@ export interface GigResult {
   encoreEnergy?: number;
 }
 
-export type GigFactorId = 'songs' | 'familiarity' | 'skill' | 'stage' | 'presence' | 'setLength' | 'energy' | 'mood' | 'flow' | 'events';
+export type GigFactorId = 'songs' | 'familiarity' | 'skill' | 'stage' | 'presence' | 'setLength' | 'energy' | 'mood' | 'flow' | 'events' | 'style';
 export type GigFactorRating = 'weak' | 'ok' | 'strong';
 export type GigFactors = Partial<Record<GigFactorId, GigFactorRating>>;
 
@@ -273,7 +278,7 @@ const rate = (v: number, weak: number, strong: number): GigFactorRating => (v < 
 
 /** Konserden sonra ne yapılmalı: en zayıf etkenler önce (en fazla 3). Sırası etkinin büyüklüğüne göredir. */
 export function gigAdvice(factors: GigFactors): GigFactorId[] {
-  const order: GigFactorId[] = ['presence', 'setLength', 'familiarity', 'songs', 'skill', 'energy', 'mood', 'stage', 'flow', 'events'];
+  const order: GigFactorId[] = ['presence', 'setLength', 'familiarity', 'songs', 'skill', 'energy', 'mood', 'stage', 'flow', 'events', 'style'];
   return order.filter((f) => factors[f] === 'weak').slice(0, 3);
 }
 
@@ -323,9 +328,10 @@ export function computeGig(input: GigInput): GigResult {
   const stage = present.reduce((sum, p) => sum + clamp(stageScore(p.skills) + p.outfitBonus, 0, 110), 0) / present.length;
   const presence = present.length / memberCount;
 
-  const songScores = setlist.map((s) => {
+  const styleBonuses = setlist.map((s) => subgenreGigBonus(s.subgenre, city.id, venue, input.weekId ?? 0));
+  const songScores = setlist.map((s, i) => {
     const fam = present.reduce((sum, p) => sum + (p.familiarity[s.id] ?? 0), 0) / present.length;
-    return { id: s.id, score: 0.4 * s.quality + 0.35 * fam + 0.25 * bandSkill };
+    return { id: s.id, score: 0.4 * s.quality + 0.35 * fam + 0.25 * bandSkill + styleBonuses[i] };
   });
   const avgSong = songScores.reduce((sum, s) => sum + s.score, 0) / songScores.length;
   const lengthFactor = Math.min(1, 0.6 + 0.1 * setlist.length);
@@ -348,6 +354,11 @@ export function computeGig(input: GigInput): GigResult {
   // Setlist sırası: zayıfı öne, güçlüyü sona (Popmundo). Konum ağırlıkları performance.ts içinde.
   const flow = setlistFlow(setlist.map((s, i) => ({ score: songScores[i].score, tempo: s.tempo })));
   if (setlist.length >= 3) factors.flow = flow <= -1.5 ? 'weak' : flow >= 1.5 ? 'strong' : 'ok';
+  // Alt türlerin bu şehirde ve bu sahnede tutması (yalnızca alt türlü şarkı varsa değerlendirilir)
+  if (setlist.some((s) => s.subgenre)) {
+    const avgStyle = styleBonuses.reduce((a, b) => a + b, 0) / setlist.length;
+    factors.style = avgStyle < 0 ? 'weak' : avgStyle >= 1.5 ? 'strong' : 'ok';
+  }
 
   // Sahne olayları: grubun kendi sahnedeki üyelerinden en uygun olanı dener (kiralık müzisyenler plana uymaz)
   const events: { id: string; outcome: StageEventOutcome; by: number | null }[] = [];

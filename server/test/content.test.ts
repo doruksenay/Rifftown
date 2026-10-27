@@ -176,3 +176,40 @@ describe('görev zincirleri ve yeni beceriler', () => {
     expect(t.next).toMatchObject({ id: 'legacy', legacyId: LEGACY_GOALS[0].id });
   });
 });
+
+describe('alt türlerin bağlamı', () => {
+  it('en az 50 alt tür, her türde en az 3; sahneler gerçek şehirler', async () => {
+    const { SUBGENRES: subs, subgenresOf, CITY_BY_ID } = await import('@rifftown/shared');
+    expect(subs.length).toBeGreaterThanOrEqual(50);
+    for (const g of GENRES) expect(subgenresOf(g).length, g).toBeGreaterThanOrEqual(3);
+    for (const s of subs) for (const c of s.scenes) expect(CITY_BY_ID[c], `${s.id} ${c}`).toBeDefined();
+  });
+
+  it('sahne, moda ve niş: en yüksek yazım bonusu her yerde en iyi seçim değil', async () => {
+    const { subgenreGigBonus, styleBonus, trendingSubgenre, subgenresOf } = await import('@rifftown/shared');
+    const skills = { genre_rock: 60 };
+    const weekId = [...Array(200).keys()].find((w) => !['britpop', 'krautrock'].includes(trendingSubgenre('rock', w)!))!;
+    const total = (sub: string, city: string, venue: string) => styleBonus(skills, 'rock', sub, 'mid') + subgenreGigBonus(sub, city, venue, weekId);
+    // Manchester konser salonunda britpop, yazımda daha yüksek bonuslu krautrock'u geçer; Berlin kulübünde tersi
+    expect(total('britpop', 'manchester', 'hall')).toBeGreaterThan(total('krautrock', 'manchester', 'hall'));
+    expect(total('krautrock', 'berlin', 'club')).toBeGreaterThan(total('britpop', 'berlin', 'club'));
+    // Moda haftadan haftaya döner ve türün bütün alt türlerine sıra gelir
+    const seen = new Set([...Array(300).keys()].map((w) => trendingSubgenre('rock', w)));
+    expect(seen.size).toBe(subgenresOf('rock').length);
+    expect(subgenreGigBonus(null, 'berlin', 'club', 1)).toBe(0);
+  });
+
+  it('haftanın modası API ile görülür; alt türlü şarkı konser raporunda değerlendirilir', async () => {
+    const p = await newPlayer({ cityId: 'berlin' });
+    const tr = (await p.c.get('/api/trends')).body;
+    expect(Object.keys(tr.trends)).toEqual(expect.arrayContaining(GENRES as unknown as string[]));
+    await q(`INSERT INTO songs(author_id, title, genre, quality, subgenre, tempo) VALUES ($1, 'Autobahn Nacht', 'electronic', 50, 'techno', 'fast')`, [p.character.id]);
+    const band = (await p.c.post('/api/bands', { name: `Sahne ${p.character.id}`, genre: 'electronic', role: 'keys' })).body.band;
+    const g = (await p.c.post('/api/gigs', { locationId: 'berlin-bar', inHours: 2, setlist: [band.songs[0].id] })).body.gig;
+    await q(`UPDATE gigs SET starts_at = now() - interval '1 second' WHERE id = $1`, [g.id]);
+    const { advance } = await import('./helpers');
+    await advance(1);
+    const r = (await q('SELECT result FROM gigs WHERE id = $1', [g.id])).rows[0].result;
+    expect(['ok', 'strong']).toContain(r.factors.style); // tekno Berlin'de sahnesi olan alt tür
+  });
+});

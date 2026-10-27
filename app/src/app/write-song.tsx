@@ -1,4 +1,5 @@
-import { GENRES, GENRE_NAMES, type Genre, TEMPOS, TEMPO_NAMES, type Tempo, WRITE_SONG_HOURS, energyAfter, subgenresOf } from '@rifftown/shared';
+import { CITY_BY_ID, GENRES, GENRE_NAMES, type Genre, TEMPOS, TEMPO_NAMES, type Tempo, WRITE_SONG_HOURS, energyAfter, isNicheSubgenre, subgenresOf } from '@rifftown/shared';
+import { useQuery } from '@tanstack/react-query';
 import { Stack, router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -29,6 +30,17 @@ function WriteSongScreen() {
   const [subgenre, setSubgenre] = useState<string>('');
   const [tempo, setTempo] = useState<Tempo>('mid');
   const subs = subgenresOf(genre);
+  // Alt türün bağlamı: sahne şehirleri, haftanın modası, niş (konserde şarkı puanını etkiler)
+  const trends = useQuery({ queryKey: ['trends'], queryFn: () => api.get<{ trends: Record<string, string | null> }>('/trends') });
+  const subHint = (s: (typeof subs)[number]) =>
+    [
+      p(TEMPO_NAMES[s.tempo]),
+      s.scenes.length ? t('subgenreScenes', { cities: s.scenes.map((id) => p(CITY_BY_ID[id].name)).join(', ') }) : null,
+      trends.data?.trends?.[genre] === s.id ? t('subgenreTrending') : null,
+      isNicheSubgenre(s) ? t('subgenreNiche') : null,
+    ]
+      .filter(Boolean)
+      .join(' · ');
   const pickGenre = (g: Genre) => {
     setGenre(g);
     setSubgenre('');
@@ -51,7 +63,7 @@ function WriteSongScreen() {
       <Choice options={GENRES.map((g) => ({ value: g, label: p(GENRE_NAMES[g]) }))} value={genre} onChange={pickGenre} />
       <Heading>{t('subgenre')}</Heading>
       <Choice
-        options={[{ value: '', label: t('subgenreNone') }, ...subs.map((s) => ({ value: s.id, label: p(s.name), hint: p(TEMPO_NAMES[s.tempo]) }))]}
+        options={[{ value: '', label: t('subgenreNone') }, ...subs.map((s) => ({ value: s.id, label: p(s.name), hint: subHint(s) }))]}
         value={subgenre}
         onChange={(v) => {
           setSubgenre(v);

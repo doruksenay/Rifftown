@@ -301,7 +301,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     'SELECT character_id, song_id, value FROM familiarity WHERE character_id = ANY($1::bigint[]) AND song_id = ANY($2::bigint[])',
     [ids, gig.setlist],
   );
-  const songs = await many(c, 'SELECT id, title, genre, quality, tempo FROM songs WHERE id = ANY($1::bigint[])', [gig.setlist]);
+  const songs = await many(c, 'SELECT id, title, genre, quality, tempo, subgenre FROM songs WHERE id = ANY($1::bigint[])', [gig.setlist]);
   const fame = await bandFame(c, gig.band_id, gig.city_id);
   // Görünen ruh hâli (moodlet'lerle), enerji ve ilham
   const wells = new Map<number, Wellbeing>();
@@ -375,6 +375,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     press,
     crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },
     cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
+    // Haftanın modası açık liste haftasına göre döner
+    weekId: Number((await one(c, `SELECT id FROM chart_weeks WHERE status = 'open' ORDER BY id DESC LIMIT 1`))?.id ?? 0),
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür
   const ownerShare = await barGigShare(c, gig.location_id, res.revenue, ids);

@@ -329,7 +329,7 @@ Oyunun takvimi tek dosyadadır: `packages/shared/src/pacing.ts` (`PACING`). Büt
 | Beceri | 41 | 99 | `content/skills.ts` (+ 7 yeni tür becerisi) |
 | Dükkân ve atölye eşyası | ~70 | 118 | `content/items.ts` |
 | Atölye tarifi | 6 | 16 | `content/items.ts` |
-| Tür / alt tür | 7 / 0 | 14 / 35 | `world.ts` (popülerlik tablosu veriyle), `performance.ts` |
+| Tür / alt tür | 7 / 0 | 14 / 72 | `world.ts` (popülerlik tablosu veriyle), `performance.ts` |
 | Başarım | 39 | 80 | `content/progress.ts` (istatistik eşikli) |
 | Haftalık görev havuzu | 12 | 28 | `content/progress.ts` |
 | Görev zinciri | 0 | 6 zincir, 24 adım | `content/progress.ts` |
@@ -418,7 +418,8 @@ Kurallar `packages/shared/src/performance.ts` dosyasındadır.
 
 ### Şarkı yazma: alt tür, tempo ve hız sınırı
 
-- Şarkı yazarken türün yanında isteğe bağlı bir **alt tür** (17 alt tür, ör. hard rock, tekno, trap, smooth caz, psikedelik Anadolu) ve **tempo** (yavaş, orta, hızlı) seçilir. Alt türün tür becerisi eşiğini geçmek +2 ile +4, geçmemek −2; alt türün doğal temposuna uymak +2, bir basamak sapmak 0, iki basamak −3.
+- Şarkı yazarken türün yanında isteğe bağlı bir **alt tür** (72 alt tür, her türde en az 3; ör. hard rock, krautrock, tekno, grime, manuş caz, türkü, Anadolu funk, barok) ve **tempo** (yavaş, orta, hızlı) seçilir. Alt türün tür becerisi eşiğini geçmek +2 ile +4, geçmemek −2; alt türün doğal temposuna uymak +2, bir basamak sapmak 0, iki basamak −3.
+- **Alt türün bağlamı** (`performance.ts` `subgenreGigBonus`): her alt türün bir ya da birkaç sahne şehri vardır (ör. krautrock Berlin, Münih, Hamburg; britpop Manchester, Londra, Liverpool; türkü Ankara, İzmir, İstanbul). Konserde şarkı puanına: sahne şehrinde +3, haftanın modasıysa +2 (her türden bir alt tür, açık liste haftasıyla döner; `GET /api/trends`), niş alt türler (tür becerisi eşiği 45) salon, stadyum ve festivalde −3; toplam −3 … +5. Böylece yüksek yazım bonuslu zor alt tür her yerde en iyi seçim değildir: Manchester'da bir salonda britpop krautrock'u geçer, Berlin'de bir kulüpte tersi. Konser raporunda "alt türlerin bu sahnede tutması" ayrı bir etkendir; şarkı yazma ekranı her alt türün sahnesini, modasını ve nişliğini gösterir.
 - **Hız sınırı:** son 3 oyun gününde yazılmış şarkı sayısına göre kalite ×1 / ×0,85 / ×0,72 / ×0,6. Bildirim "aceleye geldi" der. İlham bonusu bu çarpandan sonra eklenir.
 
 ### Konser eleştirisi

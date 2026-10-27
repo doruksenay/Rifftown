@@ -7,7 +7,7 @@ import { pool } from '../db';
 import { bandPress, cityNews } from '../game/press';
 import { membership } from '../game/common';
 import { parse } from './util';
-import { CREW_ROLES } from '@rifftown/shared';
+import { CREW_ROLES, GENRES, trendingSubgenre } from '@rifftown/shared';
 import { fail } from '../errors';
 import { fireCrew, hireCrew, repairGear, startTour, tourView } from '../game/touring';
 import { answerContract, foundLabel, labelView, labelsList, moveLabelTill, offerContract } from '../game/labels';
@@ -46,6 +46,12 @@ export async function mediaRoutes(app: FastifyInstance) {
 
   // ---------- Klip listesi ----------
   app.get('/charts/videos', async () => videoChart(pool));
+  // Haftanın modası: her türden bir alt tür (açık liste haftasıyla döner; konserde şarkı puanına +2)
+  app.get('/trends', async () => {
+    const w = await pool.query(`SELECT id, ends_at FROM chart_weeks WHERE status = 'open' ORDER BY id DESC LIMIT 1`);
+    const weekId = Number(w.rows[0]?.id ?? 0);
+    return { weekId, endsAt: w.rows[0]?.ends_at?.toISOString() ?? null, trends: Object.fromEntries(GENRES.map((g) => [g, trendingSubgenre(g, weekId)])) };
+  });
 
   // ---------- Plak şirketi ----------
   app.get('/labels', async (req) => ({ labels: await labelsList(pool), mine: await labelView(pool, charId(req)) }));
