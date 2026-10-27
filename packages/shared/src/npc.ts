@@ -111,4 +111,45 @@ export const NPC_BANDS: NpcBandDef[] = [
   B('nashville', 'rookie', 'East Side Strays', 'jazz', 'Caleb Hughes', 'keys', ['East Side', 'Strays', 'Five Points', 'Late Set', 'Cumberland Blue', 'Night Shift']),
 ];
 
+// Yeni türlerin grupları (blues, folk, punk, soul, reggae, country, klasik): her türden üç grup, türün sevildiği şehirlerde.
+// Anahtar şehir-seviye-tür biçimindedir (bir şehirde aynı seviyeden ikinci grup olabilsin); eski anahtarlar değişmedi.
+const G = (cityId: string, tier: NpcTier, name: string, genre: Genre, leader: string, role: Instrument, songs: string[]): NpcBandDef => ({
+  ...B(cityId, tier, name, genre, leader, role, songs),
+  key: `${cityId}-${tier}-${genre}`,
+});
+
+NPC_BANDS.push(
+  // Blues: Nashville ve Liverpool'da en sevilen, New York'ta kulüp geleneği
+  G('nashville', 'star', 'Cumberland Delta', 'blues', 'Otis Freeman', 'guitar', ['Muddy Cumberland', 'Twelve Bar Sunday', 'Crossroads Motel', 'Slide On Home', 'Rail Yard Moan', 'Low Down Lantern', 'Whiskey Delta']),
+  G('liverpool', 'local', 'The Mersey Mudcats', 'blues', 'Declan Hart', 'vocals', ['Dock Road Blues', 'Pier Head Rain', 'Mudcat Shuffle', 'Grey Tide Moan', 'Ferry Fare', 'Lime Street Lament']),
+  G('newyork', 'rookie', 'Bowery Slide', 'blues', 'Ruby Coleman', 'guitar', ['Bowery Slide', 'Subway Moan', 'Five Dollar Guitar', 'Fire Escape Blues', 'Night Shift', 'Rent Party']),
+  // Folk: İzmir, Ankara ve Manchester
+  G('izmir', 'star', 'Kordon Akustik', 'folk', 'Defne Uçar', 'vocals', ['İmbat Türküsü', 'Zeytin Dalı', 'Kordonda Akşam', 'Tahta İskele', 'Ege Ninnisi', 'Karşıyaka Vapuru', 'Bademler Çiçek Açtı']),
+  G('manchester', 'local', 'Pennine Lanterns', 'folk', 'Rosie Ashworth', 'guitar', ['Pennine Way', 'Mill Chimney', 'Lantern Song', 'Moorland Rain', 'Weaver\'s Daughter', 'Canal Lock']),
+  G('ankara', 'rookie', 'Bozkır Akustik', 'folk', 'Yusuf Erdem', 'guitar', ['Bozkır', 'Gençlik Parkı', 'Hamamönü', 'Kuru Ayaz', 'Mogan Gölü', 'Kale Yolu']),
+  // Punk: Londra, Berlin, Hamburg
+  G('london', 'star', 'The Safety Pins', 'punk', 'Nicky Vane', 'vocals', ['No Future Tense', 'Camden Riot', 'Pins and Needles', 'Tower Block', 'Two Chords Left', 'Dole Queue Disco', 'Kings Road Spit']),
+  G('berlin', 'local', 'Kaputt Kollektiv', 'punk', 'Ronja Pfeiffer', 'guitar', ['Kaputt', 'Besetzt', 'Rigaer Straße', 'Pfandflasche', 'Lärm Gegen Alles', 'Kein Bock']),
+  G('hamburg', 'rookie', 'Hafenkrawall', 'punk', 'Tjark Petersen', 'bass', ['Krawall', 'Hafenstraße', 'Möwenschiss', 'Dreckige Elbe', 'Sankt Punk', 'Kiezkind']),
+  // Soul: New York, Paris, Los Angeles
+  G('newyork', 'star', 'Harlem Velvet', 'soul', 'Della Simmons', 'vocals', ['Velvet Morning', 'Lenox Avenue Prayer', 'Sweet Sugar Hill', 'Hold Me Uptown', 'Apollo Lights', 'Sunday Kind of Love', 'Brownstone Heart']),
+  G('paris', 'local', 'Velours Noir', 'soul', 'Aïcha Diallo', 'vocals', ['Velours', 'Pigalle Soul', 'Mon Cœur Funky', 'Barbès', 'Rue des Martyrs', 'Minuit Doux']),
+  G('losangeles', 'rookie', 'Crenshaw Sunday', 'soul', 'Marvin Tate', 'keys', ['Crenshaw', 'Sunday Drive', 'Leimert Park', 'Golden State Groove', 'Slow Burn', 'Lowrider Love']),
+  // Reggae: Marsilya, Londra, Lyon
+  G('marseille', 'star', 'Soleil Dub Club', 'reggae', 'Moussa Keita', 'vocals', ['Soleil Dub', 'Mistral Riddim', 'Vieux-Port Skank', 'Calanques Rockers', 'Bonne Mère', 'Sun Is Shining Here', 'Planche à Voile']),
+  G('london', 'local', 'Brixton Riddim Club', 'reggae', 'Delroy Campbell', 'bass', ['Brixton Riddim', 'Windrush Morning', 'Electric Avenue Dub', 'Sound System Sunday', 'Coldharbour', 'Carnival Road']),
+  G('lyon', 'rookie', 'Rhône Riddim', 'reggae', 'Bastien Faure', 'guitar', ['Rhône Riddim', 'Pentes Roots', 'Traboule Dub', 'Soleil Lyonnais', 'Deux Fleuves Skank', 'Fourvière Rockers']),
+  // Country: Nashville ve Los Angeles (Bakersfield sesi)
+  G('nashville', 'local', 'Holler & Pine', 'country', 'Wyatt Combs', 'guitar', ['Holler & Pine', 'Gravel Road', 'Front Porch Light', 'Six String Sunday', 'Tennessee Moon', 'Dirt Road Gospel']),
+  G('losangeles', 'star', 'Bakersfield Dust', 'country', 'Loretta Gaines', 'vocals', ['Bakersfield Dust', 'Highway 99', 'Telecaster Tears', 'Desert Rose Motel', 'Long Haul Heart', 'Honky Tonk Sunset', 'Golden State Line']),
+  G('nashville', 'rookie', 'Broadway Greenhorns', 'country', 'Emmylou Pruitt', 'vocals', ['Greenhorn', 'Lower Broadway', 'Tip Jar Waltz', 'First Boots', 'Open Mic Night', 'Cumberland Bend']),
+  // Anadolu rock: Ankara ve Kreuzberg'in Türkiyeli sahnesi
+  G('ankara', 'local', 'Hamamönü Psikedelik', 'anatolian', 'Barış Tunç', 'guitar', ['Hamamönü', 'Bağlama Fuzz', 'Kale Rüzgârı', 'Ankara Çayı', 'Dumanlı Bozkır', 'Uzun Yol']),
+  G('berlin', 'rookie', 'Kreuzberg Bağlama', 'anatolian', 'Elif Yıldırım', 'guitar', ['Kottbusser Tor', 'Gurbet Fuzz', 'Landwehrkanal', 'Görlitzer Halay', 'U1 Türküsü', 'Spree Kenarı']),
+  // Klasik: Münih, Paris, Ankara
+  G('munich', 'star', 'Isar Kammerensemble', 'classical', 'Clara Weißhaupt', 'keys', ['Isar-Suite', 'Nocturne für Schwabing', 'Föhn-Sonate', 'Herbst im Hofgarten', 'Alpenrhapsodie', 'Kammerstück Nr. 3', 'Residenz-Menuett']),
+  G('paris', 'rookie', 'Ensemble Rive Gauche', 'classical', 'Élise Marchand', 'keys', ['Rive Gauche', 'Prélude du Marais', 'Valse de la Seine', 'Nocturne Montmartre', 'Étude en Pluie', 'Jardin du Luxembourg']),
+  G('ankara', 'local', 'Başkent Oda Topluluğu', 'classical', 'Nevin Akyol', 'keys', ['Başkent Süiti', 'Atakule Noktürnü', 'Bozkırda Prelüd', 'Kuğulu Park Valsi', 'Konservatuvar Etüdü', 'Ulus Sonatı']),
+);
+
 export const NPC_BAND_BY_KEY: Record<string, NpcBandDef> = Object.fromEntries(NPC_BANDS.map((b) => [b.key, b]));

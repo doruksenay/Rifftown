@@ -9,6 +9,8 @@ import {
   ITEM_BY_ID,
   LEGACY_GOALS,
   MISSIONS,
+  NPC_BANDS,
+  NPC_CIVIC,
   RECIPES,
   SKILL_BY_ID,
   SKILL_DEFS,
@@ -93,6 +95,22 @@ describe('veri dosyaları', () => {
     expect(stageScore(all)).toBeLessThanOrEqual(100);
     expect(skillBonus({ music_theory: 50 }, 'songwriting')).toBeCloseTo(2.5);
     expect(songwritingScore({ composing: 20, music_theory: 100 }, 'rock')).toBeGreaterThan(songwritingScore({ composing: 20 }, 'rock'));
+  });
+
+  it('her türün oyun grubu var: yeni türlerde en az üç grup, üç seviye; adlar ve anahtarlar benzersiz', () => {
+    for (const g of GENRES) expect(NPC_BANDS.filter((b) => b.genre === g).length, g).toBeGreaterThanOrEqual(3);
+    for (const g of ['blues', 'folk', 'punk', 'soul', 'reggae', 'country', 'classical'] as const) {
+      expect(new Set(NPC_BANDS.filter((b) => b.genre === g).map((b) => b.tier)), g).toEqual(new Set(['rookie', 'local', 'star']));
+      // Grup türün ortalamanın altında sevildiği bir şehirde yıldız değil
+      for (const b of NPC_BANDS.filter((x) => x.genre === g && x.tier === 'star')) expect(CITIES.find((c) => c.id === b.cityId)!.genrePopularity[g]).toBeGreaterThanOrEqual(1.1);
+    }
+    expect(unique(NPC_BANDS.map((b) => b.key))).toBe(true);
+    expect(unique(NPC_BANDS.map((b) => b.name.toLowerCase()))).toBe(true);
+    expect(unique([...NPC_BANDS.map((b) => b.leader), ...NPC_CIVIC.map((c) => c.name)].map((n) => n.toLowerCase()))).toBe(true);
+    for (const b of NPC_BANDS) {
+      expect(CITIES.some((c) => c.id === b.cityId), b.key).toBe(true);
+      expect(b.songs.length, b.key).toBeGreaterThanOrEqual(6);
+    }
   });
 
   it('efsane sonrası hedefler sırayla gelir, hepsi bitince boş', () => {

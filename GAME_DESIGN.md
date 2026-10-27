@@ -261,7 +261,7 @@ Başarımlar olaylardan değil oyuncunun istatistiklerinden hesaplanır, bu yüz
 
 ## Oyunun kendi grupları
 
-Dünya gerçek oyuncu azken de canlı görünsün diye her şehirde üç yapay grup vardır (toplam 33): bir yeni grup, bir yerel grup ve bir yıldız. Profillerinde ve liderlik tablosunda "oyunun grubu" olarak işaretlenirler; oyuncu sayılarına, kişi listelerine girmezler, davet edilemez ve para gönderilemezler.
+Dünya gerçek oyuncu azken de canlı görünsün diye her şehirde üç yapay grup vardır: bir yeni grup, bir yerel grup ve bir yıldız. Bunlara ek olarak her türün (yeni yedi tür ve Anadolu rock dahil) en az üç grubu, türün sevildiği şehirlerde yaşar (ör. punk Londra, Berlin ve Hamburg'da; country Nashville ve Los Angeles'ta; klasik Münih, Paris ve Ankara'da); toplam 68 grup. Yeni grupların anahtarı şehir-seviye-tür biçimindedir, eski anahtarlar değişmedi; kurulum anahtara göre idempotenttir. Profillerinde ve liderlik tablosunda "oyunun grubu" olarak işaretlenirler; oyuncu sayılarına, kişi listelerine girmezler, davet edilemez ve para gönderilemezler.
 
 | Seviye | Beceri | Başlangıç şöhreti | Şöhret aralığı | Şarkı kalitesi | Konser aralığı |
 |---|---|---|---|---|---|
