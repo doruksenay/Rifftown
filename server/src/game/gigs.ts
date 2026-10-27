@@ -295,7 +295,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   const ids = chars.map((ch) => ch.id);
   // Konser şehrinde olmayan ya da cezaevindeki üye sahneye çıkamaz
   const onStage = (ch: CharacterRow) => ch.city_id === gig.city_id && !isJailed(ch);
-  const gear = await gearBonuses(c, ids);
+  // Tür uyumlu eşyalar ve set bonusu grubun türüne göre
+  const gear = await gearBonuses(c, ids, band.genre as Genre);
   const famRows = await many(
     c,
     'SELECT character_id, song_id, value FROM familiarity WHERE character_id = ANY($1::bigint[]) AND song_id = ANY($2::bigint[])',
@@ -327,7 +328,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       inspiration: wells.get(ch.id)!.inspiration,
       present: onStage(ch),
       instrumentBonus: g.instruments[role] ?? 0,
-      outfitBonus: g.outfit + g.tattoos,
+      outfitBonus: g.outfit + g.tattoos + g.setStage,
       familiarity,
     };
   });

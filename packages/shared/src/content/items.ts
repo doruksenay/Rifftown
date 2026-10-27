@@ -2,7 +2,7 @@
 // Fiyat/bonus dengesi var olan merdivenle uyumlu tutuldu (bkz. items.ts INSTRUMENT_TIERS):
 // bonus başına fiyat yükseldikçe artar, böylece ucuz eşyayla bonus "biriktirilemez" (her yuvada tek eşya kuşanılır).
 
-import type { ItemDef } from '../items';
+import type { GearSetDef, ItemDef } from '../items';
 import type { RecipeDef } from '../crafting';
 
 type Shop = ItemDef['shop'];
@@ -20,26 +20,34 @@ const I = (id: string, shop: Shop, slot: Slot, tier: ItemDef['tier'], price: num
 
 export const EXTRA_ITEMS: ItemDef[] = [
   // Enstrüman ara seviyeleri ve markasız modeller
-  I('guitar_1b', 'music_store', 'guitar', 1, 380, 5, 'Akustik-elektro gitar', 'Electro-acoustic guitar'),
-  I('guitar_2b', 'music_store', 'guitar', 2, 2000, 9, 'Yarı gövde caz gitarı', 'Semi-hollow jazz guitar'),
-  I('guitar_2c', 'music_store', 'guitar', 2, 2400, 10, 'Yedi telli metal gitarı', 'Seven-string metal guitar'),
-  I('bass_1b', 'music_store', 'bass', 1, 380, 5, 'Perdesiz bas', 'Fretless bass'),
-  I('bass_2b', 'music_store', 'bass', 2, 2000, 9, 'Beş telli bas', 'Five-string bass'),
-  I('drums_1b', 'music_store', 'drums', 1, 380, 5, 'Elektronik davul pedi', 'Electronic drum pad'),
-  I('drums_2b', 'music_store', 'drums', 2, 2200, 9, 'Caz davul seti', 'Jazz drum kit'),
+  I('guitar_1b', 'music_store', 'guitar', 1, 380, 5, 'Akustik-elektro gitar', 'Electro-acoustic guitar', { genres: ['folk', 'country', 'pop'], genreBonus: 1 }),
+  I('guitar_2b', 'music_store', 'guitar', 2, 2000, 9, 'Yarı gövde caz gitarı', 'Semi-hollow jazz guitar', { genres: ['jazz', 'blues', 'soul'], genreBonus: 2 }),
+  I('guitar_2c', 'music_store', 'guitar', 2, 2400, 10, 'Yedi telli metal gitarı', 'Seven-string metal guitar', { genres: ['metal'], genreBonus: 1 }),
+  I('bass_1b', 'music_store', 'bass', 1, 380, 5, 'Perdesiz bas', 'Fretless bass', { genres: ['jazz', 'soul'], genreBonus: 1 }),
+  I('bass_2b', 'music_store', 'bass', 2, 2000, 9, 'Beş telli bas', 'Five-string bass', { genres: ['metal', 'reggae'], genreBonus: 2 }),
+  I('drums_1b', 'music_store', 'drums', 1, 380, 5, 'Elektronik davul pedi', 'Electronic drum pad', { genres: ['electronic', 'hiphop'], genreBonus: 1 }),
+  I('drums_2b', 'music_store', 'drums', 2, 2200, 9, 'Caz davul seti', 'Jazz drum kit', { genres: ['jazz', 'blues'], genreBonus: 2 }),
   I('keys_1b', 'music_store', 'keys', 1, 380, 5, 'Taşınabilir synth', 'Portable synth'),
-  I('keys_2b', 'music_store', 'keys', 2, 2100, 9, 'Elektrik piyano', 'Electric piano'),
-  I('keys_2c', 'music_store', 'keys', 2, 2500, 10, 'Modüler synth rafı', 'Modular synth rack'),
+  I('keys_2b', 'music_store', 'keys', 2, 2100, 9, 'Elektrik piyano', 'Electric piano', { genres: ['soul', 'jazz', 'pop'], genreBonus: 2 }),
+  I('keys_2c', 'music_store', 'keys', 2, 2500, 10, 'Modüler synth rafı', 'Modular synth rack', { genres: ['electronic'], genreBonus: 1 }),
   I('vocals_1b', 'music_store', 'vocals', 1, 300, 5, 'Dinamik sahne mikrofonu', 'Dynamic stage mic'),
   I('vocals_2b', 'music_store', 'vocals', 2, 1800, 9, 'Kulak içi monitörlü vokal seti', 'In-ear monitor vocal rig'),
+  // Türe özel yeni modeller (tür uyumu: o türde konserde ek bonus, tavanlı; bir üst basamağı geçmez)
+  I('guitar_2d', 'music_store', 'guitar', 2, 2200, 9, 'Rezonatör gitar', 'Resonator guitar', { genres: ['blues', 'country', 'folk'], genreBonus: 2 }),
+  I('guitar_1c', 'music_store', 'guitar', 1, 420, 5, 'Naylon telli klasik gitar', 'Nylon-string classical guitar', { genres: ['classical', 'folk'], genreBonus: 1 }),
+  I('violin_2b', 'music_store', 'violin', 2, 2100, 9, 'Fiddle (country kemanı)', 'Country fiddle', { genres: ['country', 'folk'], genreBonus: 2 }),
+  I('sax_2b', 'music_store', 'sax', 2, 2200, 9, 'Bariton saksofon', 'Baritone sax', { genres: ['jazz', 'soul', 'blues'], genreBonus: 2 }),
+  I('percussion_2b', 'music_store', 'percussion', 2, 2000, 9, 'Nyabinghi davul takımı', 'Nyabinghi drum set', { genres: ['reggae'], genreBonus: 2 }),
+  I('keys_1c', 'music_store', 'keys', 1, 420, 5, 'Hammond tarzı org', 'Hammond-style organ', { genres: ['soul', 'blues', 'rock'], genreBonus: 1 }),
   // Kıyafetler
-  I('outfit_1b', 'boutique', 'outfit', 1, 160, 3, 'Grup tişörtü ve postal', 'Band tee and boots'),
+  I('outfit_1b', 'boutique', 'outfit', 1, 160, 3, 'Grup tişörtü ve postal', 'Band tee and boots', { genres: ['punk', 'rock'], genreBonus: 1 }),
+  I('outfit_2e', 'boutique', 'outfit', 2, 1000, 6, 'Kovboy şapkası ve çizme', 'Cowboy hat and boots', { genres: ['country'], genreBonus: 2 }),
   I('outfit_1c', 'boutique', 'outfit', 1, 220, 3, 'Retro eşofman takımı', 'Retro tracksuit'),
   I('outfit_2b', 'boutique', 'outfit', 2, 900, 6, 'Kadife ceket', 'Velvet jacket'),
-  I('outfit_2c', 'boutique', 'outfit', 2, 1100, 7, 'Pullu sahne elbisesi', 'Sequined stage dress'),
-  I('outfit_2d', 'boutique', 'outfit', 2, 1000, 6, 'Deri pantolon ve yelek', 'Leather trousers and vest'),
+  I('outfit_2c', 'boutique', 'outfit', 2, 1100, 7, 'Pullu sahne elbisesi', 'Sequined stage dress', { genres: ['pop', 'soul'], genreBonus: 2 }),
+  I('outfit_2d', 'boutique', 'outfit', 2, 1000, 6, 'Deri pantolon ve yelek', 'Leather trousers and vest', { genres: ['rock', 'metal', 'punk'], genreBonus: 2 }),
   I('outfit_3b', 'boutique', 'outfit', 3, 3800, 11, 'Işıklı sahne kostümü', 'Light-up stage costume'),
-  I('outfit_3c', 'boutique', 'outfit', 3, 4200, 12, 'Haute couture smokin', 'Haute couture tuxedo'),
+  I('outfit_3c', 'boutique', 'outfit', 3, 4200, 12, 'Haute couture smokin', 'Haute couture tuxedo', { genres: ['jazz', 'classical'], genreBonus: 2 }),
   // Sanat
   I('art_1b', 'gallery', 'art', 1, 180, 6, 'İmzalı plak kapağı', 'Signed record sleeve'),
   I('art_1c', 'gallery', 'art', 1, 240, 7, 'Siyah beyaz konser fotoğrafı', 'Black-and-white gig photo'),
@@ -88,6 +96,24 @@ export const REWARD_ITEMS: ItemDef[] = [
   I('reward_vedat_mic', 'boutique', 'vocals', 2, 900, 8, 'Vedat Karahan\'ın stüdyo mikrofonu', 'Vedat Karahan\'s studio mic', { reward: true, bound: true }),
   I('reward_fox_jacket', 'boutique', 'outfit', 2, 900, 6, 'Kızıl Tilki sahne ceketi', 'Red Fox stage jacket', { reward: true, bound: true }),
   I('reward_melek_notebook', 'gallery', 'art', 2, 900, 12, 'Melek Aksoy\'un nota defteri', 'Melek Aksoy\'s notebook', { reward: true, bound: true }),
+];
+
+// Sezonluk eşyalar: dükkânda yalnızca kendi mevsiminde satılır (oyun yılı 56 gün); bonusları merdivenin ara basamağıdır
+export const SEASONAL_ITEMS: ItemDef[] = [
+  I('outfit_winter', 'boutique', 'outfit', 2, 1050, 6, 'Kış turnesi paltosu', 'Winter tour greatcoat', { season: 'winter' }),
+  I('fx_snow', 'stage_shop', 'fx', 2, 320, 4, 'Kar makinesi', 'Snow machine', { season: 'winter', stackable: true }),
+  I('outfit_spring', 'boutique', 'outfit', 1, 240, 3, 'Çiçekli bahar gömleği', 'Floral spring shirt', { season: 'spring', genres: ['folk', 'pop'], genreBonus: 1 }),
+  I('outfit_summer', 'boutique', 'outfit', 2, 950, 6, 'Festival yazlığı', 'Festival summer outfit', { season: 'summer', genres: ['reggae', 'electronic', 'pop'], genreBonus: 1 }),
+  I('fx_fireworks', 'stage_shop', 'fx', 3, 900, 6, 'Hasat havai fişeği', 'Harvest fireworks', { season: 'autumn', stackable: true }),
+  I('art_autumn', 'gallery', 'art', 2, 1200, 14, 'Sonbahar turnesi afişi (sınırlı baskı)', 'Autumn tour poster (limited print)', { season: 'autumn' }),
+];
+
+/** Set bonusları: her gruptan bir eşya kuşanılınca sahne performansına +stage (en iyi set, en fazla +3) */
+export const GEAR_SETS: GearSetDef[] = [
+  { id: 'jazz_club', name: { tr: 'Caz kulübü', en: 'Jazz club' }, groups: [['guitar_2b', 'drums_2b', 'keys_2b', 'sax_2b', 'bass_1b'], ['outfit_3c']], stage: 2 },
+  { id: 'heavy_armour', name: { tr: 'Ağır zırh', en: 'Heavy armour' }, groups: [['guitar_2c', 'bass_2b'], ['outfit_2d']], stage: 2 },
+  { id: 'honky_tonk', name: { tr: 'Honky tonk', en: 'Honky tonk' }, groups: [['guitar_2d', 'violin_2b'], ['outfit_2e'], ['van_1', 'pickup_1']], stage: 3 },
+  { id: 'neon_night', name: { tr: 'Neon gece', en: 'Neon night' }, groups: [['keys_2c', 'drums_1b'], ['outfit_3b', 'outfit_led_crafted']], stage: 2 },
 ];
 
 export const EXTRA_RECIPES: RecipeDef[] = [

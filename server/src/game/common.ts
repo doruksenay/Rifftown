@@ -19,6 +19,9 @@ import {
   ageOf,
   START_AGE,
   wornBonus,
+  type Genre,
+  gearSetBonus,
+  genreAffinity,
 } from '@rifftown/shared';
 import type { Db } from '../db';
 import { many, one } from '../db';
@@ -205,12 +208,20 @@ export interface GearBonuses {
   vehicleSpeed: number;
   /** Dövmelerden gelen sahne imajı */
   tattoos: number;
+  /** Tamamlanan eşya setinin sahne bonusu ve kimliği (items.ts gearSetBonus) */
+  setStage: number;
+  setId: string | null;
 }
 
 /** Karakterin kuşandığı eşyalardan ve dövmelerinden gelen bonuslar. */
-export async function gearBonuses(db: Db, characterIds: number[]): Promise<Map<number, GearBonuses>> {
+/** genre: konser veren grubun türü; verilirse tür uyumlu eşyalar ek bonus alır (items.ts genreAffinity) */
+export async function gearBonuses(db: Db, characterIds: number[], genre?: Genre): Promise<Map<number, GearBonuses>> {
   const out = new Map<number, GearBonuses>();
-  for (const id of characterIds) out.set(id, { instruments: {}, outfit: 0, art: 0, pet: 0, vehicleSpeed: 0, tattoos: 0 });
+  const equippedIds = new Map<number, string[]>();
+  for (const id of characterIds) {
+    out.set(id, { instruments: {}, outfit: 0, art: 0, pet: 0, vehicleSpeed: 0, tattoos: 0, setStage: 0, setId: null });
+    equippedIds.set(id, []);
+  }
   if (characterIds.length === 0) return out;
   const rows = await many(
     db,
@@ -225,11 +236,17 @@ export async function gearBonuses(db: Db, characterIds: number[]): Promise<Map<n
     const bonus = (r.bonus ?? def.bonus) + (r.legendary_at ? LEGENDARY_ITEM_BONUS : 0);
     if (def.slot === 'art') g.art += bonus;
     else if (!r.equipped) continue;
-    else if (def.slot === 'outfit') g.outfit = bonus;
+    else if (def.slot === 'outfit') g.outfit = bonus + genreAffinity(def, genre);
     else if (def.slot === 'pet') g.pet = bonus;
     else if (def.slot === 'vehicle') g.vehicleSpeed = def.speed ?? 0;
     // Yıpranmış enstrüman bonusunun bir kısmını kaybeder (tamirle geri gelir)
-    else if ((INSTRUMENTS as readonly string[]).includes(def.slot)) g.instruments[def.slot as Instrument] = wornBonus(bonus, Number(r.wear ?? 0));
+    else if ((INSTRUMENTS as readonly string[]).includes(def.slot)) g.instruments[def.slot as Instrument] = wornBonus(bonus, Number(r.wear ?? 0)) + genreAffinity(def, genre);
+    if (r.equipped) equippedIds.get(r.character_id)?.push(r.item_id);
+  }
+  // Set bonusu: kuşanılmış eşyalar bir seti tamamlıyorsa sahneye küçük katkı (en iyi set, tavanlı)
+  for (const [id, items] of equippedIds) {
+    const set = gearSetBonus(items);
+    if (set) Object.assign(out.get(id)!, { setStage: set.stage, setId: set.setId });
   }
   const tattoos = await many(db, 'SELECT character_id, count(*)::int AS n FROM tattoos WHERE character_id = ANY($1::bigint[]) GROUP BY character_id', [
     characterIds,

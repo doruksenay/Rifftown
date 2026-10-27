@@ -20,6 +20,7 @@ import {
   isEquippable,
   startingSkills,
   indulgenceForSpend,
+  seasonAt,
 } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
@@ -27,6 +28,7 @@ import { storedMoodlets } from '../game/wellbeing';
 import { charId, requireUser, requireVip } from '../auth';
 import { many, one, pool, tx } from '../db';
 import { fail } from '../errors';
+import { config } from '../config';
 import { activeAction, getCharacter, isJailed, lockCharacter, membership, notify, officesOf, requireEstablished, toActionDto, toCharacterDto } from '../game/common';
 import { achievementPoints, evaluateThrottled } from '../game/achievements';
 import { bailQuote, inCustody } from '../game/crime';
@@ -289,6 +291,10 @@ export async function meRoutes(app: FastifyInstance) {
       if (!loc || !isShop(loc.type) || !item || item.shop !== loc.type || item.crafted) fail('invalid_item');
       if (item!.vip && !req.user!.isVip) fail('vip_required', 403);
       if (loc!.cityId !== ch.city_id) fail('not_in_city');
+      // Ödül eşyası dükkânda satılmaz; nadir eşya yalnızca kendi şehrinde; sezonluk eşya yalnızca mevsiminde
+      if (item!.reward) fail('invalid_item');
+      if (item!.cityOnly && item!.cityOnly !== loc!.cityId) fail('invalid_item');
+      if (item!.season && item!.season !== seasonAt(Date.now(), config.gameSpeed)) fail('out_of_season', 409);
       const qty = item!.stackable ? body.qty : 1;
       const total = item!.price * qty;
       if (ch.money < total) fail('not_enough_money');
