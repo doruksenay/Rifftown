@@ -38,6 +38,10 @@ import {
   GEAR_QUALITY_CAP,
   setlistFlow,
   FLOW_MULT,
+  RELEASE_RULES,
+  BAND_SHARE,
+  CITIES,
+  weeklyUnits,
 } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { config } from '../src/config';
@@ -347,5 +351,30 @@ describe('konser planı: reçete yok, karar var (kurallar)', () => {
     const songs = [60, 40, 42, 45, 70].map((score) => ({ score }));
     expect(setlistFlow(songs)).toBeGreaterThanOrEqual(1);
     expect(FLOW_MULT).toBe(5);
+  });
+});
+
+// ---------- Plaklar (denge raporu madde 9) ----------
+
+describe('plaklar bir gelir kolu (kurallar)', () => {
+  /** Ev şehri İstanbul, ülke içine yayılmış şöhret; zar ortada */
+  function lifetimeBand(kind: 'single' | 'album', quality: number, fame: number) {
+    let units = 0;
+    for (let w = 0; w < RELEASE_RULES[kind].weeks; w++) {
+      for (const c of CITIES) {
+        const f = c.id === 'istanbul' ? fame : c.countryCode === 'TR' ? fame * 0.375 : 0;
+        units += weeklyUnits(kind, quality, f, c.genrePopularity.rock, c, w, fixed(0.5));
+      }
+    }
+    return units * RELEASE_RULES[kind].price * BAND_SHARE;
+  }
+  it('az tanınan grubun albümü (şöhret 10, kalite 45) maliyetini çıkarır; ünlü grubun albümü birkaç büyük konser eder', () => {
+    expect(RELEASE_RULES.album.price).toBe(25);
+    expect(BAND_SHARE).toBe(0.6);
+    // 8 şarkılık albüm: kayıt + prova + baskı ≈ $3.060 (İstanbul)
+    expect(lifetimeBand('album', 45, 10)).toBeGreaterThan(3060);
+    expect(lifetimeBand('album', 45, 55)).toBeGreaterThan(15000);
+    // Single şöhret 3'te bile zarar etmez (~$420 maliyet)
+    expect(lifetimeBand('single', 45, 3)).toBeGreaterThan(420);
   });
 });

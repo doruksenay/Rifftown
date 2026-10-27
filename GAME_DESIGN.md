@@ -244,11 +244,11 @@ Satın alma akışı: uygulama RevenueCat ile satın almayı başlatır → Reve
 | Şarkı | 1–2 | 6–12 |
 | Baskı ücreti | $100 | $500 |
 | Aynı türde iki yayın arası | 28 oyun günü | 112 oyun günü |
-| Fiyat | $3,5 | $15 |
+| Fiyat | $5 (eskiden $3,5) | $25 (eskiden $15) |
 | Satış süresi | 16 liste haftası (112 gün) | 32 liste haftası (224 gün) |
 
-- **Haftalık satış:** Liste haftası 7 oyun günüdür (bkz. "Tempo"). Hafta kapanınca her yayının her şehirdeki satışı hesaplanır: temel × (0,04 + 0,96 × (şöhret/100)^1,2) × tür popülerliği × (0,3 + kalite/100) × pazar büyüklüğü × düşüş^hafta, ±%15. Grubun hiç tanınmadığı şehirde satış olmaz; az tanındığı yerde küçük bir taban satış olur, böylece yeni gruplar da listelere girebilir. Pazar büyüklüğü pahalı ve büyük şehirlerde yüksektir. Satışlar haftadan haftaya azalır (her liste haftası single'da ~%16, albümde ~%9; günlük düşüş pacing.ts içinde).
-- **Gelir:** Plak şirketi olmayan grupta satış gelirinin yarısı gruba kalır (gerisi dağıtım), grup üyeleri arasında eşit bölünür. Oyuncunun plak şirketiyle sözleşmeli grupta pay sözleşmeyle belirlenir (bkz. "Plak şirketi").
+- **Haftalık satış:** Liste haftası 7 oyun günüdür (bkz. "Tempo"). Hafta kapanınca her yayının her şehirdeki satışı hesaplanır: temel × (0,06 + 0,94 × şöhret/100) × tür popülerliği (eskiden 0,04 + 0,96 × (şöhret/100)^1,2) × (0,3 + kalite/100) × pazar büyüklüğü × düşüş^hafta, ±%15. Grubun hiç tanınmadığı şehirde satış olmaz; az tanındığı yerde küçük bir taban satış olur, böylece yeni gruplar da listelere girebilir. Pazar büyüklüğü pahalı ve büyük şehirlerde yüksektir. Satışlar haftadan haftaya azalır (her liste haftası single'da ~%16, albümde ~%9; günlük düşüş pacing.ts içinde).
+- **Gelir:** Plak şirketi olmayan grupta satış gelirinin %60'ı gruba kalır (eskiden %50; gerisi dağıtım), grup üyeleri arasında eşit bölünür. Fiyat, pay ve satış eğrisi denge raporu §4'e göre ayarlandı: kayıt odaklı oyuncuda plaklar gelirin %2–7'siydi, şöhret 20'nin altında albüm zarar ediyordu. Şimdi şöhret 10, kalite 45'te bir albüm ömür boyu ~$8.000 (maliyet ~$3.000), şöhret 55'te ~$25.000 (önce $1.750–10.000); yayın temposu (bekleme süreleri) değişmedi. Oyuncunun plak şirketiyle sözleşmeli grupta pay sözleşmeyle belirlenir (bkz. "Plak şirketi").
 - **Listeler:** Her şehrin ve dünyanın single ve albüm listeleri ayrı çıkar (ilk 20). Şehir listesinde 1. olmak +1,6, ilk 3 +1,05, ilk 10 +0,47, ilk 20 +0,23 şöhret getirir (7 günlük haftaya göre; hafta kısalırsa orantılı küçülür, günlük ödül aynı kalır); şöhret yükseldikçe bu bonus küçülür. Listede önceki haftaya göre yükselme ve düşme gösterilir.
 - 1.000 satışta altın, 10.000 satışta platin plak.
 - Son haftanın listesini herkes görür; geçmiş haftaların listeleri VIP avantajıdır.
