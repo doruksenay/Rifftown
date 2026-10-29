@@ -51,9 +51,30 @@ export const ENERGY_FREE_KINDS: readonly ActionKind[] = ['rest', 'treat', 'trave
 export const energyFactor = (energy: number) => 0.7 + 0.3 * (clamp(energy, 0, 100) / 100);
 
 /** Bir eylemin bitince enerjiyi ne kadar değiştireceği (kendiliğinden dolan dahil) */
-export function energyAfter(kind: ActionKind, hours: number, now: number, homeRest = false): number {
-  const perHour = ENERGY_PER_HOUR[kind] + (kind === 'rest' && homeRest ? HOME_REST_ENERGY_BONUS : 0) + ENERGY_REGEN_PER_HOUR;
-  return now + perHour * hours;
+// ---------- Tempo: uzun işler ve yeni başlayanlar (playtest Y-3) ----------
+// Eskiden ilk dört iş (şarkı, 8 saat mesai, 4 saat prova, bar konseri) ruh hâlini 80'den 6'ya, enerjiyi 10'a indiriyordu;
+// 8 saatlik mesai tek başına ruh hâlinden 32 götürüyordu ve ilk günün yarısı zorunlu uykuydu.
+
+/** Yeni karakterde uzun işin ilk bu kadar saati tam yorar, sonrası LONG_ACTION_DRAIN_MULT ile */
+export const LONG_ACTION_FULL_HOURS = 4;
+export const LONG_ACTION_DRAIN_MULT = 0.6;
+/** Yeni karakterin ilk bu kadar oyun saatinde yorucu işlerin ruh hâli ve enerji maliyeti NEWCOMER_DRAIN_MULT ile ("Yeni başlangıç") */
+export const NEWCOMER_HOURS = 48;
+export const NEWCOMER_DRAIN_MULT = 0.6;
+
+/** Yorucu bir eylemin ruh hâli ve enerji maliyetinde sayılan saat (kazançlarda değil; dinlenme ve tedavi tam sayılır).
+ *  Yalnızca yeni karakterde: uzun işin 4 saatten sonrası ×0,6, hepsi ayrıca ×0,6. Eski oyuncuda saat aynen sayılır;
+ *  herkese uygulanan indirim PR #2'nin gider/gelir dengesini bozuyordu (10 günde mesai botu +%25 para). */
+export function drainHours(hours: number, newcomer = false): number {
+  if (!newcomer) return hours;
+  const h = Math.min(hours, LONG_ACTION_FULL_HOURS) + Math.max(0, hours - LONG_ACTION_FULL_HOURS) * LONG_ACTION_DRAIN_MULT;
+  return h * NEWCOMER_DRAIN_MULT;
+}
+
+/** Eylem bitince enerji (zamanla dolanı da sayar). Yorucu işlerin maliyeti drainHours ile. */
+export function energyAfter(kind: ActionKind, hours: number, now: number, homeRest = false, newcomer = false): number {
+  const base = ENERGY_PER_HOUR[kind] + (kind === 'rest' && homeRest ? HOME_REST_ENERGY_BONUS : 0);
+  return now + (base < 0 ? base * drainHours(hours, newcomer) : base * hours) + ENERGY_REGEN_PER_HOUR * hours;
 }
 
 // ---------- İlham ----------
@@ -107,6 +128,7 @@ export const LEGENDARY_ITEM_PREFIX: L = { tr: 'Efsanevi', en: 'Legendary' };
 
 export type MoodletId =
   | 'great_gig'
+  | 'fresh_start'
   | 'legendary_gig'
   | 'bad_gig'
   | 'good_meal'
@@ -192,6 +214,7 @@ export const MOODLETS: MoodletDef[] = [
   M('expecting', 4, 480, 'Bebek bekliyor', 'Expecting', 'Ailen büyüyor.', 'Your family is growing.'),
   M('new_parent', 15, 72, 'Yeni ebeveyn', 'New parent', 'Kucağında yeni bir hayat var.', 'You\'re holding a brand-new life.'),
   M('family_strain', -8, 48, 'Aile bütçesi', 'Family strain', 'Çocuğun bakım giderini karşılayamadın.', 'You couldn’t cover your child’s care this week.'),
+  M('fresh_start', 5, 48, 'Yeni başlangıç', 'Fresh start', 'Şehirde ilk günlerin: yorucu işler seni daha az yoruyor.', 'Your first days in town: hard work wears you out less.'),
   M('exhausted', -15, 0, 'Bitkin', 'Exhausted', 'Enerjin tükenmek üzere. Dinlen ya da bir şey ye.', 'You are running on empty. Rest or eat something.'),
   M('tired', -6, 0, 'Yorgun', 'Tired', 'Enerjin azaldı.', 'Your energy is low.'),
   M('inspired', 8, 0, 'İlham dolu', 'Inspired', 'Kafanda melodiler dönüyor.', 'Melodies keep coming to you.'),

@@ -56,6 +56,8 @@ export const tr = {
   unread: '{n} yeni bildirim',
   tooSickWarning: 'Sağlığın çok düşük. Dinlen ya da hastaneye git.',
   lowMoodWarning: 'Ruh hâlin düşük. Bu hâlde çalışmak sağlığını yıpratır.',
+  tiredHint: 'Yorgunsun. Biraz dinlenmek ya da bir şey yemek seni toparlar; dinlenmek ücretsiz.',
+  eatSomething: 'Bir şey ye',
   recent: 'Son olanlar',
   seeAll: 'Tümünü gör',
 
@@ -1555,6 +1557,8 @@ export const en: Record<StringKey, string> = {
   unread: '{n} new notifications',
   tooSickWarning: 'Your health is very low. Rest or visit the hospital.',
   lowMoodWarning: 'Your mood is low. Working like this wears down your health.',
+  tiredHint: 'You are tired. A rest or a meal will pick you up; resting is free.',
+  eatSomething: 'Eat something',
   recent: 'Recent',
   seeAll: 'See all',
 

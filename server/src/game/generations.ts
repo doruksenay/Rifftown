@@ -52,6 +52,7 @@ import { config } from '../config';
 import { type Db, many, one, tx } from '../db';
 import { GameError, fail } from '../errors';
 import { type CharacterRow, isJailed, lockCharacter, notify, toCharacterDto } from './common';
+import { addMoodlet } from './wellbeing';
 import { claimInheritance, releaseCharacter } from './consequences';
 import { handOver, ringPledged, toInventoryDto } from './items';
 import { isBlocked } from './social';
@@ -350,6 +351,7 @@ export async function succeed(userId: number, isVip: boolean, input: SuccessionI
       userId, pred.id, heir!.id, child.id, mode, inheritance, items.length,
     ]);
     await notify(c, heir!.id, 'welcome', {});
+    await addMoodlet(c, heir!.id, 'fresh_start');
     await notify(c, heir!.id, 'heir_started', { from: pred.name, money: inheritance, items: items.length });
     if (co) await notify(c, co.id, 'child_became_heir', { name: heir!.name, from: pred.name });
     return {

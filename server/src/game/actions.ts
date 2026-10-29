@@ -67,6 +67,8 @@ import {
   type MoodletId,
   SONG_INSPIRATION_SPEND,
   energyAfter,
+  drainHours,
+  NEWCOMER_HOURS,
   energyFactor,
   songInspirationBonus,
   SONG_FATIGUE_WINDOW_DAYS,
@@ -408,7 +410,7 @@ export async function startAction(characterId: number, req: StartActionRequest, 
     if (req.kind === 'study' || req.kind === 'lesson') params.focus = studyFocusFactor(await recentActionHours(c, characterId, ['study', 'lesson'], 24), hours);
     if (char.money < cost) fail('not_enough_money');
     // Enerji yetmiyorsa yorucu iş başlamaz (dinlenmek, tedavi ve yolculuk her zaman serbest)
-    if (!ENERGY_FREE_KINDS.includes(req.kind) && energyAfter(req.kind, hours, currentEnergy(char)) < 0) fail('too_tired', 409);
+    if (!ENERGY_FREE_KINDS.includes(req.kind) && energyAfter(req.kind, hours, currentEnergy(char), false, isNewcomer(char)) < 0) fail('too_tired', 409);
     params.hours = hours;
     params.cost = cost;
 
@@ -522,6 +524,9 @@ export async function completeDueActions(limit = 100): Promise<number> {
   return done;
 }
 
+/** Yeni karakter mi (ilk NEWCOMER_HOURS oyun saati; mirasçı da yeni karakterdir) */
+export const isNewcomer = (char: { created_at: Date }) => Date.now() - new Date(char.created_at).getTime() < gameHoursToMs(NEWCOMER_HOURS, config.gameSpeed);
+
 async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<Record<string, unknown>> {
   const char = await lockCharacter(c, a.character_id);
   const params = a.params as Record<string, any>;
@@ -532,7 +537,11 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   // Görünen ruh hâli (moodlet'lerle), enerji ve ilham
   const well = await wellbeingOf(c, char);
   const efficiency = energyFactor(well.energy);
-  let energyDelta = ENERGY_PER_HOUR[a.kind as ActionKind] * hours + (a.kind === 'rest' && (params.home || params.hotel) ? HOME_REST_ENERGY_BONUS * hours : 0);
+  // Tempo (playtest Y-3): uzun işin 4 saatten sonrası ve yeni karakterin ilk 48 oyun saati daha az yorar (drainHours)
+  const newcomer = isNewcomer(char);
+  const drainH = drainHours(hours, newcomer);
+  const basicEnergy = ENERGY_PER_HOUR[a.kind as ActionKind];
+  let energyDelta = (basicEnergy < 0 ? basicEnergy * drainH : basicEnergy * hours) + (a.kind === 'rest' && (params.home || params.hotel) ? HOME_REST_ENERGY_BONUS * hours : 0);
   let inspirationDelta = 0;
   let setInspiration: number | undefined;
   const moodlets: MoodletId[] = [];
@@ -543,7 +552,10 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   if (a.kind === 'rest') {
     // Hayvan bakımı becerisi evcil hayvanın dinlenme bonusunu artırır (en fazla ×1,3)
     mood += restMoodGain(hours, Math.min(100, gear.art + ((params.restBonus as number) ?? 0) + (params.pet ? gear.pet * skillMult(char.skills, 'pets') : 0)));
-  } else mood += MOOD_PER_HOUR[a.kind as keyof typeof MOOD_PER_HOUR] * hours;
+  } else {
+    const perHour = MOOD_PER_HOUR[a.kind as keyof typeof MOOD_PER_HOUR];
+    mood += perHour < 0 ? perHour * drainH : perHour * hours;
+  }
   let healthChange = HEALTH_PER_HOUR[a.kind as keyof typeof HEALTH_PER_HOUR] * hours;
   // Kondisyon yorucu işlerdeki sağlık kaybını azaltır; bünye niteliği de (çarpılarak, en fazla %15)
   if (healthChange < 0) healthChange *= (1 - fitnessShield(lv(char.skills, 'fitness') + skillBonus(char.skills, 'fitness'))) * (1 - healthShieldAttr(char.attributes));

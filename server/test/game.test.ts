@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { SESSION_MUSICIAN, recoveryAttrMult, startingAttributes } from '@rifftown/shared';
+import { MOOD_PER_HOUR, SESSION_MUSICIAN, drainHours, recoveryAttrMult, startingAttributes } from '@rifftown/shared';
 import { config } from '../src/config';
 import { pool } from '../src/db';
 import { advance, client, me, newPlayer, raw, setMoney, setSkills, setVip, setup, teardown } from './helpers';
@@ -89,10 +89,12 @@ describe('eylemler', () => {
     await advance();
     let m = await me(c);
     expect(m.character.money).toBe(500 + 15 * 8);
-    expect((await raw(character.id)).mood).toBe(80 - 32);
+    // Test hızında karakter "yeni başlayan" sayılmaz (48 oyun saati milisaniyede geçer): eski kural
+    const afterWork = 80 + MOOD_PER_HOUR.work * drainHours(8);
+    expect((await raw(character.id)).mood).toBeCloseTo(afterWork, 5);
     await c.post('/api/actions', { kind: 'rest', hours: 2 });
     await advance();
-    expect((await raw(character.id)).mood).toBe(78);
+    expect((await raw(character.id)).mood).toBeCloseTo(Math.min(100, afterWork + 2 * MOOD_PER_HOUR.rest), 5);
   });
 
   it('eylem iptal edilebilir, seyahat edilemez', async () => {
@@ -416,6 +418,7 @@ describe('VIP', () => {
     const p = await newPlayer({ instrument: 'guitar' });
     await setSkills(p.character.id, { guitar: 37.3, basic_strings: 15.2 });
     await pool.query('UPDATE characters SET mood = 63.7 WHERE id = $1', [p.character.id]);
+    await pool.query('DELETE FROM moodlets WHERE character_id = $1', [p.character.id]); // "Yeni başlangıç" görünen ruh hâline eklenir
 
     // Normal üye: amatör seviyesi (30–45) içinde dörtte birlik adıma aşağı yuvarlanır
     let m = (await me(p.c)).character;

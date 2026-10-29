@@ -31,7 +31,7 @@ import {
 import { attributesOf, spendAttribute } from '../game/attributes';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { storedMoodlets } from '../game/wellbeing';
+import { addMoodlet, storedMoodlets } from '../game/wellbeing';
 import { charId, requireUser, requireVip } from '../auth';
 import { many, one, pool, tx } from '../db';
 import { fail } from '../errors';
@@ -155,6 +155,8 @@ export async function meRoutes(app: FastifyInstance) {
           JSON.stringify(startingAttributes(body.mainInstrument, body.startAttributes))],
       );
       await c.query(`INSERT INTO notifications(character_id, kind, data) VALUES ($1, 'welcome', '{}')`, [ch.id]);
+      // İlk 48 oyun saati yorucu işler daha az yorar (actions.ts isNewcomer); oyuncu bunu moodlet olarak görür
+      await addMoodlet(c, ch.id, 'fresh_start');
       return { character: toCharacterDto(ch) };
     });
   });

@@ -1,5 +1,5 @@
 // Enerji, ilham, moodlet'ler, EFSANEVİ konser ve oyuncular arası takas
-import { type GigPerformer, CITY_BY_ID, computeGig, legendaryChance } from '@rifftown/shared';
+import { type GigPerformer, CITY_BY_ID, computeGig, energyAfter, legendaryChance } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -43,7 +43,9 @@ describe('enerji ve moodlet', () => {
       await p.c.post('/api/actions', { kind: 'work', locationId: 'istanbul-work', hours: 8 });
       await finishNow(p.character.id);
       const tired = (await me(p.c)).character;
-      expect(tired.energy).toBeLessThan(60); // 8 saat × (−8 + 2) = −48
+      // 8 saat yorucu iş enerji harcar (yeni başlayanda daha az: drainHours)
+      expect(tired.energy).toBeLessThan(start.energy - 10);
+      expect(tired.energy).toBeGreaterThanOrEqual(energyAfter('work', 8, start.energy) - 1);
 
       // Enerji çok düşükse 8 saatlik iş başlamaz; dinlenmek serbest
       await q('UPDATE characters SET energy = 5, energy_at = now() WHERE id = $1', [p.character.id]);

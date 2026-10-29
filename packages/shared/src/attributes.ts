@@ -226,7 +226,8 @@ export const GIG_XP_GREAT_BONUS = 1;
 /** XP tavanları: son 24 oyun saatinde 10, son 7 oyun gününde 50. Yeni hesaplarda (ilk 72 oyun saati) yarısı. */
 export const XP_DAY_CAP = 10;
 export const XP_WEEK_CAP = 50;
-export const XP_NEW_ACCOUNT_FACTOR = 0.5;
+// Yeni hesabın tavanı: eskiden yarısıydı (günde 5) ve ilk mesaide doluyordu (playtest Y-3); ek hesap koruması için yine düşük
+export const XP_NEW_ACCOUNT_FACTOR = 0.8;
 
 /** Bir eylemin ham XP'si (yarıda kesilen eylemde geçen saat kadar) */
 export const actionXp = (kind: ActionKind, hours: number) => Math.max(0, (XP_PER_HOUR[kind] ?? 0) * Math.max(0, hours));
