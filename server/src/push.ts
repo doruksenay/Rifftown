@@ -45,7 +45,7 @@ const ACTION_TEXT: Record<string, Tpl> = {
       ? null
       : {
           title: T(l, 'Kayıt bitti', 'Recording finished'),
-          body: T(l, `"${d.title}": ${tierName('quality', d.quality, l)} bir kayıt`, `"${d.title}": a ${tierName('quality', d.quality, l)} recording`),
+          body: T(l, `"${d.title}": ${tierName('quality', d.quality, l)} bir kayıt`, `"${d.title}": ${withArticle(tierName('quality', d.quality, l))} recording`),
         },
   crime: (d, l) =>
     d.cancelled || !d.success
@@ -122,7 +122,7 @@ const TEMPLATES: Record<string, Tpl> = {
   gig_done: (d, l) => ({
     title: d.legendary ? T(l, 'EFSANEVİ bir gece!', 'A LEGENDARY night!') : T(l, 'Konser bitti', 'Gig finished'),
     body: d.present
-      ? d.review?.[l] ?? T(l, `${d.attendance} kişi, ${tierName('quality', d.quality, l)} bir konser.`, `${d.attendance} people, a ${tierName('quality', d.quality, l)} show.`)
+      ? d.review?.[l] ?? T(l, `${d.attendance} kişi, ${tierName('quality', d.quality, l)} bir konser.`, `${d.attendance} people, ${withArticle(tierName('quality', d.quality, l))} show.`)
       : T(l, 'Konsere katılamadın!', 'You missed the gig!'),
   }),
   band_invite: (d, l) => ({ title: T(l, 'Grup daveti', 'Band invite'), body: d.bandName }),

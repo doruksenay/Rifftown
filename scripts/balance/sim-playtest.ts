@@ -109,6 +109,10 @@ async function runSeed(seed: number) {
       : [];
     const fame = bandId ? Number((await pool.query(`SELECT fame FROM band_fame WHERE band_id = $1 AND city_id = 'istanbul'`, [bandId])).rows[0]?.fame ?? 0) : 0;
     const earned = (await pool.query(`SELECT coalesce(sum((g.result->>'perMember')::int), 0)::int AS n FROM gig_performers gp JOIN gigs g ON g.id = gp.gig_id WHERE gp.character_id = $1 AND gp.present AND g.status = 'done'`, [p.bot.id])).rows[0].n;
+    if (process.env.REVIEWS_OUT && bandId) {
+      const rv = (await pool.query(`SELECT g.result->'review'->>'tr' AS tr, l.loc FROM gigs g, LATERAL (SELECT g.location_id AS loc) l WHERE g.band_id = $1 AND g.status = 'done' ORDER BY g.starts_at`, [bandId])).rows;
+      fs.appendFileSync(process.env.REVIEWS_OUT, rv.map((r: any) => JSON.stringify({ seed, who: p.tag, loc: r.loc, tr: r.tr })).join('\n') + '\n');
+    }
     out[p.tag] = {
       solo: p.solo,
       money: Number(ch.money) + Number(ch.bank),

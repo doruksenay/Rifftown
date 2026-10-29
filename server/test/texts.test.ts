@@ -161,3 +161,28 @@ describe('metin havuzları', () => {
     expect((await book(['cover'])).status).toBe(200);
   });
 });
+
+describe('eleştiri tekrarı (playtest O-9)', () => {
+  it('grubun son eleştirilerindeki açılış tekrar seçilmez; Türkçe boş salon cümlelerinde "{venue} içinde" yok', async () => {
+    const { gigReview, REVIEW_CROWD_PARTS, REVIEW_CROWD, CITY_BY_ID, LOCATION_BY_ID } = await import('@rifftown/shared');
+    const base = { quality: 22, attendance: 9, capacity: 80, presentCount: 3, memberCount: 3, venue: LOCATION_BY_ID['istanbul-bar'].name, city: CITY_BY_ID.istanbul.name, bestSong: 'Ilk', cityId: 'istanbul' };
+    const recent: string[] = [];
+    const opens: string[] = [];
+    for (let i = 0; i < 20; i++) {
+      const r = gigReview({ ...base, seed: 1000 + i * 3, recent: recent.slice(0, 6) });
+      opens.push(r.tr.split(/[.;]/)[0]);
+      recent.unshift(r.tr);
+    }
+    // Ardışık 6 eleştiride aynı açılış yok
+    for (let i = 0; i + 6 <= opens.length; i++) expect(new Set(opens.slice(i, i + 6)).size).toBe(6);
+    for (const x of [...REVIEW_CROWD_PARTS.empty.openers, ...REVIEW_CROWD.empty]) expect(x.tr).not.toContain('{venue} içinde');
+    expect(REVIEW_CROWD_PARTS.empty.openers.length).toBeGreaterThanOrEqual(10);
+  });
+
+  it('EN push metni a/an seçer', async () => {
+    const { withArticle } = await import('../src/push');
+    expect(withArticle('outstanding')).toBe('an outstanding');
+    expect(withArticle('EPIC')).toBe('an EPIC');
+    expect(withArticle('good')).toBe('a good');
+  });
+});

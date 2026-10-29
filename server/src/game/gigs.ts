@@ -573,7 +573,12 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       ORDER BY g.starts_at DESC LIMIT 1`,
     [gig.city_id, gig.band_id, new Date(Date.now() - gameHoursToMs(48, config.gameSpeed))],
   );
+  // Grubun son eleştirileri: aynı açılış ve aynı rakip kıyası art arda gelmesin (playtest O-9)
+  const recent = (
+    await many(c, `SELECT result->'review'->>'tr' AS tr FROM gigs WHERE band_id = $1 AND status = 'done' AND result ? 'review' ORDER BY starts_at DESC LIMIT 6`, [gig.band_id])
+  ).map((x) => x.tr as string).filter(Boolean);
   const review = gigReview({
+    recent,
     cityId: gig.city_id,
     events: (res.events ?? []).map((e) => ({ id: e.id, outcome: e.outcome, name: STAGE_EVENT_BY_ID[e.id]?.name })),
     press,

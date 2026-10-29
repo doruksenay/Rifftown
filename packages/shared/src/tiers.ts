@@ -197,6 +197,8 @@ export interface GigReviewInput {
   press?: number;
   /** Son günlerde aynı şehirde çalan başka bir grup ve gecesinin kalitesi */
   rival?: { name: string; quality: number } | null;
+  /** Grubun son eleştirileri (TR): aynı açılış ve aynı rakip kıyası art arda tekrar seçilmez (playtest O-9) */
+  recent?: string[];
 }
 
 /** Tohumdan deterministik seçim (aynı konser hep aynı metni üretir) */
@@ -247,8 +249,24 @@ function composePairSentences(first: L[], second: L[], seed: number, salt: numbe
   return { tr: p.tr.replace('; ', ' '), en: p.en.replace('; ', ' ') };
 }
 
-/** Konser eleştirisi; iki dilde birden üretilir ve konserle birlikte saklanır. */
+/** İlk cümlenin ilk kelimeleri: tekrar karşılaştırması için (sayı ve tırnaklı şarkı adı ayıklanır) */
+const openingKey = (tr: string) => tr.replace(/\d+/g, '#').split(/[.;]/)[0].trim().split(/\s+/).slice(0, 6).join(' ');
+
+/** Konser eleştirisi; iki dilde birden üretilir ve konserle birlikte saklanır. Grubun son eleştirilerinde geçen açılış
+ *  seçilmez (birkaç tohum denenir); son üç eleştiride rakip kıyası geçtiyse bu kez yazılmaz. */
 export function gigReview(r: GigReviewInput): L {
+  const recent = r.recent ?? [];
+  if (!recent.length) return gigReviewOnce(r);
+  const used = new Set(recent.map(openingKey));
+  const rivalMarks = [...REVIEW_RIVAL.lost, ...REVIEW_RIVAL.beat].flatMap((x) => x.tr.split('{rival}').map((p) => p.trim()).filter((p) => p.length >= 8));
+  const rivalRecently = recent.slice(0, 3).some((t) => rivalMarks.some((m) => t.includes(m)));
+  const input = rivalRecently ? { ...r, rival: null } : r;
+  let out = gigReviewOnce(input);
+  for (let k = 1; k <= 8 && used.has(openingKey(out.tr)); k++) out = gigReviewOnce({ ...input, seed: r.seed + k * 7919 });
+  return out;
+}
+
+function gigReviewOnce(r: GigReviewInput): L {
   // En çok bir olay cümlesi: varsa başarısız olan (eleştirmen hatayı yazar), yoksa başarılı olan
   const tried = (r.events ?? []).filter((e) => e.outcome === 'success' || e.outcome === 'fail');
   const ev = tried.find((e) => e.outcome === 'fail') ?? tried.find((e) => e.outcome === 'success');
