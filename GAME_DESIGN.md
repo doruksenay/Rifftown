@@ -726,7 +726,7 @@ Her şehirde 2 bar ve 2 restoran ruhsatı oyunculara satılıktır (bar $20.000,
 
 ## Haftalık görevler
 
-Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düşer (konser ver, şarkı yaz, prova yap, mesai yap, antrenman, yemek, takıl, üret, kayıt…). İlerleme o hafta yapılanlardan hesaplanır, ödül ($20 – $60) bir kez alınır. Ödüller küçük; para asıl müzikten ve meslekten gelmeli. Görev kartı ana sayfada.
+Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düşer (konser ver, şarkı yaz, prova yap, mesai yap, antrenman, yemek, takıl, üret, kayıt…). Görevler oyuncunun durumuna göre seçilir (`missions.ts` `missionEligible`, playtest O-2): grubu olmayana konser, prova, kayıt, basın, bis, sahne olayı ve şehir görevi; arkadaşı olmayana takılma ve hediye; ilk 72 oyun saatindeki hesaba yolculuk, hediye ve şehir görevi; el işçiliği bilmeyene atölye; hiçbir sahne olayının eşiğini geçmeyene sahne olayı görevi düşmez, aynı türden iki görev aynı hafta gelmez. Seçim haftanın ilk bakışında saklanır (`mission_weeks`, migration 030): hafta içinde grup kurmak listeyi değiştirmez. Ölçüm (`scripts/balance/missions-fit.ts`, 500 oyuncu × 12 hafta): yeni ve yalnız oyuncuda yapılamaz görev oranı %58,8 → %0; yeni gruplu oyuncuda %28,2 → %0. İlerleme o hafta yapılanlardan hesaplanır, ödül ($20 – $60) bir kez alınır. Ödüller küçük; para asıl müzikten ve meslekten gelmeli. Görev kartı ana sayfada.
 
 ## Yeni beceri alanları
 

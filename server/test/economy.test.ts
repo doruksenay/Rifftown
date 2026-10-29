@@ -1,5 +1,5 @@
 // Sosyal, ilişkiler, pazar, kişiselleştirme, üretim, yaşam, işletmeler, festivaller, görevler, mağaza uyumu
-import { BUSINESS_RULES, MISSIONS_PER_WEEK, missionsFor } from '@rifftown/shared';
+import { BUSINESS_RULES, MISSION_BY_ID, MISSIONS_PER_WEEK, missionEligible } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -398,7 +398,9 @@ describe('haftalık görevler', () => {
     const p = await newPlayer();
     const state = (await p.c.get('/api/missions')).body;
     expect(state.missions).toHaveLength(MISSIONS_PER_WEEK);
-    expect(state.missions.map((m: any) => m.id)).toEqual(missionsFor(p.character.id, state.weekId).map((m) => m.id));
+    // Seçim oyuncunun durumuna göre (grubu ve arkadaşı yok: konser, takılma, hediye görevi düşmez) ve hafta boyunca aynı
+    for (const m of state.missions) expect(missionEligible(MISSION_BY_ID[m.id], { hasBand: false, gigsPlayed: 0, friends: 0, accountHours: 1e9, knowsCraft: false, canStageEvent: false }), m.id).toBe(true);
+    expect((await p.c.get('/api/missions')).body.missions.map((m: any) => m.id)).toEqual(state.missions.map((m: any) => m.id));
     // İlk görevi tamamlanmış say: haftayı sabitleyip uygun eylemleri ekle
     const m = state.missions[0];
     expect((await p.c.post(`/api/missions/${m.id}/claim`)).body.error).toBe('step_not_done');

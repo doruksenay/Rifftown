@@ -1,6 +1,18 @@
 // Haftalık görevler: liste haftasına bağlıdır (her liste haftası yeni görevler).
 
-import { MISSION_BY_ID, type MissionKind, type MissionsResponse, missionsFor } from '@rifftown/shared';
+import {
+  MISSION_BY_ID,
+  type MissionContext,
+  type MissionDef,
+  type MissionKind,
+  type MissionsResponse,
+  STAGE_EVENTS,
+  gameHoursToMs,
+  lv,
+  missionsFor,
+  roleSkill,
+} from '@rifftown/shared';
+import { config } from '../config';
 import { type Db, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { lockCharacter } from './common';
@@ -43,10 +55,50 @@ async function progress(db: Db, characterId: number, kind: MissionKind, since: D
   return Number(r?.v ?? 0);
 }
 
+/** Oyuncunun durumu (görev uygunluğu) */
+async function missionContext(db: Db, characterId: number): Promise<MissionContext> {
+  const r = await one(
+    db,
+    `SELECT c.created_at, c.skills, m.role,
+            EXISTS (SELECT 1 FROM band_members bm WHERE bm.character_id = c.id) AS has_band,
+            (SELECT count(*)::int FROM gig_performers gp JOIN gigs g ON g.id = gp.gig_id WHERE gp.character_id = c.id AND gp.present AND g.status = 'done') AS gigs,
+            (SELECT count(*)::int FROM relationships r WHERE (r.a_id = c.id OR r.b_id = c.id) AND r.friends) AS friends
+       FROM characters c LEFT JOIN band_members m ON m.character_id = c.id WHERE c.id = $1`,
+    [characterId],
+  );
+  const skills = r?.skills ?? {};
+  const canStageEvent = STAGE_EVENTS.some((e) => {
+    if (e.skill === 'genre') return false;
+    const level = e.skill === 'role' ? (r?.role ? roleSkill(skills, r.role) : 0) : lv(skills, e.skill);
+    return level >= e.min;
+  });
+  return {
+    hasBand: !!r?.has_band,
+    gigsPlayed: Number(r?.gigs ?? 0),
+    friends: Number(r?.friends ?? 0),
+    accountHours: r ? (Date.now() - new Date(r.created_at).getTime()) / gameHoursToMs(1, config.gameSpeed) : 0,
+    knowsCraft: typeof skills.craftsmanship === 'number',
+    canStageEvent,
+  };
+}
+
+/** Haftanın görevleri: ilk bakışta oyuncunun durumuna göre seçilip saklanır, hafta boyunca değişmez. Bu haftadan ödül
+ *  almış eski oyuncunun listesi (kural değişmeden önce) eski seçimle saklanır ki alınmış görev kaybolmasın. */
+async function weekMissions(db: Db, characterId: number, weekId: number): Promise<MissionDef[]> {
+  const stored = await one(db, 'SELECT mission_ids FROM mission_weeks WHERE character_id = $1 AND week_id = $2', [characterId, weekId]);
+  const fromIds = (ids: string[]) => ids.map((id) => MISSION_BY_ID[id]).filter((m): m is MissionDef => !!m);
+  if (stored) return fromIds(stored.mission_ids);
+  const claimed = await one(db, 'SELECT 1 FROM mission_claims WHERE character_id = $1 AND week_id = $2 LIMIT 1', [characterId, weekId]);
+  const list = claimed ? missionsFor(characterId, weekId) : missionsFor(characterId, weekId, await missionContext(db, characterId));
+  await db.query('INSERT INTO mission_weeks(character_id, week_id, mission_ids) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING', [characterId, weekId, list.map((m) => m.id)]);
+  const again = await one(db, 'SELECT mission_ids FROM mission_weeks WHERE character_id = $1 AND week_id = $2', [characterId, weekId]);
+  return fromIds(again?.mission_ids ?? list.map((m) => m.id));
+}
+
 export async function missionsState(db: Db, characterId: number): Promise<MissionsResponse> {
   const week = await currentWeek(db);
   if (!week) return { weekId: null, endsAt: null, missions: [] };
-  const list = missionsFor(characterId, Number(week.id));
+  const list = await weekMissions(db, characterId, Number(week.id));
   const claims = await db.query('SELECT mission_id FROM mission_claims WHERE character_id = $1 AND week_id = $2', [characterId, week.id]);
   const claimed = new Set(claims.rows.map((r) => r.mission_id));
   const missions = [];
