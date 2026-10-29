@@ -12,6 +12,7 @@ import { processBirths, processChildren } from './game/family';
 import { processUpkeep } from './game/business';
 import { processFestivals } from './game/festivals';
 import { processBankInterest } from './game/lifestyle';
+import { purgeExpiredSessions } from './auth';
 import { config } from './config';
 import { pool } from './db';
 import { pruneMoodlets } from './game/wellbeing';
@@ -31,6 +32,8 @@ async function stage(name: string, fn: () => Promise<number | void>): Promise<nu
     return 0;
   }
 }
+
+let lastSessionPurge = 0;
 
 export async function tick() {
   // Biriken iş varsa hepsi bitene kadar devam et
@@ -54,6 +57,11 @@ export async function tick() {
   await stage('seçim açma', () => ensureElections());
   await stage('maaşlar', () => payOfficeSalaries());
   await stage('moodlet temizliği', () => pruneMoodlets(pool));
+  // Süresi dolmuş oturumlar saatte bir silinir (okuma anında da reddedilirler; bu yalnızca tabloyu küçük tutar)
+  if (Date.now() - lastSessionPurge > 3600_000) {
+    lastSessionPurge = Date.now();
+    await stage('oturum temizliği', () => purgeExpiredSessions());
+  }
   if (config.decayEnabled) {
     await stage('aşinalık çürümesi', () => processFamiliarityDecay());
     await stage('şöhret azalması', () => processFameDecay());

@@ -44,6 +44,11 @@ export const ADMIN_HTML = /* html */ `<!doctype html>
   <input id="password" type="password" placeholder="Şifre" autocomplete="current-password">
   <button class="primary" id="loginBtn">Giriş yap</button>
   <div class="err" id="loginErr"></div>
+  <div id="claim" hidden>
+    <p>Bu hesap yönetici değil. Adres ADMIN_EMAILS listesindeyse sunucudaki ADMIN_CLAIM_SECRET kodunu gir.</p>
+    <input id="claimSecret" type="password" placeholder="Yönetici kodu" autocomplete="off">
+    <button class="primary" id="claimBtn">Yönetici ol</button>
+  </div>
 </div>
 <div id="panel" hidden>
   <header><h1><span>Rifftown</span> Yönetim</h1><button id="logout">Çıkış</button></header>
@@ -420,7 +425,8 @@ async function loadArticles() {
 async function show() {
   try {
     const me = await api('/me');
-    if (!me.user.isAdmin) throw new Error('Bu hesap yönetici değil');
+    if (!me.user.isAdmin) { $('login').hidden = false; $('panel').hidden = true; $('claim').hidden = false; return; }
+    $('claim').hidden = true;
     $('login').hidden = true; $('panel').hidden = false;
     await Promise.all([loadStats(), loadOnline(), loadUsers(), loadReports(), loadArticles(), loadPolicies(), loadProfiles(), loadChat()]);
     if (!window.__onlineTimer) window.__onlineTimer = setInterval(() => { if (token) { loadOnline().catch(() => {}); loadStats().catch(() => {}); } }, 30000);
@@ -431,6 +437,11 @@ $('loginBtn').onclick = async () => {
   try { const r = await api('/auth/login', { method:'POST', body: JSON.stringify({ email: $('email').value, password: $('password').value }) });
     token = r.token; localStorage.setItem('rifftown_admin_token', token); show(); }
   catch (e) { $('loginErr').textContent = e.message === 'bad_credentials' ? 'E-posta veya şifre hatalı' : e.message; }
+};
+$('claimBtn').onclick = async () => {
+  $('loginErr').textContent = '';
+  try { await api('/auth/claim-admin', { method:'POST', body: JSON.stringify({ secret: $('claimSecret').value }) }); $('claimSecret').value = ''; show(); }
+  catch (e) { $('loginErr').textContent = e.message === 'not_configured' ? 'Sunucuda ADMIN_CLAIM_SECRET ayarlı değil (make-admin komutunu kullan)' : 'Kod ya da adres uygun değil'; }
 };
 $('logout').onclick = async () => { await api('/auth/logout', { method:'POST' }).catch(() => {}); token = null; localStorage.removeItem('rifftown_admin_token'); show(); };
 $('edSave').onclick = saveEditor;

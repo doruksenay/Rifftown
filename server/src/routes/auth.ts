@@ -1,7 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { notify } from '../game/common';
-import { createSession, deleteSession, hashPassword, requireUser, verifyPassword } from '../auth';
+import crypto from 'node:crypto';
+import { createSession, deleteSession, hashPassword, requireUser, revokeUserSessions, verifyPassword } from '../auth';
 import { many, one, pool, tx } from '../db';
 import { config } from '../config';
 import { clientBucket } from '../client-ip';
@@ -42,10 +43,8 @@ export async function authRoutes(app: FastifyInstance) {
         [email, hash, body.lang, ip],
       );
     });
-    if (config.adminEmails.includes(email)) {
-      await pool.query('UPDATE users SET is_admin = TRUE WHERE id = $1', [user.id]);
-      user.is_admin = true;
-    }
+    // Kayıt hiçbir zaman yönetici yapmaz: e-posta doğrulanmadığından ADMIN_EMAILS adresiyle sahibinden önce kayıt olan
+    // paneli alıyordu (playtest Y-6). Yükseltme make-admin ya da claim-admin (aşağıda) ile.
     return { token: await createSession(user.id), user: toUser(user) };
   });
 
@@ -53,7 +52,8 @@ export async function authRoutes(app: FastifyInstance) {
   app.post('/auth/delete-account', { preHandler: requireUser, ...strict }, async (req) => {
     const body = parse(z.object({ password: z.string() }), req.body);
     const user = await one(pool, 'SELECT * FROM users WHERE id = $1', [req.user!.id]);
-    if (!user || !(await verifyPassword(body.password, user.password_hash))) fail('bad_credentials', 401);
+    // Oturum açık ama onay şifresi yanlış: 403 (401 uygulamada oturumu kapatıyordu)
+    if (!user || !(await verifyPassword(body.password, user.password_hash))) fail('wrong_password', 403);
     await deleteAccount(user.id);
     return { ok: true };
   });
@@ -74,18 +74,28 @@ export async function authRoutes(app: FastifyInstance) {
   app.post('/auth/change-password', { preHandler: requireUser, ...strict }, async (req) => {
     const body = parse(z.object({ oldPassword: z.string(), newPassword: z.string().min(8).max(200) }), req.body);
     const user = await one(pool, 'SELECT * FROM users WHERE id = $1', [req.user!.id]);
-    if (!(await verifyPassword(body.oldPassword, user.password_hash))) fail('bad_credentials', 401);
+    if (!(await verifyPassword(body.oldPassword, user.password_hash))) fail('wrong_password', 403);
+    if (body.oldPassword === body.newPassword) fail('same_password');
     await pool.query('UPDATE users SET password_hash = $2 WHERE id = $1', [user.id, await hashPassword(body.newPassword)]);
+    // Şifre değişince bu cihaz dışındaki bütün oturumlar kapanır (çalınan oturum açık kalmasın)
+    await revokeUserSessions(user.id, req.token!);
     return { ok: true };
+  });
+
+  /** ADMIN_EMAILS listesindeki hesap, sunucu tarafı gizli kodla (ADMIN_CLAIM_SECRET) kendini yönetici yapar.
+   *  İki şart birden: adres listede ve kod doğru. Kod ayarlı değilse uç kapalıdır (yalnızca make-admin). */
+  app.post('/auth/claim-admin', { preHandler: requireUser, ...strict }, async (req) => {
+    const body = parse(z.object({ secret: z.string().min(1).max(200) }), req.body);
+    if (!config.adminClaimSecret) fail('not_configured', 404);
+    const a = crypto.createHash('sha256').update(body.secret).digest();
+    const b = crypto.createHash('sha256').update(config.adminClaimSecret).digest();
+    if (!crypto.timingSafeEqual(a, b) || !config.adminEmails.includes(req.user!.email.toLowerCase())) fail('forbidden', 403);
+    await pool.query('UPDATE users SET is_admin = TRUE WHERE id = $1', [req.user!.id]);
+    return { ok: true, user: { id: req.user!.id, email: req.user!.email, lang: req.user!.lang, isAdmin: true } };
   });
 }
 
 /** Grubu devreder ya da dağıtır, sonra kullanıcıyı siler (karakter ve ona bağlı her şey zincirleme silinir) */
-/** ADMIN_EMAILS listesindeki hesapları yönetici yapar (açılışta çalışır). */
-export async function grantAdmins() {
-  if (!config.adminEmails.length) return;
-  await pool.query('UPDATE users SET is_admin = TRUE WHERE lower(email) = ANY($1::text[]) AND NOT is_admin', [config.adminEmails]);
-}
 
 export async function deleteAccount(userId: number) {
   await tx(async (c) => {

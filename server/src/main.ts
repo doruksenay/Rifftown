@@ -1,7 +1,6 @@
 import { buildApp } from './app';
 import { config } from './config';
 import { createPool, pool } from './db';
-import { grantAdmins } from './routes/auth';
 import { migrate } from './migrate';
 import { startWorker } from './worker';
 
@@ -11,10 +10,13 @@ import { startWorker } from './worker';
 const migrationPool = createPool(config.migrationUrl);
 await migrate(migrationPool);
 await migrationPool.end();
-await grantAdmins();
 const app = await buildApp();
 await app.listen({ port: config.port, host: config.host });
 app.log.info(`Rifftown API hazır · oyun hızı x${config.gameSpeed}`);
+if (config.adminEmails.length && !config.adminClaimSecret) {
+  // Eskiden ADMIN_EMAILS adresiyle ilk kayıt olan kendiliğinden yönetici oluyordu (e-posta doğrulaması yok)
+  app.log.info('ADMIN_EMAILS artık kendiliğinden yönetici yapmaz: make-admin komutu ya da ADMIN_CLAIM_SECRET ile /api/auth/claim-admin');
+}
 
 let stopWorker: (() => void) | null = null;
 if (process.env.RUN_WORKER === '1') stopWorker = startWorker(config.workerIntervalMs, (m) => app.log.info(m));

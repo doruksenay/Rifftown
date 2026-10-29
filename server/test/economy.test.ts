@@ -426,7 +426,7 @@ describe('mağaza uyumu', () => {
     await p.c.post('/api/actions', { kind: 'write_song', title: 'Veda', genre: 'pop' });
     await finishNow(p.character.id);
     await p.c.post('/api/bands', { name: 'Veda Grubu', genre: 'pop', role: 'vocals' });
-    expect((await p.c.post('/api/auth/delete-account', { password: 'yanlis' })).status).toBe(401);
+    expect((await p.c.post('/api/auth/delete-account', { password: 'yanlis' })).status).toBe(403);
     expect((await p.c.post('/api/auth/delete-account', { password: 'gizli12345' })).status).toBe(200);
     expect((await p.c.get('/api/me')).status).toBe(401);
     expect((await q('SELECT count(*)::int AS n FROM characters WHERE id = $1', [p.character.id])).rows[0].n).toBe(0);

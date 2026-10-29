@@ -767,6 +767,7 @@ Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. 
 ## Mağaza uyumu ve moderasyon
 
 - Kayıtta kullanım şartları ve gizlilik politikası onayı zorunlu; ikisi de `/legal/terms` ve `/legal/privacy` adreslerinde yayınlanır (`server/legal/*.md`, iletişim adresi `CONTACT_EMAIL`).
+- **Oturumlar ve hesap güvenliği:** oturum 90 gün sonra (mutlak) ya da 30 gün kullanılmazsa düşer (`SESSION_MAX_DAYS`, `SESSION_IDLE_DAYS`; migration 026'dan önceki oturumların süresi migration anından başlar). Şifre "Ben → Şifreyi değiştir" ekranından değişir; değişince o cihaz dışındaki bütün oturumlar kapanır. Yönetici yetkisi kayıtla verilmez (e-posta doğrulaması yok): `make-admin` komutu ya da `ADMIN_EMAILS` + sunucu tarafı `ADMIN_CLAIM_SECRET` koduyla panelden. Şifremi unuttum ve e-posta doğrulaması e-posta gönderen bir altyapı gerektirir, henüz yok.
 - Uygulama içinden hesap silme (şifreyle onay): karakter, mesajlar, fotoğraf ve tüm oyun verisi silinir; grup liderliği bir üyeye geçer ya da grup dağılır.
 - Türkçe ve İngilizce küfür filtresi: sohbet, mesaj, defter, biyografi ve başlıkta küfürler yıldızlanır; karakter, grup, işletme, eşya ve çocuk isimlerinde küfür reddedilir.
 - Engelleme ve şikâyet her sosyal alanda var (mesaja basılı tutarak, defter notunun, profilin, haberin ve topluluk yazısının altındaki düğmeyle). Yönetim panelindeki şikâyet listesinden içerik tek tıkla kaldırılır ya da yazan banlanır.

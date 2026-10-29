@@ -28,8 +28,11 @@ services:
       # Neon → Connect → "Connection pooling" kapalı adres (veritabanı güncellemeleri için)
       - key: DATABASE_URL_UNPOOLED
         sync: false
-      # Kayıt olunca yönetici olacak e-posta(lar), virgülle
+      # Yönetici olabilecek e-posta(lar), virgülle. Kayıt tek başına yönetici yapmaz: ADMIN_CLAIM_SECRET koduyla panelden
+      # (/admin → "Yönetici kodu") yükseltilir. Kod boşsa yalnızca make-admin komutu.
       - key: ADMIN_EMAILS
+        sync: false
+      - key: ADMIN_CLAIM_SECRET
         sync: false
       # Şartlarda, gizlilik politikasında ve uygulamada görünen iletişim adresi
       - key: CONTACT_EMAIL
