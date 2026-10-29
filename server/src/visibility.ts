@@ -135,7 +135,7 @@ export const EXACT_NUMERIC_KEYS: ReadonlySet<string> = new Set([
   'achievementPoints', 'points', 'age', 'attendance', 'completed', 'convictions', 'friendsCount', 'hours', 'memberCount',
   'members', 'n', 'pendingInvites', 'pendingTrades', 'playersHere', 'policeOnDuty', 'presentCount', 'progress', 'target',
   'total', 'toursDone', 'unreadMessages', 'unreadNotifications', 'unsolvedCount', 'heirloomLimit', 'players', 'qty',
-  'sentenceHours',
+  'sentenceHours', 'recoveredCrimes',
   // oyunun sabitleri ve eylem parametreleri
   'costMult', 'fraction', 'tipFactor', 'gameSpeed', 'focus',
   // XP harcanan bir bakiyedir (tasarım: tam sayı gösterilir)

@@ -89,10 +89,29 @@ export const crimeFine = (def: CrimeDef, priors: number, costMult: number) => Ma
  * Suçun başarı şansı (0–1). patrol: emniyet müdürünün devriye kararının etkisi (civic-powers.ts, -0,06 … +0,03);
  * priors: sabıka (mahkûmiyet sayısı)
  */
+/**
+ * Taban şans ve beceri ağırlığı (playtest Y-4): eskiden 0,45 + beceri × 0,006 idi, hiç sokak becerisi olmayan yeni
+ * karakter yarı yarıya başarıyor ve ilk haftanın en kârlı işi yankesicilik oluyordu. Şimdi beceri daha belirleyici:
+ * beceri 0'da 0,35, 40'ta 0,71 (eskiden 0,69), 60'ta 0,89.
+ */
+export const CRIME_BASE_CHANCE = 0.35;
+export const CRIME_SKILL_WEIGHT = 0.009;
+
 export function crimeChance(def: CrimeDef, skills: Skills, policeOnDuty: number, patrol = 0, priors = 0): number {
   const known = Math.min(MAX_PRIOR_CHANCE_PENALTY, Math.max(0, priors) * PRIOR_CHANCE_PENALTY);
-  return clamp(0.45 + avgSkill(skills, def.skills) * 0.006 - def.difficulty * 0.01 - policeOnDuty * POLICE_PRESSURE + patrol - known, 0.08, 0.92);
+  return clamp(CRIME_BASE_CHANCE + avgSkill(skills, def.skills) * CRIME_SKILL_WEIGHT - def.difficulty * 0.01 - policeOnDuty * POLICE_PRESSURE + patrol - known, 0.08, 0.92);
 }
+
+/**
+ * Oyunun dedektifi (playtest Y-4): şehirde görevde polis oyuncu yokken her faili meçhul suça, işlendikten
+ * NPC_DETECTIVE_DELAY_HOURS sonra bir kez bakar. Faili hâlâ o şehirdeyse bulma şansı = NPC_DETECTIVE_CHANCE −
+ * gizlilik × 0,006 (en az %5; gizlilik 40'ta %6); bulursa tutuklar (ikramiye kimseye gitmez). Şehirden kaçan fail kurtulur.
+ */
+export const NPC_DETECTIVE_DELAY_HOURS = 6;
+/** Mahkûmiyette failin son COLD_CASE_DAYS günlük faili meçhul suçlarının ganimetinden geri alınan pay */
+export const COLD_LOOT_RECOVERY = 0.5;
+export const NPC_DETECTIVE_CHANCE = 0.3;
+export const npcSolveChance = (criminalSkills: Skills) => clamp(NPC_DETECTIVE_CHANCE - lv(criminalSkills, 'stealth') * 0.006, 0.05, NPC_DETECTIVE_CHANCE);
 
 /** Polis meslekleri: soruşturma yapabilir */
 export const POLICE_PROFESSIONS = ['police', 'agent', 'swat'] as const;

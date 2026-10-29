@@ -122,7 +122,7 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
       return d.position && CITY_BY_ID[d.cityId] ? `${base} ${t('n_sales_chart', { city: p(CITY_BY_ID[d.cityId].name), pos: d.position })}` : base;
     }
     case 'arrested':
-      return d.caught ? t('n_arrested_caught') : t('n_arrested', { officer: d.officer ?? '' });
+      return d.caught ? t('n_arrested_caught') : d.detective ? t('n_arrested_detective') : t('n_arrested', { officer: d.officer ?? '' });
     case 'convicted':
       return t('n_convicted', { h: d.sentenceHours });
     case 'acquitted':

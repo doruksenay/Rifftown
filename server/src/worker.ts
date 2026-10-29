@@ -13,6 +13,7 @@ import { processUpkeep } from './game/business';
 import { processFestivals } from './game/festivals';
 import { processBankInterest } from './game/lifestyle';
 import { purgeExpiredSessions } from './auth';
+import { processColdCases } from './game/crime';
 import { config } from './config';
 import { pool } from './db';
 import { pruneMoodlets } from './game/wellbeing';
@@ -45,6 +46,8 @@ export async function tick() {
   if (config.npcEnabled) await stage('oyunun grupları', () => npcDirector());
   if (config.npcEnabled) await stage('oyunun kadrosu', () => npcCivicDirector());
   const gigs = await stage('konserler', () => processDueGigs(50));
+  // Oyunun dedektifi önce: tutukladığı şüphelinin davası aynı turda açılır
+  if (config.npcEnabled) await stage('dedektif', () => processColdCases());
   const justice = await stage('adalet', () => processJustice());
   const charts = await stage('listeler', () => processChartWeeks());
   await stage('kira', () => processRent());

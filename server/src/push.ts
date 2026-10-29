@@ -99,7 +99,9 @@ const TEMPLATES: Record<string, Tpl> = {
       title: T(l, 'Tutuklandın!', 'You were arrested!'),
       body: d.caught
         ? T(l, `${crime ? pick(crime.name, l) : ''} sırasında suç üstü yakalandın. Mahkemeyi bekliyorsun.`, `Caught in the act${crime ? ` (${pick(crime.name, l)})` : ''}. You are awaiting trial.`)
-        : T(l, `Polis ${d.officer} seni buldu. Mahkemeyi bekliyorsun.`, `Officer ${d.officer} tracked you down. You are awaiting trial.`),
+        : d.detective
+          ? T(l, 'Emniyetin dedektifi faili meçhul dosyanı çözdü. Mahkemeyi bekliyorsun.', 'A police detective cracked your unsolved case. You are awaiting trial.')
+          : T(l, `Polis ${d.officer} seni buldu. Mahkemeyi bekliyorsun.`, `Officer ${d.officer} tracked you down. You are awaiting trial.`),
     };
   },
   convicted: (d, l) => ({

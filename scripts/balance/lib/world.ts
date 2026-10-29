@@ -8,7 +8,7 @@ import { pool } from '../../../server/src/db';
 import { migrate } from '../../../server/src/migrate';
 import { config } from '../../../server/src/config';
 import { completeDueActions } from '../../../server/src/game/actions';
-import { processJustice } from '../../../server/src/game/crime';
+import { processColdCases, processJustice } from '../../../server/src/game/crime';
 import { processDueGigs } from '../../../server/src/game/gigs';
 import { processChartWeeks } from '../../../server/src/game/music';
 import { npcDirector } from '../../../server/src/game/npc';
@@ -201,6 +201,7 @@ export async function simTick() {
   if (config.npcEnabled && npcNow) await measured('npc_director', () => npcDirector(Math.random, true));
   if (config.npcEnabled && npcNow) await measured('npc_civic', () => npcCivicDirector(Math.random, true));
   await measured('gig', () => processDueGigs(200));
+  if (config.npcEnabled) await measured('detective', () => processColdCases());
   await measured('justice', () => processJustice());
   await measured('sales', () => processChartWeeks());
   await measured('rent', () => processRent());
