@@ -4,6 +4,7 @@
 import {
   BUSINESS_NAME_RE,
   BUSINESS_RULES,
+  BUSINESS_DAILY_REVENUE_HOURS,
   BUSINESS_SELL_BACK,
   type BusinessDto,
   type BusinessType,
@@ -278,11 +279,21 @@ export async function resolveBusinessShift(c: pg.PoolClient, ch: CharacterRow, p
   if (reserved - pay > 0) await c.query('UPDATE businesses SET till = till + $2 WHERE location_id = $1', [b.location_id, reserved - pay]);
   const owner = await one(c, 'SELECT skills FROM characters WHERE id = $1', [b.owner_id]);
   const { kind, city } = lot(b.location_id);
-  const revenue = staffedRevenue(BUSINESS_RULES[kind], city.costMult, hours, lv(owner?.skills ?? {}, 'business'));
+  // Günlük müşteri tavanı: işletmede son 24 oyun saatinde GELİR GETİRMİŞ mesai saatleri (bu mesai hariç) sınırı aşamaz.
+  // İşletme satırı FOR UPDATE ile kilitli olduğundan eşzamanlı mesailer sırayla sayılır.
+  const used = await one(
+    c,
+    `SELECT coalesce(sum(coalesce((result->>'revenueHours')::float8,
+              (params->>'hours')::float8 * CASE WHEN status = 'done' THEN 1 ELSE coalesce((result->>'fraction')::float8, 0) END)), 0)::float8 AS h
+       FROM actions WHERE kind = 'work' AND params->>'business' = $1 AND status IN ('done', 'cancelled') AND ends_at > $2`,
+    [b.location_id, new Date(Date.now() - gameHoursToMs(24, config.gameSpeed))],
+  );
+  const revenueHours = Math.max(0, Math.min(hours, BUSINESS_DAILY_REVENUE_HOURS - Number(used?.h ?? 0)));
+  const revenue = staffedRevenue(BUSINESS_RULES[kind], city.costMult, revenueHours, lv(owner?.skills ?? {}, 'business'));
   await c.query('UPDATE businesses SET till = till + $2, total_revenue = total_revenue + $2 WHERE location_id = $1', [b.location_id, revenue]);
   await c.query(`INSERT INTO business_log(location_id, kind, amount, character_id) VALUES ($1, 'shift', $2, $3)`, [b.location_id, revenue, ch.id]);
   if (pay > 0) await c.query(`INSERT INTO business_log(location_id, kind, amount, character_id) VALUES ($1, 'wage', $2, $3)`, [b.location_id, -pay, ch.id]);
-  return { pay, revenue };
+  return { pay, revenue, revenueHours, quiet: revenueHours < hours };
 }
 
 /** Barda konser: bilet gelirinden sahibinin payı */

@@ -1,0 +1,4 @@
+# Tohum başına ham çıktılar ve günlükler büyük; özet ve küçük ölçümler depoda kalır
+*-seed-*.json
+logs/
+*.log

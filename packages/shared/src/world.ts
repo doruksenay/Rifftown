@@ -126,14 +126,21 @@ export const isShop = (t: LocationType): t is ShopType => SHOP_TYPES.includes(t)
 export const VENUE_RULES = {
   // bandShare: bilet gelirinden gruba kalan pay (kalanı mekân, prodüksiyon, organizatör).
   // Büyük sahnelerde masraf çok olduğundan pay küçülür; gelir yine de basamak basamak artar.
-  bar: { capacity: 80, ticket: 10, minFame: 0, fameMult: 1.0, bandShare: 0.7 },
-  club: { capacity: 350, ticket: 20, minFame: 15, fameMult: 1.6, bandShare: 0.45 },
-  hall: { capacity: 2000, ticket: 40, minFame: 45, fameMult: 2.5, bandShare: 0.12 },
-  stadium: { capacity: 20000, ticket: 40, minFame: 75, fameMult: 3.5, bandShare: 0.04 },
+  // breakEven: bu kalitenin üstündeki konser şöhret kazandırır, altındaki kaybettirir. Eskiden her mekânda 20'ydi;
+  // stadyumda kalite 54'lük bir konser de şöhret getiriyordu (denge raporu §1). Büyük sahne daha iyi bir gece ister.
+  // production: konser ayarlanırken liderin peşin ödediği prodüksiyon gideri (sahne, ses, ışık, tanıtım; şehir çarpanıyla).
+  // Eskiden büyük sahnede gider yoktu: 90 günde giderin gelire oranı %9'du (denge raporu §2). Bar ve festival muaf.
+  bar: { capacity: 80, ticket: 10, minFame: 0, fameMult: 1.0, bandShare: 0.7, breakEven: 20, production: 0 },
+  club: { capacity: 350, ticket: 20, minFame: 15, fameMult: 1.6, bandShare: 0.45, breakEven: 30, production: 150 },
+  hall: { capacity: 2000, ticket: 40, minFame: 45, fameMult: 2.5, bandShare: 0.12, breakEven: 50, production: 1500 },
+  stadium: { capacity: 20000, ticket: 40, minFame: 75, fameMult: 3.5, bandShare: 0.04, breakEven: 65, production: 9000 },
   /** Festival sahnesine sadece festival programıyla çıkılır (elle konser ayarlanamaz) */
-  festival: { capacity: 12000, ticket: 8, minFame: 0, fameMult: 3.0, bandShare: 0.12 },
+  festival: { capacity: 12000, ticket: 8, minFame: 0, fameMult: 3.0, bandShare: 0.12, breakEven: 40, production: 0 },
 } as const;
 export type VenueType = keyof typeof VENUE_RULES;
+/** Konserin prodüksiyon gideri (peşin, lider öder). İptalde GIG_PRODUCTION_REFUND kadarı geri verilir. */
+export const gigProductionCost = (venue: VenueType, costMult: number) => Math.round(VENUE_RULES[venue].production * costMult);
+export const GIG_PRODUCTION_REFUND = 0.5;
 export const isVenue = (t: LocationType): t is VenueType => t in VENUE_RULES;
 
 export interface Location {

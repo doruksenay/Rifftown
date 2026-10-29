@@ -8,6 +8,13 @@ export type RelationStage = 'none' | 'dating' | 'engaged' | 'married';
 
 /** Takılma: arkadaşlık + ruh hâli. Aynı ikili arasında bekleme süresi (oyun saati) */
 export const HANGOUT_COOLDOWN_HOURS = 4;
+/**
+ * Takılmanın ruh hâli, ilham ve "İyi sohbet" etkisi: bir karakter kayan 24 oyun saatinde en fazla bu kadar kez alır,
+ * aynı kişiyle günde bir kez. Arkadaşlık artışı her takılmada sürer. Eskiden her takılma etkiliydi: 3 ek hesapla
+ * 24 saatte ruh hâli 40 → 94, 5 ek hesapla ilham 78 (denge raporu §7 takılma pompası).
+ */
+export const HANGOUT_UPLIFTS_PER_DAY = 3;
+export const HANGOUT_PAIR_UPLIFTS_PER_DAY = 1;
 export const FLIRT_COOLDOWN_HOURS = 4;
 export const DATE_COOLDOWN_HOURS = 12;
 
@@ -26,6 +33,10 @@ export const PROPOSE_MIN_ROMANCE = 70;
 export const WEDDING_FEE = 500;
 export const DIVORCE_FEE = 300;
 export const ADOPTION_FEE = 1000;
+/**
+ * Çocuk sınırı KARAKTER başına (çocuklar + süren hamilelikler). Eskiden çift başınaydı: farklı eşlerle sınırsız çocuk
+ * olabiliyordu (denge raporu §8, madde 14).
+ */
 export const MAX_CHILDREN = 4;
 /** Evli çift aynı şehirde, evde dinlenirken ek bonus (%) */
 export const SPOUSE_REST_BONUS = 10;
@@ -85,8 +96,11 @@ export type ChildStage = 'baby' | 'child' | 'teen' | 'adult';
 export const childAge = (bornAt: Date | string, gameSpeed: number, nowMs = Date.now()) =>
   Math.max(0, ((nowMs - new Date(bornAt).getTime()) * gameSpeed) / 86_400_000 / 56);
 export const childStage = (age: number): ChildStage => (age < 3 ? 'baby' : age < 13 ? 'child' : age < 18 ? 'teen' : 'adult');
-/** Haftalık bakım gideri (çocuk başına, şehir çarpanıyla); her ebeveyn yarısını öder. Yetişkin çocuk için gider yok. */
-export const CHILD_WEEKLY_UPKEEP = 40;
+/**
+ * Haftalık bakım gideri (çocuk başına, şehir çarpanıyla); her ebeveyn yarısını öder. Yetişkin çocuk için gider yok.
+ * 40 → 100: bakım gideri grinder'ın günlük gelirinin %3'üydü, caydırıcı değildi (denge raporu §8, madde 14).
+ */
+export const CHILD_WEEKLY_UPKEEP = 100;
 
 // ---------- Aile planlaması ve hamilelik ----------
 // Açık içerik yok, yalnızca mekanik; bütün taraflar yetişkin, her adım karşılıklı onaylı.

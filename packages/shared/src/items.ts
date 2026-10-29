@@ -362,8 +362,48 @@ export const SESSION_MUSICIAN = {
   festival: { fee: 0, skill: 75, stage: 60 },
 } as const;
 
-/** Bir konserde sahne efektlerinden gelebilecek en yüksek kalite artışı */
-export const MAX_FX_BONUS = 12;
+/**
+ * Kiralık müzisyen grubun kendi sahnedeki üyelerinin ortalamasını en fazla bu kadar aşar (rol becerisi ve sahne puanı).
+ * Bar sınırsız (ilk konserler aynı kalsın). Eskiden kiralıklar mekânın sabit seviyesinde çalıyordu: beste 8, gitar 52
+ * olan bir oyuncu stadyumda 85'lik kadroyla 72. günde stadyuma çıkıyordu (denge raporu §1). Büyük sahnede kiralık
+ * kadro grubu ancak biraz yukarı çeker; beceri belirleyici olur.
+ */
+export const SESSION_SKILL_MARGIN = { bar: null, club: 15, hall: 10, stadium: 5, festival: 10 } as const satisfies Record<keyof typeof SESSION_MUSICIAN, number | null>;
+
+/** Kiralık müzisyenin o geceki seviyesi: mekânın seviyesi, grubun kendi ortalamasının SESSION_SKILL_MARGIN üstüyle sınırlı */
+export function sessionLevels(venue: keyof typeof SESSION_MUSICIAN, own: { skill: number; stage: number } | null) {
+  const sm = SESSION_MUSICIAN[venue];
+  const margin = SESSION_SKILL_MARGIN[venue];
+  if (margin === null || !own) return { skill: sm.skill, stage: sm.stage };
+  return { skill: Math.max(0, Math.min(sm.skill, own.skill + margin)), stage: Math.max(0, Math.min(sm.stage, own.stage + margin)) };
+}
+
+/**
+ * Sahne efektleri: her efekt türü bir kez sayılır (aynı efektten ikincisi bir şey katmaz), en güçlüsü tam, sonrakiler
+ * yarı, çeyrek… (FX_STACK_DECAY) ve toplam en fazla MAX_FX_BONUS. Eskiden tavan +12'ydi ve 6 sis makinesi ($480) her
+ * konserde +12 kalite veriyordu (denge raporu §5).
+ */
+export const MAX_FX_BONUS = 6;
+export const FX_STACK_DECAY = 0.5;
+/** itemBonuses: her efektin kendi bonusu (atölye ürünü farklı olabilir); verilmezse tanımdaki bonus. Aynı efektten en güçlüsü sayılır. */
+export function fxQualityBonus(itemIds: string[], itemBonuses?: (number | null | undefined)[] | null): number {
+  const best = new Map<string, number>();
+  itemIds.forEach((id, i) => {
+    const b = itemBonuses?.[i] ?? ITEM_BY_ID[id]?.bonus ?? 0;
+    best.set(id, Math.max(best.get(id) ?? 0, b));
+  });
+  const bonuses = [...best.values()].filter((b) => b > 0);
+  bonuses.sort((a, b) => b - a);
+  const total = bonuses.reduce((sum, b, i) => sum + b * FX_STACK_DECAY ** i, 0);
+  return Math.round(Math.min(MAX_FX_BONUS, total) * 10) / 10;
+}
+/**
+ * Set bonusu ve tür uyumu doğrudan kaliteye de eklenir (eskiden yalnız sahne puanına ve rol becerisine girip kaliteye
+ * 1 puandan az katkı veriyordu): set bonusu × 0,5 + tür uyumu (tavan +3) × 0,35, üye başına en fazla +2.
+ */
+export const GEAR_QUALITY_CAP = 2;
+export const gearQualityBonus = (setStage: number, affinity: number) =>
+  Math.round(Math.min(GEAR_QUALITY_CAP, Math.max(0, setStage) * 0.5 + Math.min(MAX_GENRE_BONUS, Math.max(0, affinity)) * 0.35) * 100) / 100;
 /** İkinci el pazarında satıştan alınan komisyon */
 export const MARKET_FEE = 0.05;
 export const MAX_LISTINGS = 20;
@@ -375,8 +415,24 @@ export const maxResalePrice = (shopPrice: number, legendary = false) =>
   Math.max(1, Math.round(shopPrice * (legendary ? LEGENDARY_RESALE_CAP_MULT : RESALE_CAP_MULT)));
 /** Yeni hesaplar bu kadar oyun saati boyunca pazar, takas, hediye ve para gönderme kullanamaz */
 export const NEW_ACCOUNT_TRADE_HOURS = 72;
-/** El değiştiren bir eşya bu kadar oyun saati içinde önceki sahibine geri dönemez (takas, pazar, hediye) */
+/**
+ * El değiştiren bir eşya bu kadar oyun saati içinde, bu sürede ona sahip olmuş HİÇ KİMSEYE geri dönemez
+ * (takas, pazar, hediye). Eskiden yalnızca bir önceki sahibe bakılıyordu; A → B → C → A zinciriyle eşya aynı saatte
+ * geri dönüyor, ek hesabın parası kayıpsız ana hesaba taşınıyordu (denge raporu §7). Geçmiş item_handoffs tablosunda
+ * (migration 024) tutulur.
+ */
 export const ITEM_RETURN_COOLDOWN_HOURS = 168;
+/** Takasta eklenen para, karşılığında alınan eşyaların dükkân değerinin bu katını geçemez (eskiden 2; pazar tavanı 2 kaldı) */
+export const TRADE_MONEY_VALUE_MULT = 1;
+/** Takas parasının dayanağı olan eşya değeri (EFSANEVİ eşya koleksiyonluktur: iki katı) */
+export const tradeMoneyValue = (shopPrice: number, legendary = false) => Math.max(1, Math.round(shopPrice * TRADE_MONEY_VALUE_MULT * (legendary ? 2 : 1)));
+/**
+ * İki oyuncu arasında bir yönde akabilecek NET para (takas parası, pazar alışı, VIP para gönderme), kayan
+ * PLAYER_TRANSFER_WINDOW_HOURS penceresinde. Ek hesap çiftliğinden ana hesaba aktarım ikili başına haftada bu kadarla
+ * sınırlıdır; oyunun tüccarı (NPC) sayılmaz. Akışlar player_money_flows tablosunda (migration 024).
+ */
+export const PAIR_TRANSFER_CAP = 5000;
+export const PLAYER_TRANSFER_WINDOW_HOURS = 168;
 /** Kiralık müzisyenler setlisti önceden öğrenir. */
 export const SESSION_FAMILIARITY = 70;
 export { GEAR_SETS } from './content/items';

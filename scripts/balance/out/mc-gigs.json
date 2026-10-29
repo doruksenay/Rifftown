@@ -1,0 +1,6238 @@
+{
+ "N": 3000,
+ "profiles": {
+  "newbie_hired": {
+   "label": "Yeni oyuncu + 3 kiralık (bar)",
+   "venue": "bar",
+   "fame": 1,
+   "rows": {
+    "base": {
+     "label": "Taban (sırasız, olaysız, bissiz)",
+     "quality": {
+      "n": 3000,
+      "mean": 39.69,
+      "median": 40,
+      "p10": 37,
+      "p90": 42,
+      "min": 35,
+      "max": 45
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.51,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.6,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.16,
+      "median": 1.2,
+      "p10": 1,
+      "p90": 1.3,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "ordered": {
+     "label": "Setlist sırası (en iyisi sonda)",
+     "quality": {
+      "n": 3000,
+      "mean": 40.77,
+      "median": 41,
+      "p10": 38,
+      "p90": 43,
+      "min": 36,
+      "max": 45
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.5,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.5,
+      "median": 69,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.23,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "base_ankara": {
+     "label": "Taban, Ankara (alt tür kıyası için)",
+     "quality": {
+      "n": 3000,
+      "mean": 39.74,
+      "median": 40,
+      "p10": 37,
+      "p90": 42,
+      "min": 35,
+      "max": 45
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.38,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 63.08,
+      "median": 61,
+      "p10": 48,
+      "p90": 80,
+      "min": 42,
+      "max": 86
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.16,
+      "median": 1.2,
+      "p10": 1,
+      "p90": 1.3,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene": {
+     "label": "Alt tür sahne şehrinde (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 44.81,
+      "median": 45,
+      "p10": 42,
+      "p90": 48,
+      "min": 39,
+      "max": 51
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.4,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 63.23,
+      "median": 61,
+      "p10": 48,
+      "p90": 80,
+      "min": 42,
+      "max": 86
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.47,
+      "median": 1.5,
+      "p10": 1.3,
+      "p90": 1.7,
+      "min": 1.1,
+      "max": 1.8
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene_trend": {
+     "label": "Alt tür sahne + moda (+5)",
+     "quality": {
+      "n": 3000,
+      "mean": 44.73,
+      "median": 45,
+      "p10": 42,
+      "p90": 48,
+      "min": 40,
+      "max": 51
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.34,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 62.83,
+      "median": 61,
+      "p10": 48,
+      "p90": 80,
+      "min": 42,
+      "max": 86
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.47,
+      "median": 1.5,
+      "p10": 1.3,
+      "p90": 1.7,
+      "min": 1.2,
+      "max": 1.8
+     },
+     "legendaryRate": 0
+    },
+    "sub_niche_big": {
+     "label": "Niş alt tür büyük sahnede (−3)",
+     "quality": {
+      "n": 3000,
+      "mean": 39.67,
+      "median": 40,
+      "p10": 37,
+      "p90": 42,
+      "min": 35,
+      "max": 45
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.45,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.18,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.16,
+      "median": 1.2,
+      "p10": 1,
+      "p90": 1.3,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "set_bonus": {
+     "label": "Set bonusu (+3 sahne)",
+     "quality": {
+      "n": 3000,
+      "mean": 41.21,
+      "median": 41,
+      "p10": 39,
+      "p90": 44,
+      "min": 36,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.48,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.33,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.25,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "affinity": {
+     "label": "Tür uyumu (+3 enstrüman)",
+     "quality": {
+      "n": 3000,
+      "mean": 40.98,
+      "median": 41,
+      "p10": 38,
+      "p90": 44,
+      "min": 36,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.46,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.19,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.24,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "gear_top": {
+     "label": "En iyi dükkân enstrümanı (+12) ve kostüm (+10)",
+     "quality": {
+      "n": 3000,
+      "mean": 40.43,
+      "median": 40,
+      "p10": 38,
+      "p90": 43,
+      "min": 35,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.45,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.18,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.21,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "fx12": {
+     "label": "6 sis makinesi ($480/konser)",
+     "quality": {
+      "n": 3000,
+      "mean": 41.77,
+      "median": 42,
+      "p10": 39,
+      "p90": 44,
+      "min": 37,
+      "max": 47
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.48,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.33,
+      "median": 69,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.29,
+      "median": 1.3,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 1,
+      "max": 1.6
+     },
+     "legendaryRate": 0
+    },
+    "fx_pyro": {
+     "label": "Piroteknik ($800)",
+     "quality": {
+      "n": 3000,
+      "mean": 45.76,
+      "median": 46,
+      "p10": 43,
+      "p90": 48,
+      "min": 41,
+      "max": 51
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.46,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.23,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.53,
+      "median": 1.5,
+      "p10": 1.4,
+      "p90": 1.7,
+      "min": 1.2,
+      "max": 1.8
+     },
+     "legendaryRate": 0
+    },
+    "fx_mix": {
+     "label": "Sis + konfeti + ışık ($530)",
+     "quality": {
+      "n": 3000,
+      "mean": 45.69,
+      "median": 46,
+      "p10": 43,
+      "p90": 48,
+      "min": 41,
+      "max": 51
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.51,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.6,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.52,
+      "median": 1.5,
+      "p10": 1.4,
+      "p90": 1.7,
+      "min": 1.2,
+      "max": 1.8
+     },
+     "legendaryRate": 0
+    },
+    "crew_sound": {
+     "label": "Ses teknisyeni (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 42.69,
+      "median": 43,
+      "p10": 40,
+      "p90": 45,
+      "min": 38,
+      "max": 48
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.49,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.42,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.34,
+      "median": 1.4,
+      "p10": 1.2,
+      "p90": 1.5,
+      "min": 1.1,
+      "max": 1.7
+     },
+     "legendaryRate": 0
+    },
+    "press_hot": {
+     "label": "Basın sıcak (60)",
+     "quality": {
+      "n": 3000,
+      "mean": 39.68,
+      "median": 40,
+      "p10": 37,
+      "p90": 42,
+      "min": 35,
+      "max": 45
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.51,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 17
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 72.59,
+      "median": 69,
+      "p10": 55,
+      "p90": 90,
+      "min": 48,
+      "max": 104
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.31,
+      "median": 1.3,
+      "p10": 1.1,
+      "p90": 1.5,
+      "min": 1,
+      "max": 1.7
+     },
+     "legendaryRate": 0
+    },
+    "enc_safe": {
+     "label": "Güvenli bis",
+     "quality": {
+      "n": 3000,
+      "mean": 40.27,
+      "median": 41,
+      "p10": 37,
+      "p90": 43,
+      "min": 35,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.5,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.48,
+      "median": 69,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.24,
+      "median": 1.3,
+      "p10": 1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.6
+     },
+     "legendaryRate": 0
+    },
+    "enc_bold": {
+     "label": "Cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 37.64,
+      "median": 35,
+      "p10": 33,
+      "p90": 45,
+      "min": 31,
+      "max": 48
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.5,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.49,
+      "median": 69,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.04,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 1.7,
+      "min": 0.6,
+      "max": 1.9
+     },
+     "legendaryRate": 0
+    },
+    "events3": {
+     "label": "3 sahne olayı (yok)",
+     "quality": {
+      "n": 3000,
+      "mean": 39.7,
+      "median": 40,
+      "p10": 37,
+      "p90": 42,
+      "min": 35,
+      "max": 45
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.44,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 65.11,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.16,
+      "median": 1.2,
+      "p10": 1,
+      "p90": 1.3,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "all_in": {
+     "label": "Hepsi: sıra + 3 olay + cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 39.49,
+      "median": 37,
+      "p10": 34,
+      "p90": 46,
+      "min": 31,
+      "max": 48
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.42,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 64.94,
+      "median": 62,
+      "p10": 48,
+      "p90": 83,
+      "min": 41,
+      "max": 90
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.18,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1.7,
+      "min": 0.6,
+      "max": 1.9
+     },
+     "legendaryRate": 0
+    }
+   }
+  },
+  "newbie_hired5": {
+   "label": "Yeni oyuncu + 5 kiralık (bar, tavan)",
+   "venue": "bar",
+   "fame": 1,
+   "rows": {
+    "base": {
+     "label": "Taban (sırasız, olaysız, bissiz)",
+     "quality": {
+      "n": 3000,
+      "mean": 40.51,
+      "median": 40,
+      "p10": 38,
+      "p90": 43,
+      "min": 36,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.48,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.33,
+      "median": 52,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.21,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "ordered": {
+     "label": "Setlist sırası (en iyisi sonda)",
+     "quality": {
+      "n": 3000,
+      "mean": 41.51,
+      "median": 41,
+      "p10": 39,
+      "p90": 44,
+      "min": 36,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.45,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.15,
+      "median": 52,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.27,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "base_ankara": {
+     "label": "Taban, Ankara (alt tür kıyası için)",
+     "quality": {
+      "n": 3000,
+      "mean": 40.44,
+      "median": 40,
+      "p10": 38,
+      "p90": 43,
+      "min": 35,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.26,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 52.34,
+      "median": 51,
+      "p10": 38,
+      "p90": 70,
+      "min": 32,
+      "max": 76
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.21,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene": {
+     "label": "Alt tür sahne şehrinde (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 45.47,
+      "median": 45,
+      "p10": 42,
+      "p90": 49,
+      "min": 40,
+      "max": 51
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.41,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 53.3,
+      "median": 51,
+      "p10": 38,
+      "p90": 70,
+      "min": 32,
+      "max": 76
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.51,
+      "median": 1.5,
+      "p10": 1.3,
+      "p90": 1.7,
+      "min": 1.2,
+      "max": 1.8
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene_trend": {
+     "label": "Alt tür sahne + moda (+5)",
+     "quality": {
+      "n": 3000,
+      "mean": 45.56,
+      "median": 45,
+      "p10": 43,
+      "p90": 49,
+      "min": 40,
+      "max": 51
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.31,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 52.65,
+      "median": 51,
+      "p10": 38,
+      "p90": 70,
+      "min": 32,
+      "max": 76
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.52,
+      "median": 1.5,
+      "p10": 1.4,
+      "p90": 1.7,
+      "min": 1.2,
+      "max": 1.8
+     },
+     "legendaryRate": 0
+    },
+    "sub_niche_big": {
+     "label": "Niş alt tür büyük sahnede (−3)",
+     "quality": {
+      "n": 3000,
+      "mean": 40.5,
+      "median": 40,
+      "p10": 38,
+      "p90": 43,
+      "min": 35,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.47,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.27,
+      "median": 52,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.21,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "set_bonus": {
+     "label": "Set bonusu (+3 sahne)",
+     "quality": {
+      "n": 3000,
+      "mean": 42.04,
+      "median": 42,
+      "p10": 39,
+      "p90": 45,
+      "min": 37,
+      "max": 47
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.47,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.32,
+      "median": 52,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.3,
+      "median": 1.3,
+      "p10": 1.1,
+      "p90": 1.5,
+      "min": 1,
+      "max": 1.6
+     },
+     "legendaryRate": 0
+    },
+    "affinity": {
+     "label": "Tür uyumu (+3 enstrüman)",
+     "quality": {
+      "n": 3000,
+      "mean": 41.71,
+      "median": 42,
+      "p10": 39,
+      "p90": 44,
+      "min": 37,
+      "max": 47
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.51,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.56,
+      "median": 59,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.28,
+      "median": 1.3,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 1,
+      "max": 1.6
+     },
+     "legendaryRate": 0
+    },
+    "gear_top": {
+     "label": "En iyi dükkân enstrümanı (+12) ve kostüm (+10)",
+     "quality": {
+      "n": 3000,
+      "mean": 41.03,
+      "median": 41,
+      "p10": 38,
+      "p90": 44,
+      "min": 36,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.49,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.46,
+      "median": 59,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.24,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "fx12": {
+     "label": "6 sis makinesi ($480/konser)",
+     "quality": {
+      "n": 3000,
+      "mean": 42.46,
+      "median": 42,
+      "p10": 40,
+      "p90": 45,
+      "min": 38,
+      "max": 47
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.51,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.55,
+      "median": 59,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.33,
+      "median": 1.3,
+      "p10": 1.2,
+      "p90": 1.5,
+      "min": 1.1,
+      "max": 1.6
+     },
+     "legendaryRate": 0
+    },
+    "fx_pyro": {
+     "label": "Piroteknik ($800)",
+     "quality": {
+      "n": 3000,
+      "mean": 46.52,
+      "median": 47,
+      "p10": 44,
+      "p90": 49,
+      "min": 42,
+      "max": 51
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.5,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.51,
+      "median": 59,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.57,
+      "median": 1.6,
+      "p10": 1.4,
+      "p90": 1.7,
+      "min": 1.3,
+      "max": 1.8
+     },
+     "legendaryRate": 0
+    },
+    "fx_mix": {
+     "label": "Sis + konfeti + ışık ($530)",
+     "quality": {
+      "n": 3000,
+      "mean": 46.5,
+      "median": 46,
+      "p10": 44,
+      "p90": 49,
+      "min": 42,
+      "max": 52
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.49,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.46,
+      "median": 59,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.57,
+      "median": 1.5,
+      "p10": 1.4,
+      "p90": 1.7,
+      "min": 1.3,
+      "max": 1.9
+     },
+     "legendaryRate": 0
+    },
+    "crew_sound": {
+     "label": "Ses teknisyeni (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 43.42,
+      "median": 43,
+      "p10": 41,
+      "p90": 46,
+      "min": 39,
+      "max": 49
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.51,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.6,
+      "median": 59,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.38,
+      "median": 1.4,
+      "p10": 1.2,
+      "p90": 1.5,
+      "min": 1.1,
+      "max": 1.7
+     },
+     "legendaryRate": 0
+    },
+    "press_hot": {
+     "label": "Basın sıcak (60)",
+     "quality": {
+      "n": 3000,
+      "mean": 40.53,
+      "median": 41,
+      "p10": 38,
+      "p90": 43,
+      "min": 36,
+      "max": 46
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.54,
+      "median": 13,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 17
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 62.75,
+      "median": 66,
+      "p10": 45,
+      "p90": 80,
+      "min": 38,
+      "max": 94
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.37,
+      "median": 1.4,
+      "p10": 1.2,
+      "p90": 1.5,
+      "min": 1.1,
+      "max": 1.7
+     },
+     "legendaryRate": 0
+    },
+    "enc_safe": {
+     "label": "Güvenli bis",
+     "quality": {
+      "n": 3000,
+      "mean": 41.03,
+      "median": 41,
+      "p10": 38,
+      "p90": 44,
+      "min": 35,
+      "max": 47
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.44,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.1,
+      "median": 52,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.29,
+      "median": 1.3,
+      "p10": 1.1,
+      "p90": 1.5,
+      "min": 0.9,
+      "max": 1.7
+     },
+     "legendaryRate": 0
+    },
+    "enc_bold": {
+     "label": "Cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 38.89,
+      "median": 36,
+      "p10": 34,
+      "p90": 46,
+      "min": 32,
+      "max": 49
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.52,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.64,
+      "median": 59,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.14,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1.7,
+      "min": 0.6,
+      "max": 1.9
+     },
+     "legendaryRate": 0
+    },
+    "events3": {
+     "label": "3 sahne olayı (yok)",
+     "quality": {
+      "n": 3000,
+      "mean": 40.5,
+      "median": 40,
+      "p10": 38,
+      "p90": 43,
+      "min": 36,
+      "max": 45
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.44,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 55.08,
+      "median": 52,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.21,
+      "median": 1.2,
+      "p10": 1.1,
+      "p90": 1.4,
+      "min": 0.9,
+      "max": 1.5
+     },
+     "legendaryRate": 0
+    },
+    "all_in": {
+     "label": "Hepsi: sıra + 3 olay + cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 40.59,
+      "median": 43,
+      "p10": 34,
+      "p90": 47,
+      "min": 33,
+      "max": 49
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.59,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 56.12,
+      "median": 59,
+      "p10": 38,
+      "p90": 73,
+      "min": 31,
+      "max": 80
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.27,
+      "median": 1.5,
+      "p10": 0.7,
+      "p90": 1.8,
+      "min": 0.7,
+      "max": 1.9
+     },
+     "legendaryRate": 0
+    }
+   }
+  },
+  "newbie_solo": {
+   "label": "Yeni oyuncu, tek başına (bar)",
+   "venue": "bar",
+   "fame": 1,
+   "rows": {
+    "base": {
+     "label": "Taban (sırasız, olaysız, bissiz)",
+     "quality": {
+      "n": 3000,
+      "mean": 32.97,
+      "median": 33,
+      "p10": 31,
+      "p90": 35,
+      "min": 29,
+      "max": 38
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.57,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 81.01,
+      "median": 84,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.77,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "ordered": {
+     "label": "Setlist sırası (en iyisi sonda)",
+     "quality": {
+      "n": 3000,
+      "mean": 34,
+      "median": 34,
+      "p10": 32,
+      "p90": 36,
+      "min": 29,
+      "max": 38
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.49,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.45,
+      "median": 77,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.83,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "base_ankara": {
+     "label": "Taban, Ankara (alt tür kıyası için)",
+     "quality": {
+      "n": 3000,
+      "mean": 33,
+      "median": 33,
+      "p10": 31,
+      "p90": 35,
+      "min": 29,
+      "max": 37
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.38,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 78.11,
+      "median": 76,
+      "p10": 63,
+      "p90": 95,
+      "min": 57,
+      "max": 101
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.77,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene": {
+     "label": "Alt tür sahne şehrinde (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 37.93,
+      "median": 38,
+      "p10": 35,
+      "p90": 40,
+      "min": 33,
+      "max": 43
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.33,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 77.78,
+      "median": 76,
+      "p10": 63,
+      "p90": 95,
+      "min": 57,
+      "max": 101
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.06,
+      "median": 1.1,
+      "p10": 0.9,
+      "p90": 1.2,
+      "min": 0.8,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene_trend": {
+     "label": "Alt tür sahne + moda (+5)",
+     "quality": {
+      "n": 3000,
+      "mean": 37.92,
+      "median": 38,
+      "p10": 35,
+      "p90": 41,
+      "min": 33,
+      "max": 43
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.34,
+      "median": 12,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 16
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 77.84,
+      "median": 76,
+      "p10": 63,
+      "p90": 95,
+      "min": 57,
+      "max": 101
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.05,
+      "median": 1.1,
+      "p10": 0.9,
+      "p90": 1.2,
+      "min": 0.8,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "sub_niche_big": {
+     "label": "Niş alt tür büyük sahnede (−3)",
+     "quality": {
+      "n": 3000,
+      "mean": 32.96,
+      "median": 33,
+      "p10": 31,
+      "p90": 35,
+      "min": 28,
+      "max": 37
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.44,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.06,
+      "median": 77,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.77,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "set_bonus": {
+     "label": "Set bonusu (+3 sahne)",
+     "quality": {
+      "n": 3000,
+      "mean": 34.64,
+      "median": 35,
+      "p10": 32,
+      "p90": 37,
+      "min": 30,
+      "max": 39
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.48,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.34,
+      "median": 77,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.86,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "affinity": {
+     "label": "Tür uyumu (+3 enstrüman)",
+     "quality": {
+      "n": 3000,
+      "mean": 34.57,
+      "median": 35,
+      "p10": 32,
+      "p90": 37,
+      "min": 30,
+      "max": 39
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.48,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.36,
+      "median": 77,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.86,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "gear_top": {
+     "label": "En iyi dükkân enstrümanı (+12) ve kostüm (+10)",
+     "quality": {
+      "n": 3000,
+      "mean": 35.88,
+      "median": 36,
+      "p10": 33,
+      "p90": 38,
+      "min": 31,
+      "max": 40
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.52,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.67,
+      "median": 84,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.93,
+      "median": 0.9,
+      "p10": 0.8,
+      "p90": 1.1,
+      "min": 0.7,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "fx12": {
+     "label": "6 sis makinesi ($480/konser)",
+     "quality": {
+      "n": 3000,
+      "mean": 35.03,
+      "median": 35,
+      "p10": 33,
+      "p90": 37,
+      "min": 31,
+      "max": 40
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.55,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.86,
+      "median": 84,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.88,
+      "median": 0.9,
+      "p10": 0.8,
+      "p90": 1,
+      "min": 0.7,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "fx_pyro": {
+     "label": "Piroteknik ($800)",
+     "quality": {
+      "n": 3000,
+      "mean": 39.01,
+      "median": 39,
+      "p10": 37,
+      "p90": 41,
+      "min": 35,
+      "max": 43
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.47,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.27,
+      "median": 77,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.12,
+      "median": 1.1,
+      "p10": 1,
+      "p90": 1.2,
+      "min": 0.9,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "fx_mix": {
+     "label": "Sis + konfeti + ışık ($530)",
+     "quality": {
+      "n": 3000,
+      "mean": 38.97,
+      "median": 39,
+      "p10": 37,
+      "p90": 41,
+      "min": 35,
+      "max": 44
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.53,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.71,
+      "median": 84,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.12,
+      "median": 1.1,
+      "p10": 1,
+      "p90": 1.2,
+      "min": 0.9,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "crew_sound": {
+     "label": "Ses teknisyeni (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 36.01,
+      "median": 36,
+      "p10": 34,
+      "p90": 38,
+      "min": 32,
+      "max": 40
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.41,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 79.87,
+      "median": 77,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.94,
+      "median": 0.9,
+      "p10": 0.8,
+      "p90": 1.1,
+      "min": 0.7,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "press_hot": {
+     "label": "Basın sıcak (60)",
+     "quality": {
+      "n": 3000,
+      "mean": 32.98,
+      "median": 33,
+      "p10": 31,
+      "p90": 35,
+      "min": 28,
+      "max": 38
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 12.61,
+      "median": 13,
+      "p10": 10,
+      "p90": 15,
+      "min": 9,
+      "max": 17
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 88.3,
+      "median": 91,
+      "p10": 70,
+      "p90": 105,
+      "min": 63,
+      "max": 119
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.87,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.5,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "enc_safe": {
+     "label": "Güvenli bis",
+     "quality": {
+      "n": 3000,
+      "mean": 32.96,
+      "median": 33,
+      "p10": 31,
+      "p90": 35,
+      "min": 29,
+      "max": 37
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.48,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.33,
+      "median": 84,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.77,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "enc_bold": {
+     "label": "Cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 28.97,
+      "median": 29,
+      "p10": 27,
+      "p90": 31,
+      "min": 25,
+      "max": 33
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.58,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 81.06,
+      "median": 84,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.47,
+      "median": 0.5,
+      "p10": 0.4,
+      "p90": 0.6,
+      "min": 0.3,
+      "max": 0.7
+     },
+     "legendaryRate": 0
+    },
+    "events3": {
+     "label": "3 sahne olayı (yok)",
+     "quality": {
+      "n": 3000,
+      "mean": 32.98,
+      "median": 33,
+      "p10": 31,
+      "p90": 35,
+      "min": 29,
+      "max": 38
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.56,
+      "median": 12,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.92,
+      "median": 84,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.77,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "all_in": {
+     "label": "Hepsi: sıra + 3 olay + cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 30.05,
+      "median": 30,
+      "p10": 28,
+      "p90": 32,
+      "min": 26,
+      "max": 34
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 11.44,
+      "median": 11,
+      "p10": 9,
+      "p90": 14,
+      "min": 8,
+      "max": 15
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 80.09,
+      "median": 77,
+      "p10": 63,
+      "p90": 98,
+      "min": 56,
+      "max": 105
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.53,
+      "median": 0.5,
+      "p10": 0.4,
+      "p90": 0.6,
+      "min": 0.3,
+      "max": 0.7
+     },
+     "legendaryRate": 0
+    }
+   }
+  },
+  "mid_club": {
+   "label": "Orta grup, 4 kişi (kulüp, şöhret 25)",
+   "venue": "club",
+   "fame": 25,
+   "rows": {
+    "base": {
+     "label": "Taban (sırasız, olaysız, bissiz)",
+     "quality": {
+      "n": 3000,
+      "mean": 51.37,
+      "median": 51,
+      "p10": 48,
+      "p90": 55,
+      "min": 45,
+      "max": 57
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.3,
+      "median": 126,
+      "p10": 112,
+      "p90": 140,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1136.73,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1260,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.71,
+      "median": 0.7,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.4,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "ordered": {
+     "label": "Setlist sırası (en iyisi sonda)",
+     "quality": {
+      "n": 3000,
+      "mean": 52.55,
+      "median": 53,
+      "p10": 49,
+      "p90": 56,
+      "min": 46,
+      "max": 58
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.15,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1135.36,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.76,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "base_ankara": {
+     "label": "Taban, Ankara (alt tür kıyası için)",
+     "quality": {
+      "n": 3000,
+      "mean": 51.29,
+      "median": 51,
+      "p10": 48,
+      "p90": 55,
+      "min": 46,
+      "max": 57
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 147.93,
+      "median": 148,
+      "p10": 131,
+      "p90": 165,
+      "min": 124,
+      "max": 173
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1198.32,
+      "median": 1199,
+      "p10": 1061,
+      "p90": 1337,
+      "min": 1004,
+      "max": 1401
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.74,
+      "median": 0.7,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene": {
+     "label": "Alt tür sahne şehrinde (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 56.52,
+      "median": 57,
+      "p10": 53,
+      "p90": 60,
+      "min": 50,
+      "max": 63
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 148.27,
+      "median": 148,
+      "p10": 131,
+      "p90": 165,
+      "min": 124,
+      "max": 173
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1201.08,
+      "median": 1199,
+      "p10": 1061,
+      "p90": 1337,
+      "min": 1004,
+      "max": 1401
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.97,
+      "median": 1,
+      "p10": 0.8,
+      "p90": 1.1,
+      "min": 0.7,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene_trend": {
+     "label": "Alt tür sahne + moda (+5)",
+     "quality": {
+      "n": 3000,
+      "mean": 56.49,
+      "median": 56,
+      "p10": 53,
+      "p90": 60,
+      "min": 50,
+      "max": 63
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 148.29,
+      "median": 148,
+      "p10": 131,
+      "p90": 166,
+      "min": 124,
+      "max": 173
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1201.23,
+      "median": 1199,
+      "p10": 1061,
+      "p90": 1345,
+      "min": 1004,
+      "max": 1401
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.97,
+      "median": 1,
+      "p10": 0.8,
+      "p90": 1.1,
+      "min": 0.6,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "sub_niche_big": {
+     "label": "Niş alt tür büyük sahnede (−3)",
+     "quality": {
+      "n": 3000,
+      "mean": 51.38,
+      "median": 51,
+      "p10": 48,
+      "p90": 55,
+      "min": 46,
+      "max": 58
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.25,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1136.28,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.71,
+      "median": 0.7,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "set_bonus": {
+     "label": "Set bonusu (+3 sahne)",
+     "quality": {
+      "n": 3000,
+      "mean": 53.19,
+      "median": 53,
+      "p10": 50,
+      "p90": 57,
+      "min": 47,
+      "max": 59
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.32,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1136.89,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.79,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "affinity": {
+     "label": "Tür uyumu (+3 enstrüman)",
+     "quality": {
+      "n": 3000,
+      "mean": 53.01,
+      "median": 53,
+      "p10": 50,
+      "p90": 56.1,
+      "min": 47,
+      "max": 59
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.47,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1138.27,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.78,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "gear_top": {
+     "label": "En iyi dükkân enstrümanı (+12) ve kostüm (+10)",
+     "quality": {
+      "n": 3000,
+      "mean": 54.7,
+      "median": 55,
+      "p10": 51,
+      "p90": 58,
+      "min": 49,
+      "max": 61
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.25,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1136.25,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.85,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "fx12": {
+     "label": "6 sis makinesi ($480/konser)",
+     "quality": {
+      "n": 3000,
+      "mean": 53.33,
+      "median": 53,
+      "p10": 50,
+      "p90": 57,
+      "min": 47,
+      "max": 59
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.24,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1136.15,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.79,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "fx_pyro": {
+     "label": "Piroteknik ($800)",
+     "quality": {
+      "n": 3000,
+      "mean": 57.4,
+      "median": 57,
+      "p10": 54,
+      "p90": 61,
+      "min": 51,
+      "max": 64
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.14,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1135.22,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.97,
+      "median": 1,
+      "p10": 0.8,
+      "p90": 1.1,
+      "min": 0.7,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "fx_mix": {
+     "label": "Sis + konfeti + ışık ($530)",
+     "quality": {
+      "n": 3000,
+      "mean": 57.38,
+      "median": 57,
+      "p10": 54,
+      "p90": 61,
+      "min": 52,
+      "max": 64
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.21,
+      "median": 127,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1135.88,
+      "median": 1143,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.97,
+      "median": 1,
+      "p10": 0.8,
+      "p90": 1.1,
+      "min": 0.7,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "crew_sound": {
+     "label": "Ses teknisyeni (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 54.48,
+      "median": 55,
+      "p10": 51,
+      "p90": 58,
+      "min": 48,
+      "max": 60
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.14,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1135.24,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.84,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "press_hot": {
+     "label": "Basın sıcak (60)",
+     "quality": {
+      "n": 3000,
+      "mean": 51.38,
+      "median": 51,
+      "p10": 48,
+      "p90": 55,
+      "min": 46,
+      "max": 57
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 138.75,
+      "median": 139,
+      "p10": 122,
+      "p90": 154,
+      "min": 117,
+      "max": 162
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1248.77,
+      "median": 1251,
+      "p10": 1098,
+      "p90": 1386,
+      "min": 1053,
+      "max": 1458
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.82,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 1,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "enc_safe": {
+     "label": "Güvenli bis",
+     "quality": {
+      "n": 3000,
+      "mean": 52.36,
+      "median": 52,
+      "p10": 49,
+      "p90": 56,
+      "min": 47,
+      "max": 58
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 125.92,
+      "median": 126,
+      "p10": 111,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1133.23,
+      "median": 1134,
+      "p10": 999,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.79,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "enc_bold": {
+     "label": "Cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 51.5,
+      "median": 53,
+      "p10": 44,
+      "p90": 57,
+      "min": 40,
+      "max": 62
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.3,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1136.68,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.77,
+      "median": 0.8,
+      "p10": 0.3,
+      "p90": 1.1,
+      "min": 0.2,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "events3": {
+     "label": "3 sahne olayı (banter, singalong, unplugged)",
+     "quality": {
+      "n": 3000,
+      "mean": 51.18,
+      "median": 51,
+      "p10": 45,
+      "p90": 58,
+      "min": 37,
+      "max": 63
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.45,
+      "median": 127,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1138.01,
+      "median": 1143,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.7,
+      "median": 0.7,
+      "p10": 0.4,
+      "p90": 1,
+      "min": 0.1,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "all_in": {
+     "label": "Hepsi: sıra + 3 olay + cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 52.27,
+      "median": 53,
+      "p10": 43,
+      "p90": 61,
+      "min": 34,
+      "max": 67
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.21,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1135.9,
+      "median": 1134,
+      "p10": 1008,
+      "p90": 1269,
+      "min": 945,
+      "max": 1323
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.8,
+      "median": 0.8,
+      "p10": 0.3,
+      "p90": 1.3,
+      "min": -0.1,
+      "max": 1.6
+     },
+     "legendaryRate": 0
+    }
+   }
+  },
+  "mid_club_plus2": {
+   "label": "Orta grup + 2 kiralık (kulüp)",
+   "venue": "club",
+   "fame": 25,
+   "rows": {
+    "base": {
+     "label": "Taban (sırasız, olaysız, bissiz)",
+     "quality": {
+      "n": 3000,
+      "mean": 53.08,
+      "median": 53,
+      "p10": 50,
+      "p90": 57,
+      "min": 47,
+      "max": 60
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.1,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1014.87,
+      "median": 1014,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.78,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "ordered": {
+     "label": "Setlist sırası (en iyisi sonda)",
+     "quality": {
+      "n": 3000,
+      "mean": 54.27,
+      "median": 54,
+      "p10": 51,
+      "p90": 58,
+      "min": 48,
+      "max": 60
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.47,
+      "median": 127,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1018.22,
+      "median": 1023,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.83,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "base_ankara": {
+     "label": "Taban, Ankara (alt tür kıyası için)",
+     "quality": {
+      "n": 3000,
+      "mean": 53.09,
+      "median": 53,
+      "p10": 50,
+      "p90": 57,
+      "min": 47,
+      "max": 59
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 148.54,
+      "median": 149,
+      "p10": 131,
+      "p90": 165,
+      "min": 124,
+      "max": 173
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1083.22,
+      "median": 1087,
+      "p10": 941,
+      "p90": 1217,
+      "min": 884,
+      "max": 1281
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.82,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene": {
+     "label": "Alt tür sahne şehrinde (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 58.37,
+      "median": 58,
+      "p10": 55,
+      "p90": 62,
+      "min": 52,
+      "max": 65
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 148.28,
+      "median": 148,
+      "p10": 131,
+      "p90": 165,
+      "min": 124,
+      "max": 173
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1081.14,
+      "median": 1079,
+      "p10": 941,
+      "p90": 1217,
+      "min": 884,
+      "max": 1281
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.06,
+      "median": 1.1,
+      "p10": 0.9,
+      "p90": 1.2,
+      "min": 0.8,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene_trend": {
+     "label": "Alt tür sahne + moda (+5)",
+     "quality": {
+      "n": 3000,
+      "mean": 58.27,
+      "median": 58,
+      "p10": 55,
+      "p90": 62,
+      "min": 52,
+      "max": 65
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 148.27,
+      "median": 148,
+      "p10": 131,
+      "p90": 166,
+      "min": 124,
+      "max": 173
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1081.07,
+      "median": 1079,
+      "p10": 941,
+      "p90": 1225,
+      "min": 884,
+      "max": 1281
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.05,
+      "median": 1.1,
+      "p10": 0.9,
+      "p90": 1.2,
+      "min": 0.7,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "sub_niche_big": {
+     "label": "Niş alt tür büyük sahnede (−3)",
+     "quality": {
+      "n": 3000,
+      "mean": 53.09,
+      "median": 53,
+      "p10": 50,
+      "p90": 57,
+      "min": 47,
+      "max": 59
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.07,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1014.59,
+      "median": 1014,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.78,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "set_bonus": {
+     "label": "Set bonusu (+3 sahne)",
+     "quality": {
+      "n": 3000,
+      "mean": 54.81,
+      "median": 55,
+      "p10": 51,
+      "p90": 58,
+      "min": 49,
+      "max": 61
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.09,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1014.81,
+      "median": 1014,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.86,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "affinity": {
+     "label": "Tür uyumu (+3 enstrüman)",
+     "quality": {
+      "n": 3000,
+      "mean": 54.66,
+      "median": 55,
+      "p10": 51,
+      "p90": 58,
+      "min": 49,
+      "max": 61
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.36,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1017.23,
+      "median": 1014,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.85,
+      "median": 0.8,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "gear_top": {
+     "label": "En iyi dükkân enstrümanı (+12) ve kostüm (+10)",
+     "quality": {
+      "n": 3000,
+      "mean": 55.36,
+      "median": 55,
+      "p10": 52,
+      "p90": 59,
+      "min": 49,
+      "max": 62
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.37,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1017.32,
+      "median": 1014,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.88,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "fx12": {
+     "label": "6 sis makinesi ($480/konser)",
+     "quality": {
+      "n": 3000,
+      "mean": 55.13,
+      "median": 55,
+      "p10": 52,
+      "p90": 59,
+      "min": 49,
+      "max": 61
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 125.92,
+      "median": 126,
+      "p10": 112,
+      "p90": 140,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1013.27,
+      "median": 1014,
+      "p10": 888,
+      "p90": 1140,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.87,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "fx_pyro": {
+     "label": "Piroteknik ($800)",
+     "quality": {
+      "n": 3000,
+      "mean": 59.12,
+      "median": 59,
+      "p10": 56,
+      "p90": 63,
+      "min": 53,
+      "max": 65
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.16,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1015.4,
+      "median": 1014,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.04,
+      "median": 1,
+      "p10": 0.9,
+      "p90": 1.2,
+      "min": 0.8,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "fx_mix": {
+     "label": "Sis + konfeti + ışık ($530)",
+     "quality": {
+      "n": 3000,
+      "mean": 59.19,
+      "median": 59,
+      "p10": 56,
+      "p90": 63,
+      "min": 53,
+      "max": 66
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.67,
+      "median": 127,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1020.03,
+      "median": 1023,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 1.05,
+      "median": 1,
+      "p10": 0.9,
+      "p90": 1.2,
+      "min": 0.8,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "crew_sound": {
+     "label": "Ses teknisyeni (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 56.14,
+      "median": 56,
+      "p10": 53,
+      "p90": 60,
+      "min": 50,
+      "max": 62
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.52,
+      "median": 127,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1018.64,
+      "median": 1023,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.91,
+      "median": 0.9,
+      "p10": 0.8,
+      "p90": 1.1,
+      "min": 0.6,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "press_hot": {
+     "label": "Basın sıcak (60)",
+     "quality": {
+      "n": 3000,
+      "mean": 53.16,
+      "median": 53,
+      "p10": 50,
+      "p90": 57,
+      "min": 47,
+      "max": 59
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 139.04,
+      "median": 139.5,
+      "p10": 123,
+      "p90": 155,
+      "min": 116,
+      "max": 162
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1131.35,
+      "median": 1135.5,
+      "p10": 987,
+      "p90": 1275,
+      "min": 924,
+      "max": 1338
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.91,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1.1,
+      "min": 0.6,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "enc_safe": {
+     "label": "Güvenli bis",
+     "quality": {
+      "n": 3000,
+      "mean": 54.21,
+      "median": 54,
+      "p10": 51,
+      "p90": 58,
+      "min": 48,
+      "max": 60
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 125.91,
+      "median": 126,
+      "p10": 111,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1013.19,
+      "median": 1014,
+      "p10": 879,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.87,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1,
+      "min": 0.6,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "enc_bold": {
+     "label": "Cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 53.09,
+      "median": 54,
+      "p10": 45,
+      "p90": 59,
+      "min": 41,
+      "max": 62
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.4,
+      "median": 127,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1017.59,
+      "median": 1023,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.84,
+      "median": 0.9,
+      "p10": 0.4,
+      "p90": 1.2,
+      "min": 0.2,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "events3": {
+     "label": "3 sahne olayı (banter, singalong, unplugged)",
+     "quality": {
+      "n": 3000,
+      "mean": 52.77,
+      "median": 53,
+      "p10": 46,
+      "p90": 59,
+      "min": 38,
+      "max": 65
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.14,
+      "median": 126,
+      "p10": 112,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1015.24,
+      "median": 1014,
+      "p10": 888,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.77,
+      "median": 0.8,
+      "p10": 0.5,
+      "p90": 1.1,
+      "min": 0.1,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "all_in": {
+     "label": "Hepsi: sıra + 3 olay + cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 54.08,
+      "median": 55,
+      "p10": 45,
+      "p90": 63,
+      "min": 34,
+      "max": 69
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 126.22,
+      "median": 127,
+      "p10": 111,
+      "p90": 141,
+      "min": 105,
+      "max": 147
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 1016,
+      "median": 1023,
+      "p10": 879,
+      "p90": 1149,
+      "min": 825,
+      "max": 1203
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.88,
+      "median": 0.9,
+      "p10": 0.4,
+      "p90": 1.3,
+      "min": -0.1,
+      "max": 1.7
+     },
+     "legendaryRate": 0
+    }
+   }
+  },
+  "strong_hall": {
+   "label": "Güçlü grup (salon, şöhret 55)",
+   "venue": "hall",
+   "fame": 55,
+   "rows": {
+    "base": {
+     "label": "Taban (sırasız, olaysız, bissiz)",
+     "quality": {
+      "n": 3000,
+      "mean": 65.54,
+      "median": 66,
+      "p10": 61,
+      "p90": 70,
+      "min": 58,
+      "max": 73
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1424.23,
+      "median": 1424,
+      "p10": 1254,
+      "p90": 1593.1,
+      "min": 1208,
+      "max": 1639
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6836.32,
+      "median": 6835,
+      "p10": 6019,
+      "p90": 7646.5,
+      "min": 5798,
+      "max": 7867
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.66,
+      "median": 0.7,
+      "p10": 0.5,
+      "p90": 0.8,
+      "min": 0.3,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "ordered": {
+     "label": "Setlist sırası (en iyisi sonda)",
+     "quality": {
+      "n": 3000,
+      "mean": 66.74,
+      "median": 67,
+      "p10": 62,
+      "p90": 71,
+      "min": 60,
+      "max": 73
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1423.89,
+      "median": 1425,
+      "p10": 1251,
+      "p90": 1597.1,
+      "min": 1209,
+      "max": 1639
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6834.68,
+      "median": 6840,
+      "p10": 6005,
+      "p90": 7666.4,
+      "min": 5803,
+      "max": 7867
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.71,
+      "median": 0.7,
+      "p10": 0.5,
+      "p90": 0.9,
+      "min": 0.4,
+      "max": 1
+     },
+     "legendaryRate": 0
+    },
+    "base_ankara": {
+     "label": "Taban, Ankara (alt tür kıyası için)",
+     "quality": {
+      "n": 3000,
+      "mean": 65.61,
+      "median": 66,
+      "p10": 61,
+      "p90": 70,
+      "min": 59,
+      "max": 73
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1678.74,
+      "median": 1682,
+      "p10": 1475,
+      "p90": 1881,
+      "min": 1430,
+      "max": 1936
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 7252.15,
+      "median": 7266,
+      "p10": 6372,
+      "p90": 8126,
+      "min": 6178,
+      "max": 8364
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.71,
+      "median": 0.7,
+      "p10": 0.5,
+      "p90": 0.9,
+      "min": 0.4,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene": {
+     "label": "Alt tür sahne şehrinde (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 70.81,
+      "median": 71,
+      "p10": 66,
+      "p90": 75,
+      "min": 64,
+      "max": 79
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1684.27,
+      "median": 1687,
+      "p10": 1482,
+      "p90": 1880,
+      "min": 1429,
+      "max": 1936
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 7276.03,
+      "median": 7288,
+      "p10": 6402,
+      "p90": 8122,
+      "min": 6173,
+      "max": 8364
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.95,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1.2,
+      "min": 0.6,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene_trend": {
+     "label": "Alt tür sahne + moda (+5)",
+     "quality": {
+      "n": 3000,
+      "mean": 70.93,
+      "median": 71,
+      "p10": 66,
+      "p90": 75,
+      "min": 64,
+      "max": 78
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1679.74,
+      "median": 1681,
+      "p10": 1477,
+      "p90": 1879.1,
+      "min": 1428,
+      "max": 1936
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 7256.49,
+      "median": 7262,
+      "p10": 6381,
+      "p90": 8117.5,
+      "min": 6169,
+      "max": 8364
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.95,
+      "median": 1,
+      "p10": 0.7,
+      "p90": 1.2,
+      "min": 0.6,
+      "max": 1.4
+     },
+     "legendaryRate": 0
+    },
+    "sub_niche_big": {
+     "label": "Niş alt tür büyük sahnede (−3)",
+     "quality": {
+      "n": 3000,
+      "mean": 62.32,
+      "median": 62,
+      "p10": 58,
+      "p90": 66,
+      "min": 55,
+      "max": 69
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1427.22,
+      "median": 1429,
+      "p10": 1256,
+      "p90": 1596,
+      "min": 1208,
+      "max": 1639
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6850.64,
+      "median": 6859,
+      "p10": 6029,
+      "p90": 7661,
+      "min": 5798,
+      "max": 7867
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.52,
+      "median": 0.5,
+      "p10": 0.4,
+      "p90": 0.7,
+      "min": 0.2,
+      "max": 0.8
+     },
+     "legendaryRate": 0
+    },
+    "set_bonus": {
+     "label": "Set bonusu (+3 sahne)",
+     "quality": {
+      "n": 3000,
+      "mean": 67.42,
+      "median": 67,
+      "p10": 63,
+      "p90": 72,
+      "min": 60,
+      "max": 74
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1423.98,
+      "median": 1425,
+      "p10": 1258,
+      "p90": 1591,
+      "min": 1208,
+      "max": 1640
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6835.1,
+      "median": 6840,
+      "p10": 6038,
+      "p90": 7637,
+      "min": 5798,
+      "max": 7872
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.74,
+      "median": 0.7,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.4,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "affinity": {
+     "label": "Tür uyumu (+3 enstrüman)",
+     "quality": {
+      "n": 3000,
+      "mean": 67.27,
+      "median": 67,
+      "p10": 63,
+      "p90": 71,
+      "min": 60,
+      "max": 74
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1425.04,
+      "median": 1423,
+      "p10": 1251,
+      "p90": 1597,
+      "min": 1210,
+      "max": 1639
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6840.19,
+      "median": 6830,
+      "p10": 6005,
+      "p90": 7666,
+      "min": 5808,
+      "max": 7867
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.73,
+      "median": 0.7,
+      "p10": 0.59,
+      "p90": 0.9,
+      "min": 0.4,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "gear_top": {
+     "label": "En iyi dükkân enstrümanı (+12) ve kostüm (+10)",
+     "quality": {
+      "n": 3000,
+      "mean": 69.34,
+      "median": 69,
+      "p10": 65,
+      "p90": 74,
+      "min": 62,
+      "max": 77
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1423.89,
+      "median": 1424,
+      "p10": 1256.9,
+      "p90": 1595,
+      "min": 1210,
+      "max": 1638
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6834.66,
+      "median": 6835,
+      "p10": 6033.5,
+      "p90": 7656,
+      "min": 5808,
+      "max": 7862
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.82,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 1,
+      "min": 0.5,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "fx12": {
+     "label": "6 sis makinesi ($480/konser)",
+     "quality": {
+      "n": 3000,
+      "mean": 67.55,
+      "median": 68,
+      "p10": 63,
+      "p90": 72,
+      "min": 60,
+      "max": 75
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1424.55,
+      "median": 1425,
+      "p10": 1256,
+      "p90": 1592,
+      "min": 1209,
+      "max": 1639
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6837.84,
+      "median": 6840,
+      "p10": 6029,
+      "p90": 7642,
+      "min": 5803,
+      "max": 7867
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.74,
+      "median": 0.7,
+      "p10": 0.6,
+      "p90": 0.9,
+      "min": 0.4,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "fx_pyro": {
+     "label": "Piroteknik ($800)",
+     "quality": {
+      "n": 3000,
+      "mean": 71.57,
+      "median": 72,
+      "p10": 67,
+      "p90": 76,
+      "min": 64,
+      "max": 79
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1427.94,
+      "median": 1433,
+      "p10": 1256,
+      "p90": 1594.1,
+      "min": 1209,
+      "max": 1640
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6854.14,
+      "median": 6878,
+      "p10": 6029,
+      "p90": 7651.5,
+      "min": 5803,
+      "max": 7872
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.91,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1.1,
+      "min": 0.6,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "fx_mix": {
+     "label": "Sis + konfeti + ışık ($530)",
+     "quality": {
+      "n": 3000,
+      "mean": 71.55,
+      "median": 72,
+      "p10": 67,
+      "p90": 76,
+      "min": 64,
+      "max": 79
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1423.81,
+      "median": 1423,
+      "p10": 1253,
+      "p90": 1594,
+      "min": 1209,
+      "max": 1638
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6834.3,
+      "median": 6830,
+      "p10": 6014,
+      "p90": 7651,
+      "min": 5803,
+      "max": 7862
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.91,
+      "median": 0.9,
+      "p10": 0.7,
+      "p90": 1.1,
+      "min": 0.6,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "crew_sound": {
+     "label": "Ses teknisyeni (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 68.51,
+      "median": 68,
+      "p10": 64,
+      "p90": 73,
+      "min": 62,
+      "max": 76
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1426.06,
+      "median": 1427,
+      "p10": 1253,
+      "p90": 1595,
+      "min": 1209,
+      "max": 1638
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6845.07,
+      "median": 6850,
+      "p10": 6014,
+      "p90": 7656,
+      "min": 5803,
+      "max": 7862
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.78,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 1,
+      "min": 0.5,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "press_hot": {
+     "label": "Basın sıcak (60)",
+     "quality": {
+      "n": 3000,
+      "mean": 65.62,
+      "median": 66,
+      "p10": 61,
+      "p90": 70,
+      "min": 58,
+      "max": 73
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1572.25,
+      "median": 1573,
+      "p10": 1384,
+      "p90": 1758,
+      "min": 1331,
+      "max": 1802
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 7546.81,
+      "median": 7550,
+      "p10": 6643,
+      "p90": 8438,
+      "min": 6389,
+      "max": 8650
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.78,
+      "median": 0.8,
+      "p10": 0.6,
+      "p90": 1,
+      "min": 0.4,
+      "max": 1.2
+     },
+     "legendaryRate": 0
+    },
+    "enc_safe": {
+     "label": "Güvenli bis",
+     "quality": {
+      "n": 3000,
+      "mean": 66.48,
+      "median": 66,
+      "p10": 62,
+      "p90": 71,
+      "min": 59,
+      "max": 74
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1422.58,
+      "median": 1420,
+      "p10": 1253,
+      "p90": 1591,
+      "min": 1209,
+      "max": 1640
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6828.39,
+      "median": 6816,
+      "p10": 6014,
+      "p90": 7637,
+      "min": 5803,
+      "max": 7872
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.73,
+      "median": 0.7,
+      "p10": 0.5,
+      "p90": 0.9,
+      "min": 0.4,
+      "max": 1.1
+     },
+     "legendaryRate": 0
+    },
+    "enc_bold": {
+     "label": "Cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 65.81,
+      "median": 66,
+      "p10": 57.9,
+      "p90": 72,
+      "min": 53,
+      "max": 76
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1422.09,
+      "median": 1426,
+      "p10": 1253,
+      "p90": 1592,
+      "min": 1209,
+      "max": 1639
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6826.05,
+      "median": 6845,
+      "p10": 6014,
+      "p90": 7642,
+      "min": 5803,
+      "max": 7867
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.72,
+      "median": 0.8,
+      "p10": 0.3,
+      "p90": 1.1,
+      "min": 0.1,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "events3": {
+     "label": "3 sahne olayı (banter, singalong, solo)",
+     "quality": {
+      "n": 3000,
+      "mean": 67.72,
+      "median": 68,
+      "p10": 61,
+      "p90": 75,
+      "min": 50,
+      "max": 80
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1422.38,
+      "median": 1425,
+      "p10": 1252,
+      "p90": 1592,
+      "min": 1209,
+      "max": 1638
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6827.4,
+      "median": 6840,
+      "p10": 6010,
+      "p90": 7642,
+      "min": 5803,
+      "max": 7862
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.75,
+      "median": 0.8,
+      "p10": 0.4,
+      "p90": 1.1,
+      "min": 0,
+      "max": 1.3
+     },
+     "legendaryRate": 0
+    },
+    "all_in": {
+     "label": "Hepsi: sıra + 3 olay + cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 69.38,
+      "median": 70,
+      "p10": 59,
+      "p90": 78,
+      "min": 44,
+      "max": 84
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 1422.37,
+      "median": 1421,
+      "p10": 1253,
+      "p90": 1593,
+      "min": 1210,
+      "max": 1640
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 6827.36,
+      "median": 6821,
+      "p10": 6014,
+      "p90": 7646,
+      "min": 5808,
+      "max": 7872
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.88,
+      "median": 0.9,
+      "p10": 0.4,
+      "p90": 1.3,
+      "min": -1,
+      "max": 1.6
+     },
+     "legendaryRate": 0
+    }
+   }
+  },
+  "star_stadium": {
+   "label": "Yıldız grup (stadyum, şöhret 85)",
+   "venue": "stadium",
+   "fame": 85,
+   "rows": {
+    "base": {
+     "label": "Taban (sırasız, olaysız, bissiz)",
+     "quality": {
+      "n": 3000,
+      "mean": 81.06,
+      "median": 81,
+      "p10": 76,
+      "p90": 86,
+      "min": 73,
+      "max": 90
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19757.34,
+      "median": 20000,
+      "p10": 18865.9,
+      "p90": 20000,
+      "min": 18239,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31611.74,
+      "median": 32000,
+      "p10": 30185.8,
+      "p90": 32000,
+      "min": 29182,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.32,
+      "median": 0.3,
+      "p10": 0.2,
+      "p90": 0.4,
+      "min": 0.2,
+      "max": 0.5
+     },
+     "legendaryRate": 0
+    },
+    "ordered": {
+     "label": "Setlist sırası (en iyisi sonda)",
+     "quality": {
+      "n": 3000,
+      "mean": 82.4,
+      "median": 82,
+      "p10": 77,
+      "p90": 88,
+      "min": 74,
+      "max": 91
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19761.99,
+      "median": 20000,
+      "p10": 18911.7,
+      "p90": 20000,
+      "min": 18241,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31619.18,
+      "median": 32000,
+      "p10": 30258.5,
+      "p90": 32000,
+      "min": 29186,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.34,
+      "median": 0.3,
+      "p10": 0.2,
+      "p90": 0.4,
+      "min": 0.2,
+      "max": 0.7
+     },
+     "legendaryRate": 0.0003333333333333333
+    },
+    "base_ankara": {
+     "label": "Taban, Ankara (alt tür kıyası için)",
+     "quality": {
+      "n": 3000,
+      "mean": 81.1,
+      "median": 81,
+      "p10": 76,
+      "p90": 86,
+      "min": 73,
+      "max": 90
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 20000,
+      "median": 20000,
+      "p10": 20000,
+      "p90": 20000,
+      "min": 20000,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 28800,
+      "median": 28800,
+      "p10": 28800,
+      "p90": 28800,
+      "min": 28800,
+      "max": 28800
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.32,
+      "median": 0.3,
+      "p10": 0.2,
+      "p90": 0.4,
+      "min": 0.2,
+      "max": 0.5
+     },
+     "legendaryRate": 0
+    },
+    "sub_scene": {
+     "label": "Alt tür sahne şehrinde (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 86.51,
+      "median": 87,
+      "p10": 81,
+      "p90": 92,
+      "min": 78,
+      "max": 96
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 20000,
+      "median": 20000,
+      "p10": 20000,
+      "p90": 20000,
+      "min": 20000,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 28800,
+      "median": 28800,
+      "p10": 28800,
+      "p90": 28800,
+      "min": 28800,
+      "max": 28800
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.43,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.3,
+      "max": 0.9
+     },
+     "legendaryRate": 0.010333333333333333
+    },
+    "sub_scene_trend": {
+     "label": "Alt tür sahne + moda (+5)",
+     "quality": {
+      "n": 3000,
+      "mean": 86.5,
+      "median": 87,
+      "p10": 81,
+      "p90": 92,
+      "min": 77,
+      "max": 96
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 20000,
+      "median": 20000,
+      "p10": 20000,
+      "p90": 20000,
+      "min": 20000,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 28800,
+      "median": 28800,
+      "p10": 28800,
+      "p90": 28800,
+      "min": 28800,
+      "max": 28800
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.43,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.2,
+      "max": 0.9
+     },
+     "legendaryRate": 0.008333333333333333
+    },
+    "sub_niche_big": {
+     "label": "Niş alt tür büyük sahnede (−3)",
+     "quality": {
+      "n": 3000,
+      "mean": 77.82,
+      "median": 78,
+      "p10": 73,
+      "p90": 83,
+      "min": 70,
+      "max": 86
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19760.33,
+      "median": 20000,
+      "p10": 18879.9,
+      "p90": 20000,
+      "min": 18243,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31616.53,
+      "median": 32000,
+      "p10": 30207.8,
+      "p90": 32000,
+      "min": 29189,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.25,
+      "median": 0.3,
+      "p10": 0.2,
+      "p90": 0.4,
+      "min": 0.1,
+      "max": 0.4
+     },
+     "legendaryRate": 0
+    },
+    "set_bonus": {
+     "label": "Set bonusu (+3 sahne)",
+     "quality": {
+      "n": 3000,
+      "mean": 83.01,
+      "median": 83,
+      "p10": 78,
+      "p90": 88,
+      "min": 74,
+      "max": 92
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19764.54,
+      "median": 20000,
+      "p10": 18888.9,
+      "p90": 20000,
+      "min": 18241,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31623.27,
+      "median": 32000,
+      "p10": 30221.9,
+      "p90": 32000,
+      "min": 29186,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.36,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.2,
+      "max": 0.8
+     },
+     "legendaryRate": 0.0006666666666666666
+    },
+    "affinity": {
+     "label": "Tür uyumu (+3 enstrüman)",
+     "quality": {
+      "n": 3000,
+      "mean": 82.92,
+      "median": 83,
+      "p10": 78,
+      "p90": 88,
+      "min": 74,
+      "max": 92
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19748.59,
+      "median": 20000,
+      "p10": 18829,
+      "p90": 20000,
+      "min": 18241,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31597.75,
+      "median": 32000,
+      "p10": 30126,
+      "p90": 32000,
+      "min": 29186,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.36,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.2,
+      "max": 0.7
+     },
+     "legendaryRate": 0.0006666666666666666
+    },
+    "gear_top": {
+     "label": "En iyi dükkân enstrümanı (+12) ve kostüm (+10)",
+     "quality": {
+      "n": 3000,
+      "mean": 85.31,
+      "median": 85,
+      "p10": 80,
+      "p90": 91,
+      "min": 76,
+      "max": 95
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19753.32,
+      "median": 20000,
+      "p10": 18883.9,
+      "p90": 20000,
+      "min": 18241,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31605.32,
+      "median": 32000,
+      "p10": 30213.9,
+      "p90": 32000,
+      "min": 29186,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.4,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.2,
+      "max": 0.8
+     },
+     "legendaryRate": 0.008333333333333333
+    },
+    "fx12": {
+     "label": "6 sis makinesi ($480/konser)",
+     "quality": {
+      "n": 3000,
+      "mean": 83.12,
+      "median": 83,
+      "p10": 78,
+      "p90": 88,
+      "min": 75,
+      "max": 92
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19753.71,
+      "median": 20000,
+      "p10": 18879.5,
+      "p90": 20000,
+      "min": 18238,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31605.93,
+      "median": 32000,
+      "p10": 30207.2,
+      "p90": 32000,
+      "min": 29181,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.36,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.2,
+      "max": 0.8
+     },
+     "legendaryRate": 0.0016666666666666668
+    },
+    "fx_pyro": {
+     "label": "Piroteknik ($800)",
+     "quality": {
+      "n": 3000,
+      "mean": 87.06,
+      "median": 87,
+      "p10": 82,
+      "p90": 92,
+      "min": 78,
+      "max": 95
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19748.77,
+      "median": 20000,
+      "p10": 18868.5,
+      "p90": 20000,
+      "min": 18237,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31598.04,
+      "median": 32000,
+      "p10": 30189.2,
+      "p90": 32000,
+      "min": 29179,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.43,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.3,
+      "max": 0.9
+     },
+     "legendaryRate": 0.009666666666666667
+    },
+    "fx_mix": {
+     "label": "Sis + konfeti + ışık ($530)",
+     "quality": {
+      "n": 3000,
+      "mean": 87.01,
+      "median": 87,
+      "p10": 82,
+      "p90": 92,
+      "min": 79,
+      "max": 96
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19762.4,
+      "median": 20000,
+      "p10": 18906.7,
+      "p90": 20000,
+      "min": 18238,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31619.84,
+      "median": 32000,
+      "p10": 30250.5,
+      "p90": 32000,
+      "min": 29181,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.43,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.3,
+      "max": 0.9
+     },
+     "legendaryRate": 0.008666666666666666
+    },
+    "crew_sound": {
+     "label": "Ses teknisyeni (+3)",
+     "quality": {
+      "n": 3000,
+      "mean": 83.99,
+      "median": 84,
+      "p10": 79,
+      "p90": 89,
+      "min": 76,
+      "max": 92
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19747.32,
+      "median": 20000,
+      "p10": 18836.6,
+      "p90": 20000,
+      "min": 18239,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31595.71,
+      "median": 32000,
+      "p10": 30138.4,
+      "p90": 32000,
+      "min": 29182,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.38,
+      "median": 0.4,
+      "p10": 0.3,
+      "p90": 0.5,
+      "min": 0.2,
+      "max": 0.8
+     },
+     "legendaryRate": 0.0033333333333333335
+    },
+    "press_hot": {
+     "label": "Basın sıcak (60)",
+     "quality": {
+      "n": 3000,
+      "mean": 81.18,
+      "median": 81,
+      "p10": 76,
+      "p90": 86,
+      "min": 72,
+      "max": 90
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 20000,
+      "median": 20000,
+      "p10": 20000,
+      "p90": 20000,
+      "min": 20000,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 32000,
+      "median": 32000,
+      "p10": 32000,
+      "p90": 32000,
+      "min": 32000,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.36,
+      "median": 0.4,
+      "p10": 0.2,
+      "p90": 0.5,
+      "min": 0.2,
+      "max": 0.6
+     },
+     "legendaryRate": 0
+    },
+    "enc_safe": {
+     "label": "Güvenli bis",
+     "quality": {
+      "n": 3000,
+      "mean": 82.12,
+      "median": 82,
+      "p10": 77,
+      "p90": 87,
+      "min": 74,
+      "max": 91
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19764.38,
+      "median": 20000,
+      "p10": 18904.9,
+      "p90": 20000,
+      "min": 18236,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31623,
+      "median": 32000,
+      "p10": 30247.8,
+      "p90": 32000,
+      "min": 29178,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.35,
+      "median": 0.4,
+      "p10": 0.2,
+      "p90": 0.5,
+      "min": 0.2,
+      "max": 0.8
+     },
+     "legendaryRate": 0.0003333333333333333
+    },
+    "enc_bold": {
+     "label": "Cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 82.12,
+      "median": 82,
+      "p10": 74,
+      "p90": 89,
+      "min": 67,
+      "max": 94
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19769.05,
+      "median": 20000,
+      "p10": 18925,
+      "p90": 20000,
+      "min": 18243,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31630.48,
+      "median": 32000,
+      "p10": 30280,
+      "p90": 32000,
+      "min": 29189,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.36,
+      "median": 0.4,
+      "p10": 0.2,
+      "p90": 0.5,
+      "min": 0,
+      "max": 0.9
+     },
+     "legendaryRate": 0.0033333333333333335
+    },
+    "events3": {
+     "label": "3 sahne olayı (banter, singalong, solo)",
+     "quality": {
+      "n": 3000,
+      "mean": 84.3,
+      "median": 84,
+      "p10": 77,
+      "p90": 92,
+      "min": 63,
+      "max": 96
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19756.9,
+      "median": 20000,
+      "p10": 18826.9,
+      "p90": 20000,
+      "min": 18243,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31611.04,
+      "median": 32000,
+      "p10": 30122.9,
+      "p90": 32000,
+      "min": 29189,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.38,
+      "median": 0.4,
+      "p10": 0.2,
+      "p90": 0.5,
+      "min": -0.4,
+      "max": 0.9
+     },
+     "legendaryRate": 0.009333333333333334
+    },
+    "all_in": {
+     "label": "Hepsi: sıra + 3 olay + cesur bis",
+     "quality": {
+      "n": 3000,
+      "mean": 86.5,
+      "median": 87,
+      "p10": 77,
+      "p90": 95.1,
+      "min": 59,
+      "max": 100
+     },
+     "attendance": {
+      "n": 3000,
+      "mean": 19754.38,
+      "median": 20000,
+      "p10": 18870.9,
+      "p90": 20000,
+      "min": 18239,
+      "max": 20000
+     },
+     "netRevenue": {
+      "n": 3000,
+      "mean": 31607,
+      "median": 32000,
+      "p10": 30193.8,
+      "p90": 32000,
+      "min": 29182,
+      "max": 32000
+     },
+     "fameDelta": {
+      "n": 3000,
+      "mean": 0.46,
+      "median": 0.5,
+      "p10": 0.2,
+      "p90": 0.7,
+      "min": -1.4,
+      "max": 1.1
+     },
+     "legendaryRate": 0.008333333333333333
+    }
+   }
+  }
+ },
+ "planSweep": {
+  "newbie_hired": {
+   "qualifiedEvents": [],
+   "plans": 3,
+   "top5": [
+    {
+     "events": [],
+     "encore": "safe",
+     "fame": 1.33,
+     "quality": 41.56,
+     "fameP10": 1.1
+    },
+    {
+     "events": [],
+     "encore": "none",
+     "fame": 1.23,
+     "quality": 40.8,
+     "fameP10": 1.1
+    },
+    {
+     "events": [],
+     "encore": "bold",
+     "fame": 1.18,
+     "quality": 39.4,
+     "fameP10": 0.7
+    }
+   ],
+   "top5Strategies": [
+    "0 olay + safe",
+    "0 olay + none",
+    "0 olay + bold"
+   ],
+   "top10Strategies": [
+    "0 olay + safe",
+    "0 olay + none",
+    "0 olay + bold"
+   ],
+   "worst3": [
+    {
+     "events": [],
+     "encore": "safe",
+     "fame": 1.33,
+     "quality": 41.56,
+     "fameP10": 1.1
+    },
+    {
+     "events": [],
+     "encore": "none",
+     "fame": 1.23,
+     "quality": 40.8,
+     "fameP10": 1.1
+    },
+    {
+     "events": [],
+     "encore": "bold",
+     "fame": 1.18,
+     "quality": 39.4,
+     "fameP10": 0.7
+    }
+   ],
+   "noneNone": {
+    "events": [],
+    "encore": "none",
+    "fame": 1.23,
+    "quality": 40.8,
+    "fameP10": 1.1
+   }
+  },
+  "newbie_hired5": {
+   "qualifiedEvents": [],
+   "plans": 3,
+   "top5": [
+    {
+     "events": [],
+     "encore": "safe",
+     "fame": 1.39,
+     "quality": 42.37,
+     "fameP10": 1.1
+    },
+    {
+     "events": [],
+     "encore": "bold",
+     "fame": 1.28,
+     "quality": 40.64,
+     "fameP10": 0.8
+    },
+    {
+     "events": [],
+     "encore": "none",
+     "fame": 1.27,
+     "quality": 41.55,
+     "fameP10": 1.1
+    }
+   ],
+   "top5Strategies": [
+    "0 olay + safe",
+    "0 olay + bold",
+    "0 olay + none"
+   ],
+   "top10Strategies": [
+    "0 olay + safe",
+    "0 olay + bold",
+    "0 olay + none"
+   ],
+   "worst3": [
+    {
+     "events": [],
+     "encore": "safe",
+     "fame": 1.39,
+     "quality": 42.37,
+     "fameP10": 1.1
+    },
+    {
+     "events": [],
+     "encore": "bold",
+     "fame": 1.28,
+     "quality": 40.64,
+     "fameP10": 0.8
+    },
+    {
+     "events": [],
+     "encore": "none",
+     "fame": 1.27,
+     "quality": 41.55,
+     "fameP10": 1.1
+    }
+   ],
+   "noneNone": {
+    "events": [],
+    "encore": "none",
+    "fame": 1.27,
+    "quality": 41.55,
+    "fameP10": 1.1
+   }
+  },
+  "newbie_solo": {
+   "qualifiedEvents": [],
+   "plans": 3,
+   "top5": [
+    {
+     "events": [],
+     "encore": "none",
+     "fame": 0.83,
+     "quality": 34.08,
+     "fameP10": 0.7
+    },
+    {
+     "events": [],
+     "encore": "safe",
+     "fame": 0.83,
+     "quality": 34.01,
+     "fameP10": 0.7
+    },
+    {
+     "events": [],
+     "encore": "bold",
+     "fame": 0.53,
+     "quality": 30.05,
+     "fameP10": 0.4
+    }
+   ],
+   "top5Strategies": [
+    "0 olay + none",
+    "0 olay + safe",
+    "0 olay + bold"
+   ],
+   "top10Strategies": [
+    "0 olay + none",
+    "0 olay + safe",
+    "0 olay + bold"
+   ],
+   "worst3": [
+    {
+     "events": [],
+     "encore": "none",
+     "fame": 0.83,
+     "quality": 34.08,
+     "fameP10": 0.7
+    },
+    {
+     "events": [],
+     "encore": "safe",
+     "fame": 0.83,
+     "quality": 34.01,
+     "fameP10": 0.7
+    },
+    {
+     "events": [],
+     "encore": "bold",
+     "fame": 0.53,
+     "quality": 30.05,
+     "fameP10": 0.4
+    }
+   ],
+   "noneNone": {
+    "events": [],
+    "encore": "none",
+    "fame": 0.83,
+    "quality": 34.08,
+    "fameP10": 0.7
+   }
+  },
+  "mid_club": {
+   "qualifiedEvents": [
+    "banter",
+    "singalong",
+    "unplugged",
+    "stage_dive",
+    "cover",
+    "story",
+    "mosh_pit"
+   ],
+   "plans": 192,
+   "top5": [
+    {
+     "events": [
+      "unplugged"
+     ],
+     "encore": "safe",
+     "fame": 0.92,
+     "quality": 55.38,
+     "fameP10": 0.7
+    },
+    {
+     "events": [
+      "stage_dive"
+     ],
+     "encore": "safe",
+     "fame": 0.92,
+     "quality": 55.22,
+     "fameP10": 0.5
+    },
+    {
+     "events": [
+      "banter",
+      "unplugged"
+     ],
+     "encore": "safe",
+     "fame": 0.91,
+     "quality": 55.08,
+     "fameP10": 0.7
+    },
+    {
+     "events": [
+      "banter"
+     ],
+     "encore": "safe",
+     "fame": 0.9,
+     "quality": 54.81,
+     "fameP10": 0.7
+    },
+    {
+     "events": [
+      "unplugged",
+      "stage_dive"
+     ],
+     "encore": "safe",
+     "fame": 0.9,
+     "quality": 54.82,
+     "fameP10": 0.5
+    }
+   ],
+   "top5Strategies": [
+    "1 olay + safe",
+    "2 olay + safe"
+   ],
+   "top10Strategies": [
+    "1 olay + safe",
+    "2 olay + safe",
+    "1 olay + bold",
+    "2 olay + bold"
+   ],
+   "worst3": [
+    {
+     "events": [
+      "singalong",
+      "cover",
+      "mosh_pit"
+     ],
+     "encore": "none",
+     "fame": 0.57,
+     "quality": 48.29,
+     "fameP10": 0.3
+    },
+    {
+     "events": [
+      "cover",
+      "story",
+      "mosh_pit"
+     ],
+     "encore": "bold",
+     "fame": 0.56,
+     "quality": 46.96,
+     "fameP10": 0
+    },
+    {
+     "events": [
+      "cover",
+      "story",
+      "mosh_pit"
+     ],
+     "encore": "none",
+     "fame": 0.53,
+     "quality": 47.21,
+     "fameP10": 0.2
+    }
+   ],
+   "noneNone": {
+    "events": [],
+    "encore": "none",
+    "fame": 0.76,
+    "quality": 52.55,
+    "fameP10": 0.6
+   }
+  },
+  "mid_club_plus2": {
+   "qualifiedEvents": [
+    "banter",
+    "singalong",
+    "unplugged",
+    "stage_dive",
+    "cover",
+    "story",
+    "mosh_pit"
+   ],
+   "plans": 192,
+   "top5": [
+    {
+     "events": [
+      "banter",
+      "unplugged"
+     ],
+     "encore": "safe",
+     "fame": 1,
+     "quality": 57.02,
+     "fameP10": 0.8
+    },
+    {
+     "events": [
+      "unplugged"
+     ],
+     "encore": "safe",
+     "fame": 1,
+     "quality": 57.06,
+     "fameP10": 0.7
+    },
+    {
+     "events": [
+      "stage_dive"
+     ],
+     "encore": "safe",
+     "fame": 1,
+     "quality": 57.13,
+     "fameP10": 0.6
+    },
+    {
+     "events": [
+      "unplugged",
+      "stage_dive"
+     ],
+     "encore": "safe",
+     "fame": 0.99,
+     "quality": 56.71,
+     "fameP10": 0.6
+    },
+    {
+     "events": [
+      "banter"
+     ],
+     "encore": "safe",
+     "fame": 0.98,
+     "quality": 56.6,
+     "fameP10": 0.8
+    }
+   ],
+   "top5Strategies": [
+    "2 olay + safe",
+    "1 olay + safe"
+   ],
+   "top10Strategies": [
+    "2 olay + safe",
+    "1 olay + safe",
+    "1 olay + bold",
+    "2 olay + bold"
+   ],
+   "worst3": [
+    {
+     "events": [
+      "singalong",
+      "story",
+      "mosh_pit"
+     ],
+     "encore": "none",
+     "fame": 0.66,
+     "quality": 50.2,
+     "fameP10": 0.3
+    },
+    {
+     "events": [
+      "cover",
+      "story",
+      "mosh_pit"
+     ],
+     "encore": "bold",
+     "fame": 0.64,
+     "quality": 48.87,
+     "fameP10": 0.2
+    },
+    {
+     "events": [
+      "cover",
+      "story",
+      "mosh_pit"
+     ],
+     "encore": "none",
+     "fame": 0.61,
+     "quality": 49.07,
+     "fameP10": 0.3
+    }
+   ],
+   "noneNone": {
+    "events": [],
+    "encore": "none",
+    "fame": 0.84,
+    "quality": 54.34,
+    "fameP10": 0.7
+   }
+  },
+  "strong_hall": {
+   "qualifiedEvents": [
+    "banter",
+    "singalong",
+    "solo",
+    "dance",
+    "unplugged",
+    "stage_dive",
+    "cover",
+    "story",
+    "mosh_pit"
+   ],
+   "plans": 360,
+   "top5": [
+    {
+     "events": [
+      "singalong",
+      "stage_dive"
+     ],
+     "encore": "safe",
+     "fame": 1.05,
+     "quality": 73.57,
+     "fameP10": 0.6
+    },
+    {
+     "events": [
+      "singalong",
+      "stage_dive"
+     ],
+     "encore": "bold",
+     "fame": 1.05,
+     "quality": 73.09,
+     "fameP10": 0.59
+    },
+    {
+     "events": [
+      "singalong",
+      "mosh_pit"
+     ],
+     "encore": "bold",
+     "fame": 1.05,
+     "quality": 72.86,
+     "fameP10": 0.6
+    },
+    {
+     "events": [
+      "singalong",
+      "stage_dive",
+      "story"
+     ],
+     "encore": "bold",
+     "fame": 1.04,
+     "quality": 72.71,
+     "fameP10": 0.5
+    },
+    {
+     "events": [
+      "stage_dive",
+      "cover"
+     ],
+     "encore": "safe",
+     "fame": 1.04,
+     "quality": 73.38,
+     "fameP10": 0.7
+    }
+   ],
+   "top5Strategies": [
+    "2 olay + safe",
+    "2 olay + bold",
+    "3 olay + bold"
+   ],
+   "top10Strategies": [
+    "2 olay + safe",
+    "2 olay + bold",
+    "3 olay + bold",
+    "3 olay + safe"
+   ],
+   "worst3": [
+    {
+     "events": [
+      "banter",
+      "solo",
+      "dance"
+     ],
+     "encore": "none",
+     "fame": 0.68,
+     "quality": 66.02,
+     "fameP10": 0.3
+    },
+    {
+     "events": [
+      "banter",
+      "dance",
+      "stage_dive"
+     ],
+     "encore": "none",
+     "fame": 0.68,
+     "quality": 66,
+     "fameP10": 0.3
+    },
+    {
+     "events": [
+      "banter",
+      "dance",
+      "story"
+     ],
+     "encore": "none",
+     "fame": 0.68,
+     "quality": 66.14,
+     "fameP10": 0.4
+    }
+   ],
+   "noneNone": {
+    "events": [],
+    "encore": "none",
+    "fame": 0.71,
+    "quality": 66.8,
+    "fameP10": 0.5
+   }
+  },
+  "star_stadium": {
+   "qualifiedEvents": [
+    "banter",
+    "singalong",
+    "solo",
+    "dance",
+    "unplugged",
+    "stage_dive",
+    "cover",
+    "story",
+    "mosh_pit"
+   ],
+   "plans": 360,
+   "top5": [
+    {
+     "events": [
+      "stage_dive",
+      "cover"
+     ],
+     "encore": "bold",
+     "fame": 0.58,
+     "quality": 91.77,
+     "fameP10": 0.3
+    },
+    {
+     "events": [
+      "stage_dive",
+      "cover",
+      "mosh_pit"
+     ],
+     "encore": "bold",
+     "fame": 0.58,
+     "quality": 91.74,
+     "fameP10": 0.3
+    },
+    {
+     "events": [
+      "singalong",
+      "stage_dive"
+     ],
+     "encore": "bold",
+     "fame": 0.57,
+     "quality": 91.29,
+     "fameP10": 0.3
+    },
+    {
+     "events": [
+      "singalong",
+      "stage_dive",
+      "cover"
+     ],
+     "encore": "bold",
+     "fame": 0.57,
+     "quality": 91.28,
+     "fameP10": 0.3
+    },
+    {
+     "events": [
+      "stage_dive",
+      "cover"
+     ],
+     "encore": "safe",
+     "fame": 0.56,
+     "quality": 91.73,
+     "fameP10": 0.4
+    }
+   ],
+   "top5Strategies": [
+    "2 olay + bold",
+    "3 olay + bold",
+    "2 olay + safe"
+   ],
+   "top10Strategies": [
+    "2 olay + bold",
+    "3 olay + bold",
+    "2 olay + safe",
+    "3 olay + safe"
+   ],
+   "worst3": [
+    {
+     "events": [
+      "banter",
+      "dance",
+      "unplugged"
+     ],
+     "encore": "none",
+     "fame": 0.36,
+     "quality": 83.45,
+     "fameP10": 0.2
+    },
+    {
+     "events": [
+      "banter",
+      "dance",
+      "story"
+     ],
+     "encore": "none",
+     "fame": 0.36,
+     "quality": 83.14,
+     "fameP10": 0.2
+    },
+    {
+     "events": [],
+     "encore": "none",
+     "fame": 0.34,
+     "quality": 82.38,
+     "fameP10": 0.2
+    }
+   ],
+   "noneNone": {
+    "events": [],
+    "encore": "none",
+    "fame": 0.34,
+    "quality": 82.38,
+    "fameP10": 0.2
+   }
+  }
+ },
+ "genrePopularity": {
+  "mid_club": {
+   "istanbul": {
+    "best": [
+     "pop",
+     1.3,
+     148,
+     1330,
+     0.74
+    ],
+    "worst": [
+     "country",
+     0.6,
+     71,
+     641,
+     0.62
+    ]
+   },
+   "berlin": {
+    "best": [
+     "electronic",
+     1.4,
+     159,
+     2007,
+     0.76
+    ],
+    "worst": [
+     "country",
+     0.7,
+     82,
+     1032,
+     0.64
+    ]
+   },
+   "nashville": {
+    "best": [
+     "rock",
+     1.4,
+     159,
+     2081,
+     0.76
+    ],
+    "worst": [
+     "anatolian",
+     0.6,
+     71,
+     930,
+     0.62
+    ]
+   },
+   "london": {
+    "best": [
+     "punk",
+     1.4,
+     160,
+     2445,
+     0.76
+    ],
+    "worst": [
+     "anatolian",
+     0.6,
+     71,
+     1088,
+     0.62
+    ]
+   }
+  },
+  "mid_club_plus2": {
+   "istanbul": {
+    "best": [
+     "pop",
+     1.3,
+     148,
+     1212,
+     0.82
+    ],
+    "worst": [
+     "country",
+     0.6,
+     71,
+     521,
+     0.69
+    ]
+   },
+   "berlin": {
+    "best": [
+     "electronic",
+     1.4,
+     159,
+     1886,
+     0.84
+    ],
+    "worst": [
+     "country",
+     0.7,
+     82,
+     918,
+     0.71
+    ]
+   },
+   "nashville": {
+    "best": [
+     "rock",
+     1.4,
+     159,
+     1959,
+     0.84
+    ],
+    "worst": [
+     "anatolian",
+     0.6,
+     71,
+     810,
+     0.69
+    ]
+   },
+   "london": {
+    "best": [
+     "punk",
+     1.4,
+     159,
+     2316,
+     0.84
+    ],
+    "worst": [
+     "anatolian",
+     0.6,
+     71,
+     968,
+     0.69
+    ]
+   }
+  },
+  "strong_hall": {
+   "istanbul": {
+    "best": [
+     "pop",
+     1.3,
+     1680,
+     8065,
+     0.71
+    ],
+    "worst": [
+     "country",
+     0.6,
+     779,
+     3741,
+     0.54
+    ]
+   },
+   "berlin": {
+    "best": [
+     "electronic",
+     1.4,
+     1805,
+     12131,
+     0.73
+    ],
+    "worst": [
+     "country",
+     0.7,
+     907,
+     6092,
+     0.56
+    ]
+   },
+   "nashville": {
+    "best": [
+     "rock",
+     1.4,
+     1803,
+     12550,
+     0.73
+    ],
+    "worst": [
+     "anatolian",
+     0.6,
+     781,
+     5435,
+     0.53
+    ]
+   },
+   "london": {
+    "best": [
+     "punk",
+     1.4,
+     1807,
+     14744,
+     0.73
+    ],
+    "worst": [
+     "anatolian",
+     0.6,
+     780,
+     6364,
+     0.53
+    ]
+   }
+  },
+  "star_stadium": {
+   "istanbul": {
+    "best": [
+     "pop",
+     1.3,
+     20000,
+     32000,
+     0.32
+    ],
+    "worst": [
+     "country",
+     0.6,
+     11726,
+     18762,
+     0.25
+    ]
+   },
+   "berlin": {
+    "best": [
+     "electronic",
+     1.4,
+     20000,
+     44800,
+     0.32
+    ],
+    "worst": [
+     "country",
+     0.7,
+     13679,
+     30642,
+     0.27
+    ]
+   },
+   "nashville": {
+    "best": [
+     "rock",
+     1.4,
+     20000,
+     46400,
+     0.32
+    ],
+    "worst": [
+     "anatolian",
+     0.6,
+     11748,
+     27256,
+     0.25
+    ]
+   },
+   "london": {
+    "best": [
+     "punk",
+     1.4,
+     20000,
+     54400,
+     0.32
+    ],
+    "worst": [
+     "anatolian",
+     0.6,
+     11704,
+     31836,
+     0.25
+    ]
+   }
+  }
+ },
+ "eventEV": {
+  "banter": {
+   "min": 15,
+   "bonus": 2,
+   "penalty": 2,
+   "cooldownH": 12,
+   "evAtMin": -0.07,
+   "evAtMinPlus25": 2.08,
+   "thirdAtMinPlus25": 0.06,
+   "stadiumAtMinPlus25": 1.04
+  },
+  "singalong": {
+   "min": 15,
+   "bonus": 4,
+   "penalty": 4,
+   "cooldownH": 24,
+   "evAtMin": -0.58,
+   "evAtMinPlus25": 3.22,
+   "thirdAtMinPlus25": -0.17,
+   "stadiumAtMinPlus25": 4.74
+  },
+  "solo": {
+   "min": 45,
+   "bonus": 5,
+   "penalty": 5,
+   "cooldownH": 24,
+   "evAtMin": -0.37,
+   "evAtMinPlus25": 4.78,
+   "thirdAtMinPlus25": 0.04,
+   "stadiumAtMinPlus25": 4.02
+  },
+  "dance": {
+   "min": 30,
+   "bonus": 4,
+   "penalty": 4,
+   "cooldownH": 24,
+   "evAtMin": -0.4,
+   "evAtMinPlus25": 3.6,
+   "thirdAtMinPlus25": -0.02,
+   "stadiumAtMinPlus25": 4.36
+  },
+  "unplugged": {
+   "min": 15,
+   "bonus": 3,
+   "penalty": 3,
+   "cooldownH": 24,
+   "evAtMin": -0.08,
+   "evAtMinPlus25": 3.18,
+   "thirdAtMinPlus25": 0.12,
+   "stadiumAtMinPlus25": 1.56
+  },
+  "stage_dive": {
+   "min": 5,
+   "bonus": 6,
+   "penalty": 6,
+   "cooldownH": 48,
+   "evAtMin": -0.6,
+   "evAtMinPlus25": 5.4,
+   "thirdAtMinPlus25": -0.04,
+   "stadiumAtMinPlus25": 6.54
+  },
+  "cover": {
+   "min": 30,
+   "bonus": 3,
+   "penalty": 3,
+   "cooldownH": 24,
+   "evAtMin": -0.44,
+   "evAtMinPlus25": 2.42,
+   "thirdAtMinPlus25": -0.09,
+   "stadiumAtMinPlus25": 3.56
+  },
+  "story": {
+   "min": 30,
+   "bonus": 3,
+   "penalty": 3,
+   "cooldownH": 12,
+   "evAtMin": -0.08,
+   "evAtMinPlus25": 3.18,
+   "thirdAtMinPlus25": 0.12,
+   "stadiumAtMinPlus25": 1.56
+  },
+  "light_cue": {
+   "min": 30,
+   "bonus": 3,
+   "penalty": 3,
+   "cooldownH": 24,
+   "evAtMin": -0.3,
+   "evAtMinPlus25": 2.7,
+   "thirdAtMinPlus25": -0.02,
+   "stadiumAtMinPlus25": 3.27
+  },
+  "sax_solo": {
+   "min": 45,
+   "bonus": 5,
+   "penalty": 5,
+   "cooldownH": 24,
+   "evAtMin": -0.37,
+   "evAtMinPlus25": 4.78,
+   "thirdAtMinPlus25": 0.04,
+   "stadiumAtMinPlus25": 4.02
+  },
+  "violin_solo": {
+   "min": 45,
+   "bonus": 5,
+   "penalty": 5,
+   "cooldownH": 24,
+   "evAtMin": -0.37,
+   "evAtMinPlus25": 4.78,
+   "thirdAtMinPlus25": 0.04,
+   "stadiumAtMinPlus25": 4.02
+  },
+  "percussion_break": {
+   "min": 30,
+   "bonus": 4,
+   "penalty": 4,
+   "cooldownH": 24,
+   "evAtMin": -0.31,
+   "evAtMinPlus25": 3.79,
+   "thirdAtMinPlus25": 0.05,
+   "stadiumAtMinPlus25": 3.22
+  },
+  "drum_battle": {
+   "min": 45,
+   "bonus": 4,
+   "penalty": 4,
+   "cooldownH": 48,
+   "evAtMin": -0.31,
+   "evAtMinPlus25": 3.79,
+   "thirdAtMinPlus25": 0.05,
+   "stadiumAtMinPlus25": 3.22
+  },
+  "mosh_pit": {
+   "min": 30,
+   "bonus": 5,
+   "penalty": 5,
+   "cooldownH": 24,
+   "evAtMin": -0.73,
+   "evAtMinPlus25": 4.02,
+   "thirdAtMinPlus25": -0.17,
+   "stadiumAtMinPlus25": 5.93
+  },
+  "freestyle": {
+   "min": 30,
+   "bonus": 5,
+   "penalty": 5,
+   "cooldownH": 24,
+   "evAtMin": -0.37,
+   "evAtMinPlus25": 4.78,
+   "thirdAtMinPlus25": 0.04,
+   "stadiumAtMinPlus25": 4.02
+  },
+  "big_drop": {
+   "min": 15,
+   "bonus": 5,
+   "penalty": 5,
+   "cooldownH": 24,
+   "evAtMin": -0.73,
+   "evAtMinPlus25": 4.02,
+   "thirdAtMinPlus25": -0.17,
+   "stadiumAtMinPlus25": 5.93
+  },
+  "jam": {
+   "min": 45,
+   "bonus": 5,
+   "penalty": 5,
+   "cooldownH": 24,
+   "evAtMin": -0.37,
+   "evAtMinPlus25": 4.78,
+   "thirdAtMinPlus25": 0.04,
+   "stadiumAtMinPlus25": 4.02
+  },
+  "call_response": {
+   "min": 15,
+   "bonus": 4,
+   "penalty": 4,
+   "cooldownH": 24,
+   "evAtMin": -0.58,
+   "evAtMinPlus25": 3.22,
+   "thirdAtMinPlus25": -0.17,
+   "stadiumAtMinPlus25": 4.74
+  },
+  "campfire": {
+   "min": 15,
+   "bonus": 4,
+   "penalty": 4,
+   "cooldownH": 24,
+   "evAtMin": -0.13,
+   "evAtMinPlus25": 4.17,
+   "thirdAtMinPlus25": 0.12,
+   "stadiumAtMinPlus25": 2.08
+  },
+  "dub_echo": {
+   "min": 15,
+   "bonus": 4,
+   "penalty": 4,
+   "cooldownH": 24,
+   "evAtMin": -0.4,
+   "evAtMinPlus25": 3.6,
+   "thirdAtMinPlus25": -0.02,
+   "stadiumAtMinPlus25": 4.36
+  },
+  "hushed_hall": {
+   "min": 45,
+   "bonus": 4,
+   "penalty": 4,
+   "cooldownH": 24,
+   "evAtMin": -0.13,
+   "evAtMinPlus25": 4.17,
+   "thirdAtMinPlus25": 0.12,
+   "stadiumAtMinPlus25": 2.08
+  }
+ }
+}

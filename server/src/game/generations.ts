@@ -328,7 +328,7 @@ export async function succeed(userId: number, isVip: boolean, input: SuccessionI
         JSON.stringify(skills), JSON.stringify(attributes), familyName, generation, child.id, pred.id, adultAt],
     );
     // (5) Yadigârlar: el değiştirme kaydıyla (prev_owner), kuşanılmamış ve ilansız
-    for (const inv of items) await handOver(c, Number(inv.id), pred.id, heir!.id);
+    for (const inv of items) await handOver(c, Number(inv.id), pred.id, heir!.id, 'inheritance');
     await c.query('UPDATE characters SET estate_claimed = TRUE WHERE id = $1', [pred.id]);
     await c.query(
       'UPDATE children SET heir_id = $2, heir_request_by = NULL, heir_request_at = NULL, heir_consent_for = NULL, heir_consent_at = NULL WHERE id = $1',

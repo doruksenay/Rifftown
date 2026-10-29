@@ -1,0 +1,436 @@
+{
+ "assumptions": {
+  "homeCity": "istanbul",
+  "genre": "rock",
+  "recordCost": 200,
+  "rehearseCostPerSong": 120,
+  "singleCost": 420,
+  "albumCost": 3060,
+  "albumTracks": 8
+ },
+ "grid": [
+  {
+   "fame": 3,
+   "quality": 25,
+   "single": {
+    "units": 356,
+    "gross": 1781,
+    "bandRevenue": 1068,
+    "firstMonthBand": 582,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 648
+   },
+   "album": {
+    "units": 274,
+    "gross": 6847,
+    "bandRevenue": 4108,
+    "firstMonthBand": 1455,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 1048
+   }
+  },
+  {
+   "fame": 3,
+   "quality": 45,
+   "single": {
+    "units": 481,
+    "gross": 2406,
+    "bandRevenue": 1444,
+    "firstMonthBand": 781,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 1024
+   },
+   "album": {
+    "units": 371,
+    "gross": 9275,
+    "bandRevenue": 5565,
+    "firstMonthBand": 1940,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 2505
+   }
+  },
+  {
+   "fame": 3,
+   "quality": 65,
+   "single": {
+    "units": 608,
+    "gross": 3041,
+    "bandRevenue": 1824,
+    "firstMonthBand": 984,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 1404
+   },
+   "album": {
+    "units": 463,
+    "gross": 11587,
+    "bandRevenue": 6952,
+    "firstMonthBand": 2417,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 3892
+   }
+  },
+  {
+   "fame": 10,
+   "quality": 25,
+   "single": {
+    "units": 527,
+    "gross": 2637,
+    "bandRevenue": 1582,
+    "firstMonthBand": 857,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 1162
+   },
+   "album": {
+    "units": 404,
+    "gross": 10095,
+    "bandRevenue": 6057,
+    "firstMonthBand": 2106,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 2997
+   }
+  },
+  {
+   "fame": 10,
+   "quality": 45,
+   "single": {
+    "units": 716,
+    "gross": 3579,
+    "bandRevenue": 2148,
+    "firstMonthBand": 1157,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 1728
+   },
+   "album": {
+    "units": 544,
+    "gross": 13602,
+    "bandRevenue": 8161,
+    "firstMonthBand": 2824,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 5101
+   }
+  },
+  {
+   "fame": 10,
+   "quality": 65,
+   "single": {
+    "units": 905,
+    "gross": 4525,
+    "bandRevenue": 2715,
+    "firstMonthBand": 1464,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 2295
+   },
+   "album": {
+    "units": 686,
+    "gross": 17160,
+    "bandRevenue": 10296,
+    "firstMonthBand": 3549,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 7236
+   }
+  },
+  {
+   "fame": 20,
+   "quality": 25,
+   "single": {
+    "units": 772,
+    "gross": 3861,
+    "bandRevenue": 2317,
+    "firstMonthBand": 1248,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 1897
+   },
+   "album": {
+    "units": 587,
+    "gross": 14678,
+    "bandRevenue": 8807,
+    "firstMonthBand": 3043,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 5747
+   }
+  },
+  {
+   "fame": 20,
+   "quality": 45,
+   "single": {
+    "units": 1048,
+    "gross": 5242,
+    "bandRevenue": 3145,
+    "firstMonthBand": 1686,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 2725
+   },
+   "album": {
+    "units": 797,
+    "gross": 19921,
+    "bandRevenue": 11952,
+    "firstMonthBand": 4113,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 8892
+   }
+  },
+  {
+   "fame": 20,
+   "quality": 65,
+   "single": {
+    "units": 1326,
+    "gross": 6630,
+    "bandRevenue": 3978,
+    "firstMonthBand": 2133,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 3558
+   },
+   "album": {
+    "units": 1007,
+    "gross": 25177,
+    "bandRevenue": 15106,
+    "firstMonthBand": 5156,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 12046
+   }
+  },
+  {
+   "fame": 35,
+   "quality": 25,
+   "single": {
+    "units": 1140,
+    "gross": 5698,
+    "bandRevenue": 3419,
+    "firstMonthBand": 1838,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 2999
+   },
+   "album": {
+    "units": 864,
+    "gross": 21607,
+    "bandRevenue": 12964,
+    "firstMonthBand": 4442,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 9904
+   }
+  },
+  {
+   "fame": 35,
+   "quality": 45,
+   "single": {
+    "units": 1546,
+    "gross": 7732,
+    "bandRevenue": 4639,
+    "firstMonthBand": 2481,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 4219
+   },
+   "album": {
+    "units": 1176,
+    "gross": 29398,
+    "bandRevenue": 17639,
+    "firstMonthBand": 6017,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 14579
+   }
+  },
+  {
+   "fame": 35,
+   "quality": 65,
+   "single": {
+    "units": 1962,
+    "gross": 9812,
+    "bandRevenue": 5887,
+    "firstMonthBand": 3155,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 5467
+   },
+   "album": {
+    "units": 1490,
+    "gross": 37252,
+    "bandRevenue": 22351,
+    "firstMonthBand": 7602,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 19291
+   }
+  },
+  {
+   "fame": 55,
+   "quality": 25,
+   "single": {
+    "units": 1630,
+    "gross": 8150,
+    "bandRevenue": 4890,
+    "firstMonthBand": 2621,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 4470
+   },
+   "album": {
+    "units": 1237,
+    "gross": 30921,
+    "bandRevenue": 18553,
+    "firstMonthBand": 6311,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 15493
+   }
+  },
+  {
+   "fame": 55,
+   "quality": 45,
+   "single": {
+    "units": 2213,
+    "gross": 11064,
+    "bandRevenue": 6639,
+    "firstMonthBand": 3554,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 6219
+   },
+   "album": {
+    "units": 1683,
+    "gross": 42076,
+    "bandRevenue": 25246,
+    "firstMonthBand": 8564,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 22186
+   }
+  },
+  {
+   "fame": 55,
+   "quality": 65,
+   "single": {
+    "units": 2806,
+    "gross": 14028,
+    "bandRevenue": 8417,
+    "firstMonthBand": 4509,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 7997
+   },
+   "album": {
+    "units": 2128,
+    "gross": 53189,
+    "bandRevenue": 31913,
+    "firstMonthBand": 10781,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 28853
+   }
+  },
+  {
+   "fame": 80,
+   "quality": 25,
+   "single": {
+    "units": 2239,
+    "gross": 11196,
+    "bandRevenue": 6717,
+    "firstMonthBand": 3592,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 6297
+   },
+   "album": {
+    "units": 1700,
+    "gross": 42508,
+    "bandRevenue": 25505,
+    "firstMonthBand": 8656,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 22445
+   }
+  },
+  {
+   "fame": 80,
+   "quality": 45,
+   "single": {
+    "units": 3043,
+    "gross": 15214,
+    "bandRevenue": 9128,
+    "firstMonthBand": 4884,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 8708
+   },
+   "album": {
+    "units": 2315,
+    "gross": 57882,
+    "bandRevenue": 34729,
+    "firstMonthBand": 11758,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 31669
+   }
+  },
+  {
+   "fame": 80,
+   "quality": 65,
+   "single": {
+    "units": 3861,
+    "gross": 19305,
+    "bandRevenue": 11583,
+    "firstMonthBand": 6190,
+    "weeks": 16,
+    "cost": 420,
+    "profit": 11163
+   },
+   "album": {
+    "units": 2928,
+    "gross": 73204,
+    "bandRevenue": 43922,
+    "firstMonthBand": 14820,
+    "weeks": 32,
+    "cost": 3060,
+    "profit": 40862
+   }
+  }
+ ],
+ "label": [
+  {
+   "bandShare": 0.3,
+   "grossWithoutLabel": 10000,
+   "bandWithoutLabel": 6000,
+   "bandWithLabel": 1980,
+   "labelGets": 4620,
+   "combined": 6600,
+   "upliftVsNoLabel": "10%"
+  },
+  {
+   "bandShare": 0.6,
+   "grossWithoutLabel": 10000,
+   "bandWithoutLabel": 6000,
+   "bandWithLabel": 3960,
+   "labelGets": 2640,
+   "combined": 6600,
+   "upliftVsNoLabel": "10%"
+  }
+ ],
+ "cadence": {
+  "daysPerCycle": 112,
+  "singles": 4,
+  "albums": 1,
+  "songsReleasedMax": 20,
+  "songsWritableAtNoFatigue": 37
+ }
+}

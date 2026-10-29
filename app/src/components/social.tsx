@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { confirmThen } from '@/components/careers';
 import { TierMeter } from '@/components/tier';
-import { Avatar, Body, Button, Card, Choice, Empty, Field, Heading, Row, Small, Strong } from '@/components/ui';
+import { Avatar, Body, Button, Card, Choice, Empty, Field, Heading, Row, Small, Strong, useToast } from '@/components/ui';
 import { api } from '@/lib/api';
 import { dateTime, duration } from '@/lib/format';
 import { useInventory, useRun } from '@/lib/hooks';
@@ -102,6 +102,7 @@ export function RelationshipPanel({ id, name }: { id: number; name: string }) {
   const inv = useInventory();
   const qc = useQueryClient();
   const { run, pending } = useRun();
+  const toast = useToast();
   const [ring, setRing] = useState<number | null>(null);
   const [child, setChild] = useState('');
   const r = q.data;
@@ -116,6 +117,13 @@ export function RelationshipPanel({ id, name }: { id: number; name: string }) {
   const wait = (iso: string | null) => (iso && new Date(iso).getTime() > Date.now() ? t('waitUntil', { time: duration(new Date(iso).getTime() - Date.now(), lang) }) : null);
   const act = async (path: string, body?: unknown, invalidate: string[] = ['me']) => {
     if (await run(() => api.post(`/relationships/${id}/${path}`, body), { success: t('relDone'), invalidate })) refresh();
+  };
+  // Takılmanın ruh hâli etkisi günde sınırlı: etkisiz kaldıysa oyuncuya söylenir
+  const hangout = async () => {
+    const res = await run(() => api.post<{ uplift?: boolean }>(`/relationships/${id}/hangout`), { invalidate: [] });
+    if (!res) return;
+    refresh();
+    toast(res.uplift === false ? t('hangoutNoUplift') : t('relDone'));
   };
   const rings = (inv.data ?? []).filter((i) => ITEM_BY_ID[i.itemId]?.slot === 'ring' && !i.listed);
   const hangoutWait = wait(r.next.hangout);
@@ -138,7 +146,7 @@ export function RelationshipPanel({ id, name }: { id: number; name: string }) {
 
       {r.sameCity ? (
         <View style={{ gap: space.sm, marginTop: space.md }}>
-          <ActionLine title={t('hangout')} note={hangoutWait} disabled={busy || pending || !!hangoutWait} onPress={() => act('hangout', undefined, [])} />
+          <ActionLine title={t('hangout')} note={hangoutWait} disabled={busy || pending || !!hangoutWait} onPress={hangout} />
           {canFlirt || r.stage !== 'none' ? (
             <ActionLine title={t('flirt')} note={flirtWait} disabled={busy || pending || !!flirtWait || r.takenElsewhere} onPress={() => act('flirt', undefined, [])} />
           ) : null}

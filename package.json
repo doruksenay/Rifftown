@@ -15,6 +15,7 @@
     "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w server && npm run typecheck -w app && tsc -p scripts",
     "build": "npm run typecheck && npm run build -w server",
     "build:web": "npm run build:web -w app",
+    "balance": "tsx scripts/balance/run.ts",
     "art:manifest": "tsx scripts/art/cli.ts manifest",
     "art:prepare": "tsx scripts/art/cli.ts prepare",
     "art:validate": "tsx scripts/art/cli.ts validate",

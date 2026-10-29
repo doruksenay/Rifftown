@@ -1,0 +1,96 @@
+{
+ "oneCity": {
+  "label": "Tek şehir (İstanbul), 200 konser",
+  "reviews": 200,
+  "sentences": 587,
+  "distinctSentences": 252,
+  "repeatRate": 0.571,
+  "newSentenceRateAfter10": 0.406,
+  "reviewsWithNoNewSentenceAfter10": 0.147,
+  "distinctFullReviews": 200,
+  "newSentencesByBlock": [
+   {
+    "from": 0,
+    "to": 10,
+    "newSentences": 25
+   },
+   {
+    "from": 10,
+    "to": 25,
+    "newSentences": 26
+   },
+   {
+    "from": 25,
+    "to": 50,
+    "newSentences": 33
+   },
+   {
+    "from": 50,
+    "to": 100,
+    "newSentences": 61
+   },
+   {
+    "from": 100,
+    "to": 150,
+    "newSentences": 54
+   },
+   {
+    "from": 150,
+    "to": 200,
+    "newSentences": 53
+   }
+  ],
+  "examples": [
+   "{mekân} içinde seyirciden çok sandalye vardı. İlk yarı yavaştı, ikinci yarı biraz açıldı; seyirci kalmaya karar verdi ama dans etmeye değil. Şehir basını grubu zaten konuşuyordu; bu gece haklı çıktılar.",
+   "{mekân} bu gece yalnızdı; arkadaşlar ve tanıdıklar dışında gelen olmadı. Ses düzgündü, heyecan eksikti; alkışlar setin sonunda biraz ısındı.",
+   "{mekân} bu gece yalnızdı; her alkış tek tek duyuldu. Grup temkinli başladı; ön sıra ilgiliydi, arka taraf değil."
+  ]
+ },
+ "touring": {
+  "label": "Beş şehir dönüşümlü, 200 konser",
+  "reviews": 200,
+  "sentences": 575,
+  "distinctSentences": 257,
+  "repeatRate": 0.553,
+  "newSentenceRateAfter10": 0.422,
+  "reviewsWithNoNewSentenceAfter10": 0.153,
+  "distinctFullReviews": 200,
+  "newSentencesByBlock": [
+   {
+    "from": 0,
+    "to": 10,
+    "newSentences": 26
+   },
+   {
+    "from": 10,
+    "to": 25,
+    "newSentences": 33
+   },
+   {
+    "from": 25,
+    "to": 50,
+    "newSentences": 42
+   },
+   {
+    "from": 50,
+    "to": 100,
+    "newSentences": 52
+   },
+   {
+    "from": 100,
+    "to": 150,
+    "newSentences": 53
+   },
+   {
+    "from": 150,
+    "to": 200,
+    "newSentences": 51
+   }
+  ],
+  "examples": [
+   "{mekân} içinde seyirciden çok sandalye vardı; arkadaşlar ve tanıdıklar dışında gelen olmadı. Akort sorunları setin tamamına yayıldı; kimse ne çaldığınızı tam anlamadı.",
+   "{mekân} bu gece yalnızdı; ön sıralar boş kaldı. İlk yarı yavaştı, ikinci yarı biraz açıldı; ön sıra ilgiliydi, arka taraf değil. Salondakilerin bir kısmı hâlâ {rakip} konserini konuşuyordu.",
+   "{mekân} içinde seyirciden çok sandalye vardı. Grup sahnede biraz çekingendi; birkaç kişi ritim tuttu, gerisi sohbete daldı."
+  ]
+ }
+}

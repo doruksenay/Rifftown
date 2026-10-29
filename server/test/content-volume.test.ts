@@ -416,9 +416,11 @@ describe('sunucuda', () => {
   });
 
   it('atölye efekti kendi bonusuyla konsere taşınır ve iptalde bonusuyla geri verilir', async () => {
-    expect(fxBonusOf({ effects: ['fx_c_ledwall', 'fx_smoke'], effect_bonuses: [6, 2] })).toBe(8);
+    // Efekt kuralı (denge raporu madde 6): her tür bir kez, sonrakiler yarım, tavan 6. Atölye bonusu yine kendi değeriyle sayılır.
+    expect(fxBonusOf({ effects: ['fx_c_ledwall', 'fx_smoke'], effect_bonuses: [5, 2] })).toBe(6);
+    expect(fxBonusOf({ effects: ['fx_c_ledwall'], effect_bonuses: [3] })).toBe(3);
     expect(fxBonusOf({ effects: ['fx_smoke'], effect_bonuses: null })).toBe(ITEM_BY_ID.fx_smoke.bonus);
-    expect(fxBonusOf({ effects: Array(5).fill('fx_c_ledwall'), effect_bonuses: Array(5).fill(6) })).toBe(12);
+    expect(fxBonusOf({ effects: Array(5).fill('fx_c_ledwall'), effect_bonuses: Array(5).fill(6) })).toBe(6);
     const p = await newPlayer({ cityId: 'marseille', instrument: 'vocals' });
     await q(`INSERT INTO songs(author_id, title, genre, quality) VALUES ($1, 'Calanques', 'pop', 50)`, [p.character.id]);
     const band = (await p.c.post('/api/bands', { name: `Atelier ${p.character.id}`, genre: 'pop', role: 'vocals' })).body.band;

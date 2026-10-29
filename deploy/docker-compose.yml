@@ -32,6 +32,8 @@ services:
       EXPO_ACCESS_TOKEN: ${EXPO_ACCESS_TOKEN:-}
       REVENUECAT_WEBHOOK_SECRET: ${REVENUECAT_WEBHOOK_SECRET:-}
       CONTACT_EMAIL: ${CONTACT_EMAIL:-destek@ornek.com}
+      # Önünde tek vekil var (Caddy): X-Forwarded-For'un en sağındaki adres istemcidir. README "İstemci adresi".
+      TRUST_PROXY_HOPS: ${TRUST_PROXY_HOPS:-1}
       PORT: 3000
 
   # Oyuncular çevrimdışıyken eylemleri ve konserleri sonuçlandıran süreç

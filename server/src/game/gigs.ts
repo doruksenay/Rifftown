@@ -12,10 +12,15 @@ import {
   LOCATION_BY_ID,
   MAX_SETLIST,
   MAX_SCHEDULED_GIGS,
-  MAX_FX_BONUS,
+  fxQualityBonus,
+  gearQualityBonus,
+  genreAffinity,
   ITEM_BY_ID,
   SESSION_FAMILIARITY,
   SESSION_MUSICIAN,
+  sessionLevels,
+  roleSkill,
+  stageScore,
   ROLE_SKILLS,
   type Skills,
   familiarityCap,
@@ -51,6 +56,8 @@ import {
   stageEventAllowed,
   cityEventActive,
   PACING,
+  gigProductionCost,
+  GIG_PRODUCTION_REFUND,
   gigXp,
   roleAttrBonus,
   patrolAttendanceMult,
@@ -72,11 +79,8 @@ import { type CharacterRow, gearBonuses, isJailed, lockCharacter, membership, no
 
 /** Grubun bir şehirdeki şöhreti (0–100). */
 /** Konserin sahne efektlerinden gelen kalite (tavanlı). Kayıtlı bonus varsa (atölye efektleri) o, yoksa eşyanın bonusu. */
-export const fxBonusOf = (gig: { effects?: string[] | null; effect_bonuses?: number[] | null }) =>
-  Math.min(
-    MAX_FX_BONUS,
-    (gig.effects ?? []).reduce((sum: number, id: string, i: number) => sum + (gig.effect_bonuses?.[i] ?? ITEM_BY_ID[id]?.bonus ?? 0), 0),
-  );
+/** Konserin efekt kalitesi: her efekt türü bir kez, azalan getiri, tavan MAX_FX_BONUS (items.ts fxQualityBonus) */
+export const fxBonusOf = (gig: { effects?: string[] | null; effect_bonuses?: number[] | null }) => fxQualityBonus(gig.effects ?? [], gig.effect_bonuses);
 
 export async function bandFame(db: Db, bandId: number, cityId: string): Promise<number> {
   const r = await one(db, 'SELECT fame FROM band_fame WHERE band_id = $1 AND city_id = $2', [bandId, cityId]);
@@ -84,6 +88,12 @@ export async function bandFame(db: Db, bandId: number, cityId: string): Promise<
 }
 
 const GIG_BLOCK_HOURS = 3;
+
+/** Üyenin sahnede çaldığı roldeki kuşanılmış enstrümanın tür uyumu */
+function roleAffinity(rows: { character_id: unknown; item_id: string; slot: string }[], characterId: number, role: string, genre: Genre) {
+  const r = rows.find((x) => Number(x.character_id) === characterId && x.slot === role);
+  return r ? genreAffinity(ITEM_BY_ID[r.item_id], genre) : 0;
+}
 
 /** VIP avantajı: bir mekânda konser verilse kaç kişinin geleceğinin tahmini aralığı.
  *  Başka şehirdeki mekânlar için de sorulabilir (turne planlarken). */
@@ -137,7 +147,9 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     const sessionRoles = [...new Set(req.sessionRoles ?? [])] as Instrument[];
     if (sessionRoles.some((r) => !(INSTRUMENTS as readonly string[]).includes(r))) fail('invalid_role');
     const fee = SESSION_MUSICIAN[venue].fee * sessionRoles.length;
-    if (char.money < fee) fail('not_enough_money');
+    // Prodüksiyon gideri: kulüp ve üstünde peşin (VENUE_RULES.production × şehir)
+    const production = gigProductionCost(venue, CITY_BY_ID[loc!.cityId].costMult);
+    if (char.money < fee + production) fail('not_enough_money');
 
     const scheduled = await one(
       c,
@@ -178,13 +190,13 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     if (fx.length) await c.query('DELETE FROM inventory WHERE id = ANY($1::bigint[])', [fx.map((f) => f.id)]);
 
     const plan = normalizePlan(req.plan, m!.genre as Genre);
-    await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee]);
+    await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee + production]);
     const gig = await one(
       c,
-      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan, effect_bonuses)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan, effect_bonuses, production_cost)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
       // Atölyede yapılmış efektin bonusu her üründe farklıdır: konsere kendi bonusuyla taşınır (fxBonusOf)
-      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan), fx.map((f) => f.bonus ?? ITEM_BY_ID[f.item_id]?.bonus ?? 0)],
+      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan), fx.map((f) => f.bonus ?? ITEM_BY_ID[f.item_id]?.bonus ?? 0), production],
     );
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
@@ -242,7 +254,8 @@ export async function cancelGig(characterId: number, gigId: number) {
     if (!gig) fail('not_found', 404);
     if (gig.status !== 'scheduled') fail('gig_not_scheduled');
     const venue = LOCATION_BY_ID[gig.location_id].type as VenueType;
-    const refund = SESSION_MUSICIAN[venue].fee * gig.session_roles.length;
+    // Kiralık müzisyen ücreti tam, prodüksiyon giderinin yarısı geri verilir (hazırlık yapılmıştı)
+    const refund = SESSION_MUSICIAN[venue].fee * gig.session_roles.length + Math.floor((gig.production_cost ?? 0) * GIG_PRODUCTION_REFUND);
     if (gig.festival_id) fail('festival_gig');
     // Ceza satılan biletle büyür: rezervasyondan bu yana geçen süreye göre beklenen seyircinin bir kısmı bilet almıştır
     const fame = await bandFame(c, m!.band_id, gig.city_id);
@@ -333,6 +346,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   const onStage = (ch: CharacterRow) => ch.city_id === gig.city_id && !isJailed(ch);
   // Tür uyumlu eşyalar ve set bonusu grubun türüne göre
   const gear = await gearBonuses(c, ids, band.genre as Genre);
+  const gearRows = await many(c, `SELECT character_id, item_id, slot FROM inventory WHERE character_id = ANY($1::bigint[]) AND equipped AND NOT listed`, [ids]);
   const famRows = await many(
     c,
     'SELECT character_id, song_id, value FROM familiarity WHERE character_id = ANY($1::bigint[]) AND song_id = ANY($2::bigint[])',
@@ -366,11 +380,22 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       // Enstrüman bonusu + nitelik (vokalde ses, diğer rollerde el becerisi; en fazla +4, attributes.ts roleAttrBonus)
       instrumentBonus: (g.instruments[role] ?? 0) + roleAttrBonus(ch.attributes, role),
       outfitBonus: g.outfit + g.tattoos + g.setStage,
+      // Set bonusu ve tür uyumu (kıyafet + çaldığı rolün enstrümanı) kaliteye doğrudan
+      gearQuality: gearQualityBonus(g.setStage, g.affinity + roleAffinity(gearRows, ch.id, role, band.genre as Genre)),
       familiarity,
     };
   });
 
-  const sm = SESSION_MUSICIAN[venue];
+  // Kiralık müzisyenler: mekânın seviyesi, ama grubun sahnedeki kendi üyelerinin ortalamasını en fazla
+  // SESSION_SKILL_MARGIN kadar aşar (büyük sahnede kadroyu kiralayarak beceri satın alınamaz)
+  const ownOnStage = performers.filter((p) => p.present);
+  const own = ownOnStage.length
+    ? {
+        skill: ownOnStage.reduce((sum, p) => sum + roleSkill(p.skills, p.role), 0) / ownOnStage.length,
+        stage: ownOnStage.reduce((sum, p) => sum + stageScore(p.skills), 0) / ownOnStage.length,
+      }
+    : null;
+  const sm = sessionLevels(venue, own);
   for (const role of gig.session_roles as Instrument[]) {
     const skills: Skills = {
       [ROLE_SKILLS[role].basic]: sm.skill,
@@ -410,6 +435,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     performers,
     setlist: gig.setlist.map((id: number) => songs.find((s) => s.id === id)).filter(Boolean),
     rand: Math.random,
+    // Her efekt türü bir kez, azalan getiriyle, tavan MAX_FX_BONUS (items.ts fxQualityBonus; atölye ürününün kendi bonusuyla)
     fxBonus: fxBonusOf(gig),
     plan: gig.plan ?? {},
     press,
@@ -423,7 +449,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     recentCityGigs: band.npc_key || gig.festival_id ? 0 : await recentCityGigs(c, gig),
   });
   // Oyuncu barında: bilet gelirinden sahibinin payı düşülür
-  const ownerShare = await barGigShare(c, gig.location_id, res.revenue, ids);
+  // Oyunun kendi gruplarının konserinden bar sahibine pay yok (yoktan para basılmasın; denge raporu §7)
+  const ownerShare = band.npc_key ? 0 : await barGigShare(c, gig.location_id, res.revenue, ids);
   res.revenue -= ownerShare;
   // Şehrin bilet vergisi: oyundan çıkar (şehir kasası), başkana gitmez; para basmaz
   const cityTax = Math.floor(Math.max(0, res.revenue) * ticketTaxRate(policy.mayor));
@@ -559,6 +586,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     ownerShare,
     cityTax,
     crewFee: crewPaid ? crew.fee : 0,
+    productionCost: gig.production_cost ?? 0,
     crewUnpaid: crew.roles.length > 0 && !crewPaid,
     festivalId: gig.festival_id ?? null,
   };

@@ -289,9 +289,9 @@ describe('ek hesap önlemleri', () => {
       expect((await s.c.post('/api/market', { locationId: 'berlin-flea_market', inventoryId: g.id, price: 301 })).body.error).toBe('price_too_high');
       expect((await s.c.post('/api/market', { locationId: 'berlin-flea_market', inventoryId: g.id, price: 300 })).status).toBe(200);
       await s.c.del(`/api/market/${(await s.c.get('/api/market?mine=true')).body.listings[0].id}`);
-      // Takas parası, karşılığında alınan eşyanın değerinin iki katını geçemez
-      expect((await s.c.post('/api/trades', { toId: b.character.id, give: [g.id], want: [bg.id], giveMoney: 301 })).body.error).toBe('trade_money_too_high');
-      const offer = await s.c.post('/api/trades', { toId: b.character.id, give: [g.id], want: [bg.id], giveMoney: 300 });
+      // Takas parası, karşılığında alınan eşyanın dükkân değerini geçemez (TRADE_MONEY_VALUE_MULT 1; eskiden iki katı)
+      expect((await s.c.post('/api/trades', { toId: b.character.id, give: [g.id], want: [bg.id], giveMoney: 151 })).body.error).toBe('trade_money_too_high');
+      const offer = await s.c.post('/api/trades', { toId: b.character.id, give: [g.id], want: [bg.id], giveMoney: 150 });
       expect(offer.status).toBe(200);
       expect((await b.c.post(`/api/trades/${offer.body.id}/accept`)).status).toBe(200);
       // Para döngüsü kapalı: aynı eşyalar bir hafta içinde önceki sahiplerine geri dönemez
@@ -300,8 +300,9 @@ describe('ek hesap önlemleri', () => {
       await b.c.post('/api/market', { locationId: 'berlin-flea_market', inventoryId: g.id, price: 1 });
       const lid = (await b.c.get('/api/market?mine=true')).body.listings[0].id;
       expect((await s.c.post(`/api/market/${lid}/buy`, { locationId: 'berlin-flea_market' })).body.error).toBe('item_recently_yours');
-      // Bir hafta sonra serbest
+      // Bir hafta sonra serbest (geçmiş tablosu da eskir)
       await q(`UPDATE inventory SET handed_at = now() - interval '30 days' WHERE id = $1`, [g.id]);
+      await q(`UPDATE item_handoffs SET created_at = now() - interval '30 days' WHERE inventory_id = $1`, [g.id]);
       expect((await s.c.post(`/api/market/${lid}/buy`, { locationId: 'berlin-flea_market' })).status).toBe(200);
     } finally {
       config.tradeMinAccountHours = prev;
@@ -310,14 +311,16 @@ describe('ek hesap önlemleri', () => {
   });
 
   it('aynı adresten günde sınırlı sayıda hesap açılır', async () => {
-    const prev = config.registerPerIpDay;
+    const prev = { n: config.registerPerIpDay, header: config.clientIpHeader };
     config.registerPerIpDay = 2;
+    // Kenar sunucusunun yazdığı başlık yalnızca açıkça yapılandırılınca okunur (client-ip.ts)
+    config.clientIpHeader = 'cf-connecting-ip';
     const ip = `203.0.113.${Math.floor(Math.random() * 200) + 1}`;
     try {
       const reg = (n: number) =>
         inject('POST', '/api/auth/register', {
           payload: { email: `ipsiniri${n}_${Date.now()}@test.com`, password: 'gizli12345', acceptTerms: true },
-          // Cloudflare'in yazdığı adres esas alınır: istemcinin değiştirdiği X-Forwarded-For sınırı aşamaz
+          // Yapılandırılmış başlık esas alınır: istemcinin değiştirdiği X-Forwarded-For sınırı aşamaz
           headers: { 'cf-connecting-ip': ip, 'x-forwarded-for': `198.51.100.${n}` },
         });
       expect((await reg(1)).statusCode).toBe(200);
@@ -326,7 +329,8 @@ describe('ek hesap önlemleri', () => {
       expect(third.statusCode).toBe(429);
       expect(JSON.parse(third.body).error).toBe('too_many_accounts');
     } finally {
-      config.registerPerIpDay = prev;
+      config.registerPerIpDay = prev.n;
+      config.clientIpHeader = prev.header;
     }
   });
 });

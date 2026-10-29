@@ -16,8 +16,12 @@ const round1 = (v: number) => Math.round(v * 10) / 10;
 
 // ---------- Aşinalık çürümesi ----------
 
-/** Bu kadar oyun günü çalınmayan ya da prova edilmeyen şarkı unutulmaya başlar (Popmundo: 10–14 gün) */
-export const FAMILIARITY_GRACE_DAYS = 12;
+/**
+ * Bu kadar oyun günü çalınmayan, prova edilmeyen ya da kaydedilmeyen şarkı unutulmaya başlar. 12 → 5: aktif oyuncunun
+ * repertuvarı hiç çürümüyordu (denge raporu §6). Setlistte çalınan şarkılar etkilenmez; kenarda kalan şarkıyı korumak
+ * için ara sıra prova gerekir.
+ */
+export const FAMILIARITY_GRACE_DAYS = 5;
 /** Eşikten sonra her oyun günü kaybedilen aşinalık */
 export const FAMILIARITY_DECAY_PER_DAY = 1.5;
 /** Çürüme bu değerin altına indirmez (şarkı tamamen unutulmaz) */
@@ -31,8 +35,11 @@ export function decayedFamiliarity(value: number, idleDays: number): number {
 
 // ---------- Şöhretin azalması ----------
 
-/** O şehirde bu kadar oyun günü konser verilmezse şöhret azalmaya başlar (Popmundo: 48–60 gün) */
-export const FAME_GRACE_DAYS = 54;
+/**
+ * O şehirde bu kadar oyun günü konser verilmezse şöhret azalmaya başlar. 54 → 21: şöhret aktif oyuncuya hiç dokunmuyordu
+ * (denge raporu §6). Düzenli çalınan şehir etkilenmez; turne yapılmayan şehirlerde süperstarlığı korumak bir uğraştır.
+ */
+export const FAME_GRACE_DAYS = 21;
 /** Eşikten sonra her oyun günü kaybedilen şöhret oranı ve en az puan */
 export const FAME_DECAY_RATE_PER_DAY = 0.01;
 export const FAME_DECAY_MIN_PER_DAY = 0.05;
@@ -95,11 +102,18 @@ export const ADDICTION_RECOVERY = 6;
 export const ADDICTION_TREAT_PER_HOUR = 2;
 /** Bağımlı biri son bu kadar saatte "isteğini gidermediyse" canı çeker (ruh hâli düşer) */
 export const CRAVING_HOURS = 12;
+/**
+ * İsteği yalnızca tek seferde en az bu kadarlık dükkân alışverişi ya da hastanede tedavi giderir. Yemek düşkünlüğü artırır
+ * ama isteği gidermez: eskiden $6'lık çorba 11 saatte bir bağımlılığı tamamen siliyordu (denge raporu §6).
+ */
+export const CRAVING_SATISFY_SPEND = 150;
+/** Bağımlıyken düşkünlük daha yavaş söner (günde 4 yerine 2): bağımlılık kendiliğinden ~5 yerine ~6+ günde geçer, tedavi kısaltır */
+export const ADDICTED_DECAY_PER_DAY = 2;
 
-export const indulgenceNow = (stored: number, at: Date | string | null, gameSpeed: number, nowMs = Date.now()) => {
+export const indulgenceNow = (stored: number, at: Date | string | null, gameSpeed: number, nowMs = Date.now(), addicted = false) => {
   const t = at ? new Date(at).getTime() : nowMs;
   const days = Math.max(0, ((nowMs - t) * gameSpeed) / 86_400_000);
-  return Math.max(0, stored - days * INDULGENCE_DECAY_PER_DAY);
+  return Math.max(0, stored - days * (addicted ? ADDICTED_DECAY_PER_DAY : INDULGENCE_DECAY_PER_DAY));
 };
 
 // ---------- Skandal ----------

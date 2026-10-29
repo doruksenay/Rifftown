@@ -1,5 +1,5 @@
 // Sosyal, ilişkiler, pazar, kişiselleştirme, üretim, yaşam, işletmeler, festivaller, görevler, mağaza uyumu
-import { MISSIONS_PER_WEEK, missionsFor } from '@rifftown/shared';
+import { BUSINESS_RULES, MISSIONS_PER_WEEK, missionsFor } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -310,7 +310,8 @@ describe('oyuncu işletmeleri', () => {
     await finishNow(worker.character.id);
     expect((await raw(worker.character.id)).money).toBe(before + 30);
     let b = (await owner.c.get(`/api/businesses/${loc}`)).body.business;
-    expect(b.till).toBe(100 - 30 + 54); // 2 saat × 20 × 1,35
+    // 2 saat × saatlik gelir × 1,35 (gelir 20 → 12: denge raporu madde 7)
+    expect(b.till).toBe(100 - 30 + Math.round(2 * BUSINESS_RULES.bar.revenuePerHour * 1.35));
     expect(b.staff[0]).toMatchObject({ characterId: worker.character.id, status: 'hired', wage: 15 });
     expect((await me(worker.c)).character.business).toEqual({ locationId: loc, role: 'staff' });
 

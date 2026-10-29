@@ -224,6 +224,7 @@ describe('takas', () => {
     // Aynı eşyalar bir hafta içinde önceki sahibine geri dönemez
     expect((await b.c.post('/api/trades', { toId: a.character.id, give: [ag.id], want: [bo.id] })).body.error).toBe('item_recently_yours');
     await q(`UPDATE inventory SET handed_at = now() - interval '30 days' WHERE id = ANY($1::bigint[])`, [[ag.id, bo.id]]);
+    await q(`UPDATE item_handoffs SET created_at = now() - interval '30 days' WHERE inventory_id = ANY($1::bigint[])`, [[ag.id, bo.id]]);
     // Teklif eden geri çekebilir, alıcı reddedebilir
     const third = await b.c.post('/api/trades', { toId: a.character.id, give: [ag.id], want: [bo.id] });
     expect((await a.c.post(`/api/trades/${third.body.id}/decline`)).status).toBe(200);

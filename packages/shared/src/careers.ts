@@ -206,8 +206,40 @@ export const VIP_BENEFITS: L[] = [
 
 export const BUSK_HOURS = [1, 2, 4] as const;
 
-/** Parkta çalarak kazanılan saatlik bahşiş (rastgelelik hariç) */
-export const buskPayPerHour = (roleLevel: number, stage: number, costMult: number) =>
-  Math.round((4 + roleLevel * 0.35 + stage * 0.15) * costMult);
+/**
+ * Sokak müziği bir başlangıç yoludur, kariyer değil (denge raporu §3: 30 günde sokak müzisyeni $10.527 kazanıp
+ * şovmenliği 82'ye, gitarı 69'a taşıyordu; konser odaklı oyuncudan fazla).
+ * - Saatlik bahşiş en fazla BUSK_MAX_PAY_PER_HOUR × şehir (sokak kalabalığının bırakabileceği; beceri etkisi dahil)
+ * - Günlük azalan getiri: kayan 24 oyun saatinde ilk 4 saat tam, sonraki 4 saat yarım, sonrası çeyrek bahşiş
+ * - Beceri artışı saatte rol 0,2 → 0,08, şovmenlik 0,3 → 0,1 ve sokakta yalnızca BUSK_SKILL_CAP'e (amatör) kadar
+ */
+export const BUSK_MAX_PAY_PER_HOUR = 20;
+export const BUSK_DAILY_TIERS: readonly [hoursUpTo: number, mult: number][] = [
+  [4, 1],
+  [8, 0.5],
+  [Infinity, 0.25],
+];
+export const BUSK_SKILL_CAP = 30;
+export const BUSK_SKILL_GAIN = { role: 0.08, showmanship: 0.1 } as const;
+
+/** Parkta çalarak kazanılan saatlik bahşiş (rastgelelik ve günlük azalma hariç); mult: sokak becerilerinin çarpanı */
+export const buskPayPerHour = (roleLevel: number, stage: number, costMult: number, mult = 1) =>
+  Math.round(Math.min(BUSK_MAX_PAY_PER_HOUR, (4 + roleLevel * 0.35 + stage * 0.15) * mult) * costMult);
+
+/** Bugün (son 24 oyun saatinde) zaten `used` saat çalmış biri için sonraki `hours` saatin ortalama bahşiş çarpanı */
+export function buskDailyFactor(used: number, hours: number): number {
+  if (hours <= 0) return 1;
+  let total = 0;
+  let h = Math.max(0, used);
+  let left = hours;
+  for (const [upTo, mult] of BUSK_DAILY_TIERS) {
+    if (left <= 0) break;
+    const span = Math.max(0, Math.min(left, upTo - h));
+    total += span * mult;
+    h += span;
+    left -= span;
+  }
+  return total / hours;
+}
 
 export type BuskRole = Instrument;

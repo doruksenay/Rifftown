@@ -30,8 +30,9 @@ export const RELEASE_RULES: Record<
 > = {
   // price: tek kopyanın fiyatı (dolar). base: şöhret %100'de, kalite 70'te bir şehirdeki haftalık satış ölçeği.
   // Bekleme, satış süresi, düşüş ve haftalık satış tempo dosyasından (pacing.ts) gelir; liste haftasının uzunluğu değişirse kendiliğinden ölçeklenir.
-  single: { minSongs: 1, maxSongs: 2, pressingCost: 100, cooldownDays: PACING.singleCooldownDays, price: 3.5, ...SALES_PACE.single },
-  album: { minSongs: 6, maxSongs: 12, pressingCost: 500, cooldownDays: PACING.albumCooldownDays, price: 15, ...SALES_PACE.album },
+  // Fiyat single 3,5 → 5, albüm 15 → 25 (denge raporu §4: plaklar kayıt odaklı oyuncuda bile gelirin %2–7'siydi)
+  single: { minSongs: 1, maxSongs: 2, pressingCost: 100, cooldownDays: PACING.singleCooldownDays, price: 5, ...SALES_PACE.single },
+  album: { minSongs: 6, maxSongs: 12, pressingCost: 500, cooldownDays: PACING.albumCooldownDays, price: 25, ...SALES_PACE.album },
 };
 
 export const RELEASE_NAMES: Record<ReleaseKind, L> = {
@@ -39,8 +40,14 @@ export const RELEASE_NAMES: Record<ReleaseKind, L> = {
   album: { tr: 'Albüm', en: 'Album' },
 };
 
-/** Satış gelirinin gruba kalan payı (gerisi plak şirketi ve dağıtım). Grup üyeleri arasında eşit bölünür. */
-export const BAND_SHARE = 0.5;
+/** Satış gelirinin gruba kalan payı (gerisi plak şirketi ve dağıtım). Grup üyeleri arasında eşit bölünür. 0,5 → 0,6. */
+export const BAND_SHARE = 0.6;
+/**
+ * Şöhretin satışa etkisi: 0,06 + 0,94 × şöhret ÷ 100 (eskiden 0,04 + 0,96 × (şöhret ÷ 100)^1,2). Az tanınan grubun da küçük
+ * ama gerçek bir alıcı kitlesi olur: eskiden şöhret 20'nin altında albüm zarar ediyordu.
+ */
+export const SALES_FAN_FLOOR = 0.06;
+export const SALES_FAME_EXPONENT = 1;
 /** Bir liste haftası kaç oyun günü (pacing.ts) */
 export const CHART_WEEK_DAYS = PACING.chartWeekDays;
 export const CHART_SIZE = 20;
@@ -64,7 +71,7 @@ export function weeklyUnits(
   const r = RELEASE_RULES[kind];
   if (weekIndex >= r.weeks) return 0;
   // Biraz tanınan bir şehirde küçük bir taban satış olur (yeni gruplar da listelere girebilsin)
-  const fanDraw = fame > 0 ? 0.04 + 0.96 * Math.pow(clamp(fame, 0, 100) / 100, 1.2) : 0;
+  const fanDraw = fame > 0 ? SALES_FAN_FLOOR + (1 - SALES_FAN_FLOOR) * Math.pow(clamp(fame, 0, 100) / 100, SALES_FAME_EXPONENT) : 0;
   const qualityFactor = 0.3 + clamp(quality, 0, 100) / 100;
   const units = r.base * fanDraw * genrePop * qualityFactor * marketSize(city) * Math.pow(r.decay, weekIndex) * (0.85 + rand() * 0.3);
   // Az da olsa tanınan bir şehirde birkaç sadık dinleyici her zaman alır

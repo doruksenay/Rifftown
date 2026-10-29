@@ -96,8 +96,10 @@ describe('NPC kadrosu', () => {
     await npcNews();
     const news = (await p.c.get('/api/cities/lyon/news')).body.articles.filter((a: any) => a.npc);
     expect(news.length).toBe(1);
-    expect(news[0].titleEn).toContain(band.name);
-    expect(news[0].body).toContain('300');
+    // Haber parçalardan kurulur (denge raporu madde 10): grup adı başlıkta ya da metinde, metin konseri bilir
+    // (seyirci sayısı, mekân, şehir ya da gecenin şarkısı)
+    expect(`${news[0].titleEn} ${news[0].bodyEn}`).toContain(band.name);
+    expect(['300', 'Péniche', 'Lyon', band.songs[0].title].some((x) => news[0].body.includes(x))).toBe(true);
     await npcNews();
     expect((await p.c.get('/api/cities/lyon/news')).body.articles.filter((a: any) => a.npc)).toHaveLength(1);
   }));

@@ -32,9 +32,14 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
     case 'welcome':
       return t('n_welcome');
     case 'action_done':
-      if (d.kind === 'lesson' && d.skill) return t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
+      if (d.kind === 'lesson' && d.skill) {
+        const text = t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
+        return d.unfocused ? `${text}. ${t('n_study_unfocused')}` : text;
+      }
       if (d.kind === 'study') {
-        return d.learned ? t('learnedSkill', { skill: skillName(d.skill) }) : t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
+        if (d.learned) return t('learnedSkill', { skill: skillName(d.skill) });
+        const text = t('n_study', { skill: skillName(d.skill), gain: gainText(d.gain, lang) });
+        return d.unfocused ? `${text}. ${t('n_study_unfocused')}` : text;
       }
       if (d.kind === 'write_song' && d.title) {
         const base = `${t('n_action_done', { action: t('action_write_song') })}: "${d.title}", ${tierName('quality', d.quality, lang)}`;
@@ -42,6 +47,7 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
         return d.fatigued ? `${withInspo}. ${t('n_song_fatigued')}` : withInspo;
       }
       if (d.kind === 'record' && d.title) return t('n_record', { title: d.title, q: tierName('quality', d.quality, lang) });
+      if (d.kind === 'busk' && d.tired) return `${t('n_action_done', { action: t('action_busk') })}. ${t('busk_tired')}`;
       if (d.kind === 'crime' && d.success) return t('n_crime_ok', { money: `$${Number(d.loot).toLocaleString('en-US')}` });
       if (d.kind === 'investigate' && !d.cancelled) {
         return d.solved ? t('n_investigate_solved', { money: `$${Number(d.bonus).toLocaleString('en-US')}` }) : t('n_investigate_none');

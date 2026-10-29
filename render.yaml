@@ -45,3 +45,11 @@ services:
         value: "5000"
       - key: PG_POOL_MAX
         value: "5"
+      # İstemci adresi (kayıt sınırı ve istek sınırı). Render trafiği Cloudflare'den geçirir: cf-connecting-ip kenarda
+      # yazılır, istemci değiştiremez. Başlık yoksa X-Forwarded-For'un en sağındaki (Render vekilinin eklediği) adres
+      # kullanılır; Render istemcinin gönderdiği X-Forwarded-For'u silmeden eklediği için soldaki değerlere güvenilmez.
+      # Kod bu değerleri RENDER=true iken zaten varsayar; burada açıkça yazılı. Ayrıntı: README "İstemci adresi".
+      - key: CLIENT_IP_HEADER
+        value: cf-connecting-ip
+      - key: TRUST_PROXY_HOPS
+        value: "1"

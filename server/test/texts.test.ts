@@ -10,6 +10,10 @@ import {
   REVIEW_PRESS,
   REVIEW_RIVAL,
   REVIEW_TIERS,
+  REVIEW_PARTS,
+  REVIEW_CROWD_PARTS,
+  NEWS_PARTS,
+  newsArticleTemplate,
   STAGE_EVENTS,
   type L,
   computeGig,
@@ -37,6 +41,11 @@ const ALL: L[] = [
   ...Object.values(REVIEW_RIVAL).flat(),
   ...Object.values(REVIEW_CITY).flat(),
   ...NEWS_TEMPLATES.flatMap((x) => [x.title, x.body]),
+  ...REVIEW_PARTS.flatMap((t) => [...t.openers, ...t.followups]),
+  ...Object.values(REVIEW_CROWD_PARTS).flatMap((x) => [...x.openers, ...x.details]),
+  ...NEWS_PARTS.titles,
+  ...NEWS_PARTS.leads,
+  ...NEWS_PARTS.closers,
 ];
 const base = {
   attendance: 70, capacity: 80, presentCount: 3, memberCount: 3,
@@ -53,6 +62,62 @@ describe('metin havuzları', () => {
     for (const e of STAGE_EVENTS) expect(REVIEW_EVENT[e.id], e.id).toBeDefined();
     for (const c of CITIES) expect(REVIEW_CITY[c.id]?.length, c.id).toBeGreaterThanOrEqual(2);
     expect(NEWS_TEMPLATES.length).toBeGreaterThanOrEqual(8);
+  });
+
+  it('parçalardan kurulan cümleler: basamak başına en az 100 kombinasyon, parçalar birbirine uyar', () => {
+    expect(REVIEW_PARTS.map((t) => t.minQuality)).toEqual(REVIEW_TIERS.map((t) => t.minQuality));
+    for (const t of REVIEW_PARTS) {
+      expect(t.openers.length * t.followups.length).toBeGreaterThanOrEqual(100);
+      for (const o of t.openers) for (const lang of ['tr', 'en'] as const) {
+        // Açılış büyük harfle başlar, noktasız biter; devam küçük harfle başlar, noktayla biter
+        expect(/[.;]$/.test(o[lang]), o[lang]).toBe(false);
+      }
+      for (const f of t.followups) for (const lang of ['tr', 'en'] as const) {
+        expect(f[lang].endsWith('.'), f[lang]).toBe(true);
+        expect(f[lang][0], f[lang]).toBe(f[lang][0].toLocaleLowerCase(lang === 'tr' ? 'tr' : 'en'));
+      }
+    }
+    for (const x of Object.values(REVIEW_CROWD_PARTS)) {
+      expect(x.openers.length * x.details.length).toBeGreaterThanOrEqual(24);
+      // Doluluk cümlesi hep mekânı anar
+      for (const o of x.openers) expect(o.tr.includes('{venue}') && o.en.includes('{venue}')).toBe(true);
+    }
+    // Aynı şarkı adı bir cümlede iki kez geçmez; aynı konser hep aynı metni üretir
+    for (let seed = 0; seed < 300; seed++) {
+      const r = gigReview({ ...base, quality: 10 + (seed % 85), seed });
+      expect(r.tr.split('Son Vapur').length - 1, r.tr).toBeLessThanOrEqual(2);
+      expect(gigReview({ ...base, quality: 10 + (seed % 85), seed })).toEqual(r);
+    }
+    // Haber: başlık × giriş × kapanış; şarkısız konserde şarkı anılmaz
+    const news = new Set(Array.from({ length: 200 }, (_, i) => JSON.stringify(newsArticleTemplate(i, true))));
+    expect(news.size).toBeGreaterThanOrEqual(100);
+    for (let i = 0; i < 100; i++) {
+      const t = newsArticleTemplate(i, false);
+      expect(t.title.tr + t.body.tr + t.title.en + t.body.en).not.toContain('{song}');
+      // Haber grubu hep anar
+      expect(t.title.tr + t.body.tr).toContain('{band}');
+      expect(t.title.en + t.body.en).toContain('{band}');
+    }
+  });
+
+  it('çeşitlilik: 200 konserde 10. konserden sonra cümlelerin en az %35\'i yeni (denge raporu §9)', () => {
+    const seen = new Set<string>();
+    let after = 0;
+    let fresh = 0;
+    for (let i = 0; i < 200; i++) {
+      const q = Math.round(Math.max(5, Math.min(97, 25 + i * 0.25 + ((i * 37) % 20) - 10)));
+      const r = gigReview({ ...base, attendance: Math.round(80 * Math.min(1, 0.15 + i / 220)), quality: q, seed: 100 + i * 13 });
+      for (const sentence of r.tr.split(/(?<=[.!?])\s+/)) {
+        const norm = sentence.replace(/\d+/g, '#');
+        const isNew = !seen.has(norm);
+        seen.add(norm);
+        if (i >= 10) {
+          after++;
+          if (isNew) fresh++;
+        }
+      }
+    }
+    expect(fresh / after).toBeGreaterThanOrEqual(0.35);
   });
 
   it('iki dil dolu, yer tutucular iki dilde aynı; Türkçede yer tutucuya ek getirilmez', () => {

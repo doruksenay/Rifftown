@@ -22,6 +22,26 @@ import {
   songwritingScore,
   stageScore,
   studyGain,
+  VENUE_RULES,
+  SESSION_MUSICIAN,
+  SESSION_SKILL_MARGIN,
+  fameGainMult,
+  sessionLevels,
+  fxQualityBonus,
+  MAX_FX_BONUS,
+  STAGE_EVENTS,
+  STAGE_EVENT_BY_ID,
+  stageEventOdds,
+  ENCORE_RULES,
+  boldEncoreChance,
+  gearQualityBonus,
+  GEAR_QUALITY_CAP,
+  setlistFlow,
+  FLOW_MULT,
+  RELEASE_RULES,
+  BAND_SHARE,
+  CITIES,
+  weeklyUnits,
 } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { config } from '../src/config';
@@ -162,11 +182,13 @@ describe('uzmanlık payı (kurallar)', () => {
     expect(stageScore({ showmanship: 100, pro_showmanship: 100, dancing: 100, audience: 100, stagediving: 100, ...profile('stage', 13, 100) })).toBe(100);
   });
 
-  it('aynı çalışma saatiyle (240 saat) derin uzman geniş oyuncuyu geçer; eskiden ikisi de +10 tavanında eşitti', () => {
+  // Saat: 240 → 350. Beceri eğrisi sertleşti (diminishing üssü 2, denge raporu madde 5); 240 saatte geniş oyuncu artık
+  // +10 tavanına varmıyor. Testin konusu aynı: aynı saatle derin uzman geniş oyuncuyu geçer.
+  it('aynı çalışma saatiyle (350 saat) derin uzman geniş oyuncuyu geçer; eskiden ikisi de +10 tavanında eşitti', () => {
     for (const kind of ['stage', 'songwriting'] as SkillEffectKind[]) {
       const n = effectSkills(kind).length;
-      const broad = profile(kind, n, levelAfter(240 / n));
-      const deep = profile(kind, 3, levelAfter(240 / 3));
+      const broad = profile(kind, n, levelAfter(350 / n));
+      const deep = profile(kind, 3, levelAfter(350 / 3));
       // Eski kural: ikisi de en fazla tavan
       expect(Math.min(MAX_EFFECT_BONUS, skillBonus(broad, kind))).toBe(MAX_EFFECT_BONUS);
       expect(effectBonus(broad, kind)).toBe(MAX_EFFECT_BONUS);
@@ -248,5 +270,111 @@ describe('şehir doygunluğu (sunucu)', () => {
       const again = await play(p, 'istanbul-club', setlist);
       expect(again.result.factors.saturation).toBeUndefined();
     });
+  });
+});
+
+// ---------- Kiralık müzisyen ve şöhret eğrisi (denge raporu madde 1) ----------
+
+describe('büyük sahnede beceri belirleyici (kurallar)', () => {
+  it('başa baş kalite mekâna göre artar: barda 30 kalite şöhret getirir, salonda ve stadyumda vasat gece getirmez', () => {
+    expect(VENUE_RULES.bar.breakEven).toBe(20);
+    expect(VENUE_RULES.club.breakEven).toBeGreaterThan(VENUE_RULES.bar.breakEven);
+    expect(VENUE_RULES.hall.breakEven).toBeGreaterThan(VENUE_RULES.club.breakEven);
+    expect(VENUE_RULES.stadium.breakEven).toBeGreaterThan(VENUE_RULES.hall.breakEven);
+    // Aynı vasat grup (kalite ~45): barda ve kulüpte kazanır, salonda kazanamaz
+    const mid = (venue: 'bar' | 'club' | 'hall' | 'stadium', fame: number) =>
+      computeGig({ venue, fame, genre: 'rock', city: istanbul, performers: band(40, 30, 55), setlist: setlist(40), rand: fixed(0.5) });
+    const bar = mid('bar', 5);
+    const hall = mid('hall', 50);
+    const stadium = mid('stadium', 80);
+    expect(bar.fameDelta).toBeGreaterThan(0);
+    expect(hall.quality).toBeLessThan(VENUE_RULES.hall.breakEven);
+    expect(hall.fameDelta).toBeLessThan(0);
+    expect(stadium.fameDelta).toBeLessThan(0);
+  });
+
+  it('şöhret kazancı azalan verimli: bar döneminde neredeyse aynı, üst şöhrette çok daha yavaş', () => {
+    expect(fameGainMult(0)).toBe(1);
+    expect(fameGainMult(10)).toBeGreaterThan(0.85);
+    expect(fameGainMult(60)).toBeLessThan(0.42);
+    expect(fameGainMult(70)).toBeLessThan(0.32);
+    for (let f = 0; f < 100; f += 5) expect(fameGainMult(f + 5)).toBeLessThanOrEqual(fameGainMult(f));
+    expect(fameGainMult(100)).toBeGreaterThan(0);
+  });
+
+  it('kiralık müzisyen barda mekânın seviyesinde, kulüp ve üstünde grubun kendi ortalamasının biraz üstünde çalar', () => {
+    expect(sessionLevels('bar', { skill: 10, stage: 5 })).toEqual({ skill: SESSION_MUSICIAN.bar.skill, stage: SESSION_MUSICIAN.bar.stage });
+    expect(sessionLevels('hall', { skill: 40, stage: 30 })).toEqual({ skill: 40 + SESSION_SKILL_MARGIN.hall, stage: 30 + SESSION_SKILL_MARGIN.hall });
+    expect(sessionLevels('stadium', { skill: 40, stage: 30 }).skill).toBe(40 + SESSION_SKILL_MARGIN.stadium);
+    // Grup zaten iyiyse mekânın seviyesini geçmez
+    expect(sessionLevels('club', { skill: 90, stage: 90 })).toEqual({ skill: SESSION_MUSICIAN.club.skill, stage: SESSION_MUSICIAN.club.stage });
+  });
+});
+
+// ---------- Konserde karar (denge raporu madde 6) ----------
+
+describe('konser planı: reçete yok, karar var (kurallar)', () => {
+  it('sahne efektleri: aynı efekt bir kez sayılır, azalan getiri, tavan 6', () => {
+    expect(fxQualityBonus(Array(6).fill('fx_smoke'))).toBe(2);
+    expect(fxQualityBonus(['fx_pyro'])).toBe(6);
+    expect(fxQualityBonus(['fx_pyro', 'fx_screen', 'fx_lasers'])).toBe(MAX_FX_BONUS);
+    expect(fxQualityBonus(['fx_smoke', 'fx_confetti'])).toBeCloseTo(3 + 2 * 0.5);
+    expect(fxQualityBonus([])).toBe(0);
+  });
+
+  it('sahne olayları: eşikte beklenen değer negatif, her ek olay daha riskli ve daha az getirir, mekâna göre değişir', () => {
+    for (const e of STAGE_EVENTS) {
+      expect(e.penalty).toBe(e.bonus);
+      const atMin = stageEventOdds(e, e.min, 0, 'club', 80);
+      expect(atMin.chance * atMin.bonus - (1 - atMin.chance) * atMin.penalty).toBeLessThan(0);
+      const first = stageEventOdds(e, e.min + 25, 0, 'hall', 80);
+      const third = stageEventOdds(e, e.min + 25, 2, 'hall', 80);
+      expect(third.chance).toBeLessThan(first.chance);
+      expect(third.bonus).toBeLessThan(first.bonus);
+    }
+    const banter = STAGE_EVENT_BY_ID.banter;
+    expect(stageEventOdds(banter, 60, 0, 'bar', 80).bonus).toBeGreaterThan(stageEventOdds(banter, 60, 0, 'stadium', 80).bonus);
+    const singalong = STAGE_EVENT_BY_ID.singalong;
+    expect(stageEventOdds(singalong, 60, 0, 'stadium', 80).bonus).toBeGreaterThan(stageEventOdds(singalong, 60, 0, 'bar', 80).bonus);
+    // Yorgun grup olaylarda daha sık hata yapar
+    expect(stageEventOdds(banter, 40, 0, 'club', 30).chance).toBeLessThan(stageEventOdds(banter, 40, 0, 'club', 80).chance);
+  });
+
+  it('cesur bis kumardır; set bonusu, tür uyumu ve setlist sırası kaliteye anlamlı katkı verir', () => {
+    expect(ENCORE_RULES.bold.failQuality).toBe(-6);
+    // Enerjisi düşük grupta cesur bis çoğu zaman tutmaz
+    expect(boldEncoreChance(60, 30)).toBeLessThan(0.5);
+    expect(boldEncoreChance(80, 90)).toBeGreaterThan(0.7);
+    expect(gearQualityBonus(3, 0)).toBe(1.5);
+    expect(gearQualityBonus(3, 3)).toBe(GEAR_QUALITY_CAP);
+    // En güçlü şarkı sonda, zayıflar ortada: en az 1 puan
+    const songs = [60, 40, 42, 45, 70].map((score) => ({ score }));
+    expect(setlistFlow(songs)).toBeGreaterThanOrEqual(1);
+    expect(FLOW_MULT).toBe(5);
+  });
+});
+
+// ---------- Plaklar (denge raporu madde 9) ----------
+
+describe('plaklar bir gelir kolu (kurallar)', () => {
+  /** Ev şehri İstanbul, ülke içine yayılmış şöhret; zar ortada */
+  function lifetimeBand(kind: 'single' | 'album', quality: number, fame: number) {
+    let units = 0;
+    for (let w = 0; w < RELEASE_RULES[kind].weeks; w++) {
+      for (const c of CITIES) {
+        const f = c.id === 'istanbul' ? fame : c.countryCode === 'TR' ? fame * 0.375 : 0;
+        units += weeklyUnits(kind, quality, f, c.genrePopularity.rock, c, w, fixed(0.5));
+      }
+    }
+    return units * RELEASE_RULES[kind].price * BAND_SHARE;
+  }
+  it('az tanınan grubun albümü (şöhret 10, kalite 45) maliyetini çıkarır; ünlü grubun albümü birkaç büyük konser eder', () => {
+    expect(RELEASE_RULES.album.price).toBe(25);
+    expect(BAND_SHARE).toBe(0.6);
+    // 8 şarkılık albüm: kayıt + prova + baskı ≈ $3.060 (İstanbul)
+    expect(lifetimeBand('album', 45, 10)).toBeGreaterThan(3060);
+    expect(lifetimeBand('album', 45, 55)).toBeGreaterThan(15000);
+    // Single şöhret 3'te bile zarar etmez (~$420 maliyet)
+    expect(lifetimeBand('single', 45, 3)).toBeGreaterThan(420);
   });
 });

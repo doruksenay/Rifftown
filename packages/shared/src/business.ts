@@ -16,10 +16,19 @@ export interface BusinessRule {
   revenuePerHour: number;
 }
 
+/**
+ * Mesai geliri 20 → 12 (bar), 24 → 14 (restoran). Eskiden 5 ek hesap en düşük maaşla çalışıp bara günde $1.650–5.078
+ * net basıyordu, ruhsat 7–12 günde geri ödeniyordu (denge raporu §7). Ayrıca günlük müşteri tavanı ve daha küçük
+ * işletmecilik bonusu (aşağıda).
+ */
 export const BUSINESS_RULES: Record<BusinessType, BusinessRule> = {
-  bar: { name: { tr: 'Bar', en: 'Bar' }, price: 20000, upkeep: 350, revenuePerHour: 20 },
-  restaurant: { name: { tr: 'Restoran', en: 'Restaurant' }, price: 14000, upkeep: 300, revenuePerHour: 24 },
+  bar: { name: { tr: 'Bar', en: 'Bar' }, price: 20000, upkeep: 350, revenuePerHour: 12 },
+  restaurant: { name: { tr: 'Restoran', en: 'Restaurant' }, price: 14000, upkeep: 300, revenuePerHour: 14 },
 };
+/** Bir işletmenin kayan 24 oyun saatinde gelir getiren en fazla mesai saati (müşteri sınırlı; fazla çalışan gelir getirmez) */
+export const BUSINESS_DAILY_REVENUE_HOURS = 16;
+/** İşletmecilik becerisinin gelire en fazla katkısı (eskiden %50) */
+export const BUSINESS_SKILL_MAX_BONUS = 0.2;
 
 export const MAX_EMPLOYEES = 5;
 /** Sahibinin belirleyebileceği saatlik maaş aralığı */
@@ -33,6 +42,6 @@ export const BUSINESS_SELL_BACK = 0.5;
 export const BUSINESS_HOUR_OPTIONS = [2, 4, 8] as const;
 export const BUSINESS_NAME_RE = /^[\p{L}\p{N} '’.&!-]{2,32}$/u;
 
-/** Bir mesai saatinin kasaya getirdiği para: işletmecilik becerisi en fazla %50 artırır */
+/** Mesai saatlerinin kasaya getirdiği para: işletmecilik becerisi en fazla BUSINESS_SKILL_MAX_BONUS artırır */
 export const staffedRevenue = (rule: BusinessRule, costMult: number, hours: number, businessSkill: number) =>
-  Math.round(rule.revenuePerHour * costMult * hours * (1 + Math.min(100, businessSkill) / 200));
+  Math.round(rule.revenuePerHour * costMult * hours * (1 + (Math.min(100, Math.max(0, businessSkill)) / 100) * BUSINESS_SKILL_MAX_BONUS));

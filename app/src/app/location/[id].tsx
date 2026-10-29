@@ -36,6 +36,7 @@ import {
   ROLE_SKILLS,
   UNIVERSITY_PRICE_PER_HOUR,
   buskPayPerHour,
+  skillMult,
   roleSkill,
   stageScore,
   studyPlaceFor,
@@ -567,10 +568,11 @@ function Park({ locationId }: { locationId: string }) {
   const roles = INSTRUMENTS.filter((r) => knows(ch.skills, ROLE_SKILLS[r].specific));
   const [role, setRole] = useState<Instrument | undefined>(roles.includes(ch.mainInstrument) ? ch.mainInstrument : roles[0]);
   if (!role) return <Empty text={t('err_skill_not_known')} />;
-  const perHour = buskPayPerHour(roleSkill(ch.skills, role), stageScore(ch.skills), city.costMult);
+  const perHour = buskPayPerHour(roleSkill(ch.skills, role), stageScore(ch.skills), city.costMult, skillMult(ch.skills, 'busking'));
   return (
     <View style={{ marginTop: space.lg }}>
       <Body color={c.inkSoft}>{t('buskIntro')}</Body>
+      <Small style={{ marginTop: space.sm }}>{t('buskLimits')}</Small>
       <Heading>{t('instrumentToPlay')}</Heading>
       <Choice
         options={roles.map((r) => ({ value: r, label: p(ROLE_NAMES[r]), hint: tierName('skill', roleSkill(ch.skills, r), lang) }))}

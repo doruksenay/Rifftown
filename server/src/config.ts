@@ -37,6 +37,20 @@ export const config = {
   rateLimit: process.env.RATE_LIMIT !== '0',
   /** Aynı IP adresinden 24 saatte açılabilecek hesap sayısı (0 = sınırsız; testlerde kapalı) */
   registerPerIpDay: num(process.env.REGISTER_PER_IP_DAY, 3),
+  /**
+   * İstemci adresi (kayıt sınırı ve istek sınırı) için önümüzdeki vekil sayısı. X-Forwarded-For'un SAĞINDAN bu kadar
+   * atlama güvenilir, daha solundaki (istemcinin yazabildiği) değerler yok sayılır. 0: bağlantının kendi adresi.
+   * Varsayılan 0; Render'da (RENDER=true) 1. Ayrıntı: server/src/client-ip.ts ve README "İstemci adresi".
+   */
+  trustProxyHops: Math.max(0, Math.floor(num(process.env.TRUST_PROXY_HOPS, process.env.RENDER === 'true' ? 1 : 0))),
+  /**
+   * Kenar sunucusunun yazdığı ve istemcinin değiştiremediği istemci adresi başlığı (ör. cf-connecting-ip). Yalnızca
+   * açıkça ayarlanırsa okunur; "none" kapatır. Varsayılan boş; Render'da (trafik Cloudflare'den geçer) cf-connecting-ip.
+   */
+  clientIpHeader: (() => {
+    const v = (process.env.CLIENT_IP_HEADER ?? (process.env.RENDER === 'true' ? 'cf-connecting-ip' : '')).trim().toLowerCase();
+    return v === 'none' ? '' : v;
+  })(),
   /** Yeni hesapların pazar/takas/hediye kapısı (oyun saati). Boşsa NEW_ACCOUNT_TRADE_HOURS. */
   tradeMinAccountHours: num(process.env.TRADE_MIN_ACCOUNT_HOURS, 72),
   /** RevenueCat webhook'u için gizli anahtar (boşsa mağaza bağlantısı kapalıdır) */

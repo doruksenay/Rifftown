@@ -14,7 +14,7 @@ import {
   encoreOutcome,
   setlistFlow,
   stageEventAllowed,
-  stageEventChance,
+  stageEventOdds,
   subgenreGigBonus,
 } from './performance';
 import { CITY_EVENT_ATTENDANCE } from './content/cities';
@@ -111,8 +111,28 @@ export const priceFor = (base: number, city: City, hours: number) => Math.round(
 /** Ruh hâli verimi çarpar: %0 ruh hâlinde 0.6, %100'de 1.0. */
 export const moodFactor = (mood: number) => 0.6 + 0.4 * (clamp(mood, 0, 100) / 100);
 
-/** Becerinin yükseldikçe zorlaşan artışı. */
-export const diminishing = (level: number) => Math.max(0, 1 - level / 110);
+/**
+ * Becerinin yükseldikçe zorlaşan artışı: (1 − seviye ÷ 110)^SKILL_DIMINISHING_EXPONENT. Eskiden üs 1'di ve okulda ana
+ * enstrüman 12'den 90'a (efsane) 104 oyun saatinde, 6 günde çıkıyordu (denge raporu §3). Üs 2 ile ilk seviyeler
+ * hâlâ hızlı (12 → 30 yalnızca ~%25 yavaş), usta (60) üstü belirgin biçimde zor. Bütün beceri artışları (ders, prova,
+ * konser, sokak, atölye) aynı eğriyi kullanır.
+ */
+export const SKILL_DIMINISHING_EXPONENT = 2;
+export const diminishing = (level: number) => Math.max(0, 1 - level / 110) ** SKILL_DIMINISHING_EXPONENT;
+
+/**
+ * Odaklı çalışma: kayan 24 oyun saatinde ilk STUDY_FOCUS_HOURS saat ders ve çalışma (okul, ev, özel ders, arkadaş dersi
+ * birlikte) tam verimli; sonrası UNFOCUSED_STUDY_MULT verimle (dikkat dağılır). Eskiden günde 20 saat tam verimle
+ * çalışılabiliyordu.
+ */
+export const STUDY_FOCUS_HOURS = 5;
+export const UNFOCUSED_STUDY_MULT = 0.3;
+/** Bugün `used` saat çalışmış biri için sonraki `hours` saatin ortalama verim çarpanı */
+export function studyFocusFactor(used: number, hours: number): number {
+  if (hours <= 0) return 1;
+  const focused = Math.max(0, Math.min(hours, STUDY_FOCUS_HOURS - Math.max(0, used)));
+  return (focused + (hours - focused) * UNFOCUSED_STUDY_MULT) / hours;
+}
 
 /** instrumentBonus: o beceri için kuşanılmış enstrümanın bonusu (ör. 7 → çalışma verimi %14 artar). */
 export function studyGain(
@@ -189,8 +209,16 @@ export const gameHoursToMs = (hours: number, speed: number) => (hours * 3600 * 1
 
 // ---------- Konser ----------
 
-/** Bu kalitenin üstündeki konserler şöhret kazandırır, altındakiler kaybettirir. */
+/** Kötü konser eşiği (moodlet, rapor) ve barın başa baş kalitesi. Mekâna göre başa baş: VENUE_RULES[venue].breakEven. */
 export const GIG_BREAK_EVEN_QUALITY = 20;
+/**
+ * Şöhret kazancının azalan verimi: (1 − şöhret ÷ 110)^FAME_GAIN_EXPONENT, en az FAME_GAIN_FLOOR.
+ * Eskiden max(0,1; 1 − şöhret ÷ 120): şöhret 60'ta ×0,5, 70'te ×0,42. Şimdi 60'ta ×0,39, 70'te ×0,30 (üs 1,2).
+ * Bar dönemi (şöhret < 15) neredeyse aynı kalır (şöhret 10'da ×0,90, eski ×0,92).
+ */
+export const FAME_GAIN_EXPONENT = 1.2;
+export const FAME_GAIN_FLOOR = 0.03;
+export const fameGainMult = (fame: number) => Math.max(FAME_GAIN_FLOOR, Math.max(0, 1 - fame / 110) ** FAME_GAIN_EXPONENT);
 /** Barda bu kaliteye ulaşan konser en az BAR_MIN_FAME kadar şöhret getirir (ilk adımlar boşa gitmesin). */
 export const BAR_FLOOR_QUALITY = 10;
 export const BAR_MIN_FAME = 0.2;
@@ -219,6 +247,8 @@ export interface GigPerformer {
   energy?: number;
   /** İlham (0–100); EFSANEVİ gece olasılığını artırır */
   inspiration?: number;
+  /** Set bonusu ve tür uyumunun kaliteye doğrudan katkısı (items.ts gearQualityBonus; yoksa 0) */
+  gearQuality?: number;
 }
 
 export interface GigSong {
@@ -266,6 +296,19 @@ export const CITY_SATURATION = { famePerGig: 0.5, attendancePerGig: 0.1, minAtte
 export const saturationFameMult = (recentGigs: number) => 1 / (1 + CITY_SATURATION.famePerGig * Math.max(0, recentGigs));
 export const saturationAttendanceMult = (recentGigs: number) =>
   Math.max(CITY_SATURATION.minAttendance, 1 - CITY_SATURATION.attendancePerGig * Math.max(0, recentGigs));
+
+/**
+ * Şarkı puanının ağırlıkları mekâna göre: büyük sahnede şarkının kendisi ve çalım becerisi daha çok, prova
+ * (aşinalık, yalnızca zamanla kazanılır) daha az sayılır. Eskiden her yerde 0,4 / 0,35 / 0,25 idi; beste 8 olan
+ * bir oyuncu aşinalık ve kiralık kadroyla salonda ve stadyumda da şöhret kazanıyordu (denge raporu §1).
+ */
+export const SONG_SCORE_WEIGHTS: Record<VenueType, { quality: number; familiarity: number; skill: number }> = {
+  bar: { quality: 0.4, familiarity: 0.35, skill: 0.25 },
+  club: { quality: 0.42, familiarity: 0.32, skill: 0.26 },
+  hall: { quality: 0.46, familiarity: 0.26, skill: 0.28 },
+  stadium: { quality: 0.5, familiarity: 0.2, skill: 0.3 },
+  festival: { quality: 0.45, familiarity: 0.27, skill: 0.28 },
+};
 
 /** Sahne olaylarının toplam kalite etkisi sınırı (±puan) */
 export const MAX_EVENT_EFFECT = 12;
@@ -358,9 +401,10 @@ export function computeGig(input: GigInput): GigResult {
   const presence = present.length / memberCount;
 
   const styleBonuses = setlist.map((s) => subgenreGigBonus(s.subgenre, city.id, venue, input.weekId ?? 0));
+  const w = SONG_SCORE_WEIGHTS[venue];
   const songScores = setlist.map((s, i) => {
     const fam = present.reduce((sum, p) => sum + (p.familiarity[s.id] ?? 0), 0) / present.length;
-    return { id: s.id, score: 0.4 * s.quality + 0.35 * fam + 0.25 * bandSkill + styleBonuses[i] };
+    return { id: s.id, score: w.quality * s.quality + w.familiarity * fam + w.skill * bandSkill + styleBonuses[i] };
   });
   const avgSong = songScores.reduce((sum, s) => sum + s.score, 0) / songScores.length;
   const lengthFactor = Math.min(1, 0.6 + 0.1 * setlist.length);
@@ -394,6 +438,7 @@ export function computeGig(input: GigInput): GigResult {
   // Sahne olayları: grubun kendi sahnedeki üyelerinden en uygun olanı dener (kiralık müzisyenler plana uymaz)
   const events: { id: string; outcome: StageEventOutcome; by: number | null }[] = [];
   let eventDelta = 0;
+  let attempted = 0;
   const cooldown = new Set(input.cooldownEvents ?? []);
   for (const id of [...new Set(input.plan?.events ?? [])].slice(0, MAX_STAGE_EVENTS)) {
     const def = STAGE_EVENT_BY_ID[id];
@@ -416,17 +461,25 @@ export function computeGig(input: GigInput): GigResult {
         bestLevel = level;
       }
     }
-    // Kimse bilmiyorsa ya da eşiğin altındaysa olay bozulur
-    const ok = best !== null && bestLevel >= def.min && rand() < stageEventChance(bestLevel, def.min);
-    eventDelta += ok ? def.bonus : -def.penalty;
+    // Kimse bilmiyorsa ya da eşiğin altındaysa olay bozulur. Her ek olay seyirciyi yorar, etkisi mekâna göre değişir.
+    const odds = stageEventOdds(def, bestLevel, attempted, venue, avg((p) => p.energy ?? 100));
+    attempted++;
+    const ok = best !== null && bestLevel >= def.min && rand() < odds.chance;
+    eventDelta += ok ? odds.bonus : -odds.penalty;
     events.push({ id, outcome: ok ? 'success' : 'fail', by: best?.characterId ?? null });
   }
   eventDelta = clamp(eventDelta, -MAX_EVENT_EFFECT, MAX_EVENT_EFFECT);
   if (events.some((e) => e.outcome !== 'skipped')) factors.events = eventDelta < 0 ? 'weak' : eventDelta >= 4 ? 'strong' : 'ok';
 
+  // Set bonusu ve tür uyumu: grubun sahnedeki kendi üyelerinin ortalaması kaliteye doğrudan (items.ts gearQualityBonus)
+  const gearQuality = own.length ? own.reduce((sum, p) => sum + (p.gearQuality ?? 0), 0) / own.length : 0;
   const noise = 0.92 + rand() * 0.16;
   const base = Math.round(
-    clamp(avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + (input.crew?.quality ?? 0) + flow + eventDelta, 0, 100),
+    clamp(
+      avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + (input.crew?.quality ?? 0) + flow + eventDelta + gearQuality,
+      0,
+      100,
+    ),
   );
   // Bis: gece iyi geçtiyse seyirci ister; cesur bis enerjiye bağlı bir kumardır
   const enc = encoreOutcome(input.plan?.encore, base, avg((p) => p.energy ?? 100), rand);
@@ -434,8 +487,9 @@ export function computeGig(input: GigInput): GigResult {
 
   const revenue = Math.round(attendance * rules.ticket * city.costMult * rules.bandShare);
 
-  let fameDelta = ((quality - GIG_BREAK_EVEN_QUALITY) / 100) * 6 * rules.fameMult;
-  if (fameDelta > 0) fameDelta *= Math.max(0.1, 1 - fame / 120);
+  // Başa baş kalite mekâna göre (bar 20 … stadyum 65): büyük sahnede vasat bir gece şöhret getirmez
+  let fameDelta = ((quality - rules.breakEven) / 100) * 6 * rules.fameMult;
+  if (fameDelta > 0) fameDelta *= fameGainMult(fame);
   // Kapasitenin çok altında kalan büyük mekân konserleri şöhreti az artırır (bar küçük sahnedir, sayılmaz).
   if (fameDelta > 0 && venue !== 'bar') fameDelta *= 0.5 + 0.5 * (attendance / rules.capacity);
   // Şehir doygunluğu: aynı şehirde üst üste çalmak şöhret kazancını küçültür (kayıplar küçülmez)

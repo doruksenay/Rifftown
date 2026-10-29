@@ -7,7 +7,7 @@ import {
   MAX_OPEN_TRADES,
   MAX_TRADE_ITEMS,
   MAX_TRADE_MONEY,
-  maxResalePrice,
+  tradeMoneyValue,
   type PersonDto,
   type TradeDto,
   type TradeItemDto,
@@ -18,7 +18,7 @@ import type pg from 'pg';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { characterIsVip, lockCharacter, notify, requireEstablished } from './common';
-import { handOver, inventoryOf, itemBonus, returnsTooSoon, ringPledged } from './items';
+import { handOver, inventoryOf, itemBonus, recordMoneyFlow, requireTransferRoom, returnsTooSoon, ringPledged } from './items';
 import { cleanText, isBlocked, pair, requirePlayer, toPerson } from './social';
 import { addMoodlet } from './wellbeing';
 
@@ -114,15 +114,18 @@ export async function proposeTrade(
         if (await ringPledged(c, r.id)) fail('ring_pledged', 409);
         // Kişiye bağlı ödül eşyası el değiştiremez
         if (isBoundItem(r.item_id)) fail('item_bound', 409);
-        // Kısa süre önce karşı taraftan gelen eşya ona geri gidemez
-        if (returnsTooSoon(r, side === 'give' ? body.toId : fromId)) fail('item_recently_yours', 409);
+        // Bekleme süresinde karşı tarafın elinden geçmiş eşya ona geri gidemez (zincirin her eli sayılır)
+        if (await returnsTooSoon(c, r, side === 'give' ? body.toId : fromId)) fail('item_recently_yours', 409);
         rows.push({ side, r });
       }
     }
-    // Para tavanı: para, karşılığında alınan eşyaların dükkân değerinin en fazla iki katı olabilir
+    // Para tavanı: para, karşılığında alınan eşyaların dükkân değerini geçemez (TRADE_MONEY_VALUE_MULT)
     const value = (side: 'give' | 'want') =>
-      rows.filter((x) => x.side === side).reduce((sum, x) => sum + maxResalePrice(ITEM_BY_ID[x.r.item_id]?.price ?? 0, !!x.r.legendary_at), 0);
+      rows.filter((x) => x.side === side).reduce((sum, x) => sum + tradeMoneyValue(ITEM_BY_ID[x.r.item_id]?.price ?? 0, !!x.r.legendary_at), 0);
     if (body.giveMoney > value('want') || body.wantMoney > value('give')) fail('trade_money_too_high');
+    // İkili başına haftalık net para akışı tavanı (erken uyarı; kabulde yeniden kontrol edilir)
+    if (body.giveMoney) await requireTransferRoom(c, fromId, body.toId, body.giveMoney);
+    if (body.wantMoney) await requireTransferRoom(c, body.toId, fromId, body.wantMoney);
     const t = await one(
       c,
       'INSERT INTO trades(from_id, to_id, give_money, want_money, note) VALUES ($1, $2, $3, $4, $5) RETURNING id',
@@ -182,7 +185,7 @@ export async function acceptTrade(viewer: number, tradeId: number) {
         broken = 'trade_items_changed';
       else if (ITEM_BY_ID[r.item_id]?.vip && !vip.get(to)) broken = 'vip_required';
       else if (isBoundItem(r.item_id)) broken = 'item_bound';
-      else if (returnsTooSoon(r, to)) broken = 'item_recently_yours';
+      else if (await returnsTooSoon(c, r, to)) broken = 'item_recently_yours';
       else locked.push({ id: Number(r.id), from: owner, to });
     }
     if (!broken && chars.get(fromId).money < t.give_money) broken = 'trade_money_missing';
@@ -192,12 +195,17 @@ export async function acceptTrade(viewer: number, tradeId: number) {
       await notify(c, fromId, 'trade_failed', { tradeId, reason: broken });
       return { ok: false as const, reason: broken };
     }
-    for (const it of locked) await handOver(c, it.id, it.from, it.to);
+    // Para akışı tavanı aşılıyorsa takas açık kalır (işlem geri alınır), taraflar sonra yeniden deneyebilir
+    if (t.give_money) await requireTransferRoom(c, fromId, viewer, t.give_money);
+    if (t.want_money) await requireTransferRoom(c, viewer, fromId, t.want_money);
+    for (const it of locked) await handOver(c, it.id, it.from, it.to, 'trade');
     const net = t.give_money - t.want_money; // gönderenden alıcıya
     if (net) {
       await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [fromId, net]);
       await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [viewer, net]);
     }
+    if (t.give_money) await recordMoneyFlow(c, fromId, viewer, t.give_money, 'trade');
+    if (t.want_money) await recordMoneyFlow(c, viewer, fromId, t.want_money, 'trade');
     await close(c, tradeId, 'accepted');
     // Bu eşyaları içeren diğer açık teklifler artık geçersiz
     const dropped = await many(
