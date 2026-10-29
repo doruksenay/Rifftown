@@ -486,7 +486,7 @@ Rehber bitince kartın yerini **sıradaki hedef** alır; her zaman tek, somut bi
 | Konser salonu | 2.000 | $40 | 45 | ×2,5 | 50 | $1.500 |
 | Stadyum | 20.000 | $40 | 75 | ×3,5 | 65 | $9.000 |
 
-Prodüksiyon gideri (sahne, ses, ışık, tanıtım; şehir çarpanıyla) konser ayarlanırken liderin cebinden peşin ödenir, iptalde yarısı geri verilir (`gigProductionCost`, migration 025). Eskiden büyük sahnede gider yoktu ve 90 günde giderin gelire oranı %9'a düşüyordu (denge raporu §2); gider gelirin kabaca %15–30'u kadardır. Bar (ilk saatler) ve festival muaftır.
+Prodüksiyon gideri (sahne, ses, ışık, tanıtım; şehir çarpanıyla) konser ayarlanırken liderin cebinden peşin ödenir, iptalde yarısı geri verilir (`gigProductionCost`, migration 025). İptalde bütün iadeler (kiralık müzisyen ücreti, prodüksiyon payı, sahne efektleri) konseri ayarlayıp ödeyen kişiye gider (`gigs.booked_by`, migration 027), iptal eden lidere değil: eskiden lider gruptan ayrılınca yeni lider iptal edip ücreti ve efektleri alabiliyordu. Ödeyen gruptan ayrılmışsa iadesini bildirimle öğrenir. Eskiden büyük sahnede gider yoktu ve 90 günde giderin gelire oranı %9'a düşüyordu (denge raporu §2); gider gelirin kabaca %15–30'u kadardır. Bar (ilk saatler) ve festival muaftır.
 
 Bilet fiyatı şehir çarpanıyla çarpılır.
 

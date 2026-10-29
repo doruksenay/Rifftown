@@ -65,7 +65,8 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
     case 'gig_booked':
       return t('n_gig_booked', { band: d.bandName });
     case 'gig_cancelled':
-      return t('n_gig_cancelled', { band: d.bandName });
+      // Konseri ayarlayıp ödeyen kişiye iade (kiralık müzisyen, prodüksiyon payı, sahne efektleri)
+      return d.refund ? `${t('n_gig_cancelled', { band: d.bandName })}. ${t('n_gig_cancel_refund', { money: `$${Number(d.refund).toLocaleString('en-US')}` })}` : t('n_gig_cancelled', { band: d.bandName });
     case 'gig_done':
       if (!d.present) return t('n_gig_missed', { band: d.bandName });
       if (d.legendary) return t('n_gig_legendary', { band: d.bandName });
