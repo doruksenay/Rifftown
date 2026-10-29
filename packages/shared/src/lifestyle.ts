@@ -3,6 +3,7 @@
 import type { L } from './world';
 import { clamp } from './rules';
 import { CITY_IDENTITY } from './content/cities';
+import { indexBy } from './lookup';
 
 // ---------- Restoran ----------
 
@@ -26,7 +27,7 @@ export const MEALS: MealDef[] = [
 ];
 // Her şehrin yerel lezzeti (content/cities.ts): günün yemeğinden biraz iyi, şefin menüsünden ucuz ve zayıf
 MEALS.push(...CITY_IDENTITY.map((c) => ({ ...c.dish, cityId: c.cityId, energy: 22 })));
-export const MEAL_BY_ID: Record<string, MealDef> = Object.fromEntries(MEALS.map((m) => [m.id, m]));
+export const MEAL_BY_ID: Record<string, MealDef> = indexBy(MEALS, (m) => m.id);
 /** Bir şehrin restoranında yenebilecek yemekler */
 export const mealsIn = (cityId: string) => MEALS.filter((m) => !m.cityId || m.cityId === cityId);
 /** İki yemek arasında en az bu kadar oyun saati geçmeli (tokluk) */
@@ -73,7 +74,7 @@ export const TATTOOS: TattooDef[] = [
   { id: 'koi', name: { tr: 'Koi balığı kol dövmesi', en: 'Koi sleeve' }, price: 1200 },
   { id: 'dragon', name: { tr: 'Ejderha sırt dövmesi', en: 'Dragon back piece' }, price: 2000 },
 ];
-export const TATTOO_BY_ID: Record<string, TattooDef> = Object.fromEntries(TATTOOS.map((t) => [t.id, t]));
+export const TATTOO_BY_ID: Record<string, TattooDef> = indexBy(TATTOOS, (t) => t.id);
 /** Her dövme sahne imajına +1 ekler, en fazla bu kadar */
 export const MAX_TATTOO_BONUS = 4;
 export const MAX_TATTOOS = 8;

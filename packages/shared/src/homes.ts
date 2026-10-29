@@ -4,6 +4,7 @@
 
 import { PACING } from './pacing';
 import type { L } from './world';
+import { indexBy } from './lookup';
 
 export type HomeId = 'room' | 'flat' | 'loft' | 'house' | 'penthouse';
 
@@ -65,7 +66,7 @@ export const HOMES: HomeDef[] = [
   },
 ];
 
-export const HOME_BY_ID: Record<string, HomeDef> = Object.fromEntries(HOMES.map((h) => [h.id, h]));
+export const HOME_BY_ID: Record<string, HomeDef> = indexBy(HOMES, (h) => h.id);
 
 /** Bir kira dönemi (oyun günü) */
 export const RENT_PERIOD_DAYS = PACING.rentPeriodDays;

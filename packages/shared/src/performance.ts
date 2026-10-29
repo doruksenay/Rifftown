@@ -5,6 +5,7 @@
 
 import type { Genre, L } from './world';
 import { type Skills, genreSkillId, lv } from './skills';
+import { indexBy } from './lookup';
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
@@ -123,7 +124,7 @@ export const SUBGENRES: SubgenreDef[] = [
   S('baroque', 'classical', 'Barok', 'Baroque', 'mid', 45, 4, ['munich', 'lyon']),
   S('film_score', 'classical', 'Film müziği', 'Film score', 'mid', 30, 3, ['losangeles', 'london']),
 ];
-export const SUBGENRE_BY_ID: Record<string, SubgenreDef> = Object.fromEntries(SUBGENRES.map((s) => [s.id, s]));
+export const SUBGENRE_BY_ID: Record<string, SubgenreDef> = indexBy(SUBGENRES, (s) => s.id);
 export const subgenresOf = (genre: Genre) => SUBGENRES.filter((s) => s.genre === genre);
 
 // ---------- Alt türün bağlamı: sahne şehri, haftanın modası, niş alt türler ----------
@@ -342,7 +343,7 @@ export function stageEventOdds(def: StageEventDef, level: number, index: number,
 
 /** Olay bu türdeki grup için planlanabilir mi? */
 export const stageEventAllowed = (def: StageEventDef, genre: Genre) => !def.genres || def.genres.includes(genre);
-export const STAGE_EVENT_BY_ID: Record<string, StageEventDef> = Object.fromEntries(STAGE_EVENTS.map((e) => [e.id, e]));
+export const STAGE_EVENT_BY_ID: Record<string, StageEventDef> = indexBy(STAGE_EVENTS, (e) => e.id);
 /** Bir konserde planlanabilecek en fazla sahne olayı */
 export const MAX_STAGE_EVENTS = 3;
 

@@ -8,6 +8,7 @@
 
 import type { SkillCategory } from './skills';
 import { CITIES, type L } from './world';
+import { indexBy } from './lookup';
 
 export type TutorKind = 'professor' | 'teacher' | 'friend';
 
@@ -117,6 +118,6 @@ export const PROFESSORS: ProfessorDef[] = CITIES.flatMap((city) =>
     maxLevel: Math.min(85, Math.max(60, (CATEGORY_BASE[pc.category] ?? 60) + (CITY_DEPTH[city.id] ?? 5))),
   })),
 );
-export const PROFESSOR_BY_ID: Record<string, ProfessorDef> = Object.fromEntries(PROFESSORS.map((p) => [p.id, p]));
+export const PROFESSOR_BY_ID: Record<string, ProfessorDef> = indexBy(PROFESSORS, (p) => p.id);
 /** Bir şehrin bir kategorideki profesörü */
 export const professorFor = (cityId: string, category: SkillCategory) => PROFESSOR_BY_ID[`${cityId}-${category}`];

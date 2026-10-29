@@ -4,6 +4,7 @@
 
 import type { L } from './world';
 import { EXTRA_MISSIONS, type WeeklyKind } from './content/progress';
+import { indexBy } from './lookup';
 
 export type MissionKind = WeeklyKind;
 
@@ -39,7 +40,7 @@ export const MISSIONS: MissionDef[] = [
 ];
 // Veri dosyasındaki ek görevler
 MISSIONS.push(...EXTRA_MISSIONS);
-export const MISSION_BY_ID: Record<string, MissionDef> = Object.fromEntries(MISSIONS.map((m) => [m.id, m]));
+export const MISSION_BY_ID: Record<string, MissionDef> = indexBy(MISSIONS, (m) => m.id);
 export const MISSIONS_PER_WEEK = 3;
 
 /** Oyuncunun o haftaki görevleri (aynı hafta hep aynı görevler) */

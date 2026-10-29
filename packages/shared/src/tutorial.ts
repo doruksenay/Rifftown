@@ -2,6 +2,7 @@
 // Her adımın tamamlanıp tamamlanmadığını sunucu oyuncunun istatistiklerinden hesaplar; ödül bir kez alınır.
 
 import type { L } from './world';
+import { indexBy } from './lookup';
 
 export interface TutorialStep {
   id: string;
@@ -79,5 +80,5 @@ export const TUTORIAL: TutorialStep[] = [
   },
 ];
 
-export const TUTORIAL_BY_ID: Record<string, TutorialStep> = Object.fromEntries(TUTORIAL.map((s) => [s.id, s]));
+export const TUTORIAL_BY_ID: Record<string, TutorialStep> = indexBy(TUTORIAL, (s) => s.id);
 export const TUTORIAL_TOTAL_REWARD = TUTORIAL.reduce((s, x) => s + x.reward, 0);

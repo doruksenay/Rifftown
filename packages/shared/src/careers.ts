@@ -3,6 +3,7 @@
 import { type Skills, lv } from './skills';
 import { PACING } from './pacing';
 import type { CivicType, Instrument, L, LocationType } from './world';
+import { indexBy } from './lookup';
 
 // ---------- Meslekler ----------
 
@@ -111,7 +112,7 @@ export const PROFESSIONS: Profession[] = [
   },
 ];
 
-export const PROFESSION_BY_ID: Record<string, Profession> = Object.fromEntries(PROFESSIONS.map((p) => [p.id, p]));
+export const PROFESSION_BY_ID: Record<string, Profession> = indexBy(PROFESSIONS, (p) => p.id);
 export const professionsAt = (zone: LocationType) => PROFESSIONS.filter((p) => p.zone === zone);
 
 /** Rütbe eşikleri: o meslekte toplam çalışılan oyun saati */
@@ -169,7 +170,7 @@ export const OFFICES: Office[] = [
   },
 ];
 
-export const OFFICE_BY_ID: Record<string, Office> = Object.fromEntries(OFFICES.map((o) => [o.id, o]));
+export const OFFICE_BY_ID: Record<string, Office> = indexBy(OFFICES, (o) => o.id);
 /** Bir seçim dönemi kaç oyun günü sürer */
 export const ELECTION_DAYS = PACING.electionDays;
 

@@ -5,11 +5,14 @@ import { migrate } from '../src/migrate';
 import { tick } from '../src/worker';
 
 let app: FastifyInstance;
+/** Uygulamada kayıtlı bütün uçlar (fuzz testi dolaşır) */
+export const ROUTES: { method: string; url: string }[] = [];
 
 export async function setup() {
   await pool.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;');
   await migrate(pool, 'migrations', () => {});
-  app = await buildApp({ logger: false });
+  ROUTES.length = 0;
+  app = await buildApp({ logger: false, routes: ROUTES });
   await app.ready();
   return app;
 }

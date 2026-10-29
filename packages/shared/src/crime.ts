@@ -6,6 +6,7 @@
 import { type Skills, lv } from './skills';
 import type { L, LocationType } from './world';
 import { clamp } from './rules';
+import { indexBy } from './lookup';
 
 export type CrimeKind = 'pickpocket' | 'shoplift' | 'burglary';
 
@@ -65,7 +66,7 @@ export const CRIMES: CrimeDef[] = [
   },
 ];
 
-export const CRIME_BY_ID: Record<string, CrimeDef> = Object.fromEntries(CRIMES.map((c) => [c.id, c]));
+export const CRIME_BY_ID: Record<string, CrimeDef> = indexBy(CRIMES, (c) => c.id);
 export const crimesAt = (zone: LocationType) => CRIMES.filter((c) => c.zones.includes(zone));
 
 const avgSkill = (s: Skills, ids: string[]) => ids.reduce((sum, id) => sum + lv(s, id), 0) / ids.length;

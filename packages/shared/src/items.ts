@@ -5,6 +5,7 @@ import { EXTRA_ITEMS, GEAR_SETS, REWARD_ITEMS, SEASONAL_ITEMS } from './content/
 import { COLLECTIONS, MORE_GEAR, MORE_SETS } from './content/gear';
 import { GOODS } from './content/goods';
 import { CITY_IDENTITY } from './content/cities';
+import { indexBy } from './lookup';
 
 export type ItemSlot = Instrument | 'outfit' | 'art' | 'vehicle' | 'pet' | 'fx' | 'material' | 'spray' | 'ring' | 'consumable' | 'gift';
 
@@ -319,7 +320,7 @@ export const ITEMS: ItemDef[] = [
 // Daha fazla kuşanılabilir eşya ve sanat (content/gear.ts), tüketim, hediye, bakım ve malzeme (content/goods.ts)
 ITEMS.push(...EXTRA_ITEMS, ...REWARD_ITEMS, ...SEASONAL_ITEMS, ...CITY_IDENTITY.map((c) => c.rareItem), ...MORE_GEAR, ...GOODS);
 
-export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
+export const ITEM_BY_ID: Record<string, ItemDef> = indexBy(ITEMS, (i) => i.id);
 GEAR_SETS.push(...MORE_SETS);
 // Koleksiyonlarda bütün eşya listesine bağlı gruplar: her mevsimden bir sezonluk eşya; atölyede yapılmış bir enstrüman,
 // kıyafet, sanat eseri ve hediyelik

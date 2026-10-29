@@ -6,6 +6,7 @@ import type { L } from './world';
 import { clamp } from './rules';
 import { EXTRA_RECIPES } from './content/items';
 import { MORE_RECIPES } from './content/recipes';
+import { indexBy } from './lookup';
 
 export const CRAFT_HOURS = 4;
 
@@ -45,7 +46,7 @@ export const RECIPES: RecipeDef[] = [
 ];
 // Veri dosyalarındaki ek tarifler
 RECIPES.push(...EXTRA_RECIPES, ...MORE_RECIPES);
-export const RECIPE_BY_ID: Record<string, RecipeDef> = Object.fromEntries(RECIPES.map((r) => [r.id, r]));
+export const RECIPE_BY_ID: Record<string, RecipeDef> = indexBy(RECIPES, (r) => r.id);
 
 /** Tarifin üretim süresi (oyun saati) */
 export const recipeHours = (r: RecipeDef) => r.hours ?? CRAFT_HOURS;

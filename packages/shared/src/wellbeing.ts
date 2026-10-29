@@ -9,6 +9,7 @@
 
 import type { ActionKind } from './rules';
 import type { L } from './world';
+import { indexBy } from './lookup';
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
@@ -199,7 +200,7 @@ export const MOODLETS: MoodletDef[] = [
   M('craving', -12, 0, 'Canı çekiyor', 'Craving', 'Bağımlısın; bir süredir isteğini gideremedin. Hastanede tedavi olabilirsin.', 'You are hooked and haven’t had your fix. Treatment at the hospital helps.'),
   M('aging', -3, 0, 'Yaş yetmiş', 'Getting on', 'Yıllar kendini hissettiriyor.', 'The years are catching up with you.'),
 ];
-export const MOODLET_BY_ID: Record<string, MoodletDef> = Object.fromEntries(MOODLETS.map((m) => [m.id, m]));
+export const MOODLET_BY_ID: Record<string, MoodletDef> = indexBy(MOODLETS, (m) => m.id);
 
 /** Duruma bağlı moodlet'ler */
 export function derivedMoodlets(s: { energy: number; inspiration: number; health: number; jailed: boolean; craving?: boolean; age?: number }): MoodletId[] {

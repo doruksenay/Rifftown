@@ -16,6 +16,7 @@
 
 import type { ActionKind } from './rules';
 import type { Instrument, L } from './world';
+import { indexBy } from './lookup';
 
 export const ATTRIBUTES = ['charm', 'voice', 'creativity', 'intellect', 'constitution', 'dexterity'] as const;
 export type AttributeId = (typeof ATTRIBUTES)[number];
@@ -94,7 +95,7 @@ export const ATTRIBUTE_DEFS: AttributeDef[] = [
     },
   },
 ];
-export const ATTRIBUTE_BY_ID: Record<AttributeId, AttributeDef> = Object.fromEntries(ATTRIBUTE_DEFS.map((d) => [d.id, d])) as Record<AttributeId, AttributeDef>;
+export const ATTRIBUTE_BY_ID: Record<AttributeId, AttributeDef> = indexBy(ATTRIBUTE_DEFS, (d) => d.id) as Record<AttributeId, AttributeDef>;
 
 /**
  * Etkilerin nitelik 100'deki büyüklüğü. Hepsi doğrusaldır: etki = nitelik ÷ 100 × değer.

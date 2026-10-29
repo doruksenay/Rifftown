@@ -6,6 +6,7 @@ import type { Genre, Instrument, L, Lang } from './world';
 import { GENRES } from './world';
 import { tierOf } from './tiers';
 import { EXTRA_SKILLS } from './content/skills';
+import { indexBy } from './lookup';
 
 /**
  * Becerilerin genel etkileri (veri dosyalarındaki beceriler için). Değer, beceri 100 iken etkinin büyüklüğüdür:
@@ -315,7 +316,7 @@ export const SKILL_DEFS: SkillDef[] = [
 // Veri dosyasındaki ek beceriler (packages/shared/src/content/skills.ts)
 SKILL_DEFS.push(...EXTRA_SKILLS);
 
-export const SKILL_BY_ID: Record<string, SkillDef> = Object.fromEntries(SKILL_DEFS.map((s) => [s.id, s]));
+export const SKILL_BY_ID: Record<string, SkillDef> = indexBy(SKILL_DEFS, (s) => s.id);
 
 const EFFECT_SKILLS = SKILL_DEFS.filter((d) => d.effects);
 /** Bir etki türüne bütün bilinen becerilerden gelen toplam (bkz. SkillEffectKind) */

@@ -12,6 +12,7 @@ import {
   NAME_RE,
   containsProfanity,
   maskProfanity,
+  cleanText,
   SELL_BACK_RATE,
   START_HEALTH,
   START_MONEY,
@@ -47,15 +48,8 @@ import { idParam, parse } from './util';
 import { claimInheritance, indulge, lastDeath } from '../game/consequences';
 import { answerHeirConsent, heirsInfo, requestHeirConsent, succeed } from '../game/generations';
 
-/** Kontrol karakterlerini atar; tek satırlık alanlarda satır sonlarını da */
-const clean = (v: string | undefined, singleLine = false) => {
-  if (v === undefined) return null;
-  const x = v
-    .replace(singleLine ? /[\u0000-\u001f\u007f]/g : /[\u0000-\u0009\u000b-\u001f\u007f]/g, '')
-    // Görünmez ve yön değiştiren karakterler (ad taklidi için kullanılabilir)
-    .replace(/[\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '');
-  return maskProfanity(singleLine ? x.trim() : x.replace(/\n{3,}/g, '\n\n').trim());
-};
+/** Ortak temizleyici (shared moderation.ts) + küfür yıldızı */
+const clean = (v: string | undefined, singleLine = false) => (v === undefined ? null : maskProfanity(cleanText(v, singleLine)));
 
 const AVATAR_COLORS = ['#E4572E', '#F3A712', '#29335C', '#669BBC', '#A8C686', '#8E5572', '#2E294E', '#1B998B', '#C5283D', '#FF9F1C'];
 

@@ -1,5 +1,6 @@
 // Oyun dünyası: şehirler, mekânlar, beceriler, türler.
 // Bu dosya hem sunucu hem mobil uygulama tarafından kullanılır.
+import { indexBy } from './lookup';
 
 export type Lang = 'tr' | 'en';
 export type L = { tr: string; en: string };
@@ -487,7 +488,8 @@ for (const city of CITIES) {
   }
 }
 
-export const CITY_BY_ID: Record<string, City> = Object.fromEntries(CITIES.map((c) => [c.id, c]));
-export const LOCATION_BY_ID: Record<string, Location> = Object.fromEntries(
-  CITIES.flatMap((c) => c.locations).map((l) => [l.id, l]),
+export const CITY_BY_ID: Record<string, City> = indexBy(CITIES, (c) => c.id);
+export const LOCATION_BY_ID: Record<string, Location> = indexBy(
+  CITIES.flatMap((c) => c.locations),
+  (l) => l.id,
 );

@@ -1,6 +1,8 @@
 // Süreli eylemler: başlatma, iptal ve tamamlanma.
 
 import {
+  cleanText,
+  maskProfanity,
   CITY_BY_ID,
   diminishing,
   GENRES,
@@ -267,7 +269,7 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         break;
       }
       case 'write_song': {
-        const title = typeof req.title === 'string' ? req.title.trim() : '';
+        const title = typeof req.title === 'string' ? maskProfanity(cleanText(req.title, true)) : '';
         if (title.length < 1 || title.length > 40) fail('invalid_title');
         if (!(GENRES as readonly string[]).includes(req.genre)) fail('invalid_genre');
         // Alt tür ve tempo isteğe bağlı; alt tür seçilen türe ait olmalı
