@@ -9,6 +9,9 @@ import { many, pool } from './db';
 
 type Tpl = (d: any, lang: Lang) => { title: string; body: string } | null;
 
+/** İngilizcede belirsiz tanımlık: "a good", "an outstanding", "an EPIC" (playtest O-9: "a outstanding", "a EPIC") */
+export const withArticle = (word: string) => `${/^[aeiou]/i.test(word) ? 'an' : 'a'} ${word}`;
+
 const T = (lang: Lang, tr: string, en: string) => (lang === 'en' ? en : tr);
 
 const ACTION_TEXT: Record<string, Tpl> = {
@@ -26,7 +29,12 @@ const ACTION_TEXT: Record<string, Tpl> = {
     body: T(l, `Şapkada ${d.pay} $ birikti.`, `You collected $${d.pay} in tips.`),
   }),
   treat: (_d, l) => ({ title: T(l, 'Tedavi bitti', 'Treatment finished'), body: T(l, 'Sağlığın düzeldi.', 'Your health improved.') }),
-  write_song: (d, l) => ({ title: T(l, 'Yeni şarkı!', 'New song!'), body: T(l, `"${d.title}" hazır: ${tierName('quality', d.quality, l)} bir şarkı`, `"${d.title}" is ready: a ${tierName('quality', d.quality, l)} song`) }),
+  write_song: (d, l) => ({
+    title: T(l, 'Yeni şarkı!', 'New song!'),
+    body:
+      T(l, `"${d.title}" hazır: ${tierName('quality', d.quality, l)} bir şarkı`, `"${d.title}" is ready: ${withArticle(tierName('quality', d.quality, l))} song`) +
+      (d.addedToBand ? T(l, ' Grubunun repertuvarına girdi.', " It's in your band's repertoire.") : ''),
+  }),
   rehearse: (d, l) => ({ title: T(l, 'Prova bitti', 'Rehearsal finished'), body: T(l, `Artık şarkıyı ${tierName('familiarity', d.familiarity, l)}.`, `You now: ${tierName('familiarity', d.familiarity, l)}.`) }),
   travel: (d, l) => {
     const city = CITY_BY_ID[d.to];

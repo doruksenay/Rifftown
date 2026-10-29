@@ -677,6 +677,13 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       result.songId = song!.id;
       result.title = params.title;
       result.quality = quality;
+      // Grubu varsa şarkı kendiliğinden grubun repertuvarına girer (playtest O-1: grup kurulduktan sonra yazılan şarkılar
+      // repertuvara girmiyor, yeni oyuncu tek şarkıyla konser veriyordu). Repertuvardan çıkarmak eskisi gibi elde.
+      const band = await membership(c, char.id);
+      if (band) {
+        await c.query('INSERT INTO band_songs(band_id, song_id) VALUES ($1, $2) ON CONFLICT DO NOTHING', [band.band_id, song!.id]);
+        result.addedToBand = true;
+      }
       break;
     }
     case 'rehearse': {

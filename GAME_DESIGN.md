@@ -475,7 +475,7 @@ Rehber bitince kartın yerini **sıradaki hedef** alır; her zaman tek, somut bi
 ## Grup ve konserler
 
 - Grup en fazla 6 kişi. Herkes bir rol (enstrüman) seçer. Bir karakter tek grupta olabilir.
-- Kurulan grubun repertuvarına kurucunun şarkıları otomatik eklenir. Üyeler kendi şarkılarını ekleyebilir.
+- Kurulan grubun repertuvarına kurucunun şarkıları otomatik eklenir. Grup varken yazılan her şarkı da kendiliğinden repertuvara girer (bildirim söyler; eskiden elle eklemek gerekiyordu ve yeni oyuncu bunu bilmeden tek şarkıyla konser veriyordu). Gruba katılmadan önce yazılan şarkılar kendiliğinden girmez (yeni üyenin bütün kataloğu setlist seçimini doldurmasın), üye onları Grup sekmesinden ekler; "tam setlist" hedefi bunu söyler. Repertuvardan çıkarmak eskisi gibi şarkının sahibine ve lidere açık.
 - Konseri sadece lider, bulunduğu şehirdeki bir mekâna ayarlayabilir: 2, 6, 12 ya da 24 oyun saati sonrasına.
 - Konser anında şehirde olmayan ya da cezaevindeki üye sahneye çıkamaz; bu kaliteyi düşürür.
 

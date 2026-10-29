@@ -46,7 +46,8 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
         // İlhamın katkısı kelimeyle (VIP olmayana sunucu kaba basamak gönderir)
         const inspo = Number(d.inspirationBonus ?? 0);
         const withInspo = inspo > 0 ? `${base}. ${t(inspo < 5 ? 'n_song_inspired_little' : inspo < 10 ? 'n_song_inspired_nicely' : 'n_song_inspired_lot')}` : base;
-        return d.fatigued ? `${withInspo}. ${t('n_song_fatigued')}` : withInspo;
+        const withBand = d.addedToBand ? `${withInspo}. ${t('n_song_added_to_band')}` : withInspo;
+        return d.fatigued ? `${withBand}. ${t('n_song_fatigued')}` : withBand;
       }
       if (d.kind === 'record' && d.title) return t('n_record', { title: d.title, q: tierName('quality', d.quality, lang) });
       if (d.kind === 'busk' && d.tired) return `${t('n_action_done', { action: t('action_busk') })}. ${t('busk_tired')}`;
