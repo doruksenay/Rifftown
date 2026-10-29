@@ -14,6 +14,7 @@ import {
   LOCATION_BY_ID,
   MAX_SETLIST,
   SESSION_MUSICIAN,
+  SESSION_DOOR_SHARE,
   CITY_BY_ID,
   gigProductionCost,
   ROLE_NAMES,
@@ -193,6 +194,7 @@ function BookGigScreen() {
 
       <Heading>{t('sessionMusicians')}</Heading>
       <Small style={{ marginBottom: space.sm }}>{t('sessionHint', { fee: money(sm.fee), skill: tierName('skill', sm.skill, lang) })}</Small>
+      {SESSION_DOOR_SHARE[venue] > 0 ? <Small style={{ marginBottom: space.sm }}>{t('sessionDoorHint')}</Small> : null}
       <Row style={{ flexWrap: 'wrap' }}>
         {INSTRUMENTS.filter((r) => !takenRoles.has(r)).map((r) => {
           const on = session.includes(r);

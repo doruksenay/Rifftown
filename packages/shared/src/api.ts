@@ -254,6 +254,8 @@ export interface GigDto {
     ownerShare?: number;
     cityTax?: number;
     crewFee?: number;
+    /** Kiralık müzisyenlerin kapı payı (bar ve kulüp; peşin ücretin üstü) */
+    sessionCut?: number;
     /** Konser ayarlanırken peşin ödenen prodüksiyon gideri (kulüp ve üstü) */
     productionCost?: number;
     review?: { tr: string; en: string };

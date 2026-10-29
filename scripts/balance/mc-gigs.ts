@@ -16,7 +16,7 @@ import {
   type VenueType,
   ROLE_SKILLS,
   SESSION_MUSICIAN,
-  SESSION_FAMILIARITY,
+  SESSION_FAMILIARITY_BY_VENUE,
   sessionLevels,
   fxQualityBonus,
   gearQualityBonus,
@@ -101,7 +101,7 @@ function performers(p: Profile, opts: { instBonus?: number; outfit?: number; ene
       present: true,
       instrumentBonus: 0,
       outfitBonus: 0,
-      familiarity: Object.fromEntries(songIds.map((id) => [id, SESSION_FAMILIARITY])),
+      familiarity: Object.fromEntries(songIds.map((id) => [id, SESSION_FAMILIARITY_BY_VENUE[p.venue]])),
     });
   }
   return out;

@@ -128,7 +128,7 @@ export const EXACT_NUMERIC_KEYS: ReadonlySet<string> = new Set([
   'setlist', 'weekId', 'step', 'generation', 'caseId', 'scandalId', 'suspectId', 'releaseId',
   // para (oyuncunun kendi parası ve gelir kalemleri tam gösterilir; tasarım: "para olarak tam gösterilir")
   'money', 'bank', 'cost', 'fee', 'price', 'pay', 'reward', 'revenue', 'perMember', 'cityTax', 'ownerShare', 'crewFee',
-  'productionCost', 'inheritance', 'fine', 'totalRevenue', 'share', 'loot',
+  'productionCost', 'inheritance', 'fine', 'totalRevenue', 'share', 'loot', 'sessionCut',
   // eşyanın dükkânda ilan edilen bonusu (+3 / +7 ...), plak satış adedi (listeler herkese açık)
   'bonus', 'totalUnits', 'weeksOnSale', 'units', 'lastWeekUnits', 'position', 'lastPosition', 'bestPosition',
   // sayaçlar ve süreler

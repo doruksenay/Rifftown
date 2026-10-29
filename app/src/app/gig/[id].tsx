@@ -110,12 +110,13 @@ function GigScreenScreen() {
           <View style={{ marginTop: space.lg, gap: 2 }}>
             <Body>{t('attendance', { n: r.attendance })}</Body>
             {/* Gelir dökümü: bilet geliri, bar sahibinin payı, bilet vergisi, ekip ücreti, gruba kalan (GAME_DESIGN.md) */}
-            {(r.ownerShare ?? 0) + (r.cityTax ?? 0) + (r.crewFee ?? 0) > 0 ? (
+            {(r.ownerShare ?? 0) + (r.cityTax ?? 0) + (r.crewFee ?? 0) + (r.sessionCut ?? 0) > 0 ? (
               <>
-                <Body>{t('gigGross', { money: money(r.revenue + (r.ownerShare ?? 0) + (r.cityTax ?? 0) + (r.crewFee ?? 0)) })}</Body>
+                <Body>{t('gigGross', { money: money(r.revenue + (r.ownerShare ?? 0) + (r.cityTax ?? 0) + (r.crewFee ?? 0) + (r.sessionCut ?? 0)) })}</Body>
                 {r.ownerShare ? <Small>{t('gigOwnerShare', { money: money(r.ownerShare) })}</Small> : null}
                 {r.cityTax ? <Small>{t('gigCityTax', { money: money(r.cityTax) })}</Small> : null}
                 {r.crewFee ? <Small>{t('gigCrewFee', { money: money(r.crewFee) })}</Small> : null}
+                {r.sessionCut ? <Small>{t('gigSessionCut', { money: money(r.sessionCut) })}</Small> : null}
                 <Body>{t('gigNet', { money: money(r.revenue) })}</Body>
               </>
             ) : (

@@ -97,13 +97,16 @@ describe('eylemler', () => {
 
   it('eylem iptal edilebilir, seyahat edilemez', async () => {
     const { c } = await newPlayer();
-    await c.post('/api/actions', { kind: 'rest', hours: 8 });
+    const rest = await c.post('/api/actions', { kind: 'rest', hours: 8 });
+    await pool.query(`UPDATE actions SET ends_at = now() + interval '1 hour' WHERE id = $1`, [rest.body.action.id]);
     const cancel = await c.post('/api/actions/cancel');
     expect(cancel.status).toBe(200);
     expect(cancel.body.action.status).toBe('cancelled');
     expect((await me(c)).action).toBeNull();
 
-    await c.post('/api/actions', { kind: 'travel', toCityId: 'ankara', mode: 'bus' });
+    const tr = await c.post('/api/actions', { kind: 'travel', toCityId: 'ankara', mode: 'bus' });
+    // Test hızında yolculuk milisaniyede biter; süresi dolmuş eylem "erken bitir"de tamamlanırdı (okuma anında tamamlama)
+    await pool.query(`UPDATE actions SET ends_at = now() + interval '1 hour' WHERE id = $1`, [tr.body.action.id]);
     expect((await c.post('/api/actions/cancel')).body.error).toBe('cannot_cancel');
   });
 

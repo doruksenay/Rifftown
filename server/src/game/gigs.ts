@@ -16,7 +16,8 @@ import {
   gearQualityBonus,
   genreAffinity,
   ITEM_BY_ID,
-  SESSION_FAMILIARITY,
+  SESSION_FAMILIARITY_BY_VENUE,
+  sessionDoorCut,
   SESSION_MUSICIAN,
   sessionLevels,
   roleSkill,
@@ -107,10 +108,12 @@ export async function estimateAttendance(characterId: number, locationId: string
   const venue = loc!.type as VenueType;
   const fame = await bandFame(pool, m!.band_id, loc!.cityId);
   const pop = CITY_BY_ID[loc!.cityId].genrePopularity[m!.genre as Genre];
+  // Her üye kendi arkadaşlarını getirir: tahmin o şehirdeki üyelere göre
+  const here = Number((await one(pool, 'SELECT count(*)::int AS n FROM band_members bm JOIN characters c ON c.id = bm.character_id WHERE bm.band_id = $1 AND c.city_id = $2', [m!.band_id, loc!.cityId]))?.n ?? 1);
   return {
     locationId,
-    min: expectedAttendance(venue, fame, pop, () => 0),
-    max: expectedAttendance(venue, fame, pop, () => 0.999),
+    min: expectedAttendance(venue, fame, pop, () => 0, here),
+    max: expectedAttendance(venue, fame, pop, () => 0.999, here),
     capacity: VENUE_RULES[venue].capacity,
   };
 }
@@ -434,7 +437,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       present: true,
       instrumentBonus: 0,
       outfitBonus: 0,
-      familiarity: Object.fromEntries(gig.setlist.map((id: number) => [id, SESSION_FAMILIARITY])),
+      familiarity: Object.fromEntries(gig.setlist.map((id: number) => [id, SESSION_FAMILIARITY_BY_VENUE[venue]])),
     });
   }
 
@@ -480,6 +483,10 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   if (crewPaid) res.revenue -= crew.fee;
 
   const presentChars = chars.filter(onStage);
+  // Kapı payı: küçük sahnede kiralık müzisyenler de sahnedeki herkes gibi pay alır (items.ts SESSION_DOOR_SHARE).
+  // Oyunun grupları muaf (cüzdanları zaten her tur sıfırlanır). Pay oyundan çıkar.
+  const sessionCut = band.npc_key || !presentChars.length ? 0 : sessionDoorCut(venue, res.revenue, presentChars.length, gig.session_roles.length);
+  res.revenue -= sessionCut;
   const perMember = presentChars.length ? Math.floor(res.revenue / presentChars.length) : 0;
   const xpGained = new Map<number, number>();
   for (const ch of presentChars) {
@@ -606,6 +613,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     ownerShare,
     cityTax,
     crewFee: crewPaid ? crew.fee : 0,
+    sessionCut,
     productionCost: gig.production_cost ?? 0,
     crewUnpaid: crew.roles.length > 0 && !crewPaid,
     festivalId: gig.festival_id ?? null,

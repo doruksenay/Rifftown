@@ -492,12 +492,12 @@ Bilet fiyatı şehir çarpanıyla çarpılır.
 
 ### Tek başına ilerleme: kiralık müzisyenler
 
-Hiç oyuncu olmasa da oyun oynanabilir. Lider konser ayarlarken gruptaki boş rolleri oyunun kendi müzisyenleriyle doldurabilir. Kiralık müzisyenler setlisti %70 aşinalıkla çalar.
+Hiç oyuncu olmasa da oyun oynanabilir. Lider konser ayarlarken gruptaki boş rolleri oyunun kendi müzisyenleriyle doldurabilir. Kiralık müzisyenler setlisti kulüp ve üstünde %70, barda %55 aşinalıkla çalar.
 
 | Mekân | Kişi başı ücret | Beceri (en fazla) | Sahne (en fazla) | Grubun kendi ortalamasını en fazla |
 |---|---|---|---|---|
-| Bar | $5 | 30 | 25 | sınırsız |
-| Kulüp | $60 | 50 | 40 | +15 |
+| Bar | $5 + kapı payı | 22 | 18 | sınırsız |
+| Kulüp | $60 + kapı payı | 50 | 40 | +15 |
 | Konser salonu | $250 | 70 | 55 | +10 |
 | Stadyum | $900 | 85 | 70 | +5 |
 
@@ -505,13 +505,22 @@ Kulüp ve üstünde kiralık müzisyen, grubun sahnedeki kendi üyelerinin ortal
 
 Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr eder. Bu, `server/test/rules.test.ts` içinde test ediliyor.
 
+**Arkadaşla oynamak (playtest Y-1).** Eskiden yeni oyunculardan kurulan 3 kişilik grup, kiralık kadrolu tek oyuncudan hem kötü çalıyor hem kişi başı üçte bir kazanıyordu: barda kiralık müzisyen beceri 30 ve %70 aşinalıkla çalıyor, yalnızca $5 alıyordu, gelir sahnedeki gerçek üyeler arasında bölünüyordu. Şimdi:
+
+- **Kapı payı** (`items.ts` `SESSION_DOOR_SHARE`): bar ve kulüpte kiralık müzisyen de sahnedeki herkes gibi kapıdan pay alır. Kişi başı pay = (bar payı, vergi ve ekip ücreti düşülmüş) bilet geliri ÷ (sahnedeki üyeler + kiralıklar); kiralık bunun barda tamamını, kulüpte %75'ini alır, peşin ücret bu paydan düşülür (en az peşin ücret). Pay oyundan çıkar (kiralıklar oyunun çalışanı). Salon, stadyum ve festivalde sabit ücret aynen (denge raporu §1-2). Raporda "Kiralık müzisyenlerin kapı payı" ayrı satırdır.
+- **Grup kimyası** (`rules.ts` `BAND_CHEMISTRY`): sahnedeki her gerçek üye (ilkinden sonra, en fazla 3) kaliteye barda +3, kulüpte +2, salon, stadyum ve festivalde +1 ekler; kiralıklar sayılmaz. Raporda "Grup kimyası" etkeni (kiralıklı ya da çok üyeli konserde) ve "gerçek üye kat" önerisi.
+- **Her üye kendi arkadaşlarını getirir:** seyirci formülündeki arkadaşlar (barda 4–10, diğer sahnelerde 2–8) artık sahnedeki her gerçek üye için ayrı (kapasiteyi aşmaz).
+- **Barda kiralık müzisyen** yeni bir oyuncunun seviyesinde: beceri 30 → 22, sahne 25 → 18, aşinalık %70 → %55. İlk gün (az prova) kiralık kadrolu tek oyuncu en fazla 2 puan önde; birkaç provadan sonra gerçek grup önde.
+
+Ölçüm (`scripts/balance/sim-playtest.ts`, playtest'in bot mantığı, 9,5 oyun günü, 8 tohum; ayrıntı PLAYTEST_FIXES_REPORT.md): 3 kişilik grup kalite 30,3 → 34,0, İstanbul şöhreti 13,5 → 15,6, üye başı konser geliri $848 → $1.125; kiralıklı tek oyuncu kalite 36,2 → 30,4, şöhret 15,4 → 10,9, konser geliri $3.318 → $842. Grup artık hem kalitede hem şöhrette hem kişi başı konser gelirinde önde; tek oyuncu yine ilerler (kulübe ~2 hafta), ama daha yavaş.
+
 ### Konser hesabı
 
-- Seyirci = kapasite × (0,04 + şöhret / 100 × 1,1) × tür popülerliği × (0,85–1,15) + arkadaşlar (barda 4–10, diğer sahnelerde 2–8; kapasiteyi aşmaz)
+- Seyirci = kapasite × (0,04 + şöhret / 100 × 1,1) × tür popülerliği × (0,85–1,15) + sahnedeki her gerçek üyenin arkadaşları (üye başına barda 4–10, diğer sahnelerde 2–8; kapasiteyi aşmaz)
 - Grup becerisi = sahnedekilerin (rol becerisi + enstrüman bonusu + nitelik payı) × ruh hâli × sağlık ortalaması. Nitelik payı vokalde ses, diğer rollerde el becerisidir (en fazla +4).
 - Şarkı puanı = a × şarkı kalitesi + b × ortalama aşinalık + c × grup becerisi; ağırlıklar mekâna göre (`rules.ts` `SONG_SCORE_WEIGHTS`): bar 0,4 / 0,35 / 0,25, kulüp 0,42 / 0,32 / 0,26, salon 0,46 / 0,26 / 0,28, stadyum 0,5 / 0,2 / 0,3 (eskiden her yerde 0,4 / 0,35 / 0,25). Büyük sahnede yalnızca provayla kazanılan aşinalık daha az, şarkının kendisi ve çalım becerisi daha çok sayılır.
-- Kalite = şarkı puanı ortalaması × (0,85 + 0,15 × sahne / 100) × (0,5 + 0,5 × gelen üye oranı) × setlist uzunluğu çarpanı (1 şarkı 0,7, 4+ şarkı 1,0) × (0,92–1,08) × 1,15
-- Gelir = seyirci × bilet × şehir çarpanı × grubun payı. Pay sahne büyüdükçe küçülür (mekân, prodüksiyon, organizatör): bar %70, kulüp %45, salon %12, stadyum %4, festival %12. Böylece salon konseri $6–8 bin, stadyum $30 bin civarı getirir. Sahnedeki gerçek üyeler arasında eşit bölünür.
+- Kalite = şarkı puanı ortalaması × (0,85 + 0,15 × sahne / 100) × (0,5 + 0,5 × gelen üye oranı) × setlist uzunluğu çarpanı (1 şarkı 0,7, 4+ şarkı 1,0) × (0,92–1,08) × 1,15 + grup kimyası (bkz. "Tek başına ilerleme")
+- Gelir = seyirci × bilet × şehir çarpanı × grubun payı, bar ve kulüpte kiralıkların kapı payı düşülerek. Pay sahne büyüdükçe küçülür (mekân, prodüksiyon, organizatör): bar %70, kulüp %45, salon %12, stadyum %4, festival %12. Böylece salon konseri $6–8 bin, stadyum $30 bin civarı getirir. Sahnedeki gerçek üyeler arasında eşit bölünür.
 - Şöhret değişimi = (kalite − mekânın başa baş kalitesi) / 100 × 6 × mekân çarpanı. Başa baş kalite bar 20, kulüp 30, salon 50, stadyum 65, festival 40 (eskiden hepsi 20): büyük sahnede vasat bir gece şöhret getirmez, kaybettirir. Artışlar şöhret yükseldikçe küçülür: × max(0,03; (1 − şöhret/110)^1,2) (eskiden × max(0,1; 1 − şöhret/120); şöhret 10'da ×0,90, 60'ta ×0,39, 70'te ×0,30). Bar dışındaki sahnelerde salon boş kaldıkça da küçülür. Barda kalitesi 10'u geçen her konser en az +0,2 şöhret getirir: ilk adımlar boşa gitmez. Orta düzey bir grup 10–17 iyi bar konseriyle kulübe çıkar.
 - Raporda kiralık müzisyenler üye sayılmaz ("sahnede 1/1").
 - Aynı sahnede aynı saatlerde (±3 oyun saati) iki grup çalamaz; oyunun kendi grupları da boş saat arar ve oyuncuya her zaman yer açar (oyuncu rezervasyonu çakışan oyun grubu konserini iptal eder). Bir grubun aynı anda en fazla 2 ayarlı konseri olabilir (sahneler boş rezervasyonla kapatılamasın).

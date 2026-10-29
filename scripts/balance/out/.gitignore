@@ -2,3 +2,4 @@
 *-seed-*.json
 logs/
 *.log
+playtest*.json
