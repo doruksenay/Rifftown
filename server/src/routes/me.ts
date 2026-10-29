@@ -37,7 +37,8 @@ import { many, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { config } from '../config';
 import { activeAction, getCharacter, isJailed, lockCharacter, membership, notify, officesOf, requireEstablished, toActionDto, toCharacterDto } from '../game/common';
-import { achievementPoints, evaluateThrottled } from '../game/achievements';
+import { evaluateInBackground } from '../game/achievements';
+import { meSnapshot } from '../game/me-snapshot';
 import { bailQuote, inCustody } from '../game/crime';
 import { homeOf } from '../game/homes';
 import { businessOf } from '../game/business';
@@ -78,33 +79,28 @@ export async function meRoutes(app: FastifyInstance) {
         heirsAvailable: death ? await heirsInfo(u.id, u.isVip, pool).then((h) => h.children.filter((k) => !k.blocker).length).catch(() => 0) : 0,
       };
     }
-    await evaluateThrottled(pool, u.characterId);
-    const ch = await getCharacter(pool, u.characterId);
-    const action = await activeAction(pool, ch.id);
-    const m = await membership(pool, ch.id);
-    const unread = await one(pool, 'SELECT count(*)::int AS n FROM notifications WHERE character_id = $1 AND NOT read', [ch.id]);
-    const invites = await one(
-      pool,
-      `SELECT count(*)::int AS n FROM band_invites WHERE character_id = $1 AND status = 'pending'`,
-      [ch.id],
-    );
+    // Başarımlar istek yolunda değil, arka planda (sınırlı eşzamanlılıkla) değerlendirilir (playtest O-10)
+    evaluateInBackground(u.characterId);
+    const snap = await meSnapshot(pool, u.characterId);
+    if (!snap) fail('no_character', 404);
+    const { ch, action } = snap!;
     return {
       ...base,
-      character: toCharacterDto(ch, await officesOf(pool, ch.id), {
-        inCustody: await inCustody(pool, ch.id),
-        achievementPoints: await achievementPoints(pool, ch.id),
-        home: await homeOf(pool, ch.id),
-        hotel: await hotelOf(pool, ch.id),
-        business: await businessOf(pool, ch.id),
-        moodlets: await storedMoodlets(pool, ch.id),
+      character: toCharacterDto(ch, snap!.offices, {
+        inCustody: snap!.inCustody,
+        achievementPoints: snap!.achievementPoints,
+        home: snap!.home,
+        hotel: snap!.hotel,
+        business: snap!.business,
+        moodlets: snap!.moodlets,
       }),
       action: action ? toActionDto(action) : null,
-      band: m ? { id: m.band_id, name: m.name, genre: m.genre, role: m.role, isLeader: m.leader_id === ch.id } : null,
-      unreadNotifications: unread!.n,
-      pendingInvites: invites!.n,
+      band: snap!.band ? { ...snap!.band, isLeader: snap!.band.leaderId === Number(ch.id) } : null,
+      unreadNotifications: snap!.unreadNotifications,
+      pendingInvites: snap!.pendingInvites,
       bailCost: await bailQuote(ch),
-      unreadMessages: await unreadMessages(pool, ch.id),
-      pendingTrades: (await one(pool, `SELECT count(*)::int AS n FROM trades WHERE to_id = $1 AND status = 'open'`, [ch.id]))!.n,
+      unreadMessages: snap!.unreadMessages,
+      pendingTrades: snap!.pendingTrades,
     };
   });
 

@@ -67,6 +67,11 @@ export async function buildApp(opts: { logger?: boolean; routes?: { method: stri
     if (e.statusCode && e.statusCode < 500) return reply.status(e.statusCode).send({ error: 'bad_request', message: e.message });
     // Aynı anda iki eylem başlatma gibi yarış durumları benzersizlik ihlaliyle yakalanır
     if (e.code === '23505') return reply.status(409).send({ error: 'conflict' });
+    // Kilitlenme ya da serileştirme hatası: geçici, tekrar denenebilir; 500 değil
+    if (e.code === '40P01' || e.code === '40001') {
+      req.log.warn({ err }, 'kilitlenme');
+      return reply.status(409).send({ error: 'conflict' });
+    }
     req.log.error(err);
     return reply.status(500).send({ error: 'server_error' });
   });

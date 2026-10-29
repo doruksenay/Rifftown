@@ -275,7 +275,18 @@ export async function succeed(userId: number, isVip: boolean, input: SuccessionI
     await c.query('SELECT id FROM users WHERE id = $1 FOR UPDATE', [userId]);
     const p = await predecessorFor(c, userId);
     if (!p) fail('no_predecessor', 404);
-    const pred = await lockCharacter(c, p!.row.id);
+    // Kilit sırası (playtest A5): devreden ve çocuğun diğer ebeveyni birlikte, id sırasıyla, çocuk satırından ÖNCE.
+    // Eskiden her istek önce kendi karakterini, sonra çocuğu kilitliyordu; emeklilik diğer ebeveynin satırına da
+    // dokunduğundan (bildirim, ilişki) aynı çocuk için iki ebeveynin eşzamanlı devri kilitlenmeye (deadlock) düşüyor,
+    // biri 500 alıyor, ~14'te 1 ikisi birden reddediliyordu.
+    const peek = await one(c, 'SELECT parent_a, parent_b FROM children WHERE id = $1', [input.childId]);
+    const others = [peek?.parent_a, peek?.parent_b].map((x) => (x == null ? null : Number(x))).filter((x): x is number => x !== null && x !== Number(p!.row.id));
+    const lockIds = [Number(p!.row.id), ...others].sort((x, y) => x - y);
+    let pred!: CharacterRow;
+    for (const id of lockIds) {
+      if (id === Number(p!.row.id)) pred = await lockCharacter(c, id);
+      else await c.query('SELECT id FROM characters WHERE id = $1 FOR UPDATE', [id]); // silinmiş olabilir: yoksa geçer
+    }
     const mode = p!.mode;
     const blocker = await successionBlocker(c, userId, pred, mode);
     if (blocker) throw new GameError(blocker.code, blocker.code === 'account_too_new' ? 403 : 409, blocker.until?.toISOString());

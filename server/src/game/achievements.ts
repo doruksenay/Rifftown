@@ -5,7 +5,7 @@
 
 import { CITY_IDENTITY, HEARTBREAKER_FLINGS, INSTRUMENTS, ROLE_SKILLS, STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf, completedCollections, collectionAchievementId } from '@rifftown/shared';
 import { addMoodlet } from './wellbeing';
-import { type Db, many, one } from '../db';
+import { type Db, many, one, pool } from '../db';
 import { notify } from './common';
 import { lifetimeStats } from './stats';
 
@@ -195,6 +195,47 @@ export async function evaluateThrottled(db: Db, characterId: number, everyMs = 6
   if (now - (lastCheck.get(characterId) ?? 0) < everyMs) return;
   lastCheck.set(characterId, now);
   await evaluateAchievements(db, characterId);
+}
+
+// Arka plan değerlendirmesi (playtest O-10): /me isteği başarımları beklemez. Aynı anda en fazla BG_CONCURRENCY
+// değerlendirme çalışır, böylece yük altında havuzu (PG_POOL_MAX) doldurup diğer isteklerin önüne geçmez. Eylem, konser,
+// liste ve mahkeme sonrası değerlendirme zaten zamanlayıcıda eşzamanlı yapılır; bu yalnızca diğer olaylar içindir.
+const BG_CONCURRENCY = 1;
+const queue: number[] = [];
+const queued = new Set<number>();
+let running = 0;
+const idle: Array<() => void> = [];
+
+function pump() {
+  while (running < BG_CONCURRENCY && queue.length) {
+    const id = queue.shift()!;
+    queued.delete(id);
+    running++;
+    evaluateAchievements(pool, id)
+      .catch(() => {})
+      .finally(() => {
+        running--;
+        if (!running && !queue.length) for (const f of idle.splice(0)) f();
+        pump();
+      });
+  }
+}
+
+/** Karakter başına en fazla 5 dakikada bir, kuyruğa alır ve hemen döner (büyük olaylar zaten zamanlayıcıda değerlendirilir) */
+export function evaluateInBackground(characterId: number, everyMs = 5 * 60_000) {
+  const now = Date.now();
+  if (now - (lastCheck.get(characterId) ?? 0) < everyMs || queued.has(characterId)) return;
+  lastCheck.set(characterId, now);
+  if (lastCheck.size > 50_000) for (const [k, t] of lastCheck) if (now - t > everyMs) lastCheck.delete(k);
+  queued.add(characterId);
+  queue.push(characterId);
+  pump();
+}
+
+/** Kuyruk boşalana kadar bekler (testler ve kapanış için) */
+export function achievementQueueIdle(): Promise<void> {
+  if (!running && !queue.length) return Promise.resolve();
+  return new Promise((r) => idle.push(r));
 }
 
 export async function achievementPoints(db: Db, characterId: number): Promise<number> {
