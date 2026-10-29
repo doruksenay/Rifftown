@@ -184,8 +184,8 @@ describe('bağımlılık, hastane ve ölüm', () => {
     await setMoney(p.character.id, 20);
     await q('UPDATE characters SET health = $2 WHERE id = $1', [p.character.id, HOSPITALIZE_HEALTH - 5]);
     expect(await processHospitalizations()).toBeGreaterThanOrEqual(1);
-    const m = await me(p.c);
-    expect(m.action?.kind).toBe('treat');
+    // Okuma anında tamamlanmasın diye süren tedavinin türüne veritabanından bakılır
+    expect((await q(`SELECT kind FROM actions WHERE character_id = $1 ORDER BY id DESC LIMIT 1`, [p.character.id])).rows[0].kind).toBe('treat');
     expect((await raw(p.character.id)).money).toBe(0);
     await advance(10);
     expect((await raw(p.character.id)).health).toBeGreaterThan(HOSPITALIZE_HEALTH);

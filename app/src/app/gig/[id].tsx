@@ -109,8 +109,20 @@ function GigScreenScreen() {
           ) : null}
           <View style={{ marginTop: space.lg, gap: 2 }}>
             <Body>{t('attendance', { n: r.attendance })}</Body>
-            <Body>{t('revenue', { money: money(r.revenue) })}</Body>
+            {/* Gelir dökümü: bilet geliri, bar sahibinin payı, bilet vergisi, ekip ücreti, gruba kalan (GAME_DESIGN.md) */}
+            {(r.ownerShare ?? 0) + (r.cityTax ?? 0) + (r.crewFee ?? 0) > 0 ? (
+              <>
+                <Body>{t('gigGross', { money: money(r.revenue + (r.ownerShare ?? 0) + (r.cityTax ?? 0) + (r.crewFee ?? 0)) })}</Body>
+                {r.ownerShare ? <Small>{t('gigOwnerShare', { money: money(r.ownerShare) })}</Small> : null}
+                {r.cityTax ? <Small>{t('gigCityTax', { money: money(r.cityTax) })}</Small> : null}
+                {r.crewFee ? <Small>{t('gigCrewFee', { money: money(r.crewFee) })}</Small> : null}
+                <Body>{t('gigNet', { money: money(r.revenue) })}</Body>
+              </>
+            ) : (
+              <Body>{t('revenue', { money: money(r.revenue) })}</Body>
+            )}
             <Body>{t('perMember', { money: money(r.perMember) })}</Body>
+            {r.productionCost ? <Small>{t('gigProductionPaid', { money: money(r.productionCost) })}</Small> : null}
             <Body color={r.fameDelta >= 0 ? c.blue : c.pink}>{t(fameChangeKey(r.fameDelta))}</Body>
           </View>
           <Small style={{ marginTop: space.sm }}>{t('present', { a: r.presentCount, b: r.memberCount })}</Small>

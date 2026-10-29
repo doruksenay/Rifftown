@@ -114,7 +114,7 @@ Bir karakter aynı anda tek eylem yapar. Süreler oyun saatidir; gerçek süre =
 
 Ruh hâli 25'in altındayken dinlenme ve tedavi dışındaki her saat sağlıktan fazladan 2 puan götürür.
 
-Bir eylem erken bitirilebilir (seyahat hariç). Sonuç geçen süreyle orantılı uygulanır, ücret iade edilmez.
+Bir eylem erken bitirilebilir (seyahat hariç). Sonuç geçen süreyle orantılı uygulanır, ücret iade edilmez. Süresi dolmuş eylem zamanlayıcıyı beklemeden okuma anında sonuçlanır (`/me`, yeni eylem başlatma ya da erken bitir; bildirim ve başarım dahil): zamanlayıcı durur ya da gecikirse oyuncu "meşgul" ya da yolda takılı kalmaz. Zamanlayıcıyla aynı anda olsa da eylem bir kez sonuçlanır (`FOR UPDATE SKIP LOCKED`).
 
 ### Formüller
 

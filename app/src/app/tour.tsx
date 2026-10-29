@@ -6,7 +6,7 @@ import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useGate } from '@/components/gate';
-import { Body, Button, Card, Choice, Empty, Field, Heading, Meter, Row, Screen, Small, Strong } from '@/components/ui';
+import { Body, Button, Card, Choice, Empty, Field, Heading, Loading, Meter, Row, Screen, Small, Strong } from '@/components/ui';
 import { api } from '@/lib/api';
 import { dateTime, money } from '@/lib/format';
 import { useRun } from '@/lib/hooks';
@@ -37,7 +37,9 @@ function Tour() {
   const [name, setName] = useState('');
   const [cities, setCities] = useState<string[]>([]);
   const [days, setDays] = useState(14);
-  if (!me.data?.band) return <Screen><Empty text={t('err_no_band')} /></Screen>;
+  // Başlık erken dönüşte de doğru (eskiden ham rota adı "tour" görünüyordu)
+  if (me.isLoading) return <Screen><Stack.Screen options={{ title: t('tourTitle') }} /><Loading /></Screen>;
+  if (!me.data?.band) return <Screen><Stack.Screen options={{ title: t('tourTitle') }} /><Empty text={t('err_no_band')} /></Screen>;
   const v = q.data;
   const toggleCity = (id: string) => setCities((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length >= TOUR_MAX_CITIES ? s : [...s, id]));
   return (

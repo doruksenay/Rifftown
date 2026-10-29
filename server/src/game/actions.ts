@@ -151,6 +151,9 @@ function requireLocation(char: CharacterRow, locationId: unknown, type: Location
 
 export async function startAction(characterId: number, req: StartActionRequest, opts: { isVip?: boolean } = {}) {
   const isVip = !!opts.isVip;
+  // Süresi dolmuş ama zamanlayıcının henüz işlemediği eylem yeni eylemin önünü kesmesin (ayrı işlemde, zamanlayıcıyla
+  // aynı kilit sırası: eylem → karakter)
+  await completeOwnDueAction(characterId);
   return tx(async (c) => {
     // Özel derste karşı taraf da değişir (ücret, pekiştirme): iki karakter id sırasıyla kilitlenir
     if (req.kind === 'lesson' && req.tutorId && Number(req.tutorId) !== characterId) {
@@ -433,13 +436,15 @@ export async function startAction(characterId: number, req: StartActionRequest, 
   });
 }
 
-/** Eylemi erken bitirir: etkinin geçen süreye düşen kısmı uygulanır, ücret iade edilmez. */
+/** Eylemi erken bitirir: etkinin geçen süreye düşen kısmı uygulanır, ücret iade edilmez.
+ *  Süresi zaten dolmuşsa (zamanlayıcı gecikmiş) normal tamamlanma yolu işler: bildirim ve başarım dahil (playtest O-11). */
 export async function cancelAction(characterId: number) {
   return tx(async (c) => {
     const a = await one(c, `SELECT * FROM actions WHERE character_id = $1 AND status = 'active' FOR UPDATE`, [
       characterId,
     ]);
     if (!a) fail('no_action', 404);
+    if (a.ends_at.getTime() <= Date.now()) return toActionDto(await finishAction(c, a));
     if (a.kind === 'travel') fail('cannot_cancel');
     const total = a.ends_at.getTime() - a.started_at.getTime();
     const fraction = clamp((Date.now() - a.started_at.getTime()) / Math.max(1, total), 0, 1);
@@ -448,7 +453,37 @@ export async function cancelAction(characterId: number) {
       a.id,
       JSON.stringify(result),
     ]);
+    // Yarıda kesilen eylem de beceri ve istatistik kazandırır: başarımlar aynı işlemde
+    await evaluateAchievements(c, characterId);
     return toActionDto(row);
+  });
+}
+
+/** Vadesi gelmiş eylemin tamamlanması (zamanlayıcı, okuma anında tamamlama ve süresi dolmuş iptal aynı yolu kullanır).
+ *  Çağıran eylem satırını kilitlemiş olmalı; karakter applyAction içinde kilitlenir (sıra: eylem → karakter). */
+async function finishAction(c: pg.PoolClient, a: any) {
+  const result = await applyAction(c, a, 1);
+  const row = await one(c, `UPDATE actions SET status = 'done', result = $2 WHERE id = $1 RETURNING *`, [a.id, JSON.stringify(result)]);
+  await notify(c, a.character_id, 'action_done', { actionId: a.id, kind: a.kind, ...result });
+  await evaluateAchievements(c, a.character_id);
+  return row;
+}
+
+/**
+ * Okuma anında tamamlama (playtest O-11): zamanlayıcı durmuş ya da gecikmişse oyuncu "meşgul" takılı kalmasın.
+ * Oyuncunun süresi dolmuş eylemini kendi isteğinde tamamlar. SKIP LOCKED: zamanlayıcı aynı eylemi o an işliyorsa
+ * beklemez, ikinci kez de işlemez (durum 'active' değilse satır seçilmez). Tamamlandıysa true.
+ */
+export async function completeOwnDueAction(characterId: number): Promise<boolean> {
+  return tx(async (c) => {
+    const a = await one(
+      c,
+      `SELECT * FROM actions WHERE character_id = $1 AND status = 'active' AND ends_at <= now() FOR UPDATE SKIP LOCKED`,
+      [characterId],
+    );
+    if (!a) return false;
+    await finishAction(c, a);
+    return true;
   });
 }
 
@@ -472,10 +507,7 @@ export async function completeDueActions(limit = 100): Promise<number> {
         );
         if (!a) return false;
         id = a.id;
-        const result = await applyAction(c, a, 1);
-        await c.query(`UPDATE actions SET status = 'done', result = $2 WHERE id = $1`, [a.id, JSON.stringify(result)]);
-        await notify(c, a.character_id, 'action_done', { actionId: a.id, kind: a.kind, ...result });
-        await evaluateAchievements(c, a.character_id);
+        await finishAction(c, a);
         return true;
       });
       if (!ok) break;

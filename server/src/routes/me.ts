@@ -39,6 +39,7 @@ import { config } from '../config';
 import { activeAction, getCharacter, isJailed, lockCharacter, membership, notify, officesOf, requireEstablished, toActionDto, toCharacterDto } from '../game/common';
 import { evaluateInBackground } from '../game/achievements';
 import { meSnapshot } from '../game/me-snapshot';
+import { completeOwnDueAction } from '../game/actions';
 import { bailQuote, inCustody } from '../game/crime';
 import { homeOf } from '../game/homes';
 import { businessOf } from '../game/business';
@@ -81,7 +82,11 @@ export async function meRoutes(app: FastifyInstance) {
     }
     // Başarımlar istek yolunda değil, arka planda (sınırlı eşzamanlılıkla) değerlendirilir (playtest O-10)
     evaluateInBackground(u.characterId);
-    const snap = await meSnapshot(pool, u.characterId);
+    let snap = await meSnapshot(pool, u.characterId);
+    // Okuma anında tamamlama: süresi dolmuş eylem zamanlayıcıyı beklemeden sonuçlanır (playtest O-11)
+    if (snap?.action && (snap.action.ends_at as Date).getTime() <= Date.now() && (await completeOwnDueAction(u.characterId))) {
+      snap = await meSnapshot(pool, u.characterId);
+    }
     if (!snap) fail('no_character', 404);
     const { ch, action } = snap!;
     return {

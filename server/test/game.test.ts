@@ -51,8 +51,11 @@ describe('eylemler', () => {
     const { c } = await newPlayer();
     const start = await c.post('/api/actions', { kind: 'study', skill: 'guitar', hours: 4 });
     expect(start.status).toBe(200);
+    // Test hızında eylem milisaniyede biter ve okuma anında tamamlanırdı: süren eylemi sınamak için bitişi ileri al
+    await pool.query(`UPDATE actions SET ends_at = now() + interval '1 hour' WHERE id = $1`, [start.body.action.id]);
     expect((await c.post('/api/actions', { kind: 'rest', hours: 1 })).body.error).toBe('busy');
     expect((await me(c)).action.kind).toBe('study');
+    await pool.query(`UPDATE actions SET ends_at = now() WHERE id = $1`, [start.body.action.id]);
 
     await advance();
     const m = await me(c);
@@ -109,9 +112,11 @@ describe('eylemler', () => {
     expect((await c.post('/api/actions', { kind: 'travel', toCityId: 'newyork', mode: 'bus' })).body.error).toBe('invalid_route');
     const t = await c.post('/api/actions', { kind: 'travel', toCityId: 'ankara', mode: 'bus' });
     expect(t.status).toBe(200);
+    await pool.query(`UPDATE actions SET ends_at = now() + interval '1 hour' WHERE id = $1`, [t.body.action.id]);
     let m = await me(c);
     expect(m.character.cityId).toBeNull();
     expect(m.character.money).toBe(500 - t.body.action.params.cost);
+    await pool.query(`UPDATE actions SET ends_at = now() WHERE id = $1`, [t.body.action.id]);
     await advance();
     m = await me(c);
     expect(m.character.cityId).toBe('ankara');

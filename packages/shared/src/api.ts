@@ -250,6 +250,12 @@ export interface GigDto {
     presentCount: number;
     memberCount: number;
     perMember: number;
+    /** Bilet gelirinden kesilenler (para; herkese tam gösterilir). revenue bunlar düşüldükten sonra gruba kalandır. */
+    ownerShare?: number;
+    cityTax?: number;
+    crewFee?: number;
+    /** Konser ayarlanırken peşin ödenen prodüksiyon gideri (kulüp ve üstü) */
+    productionCost?: number;
     review?: { tr: string; en: string };
     bestSongId?: number;
     songScores?: { id: number; score: number }[];
