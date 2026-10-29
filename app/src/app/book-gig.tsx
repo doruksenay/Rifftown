@@ -14,6 +14,7 @@ import {
   LOCATION_BY_ID,
   MAX_SETLIST,
   SESSION_MUSICIAN,
+  SESSION_DOOR_SHARE,
   CITY_BY_ID,
   gigProductionCost,
   ROLE_NAMES,
@@ -24,7 +25,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { Body, Button, Choice, Empty, Heading, Row, Screen, Small, Strong } from '@/components/ui';
+import { Body, Button, Choice, Empty, Heading, Loading, Row, Screen, Small, Strong } from '@/components/ui';
 import { useGate } from '@/components/gate';
 import { api } from '@/lib/api';
 import { money, realDuration } from '@/lib/format';
@@ -63,7 +64,10 @@ function BookGigScreen() {
     enabled: vip && !!locationId,
   });
 
-  if (!loc || !band.data) return <Screen><Empty text={t('needBandLeader')} /></Screen>;
+  // Başlık erken dönüşlerde de doğru (eskiden ham rota adı "book-gig" görünüyordu); veri yüklenirken hata metni değil yükleme
+  const title = <Stack.Screen options={{ title: t('bookTitle') }} />;
+  if (band.isLoading || me.isLoading) return <Screen>{title}<Loading /></Screen>;
+  if (!loc || !band.data || band.data.leaderId !== me.data?.character?.id) return <Screen>{title}<Empty text={t('needBandLeader')} /></Screen>;
   const venue = loc.type as VenueType;
   const sm = SESSION_MUSICIAN[venue];
   const takenRoles = new Set(band.data.members.map((m) => m.role));
@@ -190,6 +194,7 @@ function BookGigScreen() {
 
       <Heading>{t('sessionMusicians')}</Heading>
       <Small style={{ marginBottom: space.sm }}>{t('sessionHint', { fee: money(sm.fee), skill: tierName('skill', sm.skill, lang) })}</Small>
+      {SESSION_DOOR_SHARE[venue] > 0 ? <Small style={{ marginBottom: space.sm }}>{t('sessionDoorHint')}</Small> : null}
       <Row style={{ flexWrap: 'wrap' }}>
         {INSTRUMENTS.filter((r) => !takenRoles.has(r)).map((r) => {
           const on = session.includes(r);

@@ -334,7 +334,7 @@ export interface GigResult {
   encoreEnergy?: number;
 }
 
-export type GigFactorId = 'songs' | 'familiarity' | 'skill' | 'stage' | 'presence' | 'setLength' | 'energy' | 'mood' | 'flow' | 'events' | 'style' | 'saturation';
+export type GigFactorId = 'songs' | 'familiarity' | 'skill' | 'stage' | 'presence' | 'setLength' | 'energy' | 'mood' | 'flow' | 'events' | 'style' | 'saturation' | 'chemistry';
 export type GigFactorRating = 'weak' | 'ok' | 'strong';
 export type GigFactors = Partial<Record<GigFactorId, GigFactorRating>>;
 
@@ -342,15 +342,30 @@ const rate = (v: number, weak: number, strong: number): GigFactorRating => (v < 
 
 /** Konserden sonra ne yapılmalı: en zayıf etkenler önce (en fazla 3). Sırası etkinin büyüklüğüne göredir. */
 export function gigAdvice(factors: GigFactors): GigFactorId[] {
-  const order: GigFactorId[] = ['presence', 'setLength', 'familiarity', 'songs', 'saturation', 'skill', 'energy', 'mood', 'stage', 'flow', 'events', 'style'];
+  const order: GigFactorId[] = ['presence', 'setLength', 'familiarity', 'songs', 'saturation', 'chemistry', 'skill', 'energy', 'mood', 'stage', 'flow', 'events', 'style'];
   return order.filter((f) => factors[f] === 'weak').slice(0, 3);
 }
 
-export function expectedAttendance(venue: VenueType, fame: number, genrePop: number, rand: Rand): number {
+/**
+ * Grup kimyası (playtest Y-1): sahnedeki her gerçek üye (ilkinden sonra, en fazla 3 üye) kaliteye mekâna göre puan
+ * ekler; kiralık müzisyen sayılmaz. Gerçek grup bir arada çalmanın uyumunu taşır; kiralık kadro kolay başlangıçtır ama
+ * bunu getirmez. Küçük sahnede büyük (bar +3, kulüp +2), büyük sahnede küçük (+1): salon ve stadyumun denge ayarları
+ * (başa baş kalite, şarkı puanı ağırlıkları) korunur.
+ */
+export const BAND_CHEMISTRY = { perMember: { bar: 3, club: 2, hall: 1, stadium: 1, festival: 1 }, maxExtraMembers: 3 } as const satisfies {
+  perMember: Record<VenueType, number>;
+  maxExtraMembers: number;
+};
+export const bandChemistry = (venue: VenueType, ownOnStage: number) =>
+  BAND_CHEMISTRY.perMember[venue] * clamp(ownOnStage - 1, 0, BAND_CHEMISTRY.maxExtraMembers);
+
+/** members: sahnedeki gerçek üye sayısı. Her üye kendi arkadaşlarını getirir (eskiden grup başına tek sayılıyordu). */
+export function expectedAttendance(venue: VenueType, fame: number, genrePop: number, rand: Rand, members = 1): number {
   const rules = VENUE_RULES[venue];
   const draw = clamp(0.04 + (fame / 100) * 1.1, 0, 1);
-  // Arkadaşlar ve tanıdıklar: küçük sahnede ilk geceleri ayakta tutar
-  const friends = venue === 'bar' ? 4 + Math.floor(rand() * 7) : 2 + Math.floor(rand() * 7);
+  // Arkadaşlar ve tanıdıklar: küçük sahnede ilk geceleri ayakta tutar; üye başına
+  let friends = 0;
+  for (let i = 0; i < Math.max(1, Math.floor(members)); i++) friends += venue === 'bar' ? 4 + Math.floor(rand() * 7) : 2 + Math.floor(rand() * 7);
   const base = rules.capacity * draw * genrePop * (0.85 + rand() * 0.3);
   return Math.round(clamp(base + friends, 0, rules.capacity));
 }
@@ -363,10 +378,12 @@ export function computeGig(input: GigInput): GigResult {
   const genrePop = city.genrePopularity[genre];
   // Bar yeni grupların sahnesidir: doygunluk kulüp ve üstünde işler (ilk adımların temposu değişmesin)
   const recent = venue === 'bar' ? 0 : Math.max(0, Math.floor(input.recentCityGigs ?? 0));
+  // Sahnedeki gerçek üyeler (kiralık müzisyen hariç): arkadaş seyirci ve grup kimyası buna bakar
+  const ownOnStage = performers.filter((p) => p.present && p.characterId !== null).length;
   const attendance = Math.min(
     VENUE_RULES[venue].capacity,
     Math.round(
-      expectedAttendance(venue, fame, genrePop, rand) *
+      expectedAttendance(venue, fame, genrePop, rand, Math.max(1, ownOnStage)) *
         pressAttendanceMult(input.press ?? PRESS_NEUTRAL) *
         (input.crew?.attendanceMult ?? 1) *
         (input.cityEvent ? CITY_EVENT_ATTENDANCE : 1) *
@@ -434,6 +451,9 @@ export function computeGig(input: GigInput): GigResult {
   }
   // Şehir doygunluğu: yalnızca yakın zamanda aynı şehirde çalındıysa değerlendirilir
   if (recent > 0) factors.saturation = recent >= 2 ? 'weak' : 'ok';
+  // Grup kimyası: kiralık müzisyenle ya da birden çok üyeyle çalındıysa değerlendirilir (tek başına ve kiralıksız sayılmaz)
+  const chemistry = bandChemistry(venue, ownOnStage);
+  if (ownOnStage > 1 || present.length > ownOnStage) factors.chemistry = ownOnStage >= 3 ? 'strong' : ownOnStage === 2 ? 'ok' : 'weak';
 
   // Sahne olayları: grubun kendi sahnedeki üyelerinden en uygun olanı dener (kiralık müzisyenler plana uymaz)
   const events: { id: string; outcome: StageEventOutcome; by: number | null }[] = [];
@@ -476,7 +496,7 @@ export function computeGig(input: GigInput): GigResult {
   const noise = 0.92 + rand() * 0.16;
   const base = Math.round(
     clamp(
-      avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + (input.crew?.quality ?? 0) + flow + eventDelta + gearQuality,
+      avgSong * (0.85 + 0.15 * (stage / 100)) * (0.5 + 0.5 * presence) * lengthFactor * noise * 1.15 + (input.fxBonus ?? 0) + (input.crew?.quality ?? 0) + flow + eventDelta + gearQuality + chemistry,
       0,
       100,
     ),

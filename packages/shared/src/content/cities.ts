@@ -4,6 +4,7 @@
 
 import type { ItemDef } from '../items';
 import type { Genre, L } from '../world';
+import { indexBy } from '../lookup';
 
 export interface CityIdentity {
   cityId: string;
@@ -151,7 +152,7 @@ export const CITY_IDENTITY: CityIdentity[] = [
     legend: l('Broadway\'deki bir honky tonk\'ta bahşiş kavanozuna yazılan bir şarkı sözü, yıllar sonra liste başı olmuş.', 'A lyric scribbled on a tip jar in a Broadway honky tonk became a number one years later.'),
   },
 ];
-export const CITY_IDENTITY_BY_ID: Record<string, CityIdentity> = Object.fromEntries(CITY_IDENTITY.map((c) => [c.cityId, c]));
+export const CITY_IDENTITY_BY_ID: Record<string, CityIdentity> = indexBy(CITY_IDENTITY, (c) => c.cityId);
 
 /** Oyun takviminde haftanın günü (0–6) */
 export const gameWeekday = (nowMs: number, gameSpeed: number) => ((Math.floor((nowMs * gameSpeed) / 86_400_000) % 7) + 7) % 7;

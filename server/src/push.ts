@@ -9,6 +9,9 @@ import { many, pool } from './db';
 
 type Tpl = (d: any, lang: Lang) => { title: string; body: string } | null;
 
+/** İngilizcede belirsiz tanımlık: "a good", "an outstanding", "an EPIC" (playtest O-9: "a outstanding", "a EPIC") */
+export const withArticle = (word: string) => `${/^[aeiou]/i.test(word) ? 'an' : 'a'} ${word}`;
+
 const T = (lang: Lang, tr: string, en: string) => (lang === 'en' ? en : tr);
 
 const ACTION_TEXT: Record<string, Tpl> = {
@@ -26,7 +29,12 @@ const ACTION_TEXT: Record<string, Tpl> = {
     body: T(l, `Şapkada ${d.pay} $ birikti.`, `You collected $${d.pay} in tips.`),
   }),
   treat: (_d, l) => ({ title: T(l, 'Tedavi bitti', 'Treatment finished'), body: T(l, 'Sağlığın düzeldi.', 'Your health improved.') }),
-  write_song: (d, l) => ({ title: T(l, 'Yeni şarkı!', 'New song!'), body: T(l, `"${d.title}" hazır: ${tierName('quality', d.quality, l)} bir şarkı`, `"${d.title}" is ready: a ${tierName('quality', d.quality, l)} song`) }),
+  write_song: (d, l) => ({
+    title: T(l, 'Yeni şarkı!', 'New song!'),
+    body:
+      T(l, `"${d.title}" hazır: ${tierName('quality', d.quality, l)} bir şarkı`, `"${d.title}" is ready: ${withArticle(tierName('quality', d.quality, l))} song`) +
+      (d.addedToBand ? T(l, ' Grubunun repertuvarına girdi.', " It's in your band's repertoire.") : ''),
+  }),
   rehearse: (d, l) => ({ title: T(l, 'Prova bitti', 'Rehearsal finished'), body: T(l, `Artık şarkıyı ${tierName('familiarity', d.familiarity, l)}.`, `You now: ${tierName('familiarity', d.familiarity, l)}.`) }),
   travel: (d, l) => {
     const city = CITY_BY_ID[d.to];
@@ -37,7 +45,7 @@ const ACTION_TEXT: Record<string, Tpl> = {
       ? null
       : {
           title: T(l, 'Kayıt bitti', 'Recording finished'),
-          body: T(l, `"${d.title}": ${tierName('quality', d.quality, l)} bir kayıt`, `"${d.title}": a ${tierName('quality', d.quality, l)} recording`),
+          body: T(l, `"${d.title}": ${tierName('quality', d.quality, l)} bir kayıt`, `"${d.title}": ${withArticle(tierName('quality', d.quality, l))} recording`),
         },
   crime: (d, l) =>
     d.cancelled || !d.success
@@ -91,7 +99,9 @@ const TEMPLATES: Record<string, Tpl> = {
       title: T(l, 'Tutuklandın!', 'You were arrested!'),
       body: d.caught
         ? T(l, `${crime ? pick(crime.name, l) : ''} sırasında suç üstü yakalandın. Mahkemeyi bekliyorsun.`, `Caught in the act${crime ? ` (${pick(crime.name, l)})` : ''}. You are awaiting trial.`)
-        : T(l, `Polis ${d.officer} seni buldu. Mahkemeyi bekliyorsun.`, `Officer ${d.officer} tracked you down. You are awaiting trial.`),
+        : d.detective
+          ? T(l, 'Emniyetin dedektifi faili meçhul dosyanı çözdü. Mahkemeyi bekliyorsun.', 'A police detective cracked your unsolved case. You are awaiting trial.')
+          : T(l, `Polis ${d.officer} seni buldu. Mahkemeyi bekliyorsun.`, `Officer ${d.officer} tracked you down. You are awaiting trial.`),
     };
   },
   convicted: (d, l) => ({
@@ -112,7 +122,7 @@ const TEMPLATES: Record<string, Tpl> = {
   gig_done: (d, l) => ({
     title: d.legendary ? T(l, 'EFSANEVİ bir gece!', 'A LEGENDARY night!') : T(l, 'Konser bitti', 'Gig finished'),
     body: d.present
-      ? d.review?.[l] ?? T(l, `${d.attendance} kişi, ${tierName('quality', d.quality, l)} bir konser.`, `${d.attendance} people, a ${tierName('quality', d.quality, l)} show.`)
+      ? d.review?.[l] ?? T(l, `${d.attendance} kişi, ${tierName('quality', d.quality, l)} bir konser.`, `${d.attendance} people, ${withArticle(tierName('quality', d.quality, l))} show.`)
       : T(l, 'Konsere katılamadın!', 'You missed the gig!'),
   }),
   band_invite: (d, l) => ({ title: T(l, 'Grup daveti', 'Band invite'), body: d.bandName }),

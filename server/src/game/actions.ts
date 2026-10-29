@@ -1,6 +1,8 @@
 // Süreli eylemler: başlatma, iptal ve tamamlanma.
 
 import {
+  cleanText,
+  maskProfanity,
   CITY_BY_ID,
   diminishing,
   GENRES,
@@ -65,6 +67,8 @@ import {
   type MoodletId,
   SONG_INSPIRATION_SPEND,
   energyAfter,
+  drainHours,
+  NEWCOMER_HOURS,
   energyFactor,
   songInspirationBonus,
   SONG_FATIGUE_WINDOW_DAYS,
@@ -149,6 +153,9 @@ function requireLocation(char: CharacterRow, locationId: unknown, type: Location
 
 export async function startAction(characterId: number, req: StartActionRequest, opts: { isVip?: boolean } = {}) {
   const isVip = !!opts.isVip;
+  // Süresi dolmuş ama zamanlayıcının henüz işlemediği eylem yeni eylemin önünü kesmesin (ayrı işlemde, zamanlayıcıyla
+  // aynı kilit sırası: eylem → karakter)
+  await completeOwnDueAction(characterId);
   return tx(async (c) => {
     // Özel derste karşı taraf da değişir (ücret, pekiştirme): iki karakter id sırasıyla kilitlenir
     if (req.kind === 'lesson' && req.tutorId && Number(req.tutorId) !== characterId) {
@@ -267,7 +274,7 @@ export async function startAction(characterId: number, req: StartActionRequest, 
         break;
       }
       case 'write_song': {
-        const title = typeof req.title === 'string' ? req.title.trim() : '';
+        const title = typeof req.title === 'string' ? maskProfanity(cleanText(req.title, true)) : '';
         if (title.length < 1 || title.length > 40) fail('invalid_title');
         if (!(GENRES as readonly string[]).includes(req.genre)) fail('invalid_genre');
         // Alt tür ve tempo isteğe bağlı; alt tür seçilen türe ait olmalı
@@ -403,7 +410,7 @@ export async function startAction(characterId: number, req: StartActionRequest, 
     if (req.kind === 'study' || req.kind === 'lesson') params.focus = studyFocusFactor(await recentActionHours(c, characterId, ['study', 'lesson'], 24), hours);
     if (char.money < cost) fail('not_enough_money');
     // Enerji yetmiyorsa yorucu iş başlamaz (dinlenmek, tedavi ve yolculuk her zaman serbest)
-    if (!ENERGY_FREE_KINDS.includes(req.kind) && energyAfter(req.kind, hours, currentEnergy(char)) < 0) fail('too_tired', 409);
+    if (!ENERGY_FREE_KINDS.includes(req.kind) && energyAfter(req.kind, hours, currentEnergy(char), false, isNewcomer(char)) < 0) fail('too_tired', 409);
     params.hours = hours;
     params.cost = cost;
 
@@ -431,13 +438,15 @@ export async function startAction(characterId: number, req: StartActionRequest, 
   });
 }
 
-/** Eylemi erken bitirir: etkinin geçen süreye düşen kısmı uygulanır, ücret iade edilmez. */
+/** Eylemi erken bitirir: etkinin geçen süreye düşen kısmı uygulanır, ücret iade edilmez.
+ *  Süresi zaten dolmuşsa (zamanlayıcı gecikmiş) normal tamamlanma yolu işler: bildirim ve başarım dahil (playtest O-11). */
 export async function cancelAction(characterId: number) {
   return tx(async (c) => {
     const a = await one(c, `SELECT * FROM actions WHERE character_id = $1 AND status = 'active' FOR UPDATE`, [
       characterId,
     ]);
     if (!a) fail('no_action', 404);
+    if (a.ends_at.getTime() <= Date.now()) return toActionDto(await finishAction(c, a));
     if (a.kind === 'travel') fail('cannot_cancel');
     const total = a.ends_at.getTime() - a.started_at.getTime();
     const fraction = clamp((Date.now() - a.started_at.getTime()) / Math.max(1, total), 0, 1);
@@ -446,7 +455,37 @@ export async function cancelAction(characterId: number) {
       a.id,
       JSON.stringify(result),
     ]);
+    // Yarıda kesilen eylem de beceri ve istatistik kazandırır: başarımlar aynı işlemde
+    await evaluateAchievements(c, characterId);
     return toActionDto(row);
+  });
+}
+
+/** Vadesi gelmiş eylemin tamamlanması (zamanlayıcı, okuma anında tamamlama ve süresi dolmuş iptal aynı yolu kullanır).
+ *  Çağıran eylem satırını kilitlemiş olmalı; karakter applyAction içinde kilitlenir (sıra: eylem → karakter). */
+async function finishAction(c: pg.PoolClient, a: any) {
+  const result = await applyAction(c, a, 1);
+  const row = await one(c, `UPDATE actions SET status = 'done', result = $2 WHERE id = $1 RETURNING *`, [a.id, JSON.stringify(result)]);
+  await notify(c, a.character_id, 'action_done', { actionId: a.id, kind: a.kind, ...result });
+  await evaluateAchievements(c, a.character_id);
+  return row;
+}
+
+/**
+ * Okuma anında tamamlama (playtest O-11): zamanlayıcı durmuş ya da gecikmişse oyuncu "meşgul" takılı kalmasın.
+ * Oyuncunun süresi dolmuş eylemini kendi isteğinde tamamlar. SKIP LOCKED: zamanlayıcı aynı eylemi o an işliyorsa
+ * beklemez, ikinci kez de işlemez (durum 'active' değilse satır seçilmez). Tamamlandıysa true.
+ */
+export async function completeOwnDueAction(characterId: number): Promise<boolean> {
+  return tx(async (c) => {
+    const a = await one(
+      c,
+      `SELECT * FROM actions WHERE character_id = $1 AND status = 'active' AND ends_at <= now() FOR UPDATE SKIP LOCKED`,
+      [characterId],
+    );
+    if (!a) return false;
+    await finishAction(c, a);
+    return true;
   });
 }
 
@@ -470,10 +509,7 @@ export async function completeDueActions(limit = 100): Promise<number> {
         );
         if (!a) return false;
         id = a.id;
-        const result = await applyAction(c, a, 1);
-        await c.query(`UPDATE actions SET status = 'done', result = $2 WHERE id = $1`, [a.id, JSON.stringify(result)]);
-        await notify(c, a.character_id, 'action_done', { actionId: a.id, kind: a.kind, ...result });
-        await evaluateAchievements(c, a.character_id);
+        await finishAction(c, a);
         return true;
       });
       if (!ok) break;
@@ -488,6 +524,9 @@ export async function completeDueActions(limit = 100): Promise<number> {
   return done;
 }
 
+/** Yeni karakter mi (ilk NEWCOMER_HOURS oyun saati; mirasçı da yeni karakterdir) */
+export const isNewcomer = (char: { created_at: Date }) => Date.now() - new Date(char.created_at).getTime() < gameHoursToMs(NEWCOMER_HOURS, config.gameSpeed);
+
 async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<Record<string, unknown>> {
   const char = await lockCharacter(c, a.character_id);
   const params = a.params as Record<string, any>;
@@ -498,7 +537,11 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   // Görünen ruh hâli (moodlet'lerle), enerji ve ilham
   const well = await wellbeingOf(c, char);
   const efficiency = energyFactor(well.energy);
-  let energyDelta = ENERGY_PER_HOUR[a.kind as ActionKind] * hours + (a.kind === 'rest' && (params.home || params.hotel) ? HOME_REST_ENERGY_BONUS * hours : 0);
+  // Tempo (playtest Y-3): uzun işin 4 saatten sonrası ve yeni karakterin ilk 48 oyun saati daha az yorar (drainHours)
+  const newcomer = isNewcomer(char);
+  const drainH = drainHours(hours, newcomer);
+  const basicEnergy = ENERGY_PER_HOUR[a.kind as ActionKind];
+  let energyDelta = (basicEnergy < 0 ? basicEnergy * drainH : basicEnergy * hours) + (a.kind === 'rest' && (params.home || params.hotel) ? HOME_REST_ENERGY_BONUS * hours : 0);
   let inspirationDelta = 0;
   let setInspiration: number | undefined;
   const moodlets: MoodletId[] = [];
@@ -509,7 +552,10 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   if (a.kind === 'rest') {
     // Hayvan bakımı becerisi evcil hayvanın dinlenme bonusunu artırır (en fazla ×1,3)
     mood += restMoodGain(hours, Math.min(100, gear.art + ((params.restBonus as number) ?? 0) + (params.pet ? gear.pet * skillMult(char.skills, 'pets') : 0)));
-  } else mood += MOOD_PER_HOUR[a.kind as keyof typeof MOOD_PER_HOUR] * hours;
+  } else {
+    const perHour = MOOD_PER_HOUR[a.kind as keyof typeof MOOD_PER_HOUR];
+    mood += perHour < 0 ? perHour * drainH : perHour * hours;
+  }
   let healthChange = HEALTH_PER_HOUR[a.kind as keyof typeof HEALTH_PER_HOUR] * hours;
   // Kondisyon yorucu işlerdeki sağlık kaybını azaltır; bünye niteliği de (çarpılarak, en fazla %15)
   if (healthChange < 0) healthChange *= (1 - fitnessShield(lv(char.skills, 'fitness') + skillBonus(char.skills, 'fitness'))) * (1 - healthShieldAttr(char.attributes));
@@ -643,6 +689,13 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       result.songId = song!.id;
       result.title = params.title;
       result.quality = quality;
+      // Grubu varsa şarkı kendiliğinden grubun repertuvarına girer (playtest O-1: grup kurulduktan sonra yazılan şarkılar
+      // repertuvara girmiyor, yeni oyuncu tek şarkıyla konser veriyordu). Repertuvardan çıkarmak eskisi gibi elde.
+      const band = await membership(c, char.id);
+      if (band) {
+        await c.query('INSERT INTO band_songs(band_id, song_id) VALUES ($1, $2) ON CONFLICT DO NOTHING', [band.band_id, song!.id]);
+        result.addedToBand = true;
+      }
       break;
     }
     case 'rehearse': {

@@ -12,6 +12,8 @@ import { processBirths, processChildren } from './game/family';
 import { processUpkeep } from './game/business';
 import { processFestivals } from './game/festivals';
 import { processBankInterest } from './game/lifestyle';
+import { purgeExpiredSessions } from './auth';
+import { processColdCases } from './game/crime';
 import { config } from './config';
 import { pool } from './db';
 import { pruneMoodlets } from './game/wellbeing';
@@ -32,6 +34,8 @@ async function stage(name: string, fn: () => Promise<number | void>): Promise<nu
   }
 }
 
+let lastSessionPurge = 0;
+
 export async function tick() {
   // Biriken iş varsa hepsi bitene kadar devam et
   const actions = await stage('eylemler', async () => {
@@ -42,6 +46,8 @@ export async function tick() {
   if (config.npcEnabled) await stage('oyunun grupları', () => npcDirector());
   if (config.npcEnabled) await stage('oyunun kadrosu', () => npcCivicDirector());
   const gigs = await stage('konserler', () => processDueGigs(50));
+  // Oyunun dedektifi önce: tutukladığı şüphelinin davası aynı turda açılır
+  if (config.npcEnabled) await stage('dedektif', () => processColdCases());
   const justice = await stage('adalet', () => processJustice());
   const charts = await stage('listeler', () => processChartWeeks());
   await stage('kira', () => processRent());
@@ -54,6 +60,11 @@ export async function tick() {
   await stage('seçim açma', () => ensureElections());
   await stage('maaşlar', () => payOfficeSalaries());
   await stage('moodlet temizliği', () => pruneMoodlets(pool));
+  // Süresi dolmuş oturumlar saatte bir silinir (okuma anında da reddedilirler; bu yalnızca tabloyu küçük tutar)
+  if (Date.now() - lastSessionPurge > 3600_000) {
+    lastSessionPurge = Date.now();
+    await stage('oturum temizliği', () => purgeExpiredSessions());
+  }
   if (config.decayEnabled) {
     await stage('aşinalık çürümesi', () => processFamiliarityDecay());
     await stage('şöhret azalması', () => processFameDecay());

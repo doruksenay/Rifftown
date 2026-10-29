@@ -4,6 +4,7 @@
 
 import type { L } from './world';
 import { EXTRA_MISSIONS, type WeeklyKind } from './content/progress';
+import { indexBy } from './lookup';
 
 export type MissionKind = WeeklyKind;
 
@@ -39,17 +40,67 @@ export const MISSIONS: MissionDef[] = [
 ];
 // Veri dosyasındaki ek görevler
 MISSIONS.push(...EXTRA_MISSIONS);
-export const MISSION_BY_ID: Record<string, MissionDef> = Object.fromEntries(MISSIONS.map((m) => [m.id, m]));
+export const MISSION_BY_ID: Record<string, MissionDef> = indexBy(MISSIONS, (m) => m.id);
 export const MISSIONS_PER_WEEK = 3;
 
-/** Oyuncunun o haftaki görevleri (aynı hafta hep aynı görevler) */
-export function missionsFor(characterId: number, weekId: number): MissionDef[] {
+/** Görev seçimi için oyuncunun durumu (playtest O-2: yeni ve yalnız oyuncuya hediye, takılma, yolculuk düşüyordu) */
+export interface MissionContext {
+  hasBand: boolean;
+  /** Ömür boyu sahneye çıktığı konser */
+  gigsPlayed: number;
+  friends: number;
+  /** Karakterin yaşı (oyun saati) */
+  accountHours: number;
+  /** El işçiliğini biliyor (atölye) */
+  knowsCraft: boolean;
+  /** En az bir sahne olayının beceri eşiğini geçiyor */
+  canStageEvent: boolean;
+}
+
+/** Yeni hesap kapısı (hediye, yolculuk görevleri): TRADE_MIN_ACCOUNT_HOURS ile aynı (72 oyun saati) */
+export const MISSION_SETTLED_HOURS = 72;
+
+/** Görev bu oyuncu için bu hafta yapılabilir mi */
+export function missionEligible(m: MissionDef, ctx: MissionContext): boolean {
+  const settled = ctx.accountHours >= MISSION_SETTLED_HOURS;
+  switch (m.kind) {
+    case 'gigs':
+    case 'records':
+    case 'press':
+    case 'rehearse_hours':
+      return ctx.hasBand;
+    case 'encores':
+      return ctx.hasBand && ctx.gigsPlayed >= 3;
+    case 'stage_events':
+      return ctx.hasBand && ctx.canStageEvent;
+    case 'cities_played':
+      return ctx.hasBand && settled;
+    case 'hangouts':
+      return ctx.friends > 0;
+    case 'gifts':
+      return ctx.friends > 0 && settled;
+    case 'travel':
+      return settled;
+    case 'crafts':
+      return ctx.knowsCraft;
+    default:
+      return true;
+  }
+}
+
+/** Oyuncunun o haftaki görevleri (aynı hafta hep aynı görevler). ctx verilirse yalnızca yapılabilir görevlerden seçilir;
+ *  sunucu seçimi haftanın ilk bakışında saklar (mission_weeks). */
+export function missionsFor(characterId: number, weekId: number, ctx?: MissionContext): MissionDef[] {
   const out: MissionDef[] = [];
   let seed = (characterId * 2654435761 + weekId * 40503) >>> 0;
-  const pool = [...MISSIONS];
+  const eligible = ctx ? MISSIONS.filter((m) => missionEligible(m, ctx)) : MISSIONS;
+  const pool = [...(eligible.length >= MISSIONS_PER_WEEK ? eligible : MISSIONS)];
   while (out.length < MISSIONS_PER_WEEK && pool.length) {
     seed = (seed * 1103515245 + 12345) >>> 0;
-    out.push(pool.splice(seed % pool.length, 1)[0]);
+    // Aynı türden iki görev (ör. 2 ve 4 konser) aynı hafta düşmesin
+    const pick = pool.splice(seed % pool.length, 1)[0];
+    if (out.some((x) => x.kind === pick.kind)) continue;
+    out.push(pick);
   }
   return out;
 }

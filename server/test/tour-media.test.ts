@@ -94,6 +94,9 @@ describe('turne ekibi ve yıpranma', () => {
     await q('UPDATE bands SET crew_morale = 12 WHERE id = $1', [band.id]);
     await q(`UPDATE band_fame SET fame = 0 WHERE band_id = $1`, [band.id]);
     await p.c.post('/api/crew/promoter');
+    // Her üye kendi arkadaşlarını getirdiğinden bar geliri arttı: ücret kesin yetmesin diye ekip büyük
+    await p.c.post('/api/crew/tour_manager');
+    await p.c.post('/api/crew/light_tech');
     const g2 = (await p.c.post('/api/gigs', { locationId: 'istanbul-bar', inHours: 2, setlist: [band.songs[0].id] })).body.gig;
     expect(g2).toBeDefined();
     await q(`UPDATE gigs SET status = 'cancelled' WHERE location_id = 'istanbul-bar' AND status = 'scheduled' AND id <> $1`, [g2.id]);

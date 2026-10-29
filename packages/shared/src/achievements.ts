@@ -5,6 +5,7 @@ import { CITY_BY_ID, GENRE_NAMES, type L } from './world';
 import { CITY_IDENTITY } from './content/cities';
 import { STAT_ACHIEVEMENTS, type StatRule } from './content/progress';
 import { COLLECTIONS } from './content/gear';
+import { indexBy } from './lookup';
 
 export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social' | 'media' | 'legacy' | 'discovery' | 'cities' | 'collections';
 
@@ -132,5 +133,5 @@ ACHIEVEMENTS.push(
   ...COLLECTIONS.map((c) => ({ id: collectionAchievementId(c.id), category: 'collections' as const, points: c.points, name: c.name, about: c.about })),
 );
 
-export const ACHIEVEMENT_BY_ID: Record<string, AchievementDef> = Object.fromEntries(ACHIEVEMENTS.map((a) => [a.id, a]));
+export const ACHIEVEMENT_BY_ID: Record<string, AchievementDef> = indexBy(ACHIEVEMENTS, (a) => a.id);
 export const TOTAL_ACHIEVEMENT_POINTS = ACHIEVEMENTS.reduce((s, a) => s + a.points, 0);

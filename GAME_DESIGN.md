@@ -43,8 +43,8 @@ Beceriler "ne bildiğin"dir, nitelikler "kim olduğun". İki karakter aynı bece
 - **Seçim:** niteliklerin toplamı en fazla **330** olabilir (6 × 100 = 600'ün çok altında): ya üç niteliği tavana çıkarırsın ya da altısını ~55'te tutarsın. Bir puanın bedeli seviyeyle artar: 0–24 arası 1 XP, 25–49 arası 2, 50–74 arası 3, 75–99 arası 4. Bir niteliği 10'dan 100'e çıkarmak 240 XP'dir; aynı 90 puanı altı niteliğe 15'er dağıtmak 90 XP. Geniş-sığ ucuz ve her yere biraz etki eder; dar-derin pahalıdır ama seçtiği alanda (ör. vokalist için ses ve çekicilik) tam etkiyi verir. Harcanan puan geri alınmaz (yalnızca yönetici düzeltebilir).
 - **Etkilerin tavanı:** her etki nitelik 100'de durur ve çekirdek becerilerin yanında küçüktür: rol becerisinde +4 (asıl enstrüman 0'dan 100'e +75), şarkı yazmada +4 (temel beste 0'dan 100'e +45), öğrenmede ×1,12 (okul ×2,2). Yan becerilerin şarkı yazma ve sahne tavanı (+10, uzmanlık payıyla +15) ayrı kalır; nitelik bu tavanları büyütmez, yanına küçük bir pay ekler. Denge ölçümündeki sıralama değişmez: çekirdek beceri > yan beceri tavanı > nitelik (bkz. [docs/DENGE_OLCUMU.md](docs/DENGE_OLCUMU.md) "Nitelikler").
 - **XP kazanma:** her eylem oyun saati başına 1 XP verir (çalışma, ders, mesai, şarkı yazma, prova, kayıt, sokak müziği, antrenman, atölye, basın, haber, klip, soruşturma); yarıda kesilen eylem geçen saat kadar. Dinlenme, tedavi, yolculuk ve suç XP vermez. Sahneye çıkılan her konser 3 XP, kalitesi "harika" (60) ve üstüyse 4.
-- **Tavanlar:** son 24 oyun saatinde en fazla 10 XP, son 7 oyun gününde en fazla 50 XP (`xp_log`). Günde 4 saat okul ve 4 saat mesai yapan, bir konser veren oyuncu günlük tavana dayanır; haftada ~50 XP ile bir nitelik 10'dan 100'e ~5 haftada çıkar, üç niteliği tavana çıkarmak ~14 hafta sürer.
-- **İstismara karşı:** para ile XP alınamaz (hiçbir uç para karşılığı XP vermez); XP takas, hediye, para gönderme ya da miras ile başka karaktere geçmez; XP yalnızca karakterin kendi eyleminden ve sahneye çıktığı konserden gelir (takılma, flört, başkasına ders vermek XP vermez); yeni hesapların (ilk 72 oyun saati, `TRADE_MIN_ACCOUNT_HOURS`) tavanı yarıdır, böylece ek hesapları hızla güçlü grup arkadaşına çevirmek yavaşlar; oyunun kendi müzisyenleri XP almaz ve niteliksizdir (eski davranış aynen). Harcama karakter satırı kilitliyken yapılır: eşzamanlı istekler XP'yi eksiye düşüremez (test).
+- **Tavanlar:** son 24 oyun saatinde en fazla 10 XP, son 7 oyun gününde en fazla 50 XP (`xp_log`); yeni hesapta (ilk 72 oyun saati) %80'i (eskiden yarısı: günde 5 XP ilk mesaide doluyordu). Günde 4 saat okul ve 4 saat mesai yapan, bir konser veren oyuncu günlük tavana dayanır; haftada ~50 XP ile bir nitelik 10'dan 100'e ~5 haftada çıkar, üç niteliği tavana çıkarmak ~14 hafta sürer.
+- **İstismara karşı:** para ile XP alınamaz (hiçbir uç para karşılığı XP vermez); XP takas, hediye, para gönderme ya da miras ile başka karaktere geçmez; XP yalnızca karakterin kendi eyleminden ve sahneye çıktığı konserden gelir (takılma, flört, başkasına ders vermek XP vermez); yeni hesapların (ilk 72 oyun saati, `TRADE_MIN_ACCOUNT_HOURS`) tavanı %80'idir (eskiden yarısı), böylece ek hesapları hızla güçlü grup arkadaşına çevirmek yavaşlar; oyunun kendi müzisyenleri XP almaz ve niteliksizdir (eski davranış aynen). Harcama karakter satırı kilitliyken yapılır: eşzamanlı istekler XP'yi eksiye düşüremez (test).
 - **Karakter açarken** oyuncu 20 başlangıç puanını dağıtır (uygulama ilk enstrümana göre bir öneriyle açılır: vokal → çekicilik + yaratıcılık, davul/perküsyon → bünye + çekicilik, diğerleri → yaratıcılık + zekâ). Ölen karakterin yerine açılan yeni karakter XP ya da nitelik devralmaz; mirasçı (yetişkin çocuk) yalnızca en fazla 4 nitelik puanlık küçük bir kalıtım alır, XP almaz (bkz. "Nesiller").
 - **Mevcut oyuncular (migration 021):** yeni karakterle aynı başlangıç dağılımı (role göre) ve başlangıç XP'si: 20 + şimdiye kadarki her 4 eylem saati için 1 + sahneye çıkılan her konser için 1, en fazla 150. Bu XP tavana sayılmaz. Beceri, para ve diğer ilerleme olduğu gibi kalır.
 - **Görünürlük:** nitelikler yeni "nitelik" kelime ölçeğiyle gösterilir (aşağıdaki tablo); VIP olmayanlara sunucu bulanık değer gönderir (`visibility.ts` `attributes`), toplam tavana kalan puan 10'luk adımlarla (`attributeRoom`). Bedel basamakları (25, 50, 75) ölçeğin sınırlarına denk geldiği için bulanık değerle hesaplanan bedel de doğrudur. XP para gibi harcanan bir bakiye olduğundan tam sayı olarak gösterilir. Not: nitelikler yalnızca harcamayla değiştiğinden oyuncu kendi kesin değerini sayarak bulabilir; bulanıklık başkasının ekranında ya da yanıtlarda sayı sızmasın diyedir.
@@ -55,6 +55,8 @@ Beceriler "ne bildiğin"dir, nitelikler "kim olduğun". İki karakter aynı bece
 Sunucu her şeyi sayıyla hesaplar ve saklar; oyuncu kelimeleri görür. Ölçekler `packages/shared/src/tiers.ts` dosyasındadır; uygulama, push bildirimleri ve eleştiriler aynı kelimeleri kullanır.
 
 Kesin sayılar VIP avantajıdır (Popmundo'daki gibi). VIP üyeler kelimenin yanında sayıyı da görür ("amatör 37,3"). VIP olmayan oyunculara sunucu her değeri bulunduğu seviyenin içinde dörtte birlik adımlara aşağı yuvarlayarak gönderir: seviye adı ve ilerleme çubuğu doğru kalır, kesin sayı API'den bile okunamaz. Oyundaki bütün eşikler (mekân şöhret şartları, meslek ve makam şartları, öncül beceriler, düşük ruh hâli ve sağlık sınırları) seviye sınırlarına denk gelir, bu yüzden yuvarlanmış değer uygulamadaki kontrollerden de doğru geçer. Yöneticiler sayıları her zaman görür.
+
+Değişimler de bulanıktır, yoksa başlangıç değeri bilinen bir alan (beceri 12, ruh hâli 80, sağlık 100, şöhret 0) kesin değişimler toplanarak bulunurdu: beceri ve arkadaşlık artışı (`gain`) yalnızca "hiç / çok az / biraz / epey / çok" basamağıyla, şöhret değişimi (`fameDelta`) "düştü / arttı / çok arttı" basamağıyla, diğer bütün `...Delta` alanları (ruh hâli, sağlık, enerji, ilham) 5'lik adımlarla, ilhamın şarkıya katkısı 5'lik basamakla, arkadaşlık ve romantizm sayaçları kendi kelime ölçekleriyle gider. `server/test/visibility-leaks.test.ts` gerçek bir oyun akışından sonra bütün uçları dolaşır: VIP olmayana giden her sayısal alan ya bulanık bir kurala ya da bilerek kesin gönderilen listeye (para, kimlik, sayaç, süre, XP; `visibility.ts` `EXACT_NUMERIC_KEYS`) girmelidir, yeni sınıflandırılmamış bir alan testi kırar.
 
 | Ölçek | Seviyeler (eşik) |
 |---|---|
@@ -112,7 +114,9 @@ Bir karakter aynı anda tek eylem yapar. Süreler oyun saatidir; gerçek süre =
 
 Ruh hâli 25'in altındayken dinlenme ve tedavi dışındaki her saat sağlıktan fazladan 2 puan götürür.
 
-Bir eylem erken bitirilebilir (seyahat hariç). Sonuç geçen süreyle orantılı uygulanır, ücret iade edilmez.
+**Tempo (playtest Y-3).** Yeni karakterin (mirasçı dahil) ilk 48 oyun saatinde yorucu işlerin ruh hâli ve enerji maliyeti azalır (`wellbeing.ts` `drainHours`): uzun işin ilk 4 saati tam, sonrası ×0,6, hepsi ayrıca ×0,6; kazanç aynı. 8 saatlik ilk mesai ruh hâlinden 32 yerine ~15 götürür. Oyuncu bunu "Yeni başlangıç" moodlet'i (+5, 48 saat) olarak görür. 48 saatten sonra eski kural (herkese uygulanan indirim ekonomi ölçümünde mesai botunun 10 günlük parasını %25 artırıyordu). Ana ekran enerji 40'ın ya da ruh hâli 30'un altındayken "Dinlen" ve "Bir şey ye" düğmelerini gösterir (dinlenmek her zaman ücretsiz: parasız ve enerjisiz kilitlenme yok). Ölçüm (`scripts/balance/sim-tempo.ts`): ilk dört işten (şarkı, 8 saat mesai, 4 saat prova, bar konseri) sonra görünen ruh hâli 9,5 → 52,5, enerji 0 → 44,5; 8 saatlik mesai görünen ruh hâli −38 → −15, XP 3 → 6; ilk 48 saatte dinlenmeye giden saat 28 → 24, para ~aynı.
+
+Bir eylem erken bitirilebilir (seyahat hariç). Sonuç geçen süreyle orantılı uygulanır, ücret iade edilmez. Süresi dolmuş eylem zamanlayıcıyı beklemeden okuma anında sonuçlanır (`/me`, yeni eylem başlatma ya da erken bitir; bildirim ve başarım dahil): zamanlayıcı durur ya da gecikirse oyuncu "meşgul" ya da yolda takılı kalmaz. Zamanlayıcıyla aynı anda olsa da eylem bir kez sonuçlanır (`FOR UPDATE SKIP LOCKED`).
 
 ### Formüller
 
@@ -311,9 +315,10 @@ Polis, ajan, özel harekât ve yargıç meslekleri bu sistemle gerçek bir oynan
 | Mağazadan çalma | dükkânlar, kitapçı | 1 saat | gizlilik, sokak kurnazlığı | $60–180 | 12 saat |
 | Ofis soygunu | iş merkezi | 2 saat | kilit açma (en az çırak), gizlilik | $250–700 | 24 saat |
 
-- Ganimet şehir çarpanıyla çarpılır. Başarı şansı = 0,45 + beceri ortalaması × 0,006 − zorluk × 0,01 − görevdeki polis × 0,05 − emniyet müdürünün devriye basamağı × 0,03 (bkz. "Makam yetkileri"); %8 ile %92 arasında. Son 12 oyun saatinde emniyette mesai yapan ya da soruşturan her polis şansı düşürür. VIP üyeler şansı yüzde olarak görür, diğerleri kelimeyle (şansın düşük, yarı yarıya, şansın yüksek).
+- Ganimet şehir çarpanıyla çarpılır. Başarı şansı = 0,35 + beceri ortalaması × 0,009 (eskiden 0,45 + × 0,006: sokak becerisi olmayan yeni karakter yarı yarıya başarıyordu; beceri 40'ta şans aynı kaldı) − zorluk × 0,01 − görevdeki polis × 0,05 − emniyet müdürünün devriye basamağı × 0,03 (bkz. "Makam yetkileri"); %8 ile %92 arasında. Son 12 oyun saatinde emniyette mesai yapan ya da soruşturan her polis şansı düşürür. VIP üyeler şansı yüzde olarak görür, diğerleri kelimeyle (şansın düşük, yarı yarıya, şansın yüksek).
 - Yeni "Sokak" beceri kategorisi: sokak kurnazlığı ($50), gizlilik ($70, sokak kurnazlığında çırak), kilit açma ($90, gizlilikte çırak) kitapçıdan alınır. Okulda öğretilmez; evde çalışarak ya da suç işleyerek gelişir. Kariyer kategorisine soruşturma ($60, temel hukukta çırak), müzik kategorisine kayıt yapımcılığı ($60, temel bestede çırak) eklendi.
 - **Yakalanma:** Başarısız suç suç üstü yakalanmaktır: karakter tutuklanır, cezaevine konur ve dava açılır.
+- **Oyunun dedektifi (playtest Y-4):** şehirde görevde polis oyuncu yoksa her faili meçhul suça, işlendikten 6 oyun saati sonra bir kez bakar (`processColdCases`, migration 029 `npc_checked_at`). Fail hâlâ o şehirde ve serbestse bulma şansı %30 − gizlilik × 0,006 (en az %5); bulursa tutuklar, dava normal kuralla görülür, ikramiye kimseye gitmez. Şehirden kaçan fail kurtulur. Mahkûmiyette failin aynı şehirdeki son 7 günlük faili meçhul suçları da dosyaya girer ve ganimetlerinin yarısı para cezasına eklenir (cepte kalan kadar; dosya kapanır). Ölçüm (`scripts/balance/sim-crime.ts`, polis oyuncu yok, 6 tohum): yeni karakter ilk 6 saatte +$48 → +$24, ilk günde −$76 → −$157; becerili hırsız (40/40) ilk 6 saatte +$87 → +$37 (mesai +$60), ilk günde +$61 → −$72; faili meçhul kalan ganimet $619 → $118. Ölçülü suç hâlâ biraz kazandırır, yasal işten kârlı değildir.
 - **Faili meçhul:** Başarılı suç kayıtlara faili meçhul olarak geçer. Polis meslekleri emniyette 2 saatlik soruşturma yapabilir; son 7 oyun gününün, faili hâlâ o şehirde olan en eski faili meçhul suçunu arar. Bulma şansı = 0,35 + hukuk × 0,004 + soruşturma × 0,006 (+0,1 ajan ve özel harekât) − failin gizliliği × 0,005 + devriye basamağı × 0,03; %10 ile %90 arasında. Faili bulan polis tutuklar ve $120 × şehir çarpanı ikramiye alır. Soruşturma mesai sayılır (rütbe ilerler), ücreti normal mesainin yarısıdır.
 - **Mahkeme:** Davaya o şehirdeki VIP yargıç hafif (×0,5), normal ya da ağır (×1,5) cezayla veya beraatle karar verir ve $150 × şehir çarpanı ikramiye alır. Yargıç 12 oyun saati içinde bakmazsa mahkeme normal cezayı kendisi verir. Mahkûmiyette çalınan para geri alınır, ayrıca para cezası kesilir (ganimet tavanı × (1 + 0,25 × sabıka) × şehir; ikisi de cepte kalan kadarı, banka korur) ve sabıka sayısı artar.
 - **Sabıka:** tekrarlayan suçlunun cezası × (1 + 0,5 × sabıka), en fazla ×5; polis tanır, her mahkûmiyet başarı şansını −0,02 düşürür (en fazla −0,2). Eskiden ceza sabitti ve dolandırıcı bot ayda 42 mahkûmiyetle yine kârdaydı (denge raporu §6). Beraat eden dosya kapanır, aynı suç için yeniden soruşturma açılmaz.
@@ -330,7 +335,7 @@ Polis, ajan, özel harekât ve yargıç meslekleri bu sistemle gerçek bir oynan
 - **Ünvanlar** (`content/rewards.ts`, 16 ünvan): kozmetiktir, profilde adın altında görünür. Bir başarımdan (ör. Süperstar, Meteliksiz, Tek kişilik orkestra) ya da görev zincirinin bir adımından/seçeneğinden kazanılır. Sunucu kazanılmış ünvanı ayrıca saklamaz, başarım ve zincir kayıtlarından hesaplar; yalnızca seçili ünvan `characters.title_id` (migration 016). `GET/POST /api/titles`, başarımlar ekranında seçilir.
 - **Kişiye bağlı eşyalar** (`bound`, `reward`): dükkânda satılmaz; dükkâna satılamaz, pazara konamaz, takas ve hediye edilemez, NPC tüccar ilan etmez. Bonusları aynı yuvadaki dükkân eşyalarının ara basamağıdır. Zincir ödülü olarak verilir; para karşılığı olmadığı için ek hesaplarla zincir koşturup para ya da eşya taşınamaz.
 
-Başarımlar olaylardan değil oyuncunun istatistiklerinden hesaplanır, bu yüzden geriye dönük çalışır: sistem eklenmeden önce oynayan oyuncular da hak ettiklerini ilk girişte alır. Eylem, konser, liste haftası, yayın, tutuklama ve mahkeme kararından hemen sonra; oy verme, para gönderme ve VIP gibi diğer olaylar için en fazla dakikada bir kontrol edilir. Her yeni başarım bildirim ve kutlama ekranıyla gelir.
+Başarımlar olaylardan değil oyuncunun istatistiklerinden hesaplanır, bu yüzden geriye dönük çalışır: sistem eklenmeden önce oynayan oyuncular da hak ettiklerini ilk girişte alır. Eylem, konser, liste haftası, yayın, tutuklama ve mahkeme kararından hemen sonra; oy verme, para gönderme ve VIP gibi diğer olaylar için `/me` isteğinde arka planda, karakter başına en fazla 5 dakikada bir kontrol edilir (istek beklemez; aynı anda tek değerlendirme çalışır, yük altında havuzu doldurmasın diye). Her yeni başarım bildirim ve kutlama ekranıyla gelir.
 
 ## Oyunun kendi grupları
 
@@ -447,17 +452,22 @@ Ayrıntı, varsayımlar ve bütün tablolar: [docs/DENGE_OLCUMU.md](docs/DENGE_O
 
 ## Rehber görevler
 
-Yeni oyuncunun ana ekranında "sıradaki adım" kartı görünür. Dokuz adım, toplam $305 ödül (ek hesaplarla para toplamaya değmesin diye küçük):
+Yeni oyuncunun ana ekranında "sıradaki adım" kartı görünür. On iki adım, toplam $315 ödül (ek hesaplarla para toplamaya değmesin diye küçük). Sıra ilk dakikaları doldurur (playtest Y-2: eskiden 2 saatlik "şarkı yaz" ilk adımdı ve gerçek hızda ilk saat tek düğmeyle geçiyordu): önce anlık adımlar, sonra süreli işler.
 
-1. İlk şarkını yaz ($25)
-2. Bir mesai yap ($20)
-3. Kitapçıdan yeni bir beceri öğren ($20)
-4. Grubunu kur ($25)
-5. Prova yap ($25)
-6. İlk konserini ver ($50)
-7. Bir şarkı kaydet ($50)
-8. İlk single'ını yayınla ($75)
-9. Kendine bir ev tut ($15)
+1. Kendini tanıt: profile başlık ya da hakkında yazısı ($10, anlık)
+2. Kitapçıdan yeni bir beceri öğren ($20, anlık)
+3. Grubunu kur ($25, anlık)
+4. Kendine bir ev tut ($15, anlık; ev dinlenmeyi hızlandırır)
+5. Karnını doyur: restoranda bir yemek ($10, anlık)
+6. İlk şarkını yaz ($25, 2 saat)
+7. Bir arkadaş edin: arkadaşlık isteği gönder ($10, eylem sürerken de olur)
+8. Bir mesai yap ($20)
+9. Prova yap ($25)
+10. İlk konserini ver ($50)
+11. Bir şarkı kaydet ($45; eskiden $50)
+12. İlk single'ını yayınla ($60; eskiden $75)
+
+Süreli bir eylem sürerken kart o eylemin adımında takılmaz: eylem sürerken yapılabilen adımları (profil, grup, arkadaş) gösterir ve "… sürüyor. Bu arada:" der. Ölçüm (`scripts/balance/sim-first-hour.ts`, yalnızca kartı izleyen oyuncu, gerçek hız): ilk 10 dakikada alınan ödül 0 → 6, dokunuş 1 → 13; 72. saatte para ~$494 → $454 (ev artık ilk dakikada tutuluyor).
 
 Adımların tamamlanıp tamamlanmadığı oyuncunun yaptıklarından hesaplanır (başarımlarla aynı istatistikler); sırası gelmeden yapılan adımın ödülü de alınabilir ve kart önce ödülü hazır olan adımı gösterir, her ödül bir kez. Kartta "Git" düğmesi ilgili ekranı açar; kart gizlenebilir.
 
@@ -473,7 +483,7 @@ Rehber bitince kartın yerini **sıradaki hedef** alır; her zaman tek, somut bi
 ## Grup ve konserler
 
 - Grup en fazla 6 kişi. Herkes bir rol (enstrüman) seçer. Bir karakter tek grupta olabilir.
-- Kurulan grubun repertuvarına kurucunun şarkıları otomatik eklenir. Üyeler kendi şarkılarını ekleyebilir.
+- Kurulan grubun repertuvarına kurucunun şarkıları otomatik eklenir. Grup varken yazılan her şarkı da kendiliğinden repertuvara girer (bildirim söyler; eskiden elle eklemek gerekiyordu ve yeni oyuncu bunu bilmeden tek şarkıyla konser veriyordu). Gruba katılmadan önce yazılan şarkılar kendiliğinden girmez (yeni üyenin bütün kataloğu setlist seçimini doldurmasın), üye onları Grup sekmesinden ekler; "tam setlist" hedefi bunu söyler. Repertuvardan çıkarmak eskisi gibi şarkının sahibine ve lidere açık.
 - Konseri sadece lider, bulunduğu şehirdeki bir mekâna ayarlayabilir: 2, 6, 12 ya da 24 oyun saati sonrasına.
 - Konser anında şehirde olmayan ya da cezaevindeki üye sahneye çıkamaz; bu kaliteyi düşürür.
 
@@ -484,18 +494,18 @@ Rehber bitince kartın yerini **sıradaki hedef** alır; her zaman tek, somut bi
 | Konser salonu | 2.000 | $40 | 45 | ×2,5 | 50 | $1.500 |
 | Stadyum | 20.000 | $40 | 75 | ×3,5 | 65 | $9.000 |
 
-Prodüksiyon gideri (sahne, ses, ışık, tanıtım; şehir çarpanıyla) konser ayarlanırken liderin cebinden peşin ödenir, iptalde yarısı geri verilir (`gigProductionCost`, migration 025). Eskiden büyük sahnede gider yoktu ve 90 günde giderin gelire oranı %9'a düşüyordu (denge raporu §2); gider gelirin kabaca %15–30'u kadardır. Bar (ilk saatler) ve festival muaftır.
+Prodüksiyon gideri (sahne, ses, ışık, tanıtım; şehir çarpanıyla) konser ayarlanırken liderin cebinden peşin ödenir, iptalde yarısı geri verilir (`gigProductionCost`, migration 025). İptalde bütün iadeler (kiralık müzisyen ücreti, prodüksiyon payı, sahne efektleri) konseri ayarlayıp ödeyen kişiye gider (`gigs.booked_by`, migration 027), iptal eden lidere değil: eskiden lider gruptan ayrılınca yeni lider iptal edip ücreti ve efektleri alabiliyordu. Ödeyen gruptan ayrılmışsa iadesini bildirimle öğrenir. Eskiden büyük sahnede gider yoktu ve 90 günde giderin gelire oranı %9'a düşüyordu (denge raporu §2); gider gelirin kabaca %15–30'u kadardır. Bar (ilk saatler) ve festival muaftır.
 
 Bilet fiyatı şehir çarpanıyla çarpılır.
 
 ### Tek başına ilerleme: kiralık müzisyenler
 
-Hiç oyuncu olmasa da oyun oynanabilir. Lider konser ayarlarken gruptaki boş rolleri oyunun kendi müzisyenleriyle doldurabilir. Kiralık müzisyenler setlisti %70 aşinalıkla çalar.
+Hiç oyuncu olmasa da oyun oynanabilir. Lider konser ayarlarken gruptaki boş rolleri oyunun kendi müzisyenleriyle doldurabilir. Kiralık müzisyenler setlisti kulüp ve üstünde %70, barda %55 aşinalıkla çalar.
 
 | Mekân | Kişi başı ücret | Beceri (en fazla) | Sahne (en fazla) | Grubun kendi ortalamasını en fazla |
 |---|---|---|---|---|
-| Bar | $5 | 30 | 25 | sınırsız |
-| Kulüp | $60 | 50 | 40 | +15 |
+| Bar | $5 + kapı payı | 22 | 18 | sınırsız |
+| Kulüp | $60 + kapı payı | 50 | 40 | +15 |
 | Konser salonu | $250 | 70 | 55 | +10 |
 | Stadyum | $900 | 85 | 70 | +5 |
 
@@ -503,13 +513,22 @@ Kulüp ve üstünde kiralık müzisyen, grubun sahnedeki kendi üyelerinin ortal
 
 Yeni başlayan tek bir oyuncu, 3 kiralık müzisyenle bile bar konserinden kâr eder. Bu, `server/test/rules.test.ts` içinde test ediliyor.
 
+**Arkadaşla oynamak (playtest Y-1).** Eskiden yeni oyunculardan kurulan 3 kişilik grup, kiralık kadrolu tek oyuncudan hem kötü çalıyor hem kişi başı üçte bir kazanıyordu: barda kiralık müzisyen beceri 30 ve %70 aşinalıkla çalıyor, yalnızca $5 alıyordu, gelir sahnedeki gerçek üyeler arasında bölünüyordu. Şimdi:
+
+- **Kapı payı** (`items.ts` `SESSION_DOOR_SHARE`): bar ve kulüpte kiralık müzisyen de sahnedeki herkes gibi kapıdan pay alır. Kişi başı pay = (bar payı, vergi ve ekip ücreti düşülmüş) bilet geliri ÷ (sahnedeki üyeler + kiralıklar); kiralık bunun barda tamamını, kulüpte %75'ini alır, peşin ücret bu paydan düşülür (en az peşin ücret). Pay oyundan çıkar (kiralıklar oyunun çalışanı). Salon, stadyum ve festivalde sabit ücret aynen (denge raporu §1-2). Raporda "Kiralık müzisyenlerin kapı payı" ayrı satırdır.
+- **Grup kimyası** (`rules.ts` `BAND_CHEMISTRY`): sahnedeki her gerçek üye (ilkinden sonra, en fazla 3) kaliteye barda +3, kulüpte +2, salon, stadyum ve festivalde +1 ekler; kiralıklar sayılmaz. Raporda "Grup kimyası" etkeni (kiralıklı ya da çok üyeli konserde) ve "gerçek üye kat" önerisi.
+- **Her üye kendi arkadaşlarını getirir:** seyirci formülündeki arkadaşlar (barda 4–10, diğer sahnelerde 2–8) artık sahnedeki her gerçek üye için ayrı (kapasiteyi aşmaz).
+- **Barda kiralık müzisyen** yeni bir oyuncunun seviyesinde: beceri 30 → 22, sahne 25 → 18, aşinalık %70 → %55. İlk gün (az prova) kiralık kadrolu tek oyuncu en fazla 2 puan önde; birkaç provadan sonra gerçek grup önde.
+
+Ölçüm (`scripts/balance/sim-playtest.ts`, playtest'in bot mantığı, 9,5 oyun günü, 8 tohum; ayrıntı PLAYTEST_FIXES_REPORT.md): 3 kişilik grup kalite 30,3 → 34,0, İstanbul şöhreti 13,5 → 15,6, üye başı konser geliri $848 → $1.125; kiralıklı tek oyuncu kalite 36,2 → 30,4, şöhret 15,4 → 10,9, konser geliri $3.318 → $842. Grup artık hem kalitede hem şöhrette hem kişi başı konser gelirinde önde; tek oyuncu yine ilerler (kulübe ~2 hafta), ama daha yavaş.
+
 ### Konser hesabı
 
-- Seyirci = kapasite × (0,04 + şöhret / 100 × 1,1) × tür popülerliği × (0,85–1,15) + arkadaşlar (barda 4–10, diğer sahnelerde 2–8; kapasiteyi aşmaz)
+- Seyirci = kapasite × (0,04 + şöhret / 100 × 1,1) × tür popülerliği × (0,85–1,15) + sahnedeki her gerçek üyenin arkadaşları (üye başına barda 4–10, diğer sahnelerde 2–8; kapasiteyi aşmaz)
 - Grup becerisi = sahnedekilerin (rol becerisi + enstrüman bonusu + nitelik payı) × ruh hâli × sağlık ortalaması. Nitelik payı vokalde ses, diğer rollerde el becerisidir (en fazla +4).
 - Şarkı puanı = a × şarkı kalitesi + b × ortalama aşinalık + c × grup becerisi; ağırlıklar mekâna göre (`rules.ts` `SONG_SCORE_WEIGHTS`): bar 0,4 / 0,35 / 0,25, kulüp 0,42 / 0,32 / 0,26, salon 0,46 / 0,26 / 0,28, stadyum 0,5 / 0,2 / 0,3 (eskiden her yerde 0,4 / 0,35 / 0,25). Büyük sahnede yalnızca provayla kazanılan aşinalık daha az, şarkının kendisi ve çalım becerisi daha çok sayılır.
-- Kalite = şarkı puanı ortalaması × (0,85 + 0,15 × sahne / 100) × (0,5 + 0,5 × gelen üye oranı) × setlist uzunluğu çarpanı (1 şarkı 0,7, 4+ şarkı 1,0) × (0,92–1,08) × 1,15
-- Gelir = seyirci × bilet × şehir çarpanı × grubun payı. Pay sahne büyüdükçe küçülür (mekân, prodüksiyon, organizatör): bar %70, kulüp %45, salon %12, stadyum %4, festival %12. Böylece salon konseri $6–8 bin, stadyum $30 bin civarı getirir. Sahnedeki gerçek üyeler arasında eşit bölünür.
+- Kalite = şarkı puanı ortalaması × (0,85 + 0,15 × sahne / 100) × (0,5 + 0,5 × gelen üye oranı) × setlist uzunluğu çarpanı (1 şarkı 0,7, 4+ şarkı 1,0) × (0,92–1,08) × 1,15 + grup kimyası (bkz. "Tek başına ilerleme")
+- Gelir = seyirci × bilet × şehir çarpanı × grubun payı, bar ve kulüpte kiralıkların kapı payı düşülerek. Pay sahne büyüdükçe küçülür (mekân, prodüksiyon, organizatör): bar %70, kulüp %45, salon %12, stadyum %4, festival %12. Böylece salon konseri $6–8 bin, stadyum $30 bin civarı getirir. Sahnedeki gerçek üyeler arasında eşit bölünür.
 - Şöhret değişimi = (kalite − mekânın başa baş kalitesi) / 100 × 6 × mekân çarpanı. Başa baş kalite bar 20, kulüp 30, salon 50, stadyum 65, festival 40 (eskiden hepsi 20): büyük sahnede vasat bir gece şöhret getirmez, kaybettirir. Artışlar şöhret yükseldikçe küçülür: × max(0,03; (1 − şöhret/110)^1,2) (eskiden × max(0,1; 1 − şöhret/120); şöhret 10'da ×0,90, 60'ta ×0,39, 70'te ×0,30). Bar dışındaki sahnelerde salon boş kaldıkça da küçülür. Barda kalitesi 10'u geçen her konser en az +0,2 şöhret getirir: ilk adımlar boşa gitmez. Orta düzey bir grup 10–17 iyi bar konseriyle kulübe çıkar.
 - Raporda kiralık müzisyenler üye sayılmaz ("sahnede 1/1").
 - Aynı sahnede aynı saatlerde (±3 oyun saati) iki grup çalamaz; oyunun kendi grupları da boş saat arar ve oyuncuya her zaman yer açar (oyuncu rezervasyonu çakışan oyun grubu konserini iptal eder). Bir grubun aynı anda en fazla 2 ayarlı konseri olabilir (sahneler boş rezervasyonla kapatılamasın).
@@ -536,7 +555,7 @@ Kurallar `packages/shared/src/performance.ts` dosyasındadır.
 
 ### Konser eleştirisi
 
-Her konser bittiğinde sunucu, o konsere özel iki ila dört cümlelik bir eleştiri üretip sonuçla birlikte saklar (Türkçe ve İngilizce). Ana cümle ve doluluk cümlesi çoğunlukla parçalardan kurulur (`content/review-parts.ts`): her kalite basamağında 12 açılış × 12 devam cümleciği (DESTANSI 10 × 10), her doluluk durumunda 4 × 6; her parça kendi başına tam bir cümleciktir, "; " ile birleşir ve ikinci parça birincinin yer tutucularını tekrarlamaz. Eskiden basamak başına 8 sabit cümle vardı; 200 konserde 10. konserden sonra cümlelerin yalnızca %8–9,5'i yeniydi, şimdi %40–42 (`scripts/balance/texts.ts`, test de ≥%35'i denetler). Muhabir haberleri de aynı yaklaşımla kurulur: 12 başlık × 10 giriş × 10 kapanış (haber grubu mutlaka anar). Klasik havuzlar da kullanılmaya devam eder (`content/texts.ts`): altı kalite basamağının her birinde 8 ana cümle, 4 EFSANEVİ cümlesi, doluluk için 9 cümle (hepsi mekânı anar), her sahne olayının başarı ve başarısızlık cümlesi, basın desteği (sıcak ≥60 / soğuk ≤10), aynı şehirde son 48 oyun saatinde çalan rakip grupla kıyas (kalite farkı 8 ve üstüyse) ve her şehre özgü iki renk cümlesi. Doluluk ve ana cümleye en fazla iki bağlam cümlesi eklenir; seçim konserin kimliğine göre deterministiktir. Eleştiri konseri bilir: mekânın adı, şehir, gerçek seyirci sayısı, gecenin en iyi şarkısı ve sahneye çıkmayan üye sayısı. Türkçede yer tutuculara ek getirilmez (test denetler). Örnek: "Kadıköy Bodrum Bar tıklım tıklımdı. 72 seyirci bis istedi; Kadıköy Bodrum Bar yerinden oynadı." Oyuncu eleştiriyi tek dokunuşla grup ya da şehir sohbetinde paylaşabilir.
+Her konser bittiğinde sunucu, o konsere özel iki ila dört cümlelik bir eleştiri üretip sonuçla birlikte saklar (Türkçe ve İngilizce). Ana cümle ve doluluk cümlesi çoğunlukla parçalardan kurulur (`content/review-parts.ts`): her kalite basamağında 12 açılış × 12 devam cümleciği (DESTANSI 10 × 10), her doluluk durumunda 4 × 6; her parça kendi başına tam bir cümleciktir, "; " ile birleşir ve ikinci parça birincinin yer tutucularını tekrarlamaz. Eskiden basamak başına 8 sabit cümle vardı; 200 konserde 10. konserden sonra cümlelerin yalnızca %8–9,5'i yeniydi, şimdi %40–42 (`scripts/balance/texts.ts`, test de ≥%35'i denetler). Muhabir haberleri de aynı yaklaşımla kurulur: 12 başlık × 10 giriş × 10 kapanış (haber grubu mutlaka anar). Klasik havuzlar da kullanılmaya devam eder (`content/texts.ts`): altı kalite basamağının her birinde 8 ana cümle, 4 EFSANEVİ cümlesi, doluluk için 9 cümle (hepsi mekânı anar), her sahne olayının başarı ve başarısızlık cümlesi, basın desteği (sıcak ≥60 / soğuk ≤10), aynı şehirde son 48 oyun saatinde çalan rakip grupla kıyas (kalite farkı 8 ve üstüyse) ve her şehre özgü iki renk cümlesi. Doluluk ve ana cümleye en fazla iki bağlam cümlesi eklenir; seçim konserin kimliğine göre deterministiktir. Eleştiri konseri bilir: mekânın adı, şehir, gerçek seyirci sayısı, gecenin en iyi şarkısı ve sahneye çıkmayan üye sayısı. Türkçede yer tutuculara ek getirilmez (test denetler). Örnek: "Kadıköy Bodrum Bar tıklım tıklımdı. 72 seyirci bis istedi; Kadıköy Bodrum Bar yerinden oynadı." Oyuncu eleştiriyi tek dokunuşla grup ya da şehir sohbetinde paylaşabilir. **Tekrar önleme (playtest O-9):** grubun son 6 eleştirisindeki açılış (ilk cümlenin ilk kelimeleri) yeniden seçilmez, birkaç tohum denenir; son 3 eleştiride rakip kıyası geçtiyse bu kez yazılmaz. Boş salon basamağı (yeni grupların ilk haftası) 12 açılış × 12 ayrıntıya çıktı (eskiden 4 × 6), rakip cümleleri 2'şerden 3–4'e; Türkçede çeviri kokan "{venue} içinde" kalıbı kaldırıldı (mekân özne). İngilizce push metinleri a/an seçer ("an outstanding song"). Ölçüm (`scripts/balance/reviews-week.py`, playtest senaryosu, 3 tohum, ~118 konser): en sık açılışın payı %26,2 → %15,4, farklı açılış oranı %44 → %67, rakip kıyası %12,2 → %3,4 (PR #2 öncesi playtest: 31 konserin 13'ü, %42).
 
 Raporun altında **"Neden böyle geçti?"** bölümü her etkeni zayıf / idare eder / güçlü diye değerlendirir (şarkı kalitesi, şarkıları bilme, çalım becerisi, sahne şovu, setlist uzunluğu, kadro, enerji, ruh hâli, seyircinin tazeliği; sayı yok). Seyircinin tazeliği yalnızca grup o şehirde doygunluk penceresinde çaldıysa görünür (1 konser idare eder, 2+ zayıf). Grubun üyeleri en zayıf üç etken için "Sıradaki konser için" önerileri ve ilgili ekrana giden düğmeleri görür (prova, şarkı yaz, okul, dinlen, başka şehre git), ayrıca o şehirde sıradaki sahneye ne kaldığını gösteren çubuğu. Aynı çubuk grup sekmesinde her şehir için ve sahne sayfasında da var.
 
@@ -707,7 +726,7 @@ Her şehirde 2 bar ve 2 restoran ruhsatı oyunculara satılıktır (bar $20.000,
 
 ## Haftalık görevler
 
-Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düşer (konser ver, şarkı yaz, prova yap, mesai yap, antrenman, yemek, takıl, üret, kayıt…). İlerleme o hafta yapılanlardan hesaplanır, ödül ($20 – $60) bir kez alınır. Ödüller küçük; para asıl müzikten ve meslekten gelmeli. Görev kartı ana sayfada.
+Her liste haftası (7 oyun günü) her oyuncuya görev havuzundan 3 görev düşer (konser ver, şarkı yaz, prova yap, mesai yap, antrenman, yemek, takıl, üret, kayıt…). Görevler oyuncunun durumuna göre seçilir (`missions.ts` `missionEligible`, playtest O-2): grubu olmayana konser, prova, kayıt, basın, bis, sahne olayı ve şehir görevi; arkadaşı olmayana takılma ve hediye; ilk 72 oyun saatindeki hesaba yolculuk, hediye ve şehir görevi; el işçiliği bilmeyene atölye; hiçbir sahne olayının eşiğini geçmeyene sahne olayı görevi düşmez, aynı türden iki görev aynı hafta gelmez. Seçim haftanın ilk bakışında saklanır (`mission_weeks`, migration 030): hafta içinde grup kurmak listeyi değiştirmez. Ölçüm (`scripts/balance/missions-fit.ts`, 500 oyuncu × 12 hafta): yeni ve yalnız oyuncuda yapılamaz görev oranı %58,8 → %0; yeni gruplu oyuncuda %28,2 → %0. İlerleme o hafta yapılanlardan hesaplanır, ödül ($20 – $60) bir kez alınır. Ödüller küçük; para asıl müzikten ve meslekten gelmeli. Görev kartı ana sayfada.
 
 ## Yeni beceri alanları
 
@@ -765,6 +784,7 @@ Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. 
 ## Mağaza uyumu ve moderasyon
 
 - Kayıtta kullanım şartları ve gizlilik politikası onayı zorunlu; ikisi de `/legal/terms` ve `/legal/privacy` adreslerinde yayınlanır (`server/legal/*.md`, iletişim adresi `CONTACT_EMAIL`).
+- **Oturumlar ve hesap güvenliği:** oturum 90 gün sonra (mutlak) ya da 30 gün kullanılmazsa düşer (`SESSION_MAX_DAYS`, `SESSION_IDLE_DAYS`; migration 026'dan önceki oturumların süresi migration anından başlar). Şifre "Ben → Şifreyi değiştir" ekranından değişir; değişince o cihaz dışındaki bütün oturumlar kapanır. Yönetici yetkisi kayıtla verilmez (e-posta doğrulaması yok): `make-admin` komutu ya da `ADMIN_EMAILS` + sunucu tarafı `ADMIN_CLAIM_SECRET` koduyla panelden. Şifremi unuttum ve e-posta doğrulaması e-posta gönderen bir altyapı gerektirir, henüz yok.
 - Uygulama içinden hesap silme (şifreyle onay): karakter, mesajlar, fotoğraf ve tüm oyun verisi silinir; grup liderliği bir üyeye geçer ya da grup dağılır.
 - Türkçe ve İngilizce küfür filtresi: sohbet, mesaj, defter, biyografi ve başlıkta küfürler yıldızlanır; karakter, grup, işletme, eşya ve çocuk isimlerinde küfür reddedilir.
 - Engelleme ve şikâyet her sosyal alanda var (mesaja basılı tutarak, defter notunun, profilin, haberin ve topluluk yazısının altındaki düğmeyle). Yönetim panelindeki şikâyet listesinden içerik tek tıkla kaldırılır ya da yazan banlanır.
@@ -777,7 +797,7 @@ Kurallar `packages/shared/src/lessons.ts`, sunucu `server/src/game/lessons.ts`. 
 - **İkili başına haftalık para akışı tavanı:** iki oyuncu arasında bir yönde akan NET para (takas parası + pazar alışı + VIP para gönderme) kayan 7 oyun gününde en fazla $5.000 (`PAIR_TRANSFER_CAP`, `player_money_flows`). Oyunun tüccarından alışlar sayılmaz. Tavan dolunca `transfer_cap_reached`; açık takas açık kalır.
 - Aynı adresten 24 saatte en fazla 3 hesap açılır (`REGISTER_PER_IP_DAY`). Adres yalnızca yapılandırılmış güvenilir kaynaktan alınır (`TRUST_PROXY_HOPS`, `CLIENT_IP_HEADER`; README "İstemci adresi"); istemcinin yazdığı başlıklar varsayılan olarak okunmaz. IPv6'da /64 bloğu tek adres sayılır. API istek sınırı da aynı adresi kullanır.
 - Rehber ve görev ödülleri küçüktür; API'de dakikada 300 istek sınırı vardır.
-- XP para ile alınmaz ve karakterler arasında taşınmaz; günde 10, haftada 50 ile sınırlıdır ve yeni hesaplarda bu tavanlar yarıdır (bkz. "Nitelikler ve XP").
+- XP para ile alınmaz ve karakterler arasında taşınmaz; günde 10, haftada 50 ile sınırlıdır ve yeni hesaplarda bu tavanlar %80'idir (bkz. "Nitelikler ve XP").
 - Nesiller: mirasçı yalnızca kullanıcının kendi hesabında açılır; para (yarısı, en fazla $10.000, bir kez) ve en fazla 3 yadigâr yalnızca devredenden geçer. Yeni hesap devredemez, kullanıcı başına 56 oyun gününde bir, devreden en az 14 günlük, diğer hesaptaki ebeveynin onayı gerekir (bkz. "Nesiller").
 
 ## Oyuncular

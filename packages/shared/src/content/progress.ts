@@ -2,6 +2,7 @@
 // Hepsi veri: bir istatistik adı ve bir eşik. Sunucu istatistikleri tek yerde hesaplar (server/src/game/stats.ts).
 
 import type { L } from '../world';
+import { indexBy } from '../lookup';
 
 /** Sunucunun hesapladığı oyuncu istatistikleri (ömür boyu) */
 export type StatId =
@@ -361,7 +362,7 @@ CHAINS.push(
   },
 );
 
-export const CHAIN_BY_ID: Record<string, ChainDef> = Object.fromEntries(CHAINS.map((c) => [c.id, c]));
+export const CHAIN_BY_ID: Record<string, ChainDef> = indexBy(CHAINS, (c) => c.id);
 
 // ---------- Efsane sonrası hedefler ----------
 

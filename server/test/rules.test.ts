@@ -1,5 +1,6 @@
 import {
   REVIEW_TIERS,
+  sessionDoorCut,
   REVIEW_PARTS,
   CITY_BY_ID,
   CRIME_BY_ID,
@@ -77,7 +78,9 @@ describe('oyun dengesi', () => {
     }));
     const me = { ...performer(0, 45, ids), role: 'vocals' as const, skills: startingSkills('vocals', 'pop') };
     const r = gig([me, ...sessions], 14, 4);
-    expect(r.revenue).toBeGreaterThan(sm.fee * 3);
+    // Barda kiralıklar kapıdan pay alır (SESSION_DOOR_SHARE): oyuncuya kalan yine peşin ücretlerden fazla
+    const mine = r.revenue - sessionDoorCut('bar', r.revenue, 1, 3);
+    expect(mine).toBeGreaterThan(sm.fee * 3);
     expect(r.fameDelta).toBeGreaterThanOrEqual(0);
   });
 

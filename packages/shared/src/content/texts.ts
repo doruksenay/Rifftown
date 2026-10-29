@@ -102,18 +102,20 @@ export const REVIEW_LEGENDARY: L[] = [
 export const REVIEW_CROWD: Record<'packed' | 'half' | 'empty', L[]> = {
   packed: [
     l('{venue} tıklım tıklımdı.', '{venue} was packed.'),
-    l('Kapıda kuyruk vardı; {venue} içinde iğne atsan yere düşmezdi.', 'There was a queue at the door and not an inch to spare inside {venue}.'),
+    l('Kapıda kuyruk vardı; {venue} öyle doluydu ki iğne atsan yere düşmezdi.', 'There was a queue at the door and not an inch to spare inside {venue}.'),
     l('Biletler tükendi, {venue} nefes almakta zorlandı.', 'Sold out: {venue} could barely breathe.'),
   ],
   half: [
     l('{venue} yarı yarıya doluydu.', '{venue} was about half full.'),
-    l('{venue} içinde hem dans edecek yer hem de dans edenler vardı.', 'There was room to dance in {venue}, and some people did.'),
+    l('{venue} bu gece hem dans edecek yer hem de dans edenler buldu.', 'There was room to dance in {venue}, and some people did.'),
     l('{venue} ne boş ne dolu; rahat bir kalabalık.', '{venue} was neither empty nor full; a comfortable crowd.'),
   ],
   empty: [
     l('{venue} neredeyse boştu.', '{venue} was almost empty.'),
-    l('{venue} içinde seyirciden çok sandalye vardı.', 'There were more chairs than listeners in {venue}.'),
-    l('{venue} içinde yankı, seyirciden daha kalabalıktı.', 'In {venue}, the echo outnumbered the audience.'),
+    l('{venue} bu gece seyirciden çok sandalye ağırladı.', 'There were more chairs than listeners at {venue}.'),
+    l('{venue} yankısıyla baş başa kaldı; yankı seyirciden kalabalıktı.', 'At {venue}, the echo outnumbered the audience.'),
+    l('İlk konserlerin çoğu böyle geçer: {venue} sessiz, grup kararlı.', 'Most first gigs go like this: {venue} quiet, the band determined.'),
+    l('{venue} için sakin bir geceydi; gelenler yine de sonuna kadar kaldı.', 'A quiet night for {venue}; those who came stayed to the end.'),
   ],
 };
 
@@ -309,10 +311,13 @@ export const REVIEW_RIVAL: Record<'beat' | 'lost', L[]> = {
   beat: [
     l('Dün aynı şehirde çalan {rival} adlı grubun gecesini kolayca gölgede bıraktı.', 'It easily overshadowed the show {rival} played in the same city the night before.'),
     l('{rival} hayranları bile bu konserden sonra fikir değiştirebilir.', 'Even fans of {rival} might switch sides after this one.'),
+    l('Bu gece şehirde konuşulacak grup artık {rival} değil.', 'After tonight, {rival} is no longer the talk of the town.'),
   ],
   lost: [
     l('Kıyaslama kaçınılmaz: {rival} geçen gece aynı şehirde daha iyi bir iş çıkardı.', 'The comparison is unavoidable: {rival} did a better job in the same city the other night.'),
     l('Salondakilerin bir kısmı hâlâ {rival} konserini konuşuyordu.', 'Part of the crowd was still talking about the {rival} show.'),
+    l('Şehirde son günlerin konuşulan grubu hâlâ {rival}.', 'The band everyone in town is talking about is still {rival}.'),
+    l('{rival} çıtayı bu hafta yüksek koymuştu; bu gece oraya varılamadı.', '{rival} set the bar high this week; tonight did not reach it.'),
   ],
 };
 

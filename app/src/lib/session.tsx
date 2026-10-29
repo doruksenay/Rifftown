@@ -70,14 +70,22 @@ export function useSession() {
   return v;
 }
 
-/** Karakter, süren eylem ve özet bilgiler. Eylem sürerken sık yenilenir. */
+/** /me yenileme aralığı: eylem sürerken bitişinden hemen sonra (en az 5, en fazla 60 sn); boşta 20 sn.
+ *  Eskiden eylem sürdükçe 5 saniyede bir soruluyordu: saatlik bir eylemde oyuncu başına 720 /me (playtest O-10). */
+export function meRefetchMs(endsAt: string | undefined, now = Date.now()): number {
+  if (!endsAt) return 20_000;
+  const left = new Date(endsAt).getTime() - now;
+  return Math.min(60_000, Math.max(5_000, left + 1_500));
+}
+
+/** Karakter, süren eylem ve özet bilgiler. Eylem bitince hemen yenilenir. */
 export function useMe() {
   const { token } = useSession();
   return useQuery({
     queryKey: ['me'],
     queryFn: () => api.get<MeResponse>('/me'),
     enabled: !!token,
-    refetchInterval: (q) => (q.state.data?.action ? 5000 : 20000),
+    refetchInterval: (q) => meRefetchMs(q.state.data?.action?.endsAt),
   });
 }
 

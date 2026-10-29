@@ -12,6 +12,7 @@ import {
   NAME_RE,
   containsProfanity,
   maskProfanity,
+  cleanText,
   SELL_BACK_RATE,
   START_HEALTH,
   START_MONEY,
@@ -30,13 +31,15 @@ import {
 import { attributesOf, spendAttribute } from '../game/attributes';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { storedMoodlets } from '../game/wellbeing';
+import { addMoodlet, storedMoodlets } from '../game/wellbeing';
 import { charId, requireUser, requireVip } from '../auth';
 import { many, one, pool, tx } from '../db';
 import { fail } from '../errors';
 import { config } from '../config';
 import { activeAction, getCharacter, isJailed, lockCharacter, membership, notify, officesOf, requireEstablished, toActionDto, toCharacterDto } from '../game/common';
-import { achievementPoints, evaluateThrottled } from '../game/achievements';
+import { evaluateInBackground } from '../game/achievements';
+import { meSnapshot } from '../game/me-snapshot';
+import { completeOwnDueAction } from '../game/actions';
 import { bailQuote, inCustody } from '../game/crime';
 import { homeOf } from '../game/homes';
 import { businessOf } from '../game/business';
@@ -47,15 +50,8 @@ import { idParam, parse } from './util';
 import { claimInheritance, indulge, lastDeath } from '../game/consequences';
 import { answerHeirConsent, heirsInfo, requestHeirConsent, succeed } from '../game/generations';
 
-/** Kontrol karakterlerini atar; tek satırlık alanlarda satır sonlarını da */
-const clean = (v: string | undefined, singleLine = false) => {
-  if (v === undefined) return null;
-  const x = v
-    .replace(singleLine ? /[\u0000-\u001f\u007f]/g : /[\u0000-\u0009\u000b-\u001f\u007f]/g, '')
-    // Görünmez ve yön değiştiren karakterler (ad taklidi için kullanılabilir)
-    .replace(/[\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '');
-  return maskProfanity(singleLine ? x.trim() : x.replace(/\n{3,}/g, '\n\n').trim());
-};
+/** Ortak temizleyici (shared moderation.ts) + küfür yıldızı */
+const clean = (v: string | undefined, singleLine = false) => (v === undefined ? null : maskProfanity(cleanText(v, singleLine)));
 
 const AVATAR_COLORS = ['#E4572E', '#F3A712', '#29335C', '#669BBC', '#A8C686', '#8E5572', '#2E294E', '#1B998B', '#C5283D', '#FF9F1C'];
 
@@ -84,33 +80,32 @@ export async function meRoutes(app: FastifyInstance) {
         heirsAvailable: death ? await heirsInfo(u.id, u.isVip, pool).then((h) => h.children.filter((k) => !k.blocker).length).catch(() => 0) : 0,
       };
     }
-    await evaluateThrottled(pool, u.characterId);
-    const ch = await getCharacter(pool, u.characterId);
-    const action = await activeAction(pool, ch.id);
-    const m = await membership(pool, ch.id);
-    const unread = await one(pool, 'SELECT count(*)::int AS n FROM notifications WHERE character_id = $1 AND NOT read', [ch.id]);
-    const invites = await one(
-      pool,
-      `SELECT count(*)::int AS n FROM band_invites WHERE character_id = $1 AND status = 'pending'`,
-      [ch.id],
-    );
+    // Başarımlar istek yolunda değil, arka planda (sınırlı eşzamanlılıkla) değerlendirilir (playtest O-10)
+    evaluateInBackground(u.characterId);
+    let snap = await meSnapshot(pool, u.characterId);
+    // Okuma anında tamamlama: süresi dolmuş eylem zamanlayıcıyı beklemeden sonuçlanır (playtest O-11)
+    if (snap?.action && (snap.action.ends_at as Date).getTime() <= Date.now() && (await completeOwnDueAction(u.characterId))) {
+      snap = await meSnapshot(pool, u.characterId);
+    }
+    if (!snap) fail('no_character', 404);
+    const { ch, action } = snap!;
     return {
       ...base,
-      character: toCharacterDto(ch, await officesOf(pool, ch.id), {
-        inCustody: await inCustody(pool, ch.id),
-        achievementPoints: await achievementPoints(pool, ch.id),
-        home: await homeOf(pool, ch.id),
-        hotel: await hotelOf(pool, ch.id),
-        business: await businessOf(pool, ch.id),
-        moodlets: await storedMoodlets(pool, ch.id),
+      character: toCharacterDto(ch, snap!.offices, {
+        inCustody: snap!.inCustody,
+        achievementPoints: snap!.achievementPoints,
+        home: snap!.home,
+        hotel: snap!.hotel,
+        business: snap!.business,
+        moodlets: snap!.moodlets,
       }),
       action: action ? toActionDto(action) : null,
-      band: m ? { id: m.band_id, name: m.name, genre: m.genre, role: m.role, isLeader: m.leader_id === ch.id } : null,
-      unreadNotifications: unread!.n,
-      pendingInvites: invites!.n,
+      band: snap!.band ? { ...snap!.band, isLeader: snap!.band.leaderId === Number(ch.id) } : null,
+      unreadNotifications: snap!.unreadNotifications,
+      pendingInvites: snap!.pendingInvites,
       bailCost: await bailQuote(ch),
-      unreadMessages: await unreadMessages(pool, ch.id),
-      pendingTrades: (await one(pool, `SELECT count(*)::int AS n FROM trades WHERE to_id = $1 AND status = 'open'`, [ch.id]))!.n,
+      unreadMessages: snap!.unreadMessages,
+      pendingTrades: snap!.pendingTrades,
     };
   });
 
@@ -160,6 +155,8 @@ export async function meRoutes(app: FastifyInstance) {
           JSON.stringify(startingAttributes(body.mainInstrument, body.startAttributes))],
       );
       await c.query(`INSERT INTO notifications(character_id, kind, data) VALUES ($1, 'welcome', '{}')`, [ch.id]);
+      // İlk 48 oyun saati yorucu işler daha az yorar (actions.ts isNewcomer); oyuncu bunu moodlet olarak görür
+      await addMoodlet(c, ch.id, 'fresh_start');
       return { character: toCharacterDto(ch) };
     });
   });

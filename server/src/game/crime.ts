@@ -8,6 +8,9 @@ import {
   CASE_HOURS,
   CITY_BY_ID,
   COLD_CASE_DAYS,
+  NPC_DETECTIVE_DELAY_HOURS,
+  COLD_LOOT_RECOVERY,
+  npcSolveChance,
   CRIME_BY_ID,
   type CaseDto,
   type CrimeOptionsResponse,
@@ -233,7 +236,17 @@ export async function convict(c: Db, kase: any, baseHours: number, judgeId: numb
   // Çalınan para geri alınır ve para cezası kesilir (cebinde ne kaldıysa; banka korur, borç yazılmaz)
   const def = CRIME_BY_ID[crime?.kind];
   const penalty = def ? crimeFine(def, priors, CITY_BY_ID[kase.city_id]?.costMult ?? 1) : 0;
-  const fine = Math.min(suspect.money, (crime?.loot ?? 0) + penalty);
+  // Mahkûmiyette failin aynı şehirdeki son COLD_CASE_DAYS günlük faili meçhul suçları da dosyaya girer: ganimetleri de
+  // geri alınır (playtest Y-4: yakalanınca önceki suçların parası cepte kalıyordu)
+  const cold = await many(
+    c,
+    `UPDATE crimes SET status = 'solved' WHERE character_id = $1 AND city_id = $2 AND status = 'unsolved' AND created_at >= $3 AND id <> $4
+     RETURNING loot`,
+    [suspect.id, kase.city_id, new Date(Date.now() - hoursMs(COLD_CASE_DAYS * 24)), kase.crime_id],
+  );
+  // Yarısı geri alınır (harcanmış olabilir; dosya kapanır, ikinci kez tahsil edilmez)
+  const recovered = Math.floor(cold.reduce((sum, r) => sum + Number(r.loot ?? 0), 0) * COLD_LOOT_RECOVERY);
+  const fine = Math.min(suspect.money, (crime?.loot ?? 0) + recovered + penalty);
   await c.query(
     `UPDATE actions SET status = 'cancelled', result = '{"jailed":true}' WHERE character_id = $1 AND status = 'active' AND kind <> 'travel'`,
     [suspect.id],
@@ -247,7 +260,7 @@ export async function convict(c: Db, kase: any, baseHours: number, judgeId: numb
     sentenceHours,
     judgeId,
   ]);
-  await notify(c, suspect.id, 'convicted', { caseId: kase.id, sentenceHours, fine, until: until.toISOString() });
+  await notify(c, suspect.id, 'convicted', { caseId: kase.id, sentenceHours, fine, recoveredCrimes: cold.length, until: until.toISOString() });
   const band = await one(c, 'SELECT band_id FROM band_members WHERE character_id = $1', [suspect.id]);
   if (band) await createScandal(c, { bandId: Number(band.band_id), characterId: suspect.id, cityId: kase.city_id, kind: 'conviction' });
   await evaluateAchievements(c, suspect.id);
@@ -333,6 +346,47 @@ export async function processJustice(): Promise<number> {
     return rows.length;
   });
   return n + released;
+}
+
+/**
+ * Oyunun dedektifi (playtest Y-4): görevde polis oyuncusu olmayan şehirde, NPC_DETECTIVE_DELAY_HOURS'u geçmiş ve henüz
+ * bakılmamış faili meçhul suçlara bir kez bakar. Fail o şehirdeyse ve serbestse şansla tutuklar (dava açılır, mahkeme
+ * normal kuralla karar verir). Polis oyuncunun işini elinden almaz: şehirde görevde polis varsa bakmaz.
+ */
+export async function processColdCases(rand = Math.random, limit = 50): Promise<number> {
+  let n = 0;
+  const due = new Date(Date.now() - hoursMs(NPC_DETECTIVE_DELAY_HOURS));
+  const old = new Date(Date.now() - hoursMs(COLD_CASE_DAYS * 24));
+  const policeCache = new Map<string, number>();
+  for (let i = 0; i < limit; i++) {
+    const done = await tx(async (c) => {
+      // Kilit sırası: önce fail (karakter), sonra suç satırı (mahkûmiyet ve suç eylemiyle aynı sıra)
+      const cand = await one(
+        c,
+        `SELECT id, character_id FROM crimes WHERE status = 'unsolved' AND npc_checked_at IS NULL AND created_at <= $1 AND created_at >= $2
+          ORDER BY created_at LIMIT 1`,
+        [due, old],
+      );
+      if (!cand) return false;
+      const suspect = await lockCharacter(c, Number(cand.character_id));
+      const lead = await one(c, `SELECT id, kind, city_id FROM crimes WHERE id = $1 AND status = 'unsolved' AND npc_checked_at IS NULL FOR UPDATE`, [cand.id]);
+      if (!lead) return true; // bu arada çözüldü
+      await c.query('UPDATE crimes SET npc_checked_at = now() WHERE id = $1', [lead.id]);
+      let police = policeCache.get(lead.city_id);
+      if (police === undefined) policeCache.set(lead.city_id, (police = await policeOnDuty(c, lead.city_id)));
+      if (police > 0) return true; // polis oyuncular soruşturur
+      const free = suspect.city_id === lead.city_id && !suspect.dead_at && !suspect.retired_at && !isJailed(suspect);
+      if (!free || rand() >= npcSolveChance(suspect.skills ?? {})) return true;
+      await c.query(`UPDATE crimes SET status = 'solved' WHERE id = $1`, [lead.id]);
+      const { caseId, due: caseDue } = await openCase(c, lead.id, suspect.id, lead.city_id, null);
+      await jail(c, suspect.id, lead.city_id, custodyUntil(caseDue));
+      await notify(c, suspect.id, 'arrested', { caseId, crime: lead.kind, officer: null, detective: true, cityId: lead.city_id });
+      n++;
+      return true;
+    });
+    if (!done) break;
+  }
+  return n;
 }
 
 /** Hüküm giymiş mahkûm kalan cezası için kefalet öder (tutukluyken ödenemez). */

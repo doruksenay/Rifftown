@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import { config } from './config';
 import { many, one, pool } from './db';
 import { GameError } from './errors';
 
@@ -60,13 +61,20 @@ export async function requireUser(req: FastifyRequest, _reply: FastifyReply) {
   if (!token) throw new GameError('unauthorized', 401);
   const row = await one(
     pool,
-    `SELECT u.id, u.email, u.lang, u.is_admin, u.banned, u.vip_until, c.id AS character_id, s.last_used
+    `SELECT u.id, u.email, u.lang, u.is_admin, u.banned, u.vip_until, c.id AS character_id, s.last_used,
+            ($2::int > 0 AND s.valid_from < now() - make_interval(days => $2::int))
+         OR ($3::int > 0 AND greatest(s.last_used, s.valid_from) < now() - make_interval(days => $3::int)) AS expired
        FROM sessions s JOIN users u ON u.id = s.user_id
        LEFT JOIN characters c ON c.user_id = u.id
       WHERE s.token_hash = $1`,
-    [sha256(token)],
+    [sha256(token), Math.floor(config.sessionMaxDays), Math.floor(config.sessionIdleDays)],
   );
   if (!row) throw new GameError('unauthorized', 401);
+  // Süresi dolan oturum silinir; uygulama 401'de girişe döner (playtest Y-6: oturumlar hiç bitmiyordu)
+  if (row.expired) {
+    await pool.query('DELETE FROM sessions WHERE token_hash = $1', [sha256(token)]);
+    throw new GameError('session_expired', 401);
+  }
   if (row.banned) throw new GameError('banned', 403);
   req.user = {
     id: row.id,
@@ -96,8 +104,23 @@ export function charId(req: FastifyRequest): number {
   return id;
 }
 
-export async function revokeUserSessions(userId: number) {
-  await many(pool, 'DELETE FROM sessions WHERE user_id = $1', [userId]);
+/** Kullanıcının oturumlarını siler; exceptToken verilirse o oturum (şifreyi değiştiren cihaz) kalır */
+export async function revokeUserSessions(userId: number, exceptToken?: string) {
+  if (exceptToken) await many(pool, 'DELETE FROM sessions WHERE user_id = $1 AND token_hash <> $2', [userId, sha256(exceptToken)]);
+  else await many(pool, 'DELETE FROM sessions WHERE user_id = $1', [userId]);
+}
+
+/** Süresi dolmuş oturumları temizler (zamanlayıcı ara sıra çağırır) */
+export async function purgeExpiredSessions() {
+  const max = Math.floor(config.sessionMaxDays);
+  const idle = Math.floor(config.sessionIdleDays);
+  if (!max && !idle) return 0;
+  const r = await pool.query(
+    `DELETE FROM sessions WHERE ($1::int > 0 AND valid_from < now() - make_interval(days => $1::int))
+        OR ($2::int > 0 AND greatest(last_used, valid_from) < now() - make_interval(days => $2::int))`,
+    [max, idle],
+  );
+  return r.rowCount ?? 0;
 }
 
 /** VIP üyeliği zorunlu kılar */

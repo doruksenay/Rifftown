@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { SESSION_MUSICIAN, recoveryAttrMult, startingAttributes } from '@rifftown/shared';
+import { MOOD_PER_HOUR, SESSION_MUSICIAN, drainHours, recoveryAttrMult, startingAttributes } from '@rifftown/shared';
 import { config } from '../src/config';
 import { pool } from '../src/db';
 import { advance, client, me, newPlayer, raw, setMoney, setSkills, setVip, setup, teardown } from './helpers';
@@ -51,8 +51,11 @@ describe('eylemler', () => {
     const { c } = await newPlayer();
     const start = await c.post('/api/actions', { kind: 'study', skill: 'guitar', hours: 4 });
     expect(start.status).toBe(200);
+    // Test hızında eylem milisaniyede biter ve okuma anında tamamlanırdı: süren eylemi sınamak için bitişi ileri al
+    await pool.query(`UPDATE actions SET ends_at = now() + interval '1 hour' WHERE id = $1`, [start.body.action.id]);
     expect((await c.post('/api/actions', { kind: 'rest', hours: 1 })).body.error).toBe('busy');
     expect((await me(c)).action.kind).toBe('study');
+    await pool.query(`UPDATE actions SET ends_at = now() WHERE id = $1`, [start.body.action.id]);
 
     await advance();
     const m = await me(c);
@@ -86,21 +89,26 @@ describe('eylemler', () => {
     await advance();
     let m = await me(c);
     expect(m.character.money).toBe(500 + 15 * 8);
-    expect((await raw(character.id)).mood).toBe(80 - 32);
+    // Test hızında karakter "yeni başlayan" sayılmaz (48 oyun saati milisaniyede geçer): eski kural
+    const afterWork = 80 + MOOD_PER_HOUR.work * drainHours(8);
+    expect((await raw(character.id)).mood).toBeCloseTo(afterWork, 5);
     await c.post('/api/actions', { kind: 'rest', hours: 2 });
     await advance();
-    expect((await raw(character.id)).mood).toBe(78);
+    expect((await raw(character.id)).mood).toBeCloseTo(Math.min(100, afterWork + 2 * MOOD_PER_HOUR.rest), 5);
   });
 
   it('eylem iptal edilebilir, seyahat edilemez', async () => {
     const { c } = await newPlayer();
-    await c.post('/api/actions', { kind: 'rest', hours: 8 });
+    const rest = await c.post('/api/actions', { kind: 'rest', hours: 8 });
+    await pool.query(`UPDATE actions SET ends_at = now() + interval '1 hour' WHERE id = $1`, [rest.body.action.id]);
     const cancel = await c.post('/api/actions/cancel');
     expect(cancel.status).toBe(200);
     expect(cancel.body.action.status).toBe('cancelled');
     expect((await me(c)).action).toBeNull();
 
-    await c.post('/api/actions', { kind: 'travel', toCityId: 'ankara', mode: 'bus' });
+    const tr = await c.post('/api/actions', { kind: 'travel', toCityId: 'ankara', mode: 'bus' });
+    // Test hızında yolculuk milisaniyede biter; süresi dolmuş eylem "erken bitir"de tamamlanırdı (okuma anında tamamlama)
+    await pool.query(`UPDATE actions SET ends_at = now() + interval '1 hour' WHERE id = $1`, [tr.body.action.id]);
     expect((await c.post('/api/actions/cancel')).body.error).toBe('cannot_cancel');
   });
 
@@ -109,9 +117,11 @@ describe('eylemler', () => {
     expect((await c.post('/api/actions', { kind: 'travel', toCityId: 'newyork', mode: 'bus' })).body.error).toBe('invalid_route');
     const t = await c.post('/api/actions', { kind: 'travel', toCityId: 'ankara', mode: 'bus' });
     expect(t.status).toBe(200);
+    await pool.query(`UPDATE actions SET ends_at = now() + interval '1 hour' WHERE id = $1`, [t.body.action.id]);
     let m = await me(c);
     expect(m.character.cityId).toBeNull();
     expect(m.character.money).toBe(500 - t.body.action.params.cost);
+    await pool.query(`UPDATE actions SET ends_at = now() WHERE id = $1`, [t.body.action.id]);
     await advance();
     m = await me(c);
     expect(m.character.cityId).toBe('ankara');
@@ -408,6 +418,7 @@ describe('VIP', () => {
     const p = await newPlayer({ instrument: 'guitar' });
     await setSkills(p.character.id, { guitar: 37.3, basic_strings: 15.2 });
     await pool.query('UPDATE characters SET mood = 63.7 WHERE id = $1', [p.character.id]);
+    await pool.query('DELETE FROM moodlets WHERE character_id = $1', [p.character.id]); // "Yeni başlangıç" görünen ruh hâline eklenir
 
     // Normal üye: amatör seviyesi (30–45) içinde dörtte birlik adıma aşağı yuvarlanır
     let m = (await me(p.c)).character;

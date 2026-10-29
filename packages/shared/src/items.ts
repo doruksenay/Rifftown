@@ -5,6 +5,7 @@ import { EXTRA_ITEMS, GEAR_SETS, REWARD_ITEMS, SEASONAL_ITEMS } from './content/
 import { COLLECTIONS, MORE_GEAR, MORE_SETS } from './content/gear';
 import { GOODS } from './content/goods';
 import { CITY_IDENTITY } from './content/cities';
+import { indexBy } from './lookup';
 
 export type ItemSlot = Instrument | 'outfit' | 'art' | 'vehicle' | 'pet' | 'fx' | 'material' | 'spray' | 'ring' | 'consumable' | 'gift';
 
@@ -319,7 +320,7 @@ export const ITEMS: ItemDef[] = [
 // Daha fazla kuşanılabilir eşya ve sanat (content/gear.ts), tüketim, hediye, bakım ve malzeme (content/goods.ts)
 ITEMS.push(...EXTRA_ITEMS, ...REWARD_ITEMS, ...SEASONAL_ITEMS, ...CITY_IDENTITY.map((c) => c.rareItem), ...MORE_GEAR, ...GOODS);
 
-export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
+export const ITEM_BY_ID: Record<string, ItemDef> = indexBy(ITEMS, (i) => i.id);
 GEAR_SETS.push(...MORE_SETS);
 // Koleksiyonlarda bütün eşya listesine bağlı gruplar: her mevsimden bir sezonluk eşya; atölyede yapılmış bir enstrüman,
 // kıyafet, sanat eseri ve hediyelik
@@ -355,7 +356,9 @@ export const HOSPITAL_HEAL_PER_HOUR = 20;
 // rezervasyonunda eksik rolleri oyunun kendi müzisyenleriyle doldurabilir.
 
 export const SESSION_MUSICIAN = {
-  bar: { fee: 5, skill: 30, stage: 25 },
+  // Bar: yeni bir oyuncunun seviyesinde (eskiden beceri 30 / sahne 25 ve %70 aşinalık: yeni oyunculardan kurulan gerçek
+  // grup kiralık kadrolu tek oyuncudan kötü çalıyordu, playtest Y-1)
+  bar: { fee: 5, skill: 22, stage: 18 },
   club: { fee: 60, skill: 50, stage: 40 },
   hall: { fee: 250, skill: 70, stage: 55 },
   stadium: { fee: 900, skill: 85, stage: 70 },
@@ -433,8 +436,27 @@ export const tradeMoneyValue = (shopPrice: number, legendary = false) => Math.ma
  */
 export const PAIR_TRANSFER_CAP = 5000;
 export const PLAYER_TRANSFER_WINDOW_HOURS = 168;
-/** Kiralık müzisyenler setlisti önceden öğrenir. */
+/** Kiralık müzisyenler setlisti önceden öğrenir (kulüp ve üstü). */
 export const SESSION_FAMILIARITY = 70;
+/** Mekâna göre kiralık müzisyenin aşinalığı: barda bir gecelik hazırlık (yeni üyenin birkaç saatlik provası kadar) */
+export const SESSION_FAMILIARITY_BY_VENUE = { bar: 55, club: SESSION_FAMILIARITY, hall: SESSION_FAMILIARITY, stadium: SESSION_FAMILIARITY, festival: SESSION_FAMILIARITY } as const satisfies Record<keyof typeof SESSION_MUSICIAN, number>;
+
+/**
+ * Kapı payı (playtest Y-1, O-3): küçük sahnede kiralık müzisyen de sahnedeki herkes gibi kapıdan pay alır. Kişi başı pay
+ * = (ekip ücreti ve vergiler düşülmüş) bilet geliri ÷ (sahnedeki üyeler + kiralıklar); kiralığın alacağı bu payın
+ * oranıdır, peşin ödenen sabit ücret bu paydan düşülür (en az sabit ücret). Kapı payı oyundan çıkar (kiralıklar oyunun
+ * çalışanı). Eskiden kiralık barda $5 alıyor, gelirin hepsi tek oyuncuya kalıyordu: arkadaşlarıyla grup kuran oyuncu
+ * kişi başı üçte bir kazanıyordu. Salon, stadyum ve festivalde sabit ücret aynen (denge raporu §1-2 ayarları).
+ */
+export const SESSION_DOOR_SHARE = { bar: 1, club: 0.75, hall: 0, stadium: 0, festival: 0 } as const satisfies Record<keyof typeof SESSION_MUSICIAN, number>;
+
+/** Kiralıkların kapıdan alacağı (peşin ücretin üstündeki) toplam pay */
+export function sessionDoorCut(venue: keyof typeof SESSION_MUSICIAN, door: number, members: number, hires: number): number {
+  const share = SESSION_DOOR_SHARE[venue];
+  if (!share || hires <= 0 || door <= 0) return 0;
+  const perHead = door / (Math.max(0, members) + hires);
+  return Math.floor(hires * Math.max(0, perHead * share - SESSION_MUSICIAN[venue].fee));
+}
 export { GEAR_SETS } from './content/items';
 export { COLLECTIONS, type CollectionDef } from './content/gear';
 

@@ -38,3 +38,4 @@ export * from './lessons';
 export * from './attributes';
 export * from './generations';
 export * from './civic-powers';
+export * from './lookup';

@@ -360,18 +360,24 @@ describe('istismara karşı korumalar', () => {
   });
 
   it('aynı çocuk için eşzamanlı iki devirden yalnızca biri geçer (iki ebeveyn de kendi hesabında)', async () => {
-    const a = await newPlayer();
-    const b = await newPlayer();
-    await seasoned(a);
-    await seasoned(b);
-    const kid = await addChild(a.character.id, b.character.id, 'Tek', 25);
-    // İki taraf da birbirine onay versin
-    await a.c.post(`/api/family/children/${kid}/heir-request`);
-    await b.c.post(`/api/family/children/${kid}/heir-consent`, { accept: true });
-    const [r1, r2] = await Promise.all([succeed(a, kid, { name: 'Tek Bir' }), succeed(b, kid, { name: 'Tek Iki' })]);
-    const ok = [r1, r2].filter((r) => r.status === 200);
-    expect(ok).toHaveLength(1);
-    expect((await q('SELECT count(*)::int AS n FROM characters WHERE child_id = $1', [kid])).rows[0].n).toBe(1);
+    // Eskiden kilit sırası yüzünden kilitlenme (deadlock) oluyordu: biri 500 alıyor, ~14'te 1 ikisi birden reddediliyordu.
+    // Kilitlenme zamanlamaya bağlı olduğundan senaryo birkaç kez tekrarlanır (doğrulamada 40 × 3 tekrar).
+    for (let i = 0; i < 8; i++) {
+      const a = await newPlayer();
+      const b = await newPlayer();
+      await seasoned(a);
+      await seasoned(b);
+      const kid = await addChild(a.character.id, b.character.id, 'Tek', 25);
+      // A devretmek ister, B onay verir (B'nin kendi devri için A'nın onayı yok)
+      await a.c.post(`/api/family/children/${kid}/heir-request`);
+      await b.c.post(`/api/family/children/${kid}/heir-consent`, { accept: true });
+      const sfx = String.fromCharCode(97 + i);
+      const [r1, r2] = await Promise.all([succeed(a, kid, { name: `Tek Bir${sfx}` }), succeed(b, kid, { name: `Tek Iki${sfx}` })]);
+      expect([r1.status, r2.status].filter((s) => s === 200), `tekrar ${i}: ${r1.status} ${JSON.stringify(r1.body)} / ${r2.status} ${JSON.stringify(r2.body)}`).toHaveLength(1);
+      expect(Math.max(r1.status, r2.status)).toBeLessThan(500);
+      expect(r1.status).toBe(200);
+      expect((await q('SELECT count(*)::int AS n FROM characters WHERE child_id = $1', [kid])).rows[0].n).toBe(1);
+    }
   });
 
   it('aynı kullanıcının eşzamanlı iki devir isteğinden yalnızca biri geçer', async () => {

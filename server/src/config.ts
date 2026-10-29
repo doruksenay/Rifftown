@@ -13,11 +13,20 @@ export const config = {
   migrationUrl: process.env.DATABASE_URL_UNPOOLED ?? process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL ?? 'postgres://postgres@localhost:5432/rifftown',
   /** Bağlantı havuzunun en fazla bağlantı sayısı */
   poolMax: num(process.env.PG_POOL_MAX, 10),
-  /** Kayıt olunca kendiliğinden yönetici yapılacak e-postalar (virgülle). Komut satırı olmayan barındırmalar için. */
+  /** Yönetici olabilecek e-postalar (virgülle). Kayıt ya da açılış artık kendiliğinden yönetici YAPMAZ (e-posta doğrulaması
+   *  yok: adresin sahibinden önce kayıt olan paneli alıyordu). Yükseltme: `make-admin` komutu ya da bu listedeki hesabın
+   *  ADMIN_CLAIM_SECRET ile /api/auth/claim-admin çağrısı (komut satırı olmayan barındırmalar için). */
   adminEmails: (process.env.ADMIN_EMAILS ?? '')
     .split(',')
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean),
+  /** İsteğe bağlı: ADMIN_EMAILS'taki bir hesabın kendini yönetici yapabilmesi için sunucu tarafı gizli kod. Boşsa
+   *  claim-admin kapalıdır (yalnızca make-admin). */
+  adminClaimSecret: process.env.ADMIN_CLAIM_SECRET ?? '',
+  /** Oturumun mutlak ömrü (gün, gerçek zaman). 0 sınırsız. */
+  sessionMaxDays: Math.max(0, num(process.env.SESSION_MAX_DAYS, 90)),
+  /** Kullanılmayan oturumun düştüğü süre (gün, gerçek zaman). 0 sınırsız. */
+  sessionIdleDays: Math.max(0, num(process.env.SESSION_IDLE_DAYS, 30)),
   port: num(process.env.PORT, 3000),
   host: process.env.HOST ?? '0.0.0.0',
   /** 1 = gerçek zaman. Geliştirmede 60 → 1 oyun saati 1 dakika sürer. */

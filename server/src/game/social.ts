@@ -9,6 +9,7 @@ import {
   ITEM_BY_ID,
   type PersonDto,
   maskProfanity,
+  cleanText,
   isBoundItem,
   GIFT_BONUS_COOLDOWN_HOURS,
   MAX_GIFT_FRIENDSHIP,
@@ -24,13 +25,8 @@ import { avatarUrl, lockCharacter, notify, requireEstablished } from './common';
 
 export const pair = (x: number, y: number): [number, number] => (x < y ? [x, y] : [y, x]);
 
-/** Kontrol, görünmez ve yön değiştiren karakterleri temizler */
-export function cleanText(v: string, singleLine = false): string {
-  const x = v
-    .replace(singleLine ? /[\u0000-\u001f\u007f]/g : /[\u0000-\u0009\u000b-\u001f\u007f]/g, '')
-    .replace(/[​-‏‪-‮⁦-⁩﻿]/g, '');
-  return singleLine ? x.trim() : x.replace(/\n{3,}/g, '\n\n').trim();
-}
+/** Kontrol, görünmez ve yön değiştiren karakterleri temizler (tek kaynak: shared moderation.ts) */
+export { cleanText };
 
 export const toPerson = (r: any, prefix = ''): PersonDto => ({
   characterId: Number(r[`${prefix}id`]),

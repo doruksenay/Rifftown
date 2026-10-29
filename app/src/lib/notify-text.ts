@@ -43,8 +43,11 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
       }
       if (d.kind === 'write_song' && d.title) {
         const base = `${t('n_action_done', { action: t('action_write_song') })}: "${d.title}", ${tierName('quality', d.quality, lang)}`;
-        const withInspo = d.inspirationBonus ? `${base}. ${t('n_song_inspired', { n: d.inspirationBonus })}` : base;
-        return d.fatigued ? `${withInspo}. ${t('n_song_fatigued')}` : withInspo;
+        // İlhamın katkısı kelimeyle (VIP olmayana sunucu kaba basamak gönderir)
+        const inspo = Number(d.inspirationBonus ?? 0);
+        const withInspo = inspo > 0 ? `${base}. ${t(inspo < 5 ? 'n_song_inspired_little' : inspo < 10 ? 'n_song_inspired_nicely' : 'n_song_inspired_lot')}` : base;
+        const withBand = d.addedToBand ? `${withInspo}. ${t('n_song_added_to_band')}` : withInspo;
+        return d.fatigued ? `${withBand}. ${t('n_song_fatigued')}` : withBand;
       }
       if (d.kind === 'record' && d.title) return t('n_record', { title: d.title, q: tierName('quality', d.quality, lang) });
       if (d.kind === 'busk' && d.tired) return `${t('n_action_done', { action: t('action_busk') })}. ${t('busk_tired')}`;
@@ -63,7 +66,8 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
     case 'gig_booked':
       return t('n_gig_booked', { band: d.bandName });
     case 'gig_cancelled':
-      return t('n_gig_cancelled', { band: d.bandName });
+      // Konseri ayarlayıp ödeyen kişiye iade (kiralık müzisyen, prodüksiyon payı, sahne efektleri)
+      return d.refund ? `${t('n_gig_cancelled', { band: d.bandName })}. ${t('n_gig_cancel_refund', { money: `$${Number(d.refund).toLocaleString('en-US')}` })}` : t('n_gig_cancelled', { band: d.bandName });
     case 'gig_done':
       if (!d.present) return t('n_gig_missed', { band: d.bandName });
       if (d.legendary) return t('n_gig_legendary', { band: d.bandName });
@@ -118,7 +122,7 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
       return d.position && CITY_BY_ID[d.cityId] ? `${base} ${t('n_sales_chart', { city: p(CITY_BY_ID[d.cityId].name), pos: d.position })}` : base;
     }
     case 'arrested':
-      return d.caught ? t('n_arrested_caught') : t('n_arrested', { officer: d.officer ?? '' });
+      return d.caught ? t('n_arrested_caught') : d.detective ? t('n_arrested_detective') : t('n_arrested', { officer: d.officer ?? '' });
     case 'convicted':
       return t('n_convicted', { h: d.sentenceHours });
     case 'acquitted':

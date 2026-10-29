@@ -4,6 +4,8 @@
 // makam sahibi görevdeyken geçerlidir; makam el değiştirince (seçim, ölüm, emeklilik) varsayılana döner ve kaydedilir.
 
 import {
+  cleanText,
+  maskProfanity,
   CITIES,
   CITY_BY_ID,
   ELECTION_DAYS,
@@ -148,7 +150,7 @@ export async function runForOffice(characterId: number, electionId: number, plat
     await c.query('INSERT INTO election_candidates(election_id, character_id, platform) VALUES ($1, $2, $3)', [
       e.id,
       characterId,
-      platform.trim().slice(0, 200),
+      maskProfanity(cleanText(platform)).slice(0, 200),
     ]);
     return { ok: true };
   });
@@ -175,7 +177,7 @@ export async function setAnnouncement(characterId: number, cityId: string, text:
   if (!CITY_BY_ID[cityId]) fail('not_found', 404);
   const r = await pool.query(
     `UPDATE office_holders SET announcement = NULLIF($3, '') WHERE city_id = $1 AND office = 'mayor' AND character_id = $2`,
-    [cityId, characterId, text.trim().slice(0, 300)],
+    [cityId, characterId, maskProfanity(cleanText(text)).slice(0, 300)],
   );
   if (!r.rowCount) fail('not_mayor', 403);
   return { ok: true };

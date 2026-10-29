@@ -29,10 +29,34 @@ const KEY_RULES: Record<string, Rule[]> = {
   maxLevel: [{ scale: 'skill' }],
   // Karakter nitelikleri (attributes.ts): { charm: sayı, ... }
   attributes: [{ scale: 'attribute', map: true }],
+  // İlişki sayaçları (takılma, flört, ilişki ekranı): kelime ölçeğindeki gibi bulanık (playtest Y-5)
+  friendship: [{ scale: 'friendship' }],
+  romance: [{ scale: 'romance' }],
 };
 
+/** Beceri ya da arkadaşlık artışı (`gain`): yalnızca gainText'in basamağı (hiç / çok az / biraz / epey / çok).
+ *  Başlangıç becerisi bilindiği için kesin artışlar toplanınca kesin beceri bulunuyordu (12 + 2,98 + 5,54). */
+export function blurGain(v: number): number {
+  if (!(v > 0)) return 0;
+  return v < 0.5 ? 0.1 : v < 1.5 ? 0.5 : v < 3 ? 1.5 : 3;
+}
+
+/** Şöhret değişimi: uygulamadaki fameChangeKey basamakları (çok arttı ≥1,5 / arttı / aynı / düştü / çok düştü) */
+export function blurFameDelta(v: number): number {
+  if (v === 0) return 0;
+  const a = Math.abs(v);
+  return Math.sign(v) * (a >= 1.5 ? 1.5 : 0.5);
+}
+
+/** Diğer bütün `...Delta` alanları (ruh hâli, sağlık, enerji, ilham değişimi): 5'lik adımlarla sıfıra doğru.
+ *  Başlangıç değeri (ruh hâli 80, sağlık 100) bilindiğinden kesin değişimler toplanınca kesin değer çıkıyordu. */
+export const blurDelta = (v: number) => Math.sign(v) * Math.floor(Math.abs(v) / 5) * 5;
+
 /** Bu anahtarlarda VIP olmayanlara 10'luk adımlarla */
-const COARSE_10 = new Set(['wear', 'morale', 'attributeRoom']); // attributeRoom: nitelik toplamının tavana kalanı (toplamı ele vermesin)
+const COARSE_10 = new Set(['wear', 'morale', 'attributeRoom']);
+/** Bu anahtarlarda 5'lik adımlarla aşağı, sıfırdan büyükse en az 1 (şarkıya ilhamın katkısı: ilhamın kesin değerini
+ *  ele vermesin; uygulama kelimeyle gösterir) */
+const COARSE_5 = new Set(['inspirationBonus']); // attributeRoom: nitelik toplamının tavana kalanı (toplamı ele vermesin)
 /** Bu anahtarlarda VIP olmayanlara yalnızca işaret (-1, 0, 1) gider */
 // policyLevel, oldLevel, newLevel: makam kararlarının basamağı (civic-powers.ts); VIP olmayan yalnızca yönünü görür
 const SIGN_ONLY = new Set(['flow', 'pressDelta', 'impact', 'policyLevel', 'oldLevel', 'newLevel']);
@@ -51,6 +75,14 @@ function blurNode(node: unknown, depth = 0): unknown {
       out[k] = r
         ? Object.fromEntries(Object.entries(v as Record<string, unknown>).map(([id, n]) => [id, typeof n === 'number' ? blurValue(r.scale, n) : n]))
         : blurNode(v, depth + 1);
+    } else if (k === 'gain' && typeof v === 'number') {
+      out[k] = blurGain(v);
+    } else if (k === 'fameDelta' && typeof v === 'number') {
+      out[k] = blurFameDelta(v);
+    } else if (k.endsWith('Delta') && !SIGN_ONLY.has(k) && typeof v === 'number') {
+      out[k] = blurDelta(v);
+    } else if (COARSE_5.has(k) && typeof v === 'number') {
+      out[k] = v <= 0 ? 0 : v < 5 ? 1 : Math.floor(v / 5) * 5;
     } else if (k === 'chance' && typeof v === 'number') {
       // Suç başarı şansı: VIP olmayanlara sadece düşük / orta / yüksek (uygulamadaki eşiklerle aynı)
       out[k] = v < 0.35 ? 0.2 : v < 0.65 ? 0.5 : 0.8;
@@ -80,6 +112,36 @@ function blurNode(node: unknown, depth = 0): unknown {
 
 export const blurForNonVip = (payload: unknown) => blurNode(payload);
 
+/** Bulanıklaştırılan sayısal anahtarlar (görünürlük testi). `...Delta` ile biten her anahtar da bulanıktır. */
+export const BLURRED_NUMERIC_KEYS: ReadonlySet<string> = new Set([
+  ...Object.keys(KEY_RULES), ...COARSE_10, ...COARSE_5, ...SIGN_ONLY,
+  'gain', 'chance', 'dueDays', 'lessonRate', 'maxBandShare', 'totalFame',
+]);
+export const isBlurredKey = (k: string) => BLURRED_NUMERIC_KEYS.has(k) || k.endsWith('Delta');
+
+/** Bilerek kesin gönderilen sayısal alanlar: para ve fiyatlar (oyuncunun kendi bakiyesi, tam gösterilir), kimlikler,
+ *  sayaçlar, süreler ve zamanlar, oyunun ilan ettiği sabitler, harcanan bakiye olan XP. Bunların hiçbiri bir ölçeğin
+ *  kesin değerini ele vermez. Yeni bir sayısal alan bu listeye ya da bulanık kurallara eklenmeden görünürlük testi geçmez. */
+export const EXACT_NUMERIC_KEYS: ReadonlySet<string> = new Set([
+  // kimlikler
+  'id', 'actionId', 'authorId', 'bandId', 'bestSongId', 'characterId', 'fromId', 'toId', 'gigId', 'leaderId', 'songId',
+  'setlist', 'weekId', 'step', 'generation', 'caseId', 'scandalId', 'suspectId', 'releaseId',
+  // para (oyuncunun kendi parası ve gelir kalemleri tam gösterilir; tasarım: "para olarak tam gösterilir")
+  'money', 'bank', 'cost', 'fee', 'price', 'pay', 'reward', 'revenue', 'perMember', 'cityTax', 'ownerShare', 'crewFee',
+  'productionCost', 'inheritance', 'fine', 'totalRevenue', 'share', 'loot', 'sessionCut',
+  // eşyanın dükkânda ilan edilen bonusu (+3 / +7 ...), plak satış adedi (listeler herkese açık)
+  'bonus', 'totalUnits', 'weeksOnSale', 'units', 'lastWeekUnits', 'position', 'lastPosition', 'bestPosition',
+  // sayaçlar ve süreler
+  'achievementPoints', 'points', 'age', 'attendance', 'completed', 'convictions', 'friendsCount', 'hours', 'memberCount',
+  'members', 'n', 'pendingInvites', 'pendingTrades', 'playersHere', 'policeOnDuty', 'presentCount', 'progress', 'target',
+  'total', 'toursDone', 'unreadMessages', 'unreadNotifications', 'unsolvedCount', 'heirloomLimit', 'players', 'qty',
+  'sentenceHours', 'recoveredCrimes',
+  // oyunun sabitleri ve eylem parametreleri
+  'costMult', 'fraction', 'tipFactor', 'gameSpeed', 'focus',
+  // XP harcanan bir bakiyedir (tasarım: tam sayı gösterilir)
+  'xp', 'xpDay', 'xpDayCap', 'xpWeek', 'xpWeekCap',
+]);
+
 /** /api altındaki yanıtlara uygulanır. VIP ve yöneticiler ham sayıları görür.
  *  Kanca doğrudan /api kapsamına eklenmelidir (register ile değil), yoksa alt rotalara uygulanmaz. */
 export function addVisibilityHook(app: FastifyInstance) {
@@ -89,3 +151,4 @@ export function addVisibilityHook(app: FastifyInstance) {
     return blurForNonVip(payload);
   });
 }
+

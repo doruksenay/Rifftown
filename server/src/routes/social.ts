@@ -1,4 +1,4 @@
-import { CHAT_MAX, maskProfanity } from '@rifftown/shared';
+import { CHAT_MAX, cleanText, maskProfanity } from '@rifftown/shared';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { charId, requireUser } from '../auth';
@@ -64,7 +64,10 @@ export async function socialRoutes(app: FastifyInstance) {
 
   app.post('/chat', async (req) => {
     const id = charId(req);
-    const body = parse(z.object({ channel: z.string().max(40), text: z.string().trim().min(1).max(CHAT_MAX) }), req.body);
+    const body = parse(z.object({ channel: z.string().max(40), text: z.string().max(CHAT_MAX * 2) }), req.body);
+    // Özel mesajla aynı temizleyici: görünmez/yön değiştiren karakterler ve zalgo (playtest O-6)
+    const text = maskProfanity(cleanText(body.text));
+    if (!text || text.length > CHAT_MAX) fail('invalid_message');
     await checkChannel(id, body.channel);
     const now = Date.now();
     if (now - (lastPost.get(id) ?? 0) < CHAT_COOLDOWN_MS) fail('slow_down', 429);
@@ -72,7 +75,7 @@ export async function socialRoutes(app: FastifyInstance) {
     const r = await one(pool, 'INSERT INTO chat_messages(channel, character_id, text) VALUES ($1, $2, $3) RETURNING *', [
       body.channel,
       id,
-      maskProfanity(body.text),
+      text,
     ]);
     const ch = await getCharacter(pool, id);
     return { message: toMsg({ ...r, name: ch.name, avatar_color: ch.avatar_color, avatar_version: ch.avatar_version }) };

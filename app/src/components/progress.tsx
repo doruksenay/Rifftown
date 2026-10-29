@@ -19,7 +19,7 @@ import { useI18n } from '@/lib/i18n';
 import type { StringKey } from '@/lib/strings';
 import { space, useColors } from '@/theme';
 
-const FACTOR_ORDER: GigFactorId[] = ['songs', 'familiarity', 'skill', 'stage', 'setLength', 'flow', 'events', 'style', 'saturation', 'presence', 'energy', 'mood'];
+const FACTOR_ORDER: GigFactorId[] = ['songs', 'familiarity', 'skill', 'stage', 'setLength', 'flow', 'events', 'style', 'saturation', 'presence', 'chemistry', 'energy', 'mood'];
 
 /** Öneriye göre gidilecek ekran */
 function adviceTarget(f: GigFactorId, cityId: string): { label: StringKey; href: Href } | null {
@@ -37,6 +37,8 @@ function adviceTarget(f: GigFactorId, cityId: string): { label: StringKey; href:
       return { label: 'adviceGo_rest', href: '/rest' };
     case 'saturation':
       return { label: 'adviceGo_travel', href: '/travel' };
+    case 'chemistry':
+      return { label: 'adviceGo_people', href: '/people' };
     default:
       return null;
   }

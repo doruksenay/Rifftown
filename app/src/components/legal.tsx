@@ -54,6 +54,7 @@ export function AccountSettings() {
       {email ? (
         <Button title={t('contact', { email })} variant="ghost" small style={{ paddingHorizontal: 0, alignSelf: 'flex-start' }} onPress={() => Linking.openURL(`mailto:${email}`)} />
       ) : null}
+      <Button title={t('changePassword')} variant="ghost" small style={{ alignSelf: 'flex-start', paddingHorizontal: 0 }} onPress={() => router.push('/change-password')} />
       <Heading>{t('deleteAccount')}</Heading>
       {!open ? (
         <Button title={t('deleteAccount')} variant="ghost" small style={{ alignSelf: 'flex-start', paddingHorizontal: 0 }} onPress={() => setOpen(true)} />

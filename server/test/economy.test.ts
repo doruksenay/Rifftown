@@ -1,5 +1,5 @@
 // Sosyal, ilişkiler, pazar, kişiselleştirme, üretim, yaşam, işletmeler, festivaller, görevler, mağaza uyumu
-import { BUSINESS_RULES, MISSIONS_PER_WEEK, missionsFor } from '@rifftown/shared';
+import { BUSINESS_RULES, MISSION_BY_ID, MISSIONS_PER_WEEK, missionEligible } from '@rifftown/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { config } from '../src/config';
 import { pool } from '../src/db';
@@ -121,7 +121,9 @@ describe('ilişkiler ve aile', () => {
     expect((await a.c.post(`/api/relationships/${b.character.id}/flirt`)).body.romance).toBe(20);
     const f2 = await b.c.post(`/api/relationships/${a.character.id}/flirt`);
     expect(f2.body.mutual).toBe(true);
-    expect(f2.body.romance).toBeGreaterThan(20);
+    // Yanıt VIP olmayana bulanık gider; ham değer veritabanından
+    expect(f2.body.romance).toBeGreaterThanOrEqual(20);
+    expect(Number((await q('SELECT romance FROM relationships WHERE a_id = $1 AND b_id = $2', [x, y])).rows[0].romance)).toBeGreaterThan(20);
 
     await setMoney(a.character.id, 20000);
     await q('UPDATE relationships SET romance = 36 WHERE a_id = $1 AND b_id = $2', [x, y]);
@@ -396,7 +398,9 @@ describe('haftalık görevler', () => {
     const p = await newPlayer();
     const state = (await p.c.get('/api/missions')).body;
     expect(state.missions).toHaveLength(MISSIONS_PER_WEEK);
-    expect(state.missions.map((m: any) => m.id)).toEqual(missionsFor(p.character.id, state.weekId).map((m) => m.id));
+    // Seçim oyuncunun durumuna göre (grubu ve arkadaşı yok: konser, takılma, hediye görevi düşmez) ve hafta boyunca aynı
+    for (const m of state.missions) expect(missionEligible(MISSION_BY_ID[m.id], { hasBand: false, gigsPlayed: 0, friends: 0, accountHours: 1e9, knowsCraft: false, canStageEvent: false }), m.id).toBe(true);
+    expect((await p.c.get('/api/missions')).body.missions.map((m: any) => m.id)).toEqual(state.missions.map((m: any) => m.id));
     // İlk görevi tamamlanmış say: haftayı sabitleyip uygun eylemleri ekle
     const m = state.missions[0];
     expect((await p.c.post(`/api/missions/${m.id}/claim`)).body.error).toBe('step_not_done');
@@ -424,7 +428,7 @@ describe('mağaza uyumu', () => {
     await p.c.post('/api/actions', { kind: 'write_song', title: 'Veda', genre: 'pop' });
     await finishNow(p.character.id);
     await p.c.post('/api/bands', { name: 'Veda Grubu', genre: 'pop', role: 'vocals' });
-    expect((await p.c.post('/api/auth/delete-account', { password: 'yanlis' })).status).toBe(401);
+    expect((await p.c.post('/api/auth/delete-account', { password: 'yanlis' })).status).toBe(403);
     expect((await p.c.post('/api/auth/delete-account', { password: 'gizli12345' })).status).toBe(200);
     expect((await p.c.get('/api/me')).status).toBe(401);
     expect((await q('SELECT count(*)::int AS n FROM characters WHERE id = $1', [p.character.id])).rows[0].n).toBe(0);

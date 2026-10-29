@@ -16,7 +16,8 @@ import {
   gearQualityBonus,
   genreAffinity,
   ITEM_BY_ID,
-  SESSION_FAMILIARITY,
+  SESSION_FAMILIARITY_BY_VENUE,
+  sessionDoorCut,
   SESSION_MUSICIAN,
   sessionLevels,
   roleSkill,
@@ -76,6 +77,7 @@ import { evaluateMany } from './achievements';
 import { barGigShare } from './business';
 import { cityPolicies } from './politics';
 import { type CharacterRow, gearBonuses, isJailed, lockCharacter, membership, notify, notifySkillUps, toGigDto } from './common';
+import { pair } from './social';
 
 /** Grubun bir şehirdeki şöhreti (0–100). */
 /** Konserin sahne efektlerinden gelen kalite (tavanlı). Kayıtlı bonus varsa (atölye efektleri) o, yoksa eşyanın bonusu. */
@@ -106,10 +108,12 @@ export async function estimateAttendance(characterId: number, locationId: string
   const venue = loc!.type as VenueType;
   const fame = await bandFame(pool, m!.band_id, loc!.cityId);
   const pop = CITY_BY_ID[loc!.cityId].genrePopularity[m!.genre as Genre];
+  // Her üye kendi arkadaşlarını getirir: tahmin o şehirdeki üyelere göre
+  const here = Number((await one(pool, 'SELECT count(*)::int AS n FROM band_members bm JOIN characters c ON c.id = bm.character_id WHERE bm.band_id = $1 AND c.city_id = $2', [m!.band_id, loc!.cityId]))?.n ?? 1);
   return {
     locationId,
-    min: expectedAttendance(venue, fame, pop, () => 0),
-    max: expectedAttendance(venue, fame, pop, () => 0.999),
+    min: expectedAttendance(venue, fame, pop, () => 0, here),
+    max: expectedAttendance(venue, fame, pop, () => 0.999, here),
     capacity: VENUE_RULES[venue].capacity,
   };
 }
@@ -193,10 +197,10 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee + production]);
     const gig = await one(
       c,
-      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan, effect_bonuses, production_cost)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan, effect_bonuses, production_cost, booked_by)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
       // Atölyede yapılmış efektin bonusu her üründe farklıdır: konsere kendi bonusuyla taşınır (fxBonusOf)
-      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan), fx.map((f) => f.bonus ?? ITEM_BY_ID[f.item_id]?.bonus ?? 0), production],
+      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan), fx.map((f) => f.bonus ?? ITEM_BY_ID[f.item_id]?.bonus ?? 0), production, characterId],
     );
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
@@ -250,13 +254,24 @@ export async function cancelGig(characterId: number, gigId: number) {
     const m = await membership(c, characterId);
     if (!m) fail('no_band');
     if (m!.leader_id !== characterId) fail('not_leader', 403);
+    // İade konseri ayarlayıp ödeyen kişiye gider (playtest O-4): eskiden iptal eden lidere gidiyordu, yani lider gruptan
+    // ayrılınca yeni lider iptal edip ücreti ve efektleri alıyordu (pazar/takas/hediye kapılarını atlayan aktarım yolu).
+    // Kilit sırası: önce karakterler (id sırasıyla), sonra konser satırı.
+    const peek = await one(c, 'SELECT booked_by FROM gigs WHERE id = $1 AND band_id = $2', [gigId, m!.band_id]);
+    if (!peek) fail('not_found', 404);
+    const booker = peek!.booked_by == null ? null : Number(peek!.booked_by);
+    for (const id of booker && booker !== characterId ? pair(characterId, booker) : [characterId]) await lockCharacter(c, id);
     const gig = await one(c, `SELECT * FROM gigs WHERE id = $1 AND band_id = $2 FOR UPDATE`, [gigId, m!.band_id]);
     if (!gig) fail('not_found', 404);
     if (gig.status !== 'scheduled') fail('gig_not_scheduled');
-    const venue = LOCATION_BY_ID[gig.location_id].type as VenueType;
-    // Kiralık müzisyen ücreti tam, prodüksiyon giderinin yarısı geri verilir (hazırlık yapılmıştı)
-    const refund = SESSION_MUSICIAN[venue].fee * gig.session_roles.length + Math.floor((gig.production_cost ?? 0) * GIG_PRODUCTION_REFUND);
     if (gig.festival_id) fail('festival_gig');
+    if ((gig.booked_by == null ? null : Number(gig.booked_by)) !== booker) fail('conflict', 409);
+    const venue = LOCATION_BY_ID[gig.location_id].type as VenueType;
+    // Kiralık müzisyen ücreti tam, prodüksiyon giderinin yarısı geri verilir (hazırlık yapılmıştı). Ödeyen bilinmiyorsa
+    // (hesabı silinmiş) iade yapılmaz: para basılmaz.
+    const refund = booker
+      ? SESSION_MUSICIAN[venue].fee * gig.session_roles.length + Math.floor((gig.production_cost ?? 0) * GIG_PRODUCTION_REFUND)
+      : 0;
     // Ceza satılan biletle büyür: rezervasyondan bu yana geçen süreye göre beklenen seyircinin bir kısmı bilet almıştır
     const fame = await bandFame(c, m!.band_id, gig.city_id);
     const pop = CITY_BY_ID[gig.city_id].genrePopularity[m!.genre as Genre] ?? 1;
@@ -266,11 +281,13 @@ export async function cancelGig(characterId: number, gigId: number) {
     const sold = ticketsSold(expected, elapsedHours, leadHours);
     const penalty = cancelFamePenalty(venue, sold);
     await c.query(`UPDATE gigs SET status = 'cancelled', result = $2 WHERE id = $1`, [gigId, JSON.stringify({ cancelled: true, ticketsSold: sold, famePenalty: penalty })]);
-    await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [characterId, refund]);
-    for (const [i, itemId] of (gig.effects ?? []).entries()) {
-      // Atölye efekti kendi bonusuyla geri verilir
-      const bonus = ITEM_BY_ID[itemId]?.crafted ? (gig.effect_bonuses?.[i] ?? null) : null;
-      await c.query(`INSERT INTO inventory(character_id, item_id, slot, bonus) VALUES ($1, $2, 'fx', $3)`, [characterId, itemId, bonus]);
+    if (booker) {
+      if (refund > 0) await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [booker, refund]);
+      for (const [i, itemId] of (gig.effects ?? []).entries()) {
+        // Atölye efekti kendi bonusuyla geri verilir
+        const bonus = ITEM_BY_ID[itemId]?.crafted ? (gig.effect_bonuses?.[i] ?? null) : null;
+        await c.query(`INSERT INTO inventory(character_id, item_id, slot, bonus) VALUES ($1, $2, 'fx', $3)`, [booker, itemId, bonus]);
+      }
     }
     // İptal şöhret kaybettirir; biletlerin çoğu satılmışsa skandala dönüşür
     await addFame(c, m!.band_id, gig.city_id, -penalty);
@@ -278,10 +295,16 @@ export async function cancelGig(characterId: number, gigId: number) {
       await createScandal(c, { bandId: m!.band_id, characterId: null, cityId: gig.city_id, kind: 'cancel' });
     }
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
+    const told = new Set<number>([characterId]);
     for (const mem of members) {
-      if (mem.character_id !== characterId) await notify(c, mem.character_id, 'gig_cancelled', { gigId, bandName: m!.name });
+      const id = Number(mem.character_id);
+      if (told.has(id)) continue;
+      told.add(id);
+      await notify(c, id, 'gig_cancelled', { gigId, bandName: m!.name, ...(id === booker ? { refund } : {}) });
     }
-    return { ok: true, refund, ticketsSold: sold, famePenalty: penalty };
+    // Ödeyen artık grupta değilse de iadesini bildirimle öğrenir
+    if (booker && !told.has(booker)) await notify(c, booker, 'gig_cancelled', { gigId, bandName: m!.name, refund });
+    return { ok: true, refund, refundedTo: booker, ticketsSold: sold, famePenalty: penalty };
   });
 }
 
@@ -414,7 +437,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       present: true,
       instrumentBonus: 0,
       outfitBonus: 0,
-      familiarity: Object.fromEntries(gig.setlist.map((id: number) => [id, SESSION_FAMILIARITY])),
+      familiarity: Object.fromEntries(gig.setlist.map((id: number) => [id, SESSION_FAMILIARITY_BY_VENUE[venue]])),
     });
   }
 
@@ -460,6 +483,10 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   if (crewPaid) res.revenue -= crew.fee;
 
   const presentChars = chars.filter(onStage);
+  // Kapı payı: küçük sahnede kiralık müzisyenler de sahnedeki herkes gibi pay alır (items.ts SESSION_DOOR_SHARE).
+  // Oyunun grupları muaf (cüzdanları zaten her tur sıfırlanır). Pay oyundan çıkar.
+  const sessionCut = band.npc_key || !presentChars.length ? 0 : sessionDoorCut(venue, res.revenue, presentChars.length, gig.session_roles.length);
+  res.revenue -= sessionCut;
   const perMember = presentChars.length ? Math.floor(res.revenue / presentChars.length) : 0;
   const xpGained = new Map<number, number>();
   for (const ch of presentChars) {
@@ -546,7 +573,12 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       ORDER BY g.starts_at DESC LIMIT 1`,
     [gig.city_id, gig.band_id, new Date(Date.now() - gameHoursToMs(48, config.gameSpeed))],
   );
+  // Grubun son eleştirileri: aynı açılış ve aynı rakip kıyası art arda gelmesin (playtest O-9)
+  const recent = (
+    await many(c, `SELECT result->'review'->>'tr' AS tr FROM gigs WHERE band_id = $1 AND status = 'done' AND result ? 'review' ORDER BY starts_at DESC LIMIT 6`, [gig.band_id])
+  ).map((x) => x.tr as string).filter(Boolean);
   const review = gigReview({
+    recent,
     cityId: gig.city_id,
     events: (res.events ?? []).map((e) => ({ id: e.id, outcome: e.outcome, name: STAGE_EVENT_BY_ID[e.id]?.name })),
     press,
@@ -586,6 +618,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     ownerShare,
     cityTax,
     crewFee: crewPaid ? crew.fee : 0,
+    sessionCut,
     productionCost: gig.production_cost ?? 0,
     crewUnpaid: crew.roles.length > 0 && !crewPaid,
     festivalId: gig.festival_id ?? null,

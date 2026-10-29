@@ -1,4 +1,7 @@
 import { CITY_BY_ID, LOCATION_BY_ID, LOW_MOOD_THRESHOLD, MIN_HEALTH_FOR_ACTIVITY } from '@rifftown/shared';
+
+/** Bu enerjinin altında ana ekran dinlenmeyi önerir (moodlet "Yorgun" eşiğiyle aynı) */
+const TIRED_ENERGY = 40;
 import { type Href, router } from 'expo-router';
 import { RefreshControl, View } from 'react-native';
 import { GuideCard } from '@/components/guide';
@@ -58,9 +61,14 @@ export default function Home() {
         <Card style={{ marginTop: space.lg, borderColor: c.danger }}>
           <Body color={c.danger}>{t('tooSickWarning')}</Body>
         </Card>
-      ) : ch.mood < LOW_MOOD_THRESHOLD ? (
+      ) : !data.action && (ch.mood < LOW_MOOD_THRESHOLD + 5 || ch.energy < TIRED_ENERGY) ? (
+        // Yorgun ya da keyifsiz: uyarının yanında dinlen ve ye düğmeleri (playtest Y-3: yalnızca metin vardı)
         <Card style={{ marginTop: space.lg }}>
-          <Body>{t('lowMoodWarning')}</Body>
+          <Body>{ch.mood < LOW_MOOD_THRESHOLD ? t('lowMoodWarning') : t('tiredHint')}</Body>
+          <Row style={{ marginTop: space.sm, gap: space.sm }}>
+            <Button title={t('rest')} small onPress={() => router.push('/rest')} />
+            {ch.cityId ? <Button title={t('eatSomething')} small variant="secondary" onPress={() => router.push(`/location/${ch.cityId}-restaurant`)} /> : null}
+          </Row>
         </Card>
       ) : null}
       {ch.addicted ? (

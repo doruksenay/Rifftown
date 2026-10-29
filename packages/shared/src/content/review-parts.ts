@@ -211,7 +211,7 @@ export const REVIEW_CROWD_PARTS: Record<'packed' | 'half' | 'empty', { openers: 
       l('{venue} tıklım tıklımdı', '{venue} was packed'),
       l('Biletler tükendi ve {venue} doldu taştı', 'Tickets sold out and {venue} overflowed'),
       l('Kapıda kuyruk vardı ve {venue} ağzına kadar doluydu', 'There was a queue outside and {venue} was full to the brim'),
-      l('{venue} içinde iğne atsan yere düşmezdi', 'There was not an inch to spare inside {venue}'),
+      l('{venue} öyle doluydu ki iğne atsan yere düşmezdi', 'There was not an inch to spare inside {venue}'),
     ],
     details: [
       l('havalandırma kalabalığa yetişemedi.', "the air conditioning couldn't keep up with the crowd."),
@@ -227,7 +227,7 @@ export const REVIEW_CROWD_PARTS: Record<'packed' | 'half' | 'empty', { openers: 
       l('{venue} yarı yarıya doluydu', '{venue} was about half full'),
       l('{venue} ne boş ne doluydu', '{venue} was neither empty nor full'),
       l('{venue} rahat bir kalabalık topladı', '{venue} drew a comfortable crowd'),
-      l('{venue} içinde {n} kişi vardı', 'There were {n} people inside {venue}'),
+      l('{venue} bu gece {n} kişiyi ağırladı', 'There were {n} people inside {venue}'),
     ],
     details: [
       l('dans etmek isteyene yer vardı.', 'there was room for anyone who wanted to dance.'),
@@ -238,12 +238,22 @@ export const REVIEW_CROWD_PARTS: Record<'packed' | 'half' | 'empty', { openers: 
       l('kimse kimsenin ayağına basmadı.', "nobody stepped on anyone's toes."),
     ],
   },
+  // Boş salon yeni grupların ilk haftasıdır: en çok okunan basamak, en geniş havuz (playtest O-9: 31 konserin 13'ünde
+  // aynı açılış). Türkçede yer tutucuya ek gelmez; "{venue} içinde" çeviri kokuyordu, mekân özne yapıldı.
   empty: {
     openers: [
       l('{venue} neredeyse boştu', '{venue} was almost empty'),
-      l('{venue} içinde seyirciden çok sandalye vardı', 'There were more chairs than listeners in {venue}'),
+      l('{venue} bu gece seyirciden çok sandalye ağırladı', 'There were more chairs than listeners at {venue}'),
       l('{venue} bu gece yalnızdı', '{venue} felt lonely tonight'),
-      l('{venue} içinde yalnızca {n} kişi vardı', 'Only {n} people turned up at {venue}'),
+      l('{venue} kapısından yalnızca {n} kişi girdi', 'Only {n} people came through the door at {venue}'),
+      l('{venue} sessiz bir geceye hazırlanmıştı ve yanılmadı', '{venue} had braced for a quiet night and got one'),
+      l('{venue} salonunun yarısından fazlası karanlıkta kaldı', 'More than half of {venue} stayed in the dark'),
+      l('{venue} sahnesinde {n} kişilik bir seyirci, cesur bir başlangıç', 'An audience of {n} at {venue}: a brave start'),
+      l('Bu gece {venue} müdavimlerine kaldı', 'Tonight {venue} belonged to its regulars'),
+      l('{venue} ışıkları seyirciden fazlaydı', 'At {venue}, the lights outnumbered the crowd'),
+      l('{venue} afişleri asmıştı ama haber pek yayılmamıştı', '{venue} had put the posters up, but word had not spread'),
+      l('Bu gece kalabalık {venue} dışında bir yerdeydi', 'The crowd was anywhere but {venue} tonight'),
+      l('{venue} mütevazı bir gece yaşadı', '{venue} had a modest night'),
     ],
     details: [
       l('yankı seyirciden kalabalıktı.', 'the echo outnumbered the audience.'),
@@ -252,6 +262,12 @@ export const REVIEW_CROWD_PARTS: Record<'packed' | 'half' | 'empty', { openers: 
       l('ön sıralar boş kaldı.', 'the front rows stayed empty.'),
       l('arkadaşlar ve tanıdıklar dışında gelen olmadı.', 'apart from friends and family, nobody came.'),
       l('boş masalar gecenin hikâyesini anlattı.', 'the empty tables told the story of the night.'),
+      l('gelenler en azından şarkıların sözlerini duydu.', 'at least those who came could hear every word.'),
+      l('ses masasındaki tek kişi en sadık dinleyiciydi.', 'the person at the sound desk was the most loyal listener.'),
+      l('bir masa her şarkıdan sonra ayrı ayrı alkışladı.', 'one table applauded every single song.'),
+      l('kapı her açıldığında herkes başını çevirdi.', 'every time the door opened, everyone turned around.'),
+      l('sahneden seyircinin yüzü tek tek görünüyordu.', 'from the stage you could see every face.'),
+      l('ilk konserler böyle olur; önemli olan devam etmek.', 'first gigs go like this; what matters is keeping going.'),
     ],
   },
 };

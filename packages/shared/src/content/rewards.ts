@@ -4,6 +4,7 @@
 
 import type { L } from '../world';
 import { CHAINS } from './progress';
+import { indexBy } from '../lookup';
 
 export interface TitleDef {
   id: string;
@@ -40,7 +41,7 @@ export const TITLES: TitleDef[] = [
   T('melek_pen', 'Melek Hanım\'ın kalemi', 'Melek\'s pen'),
   T('melek_stage', 'Melek Hanım\'ın öğrencisi', 'Melek\'s student'),
 ];
-export const TITLE_BY_ID: Record<string, TitleDef> = Object.fromEntries(TITLES.map((t) => [t.id, t]));
+export const TITLE_BY_ID: Record<string, TitleDef> = indexBy(TITLES, (t) => t.id);
 
 /** Zincirlerdeki ünvan ödülleri: ünvan → (zincir, adım, seçenek) */
 export const CHAIN_TITLE_SOURCES: { titleId: string; chain: string; step: number; choice?: string }[] = CHAINS.flatMap((c) =>

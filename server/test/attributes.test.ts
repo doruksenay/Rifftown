@@ -10,6 +10,7 @@ import {
   INSTRUMENTS,
   SCALES,
   XP_DAY_CAP,
+  XP_NEW_ACCOUNT_FACTOR,
   XP_WEEK_CAP,
   attrPointCost,
   attrSpendCost,
@@ -158,15 +159,15 @@ describe('nitelikler: saf kurallar', () => {
     }
   });
 
-  it('XP tavanları: günlük 10, haftalık 50; yeni hesapta yarısı; negatif ya da fazla verilmez', () => {
+  it('XP tavanları: günlük 10, haftalık 50; yeni hesapta %80; negatif ya da fazla verilmez', () => {
     expect(xpAllowance(4, 0, 0)).toBe(4);
     expect(xpAllowance(4, 8, 8)).toBe(2);
     expect(xpAllowance(4, 10, 10)).toBe(0);
     expect(xpAllowance(4, 2, XP_WEEK_CAP - 1)).toBe(1);
     expect(xpAllowance(4, 12, 60)).toBe(0);
     expect(xpAllowance(-3, 0, 0)).toBe(0);
-    expect(xpCaps(true)).toEqual({ day: XP_DAY_CAP / 2, week: XP_WEEK_CAP / 2 });
-    expect(xpAllowance(8, 0, 0, true)).toBe(5);
+    expect(xpCaps(true)).toEqual({ day: XP_DAY_CAP * XP_NEW_ACCOUNT_FACTOR, week: XP_WEEK_CAP * XP_NEW_ACCOUNT_FACTOR });
+    expect(xpAllowance(12, 0, 0, true)).toBe(XP_DAY_CAP * XP_NEW_ACCOUNT_FACTOR);
     expect(gigXp(59)).toBe(3);
     expect(gigXp(60)).toBe(4);
   });
@@ -282,16 +283,16 @@ describe('nitelikler ve XP: sunucu', () => {
     expect(e.week).toBe(10);
   });
 
-  it('yeni hesabın XP tavanı yarıdır (ek hesap çiftliğine karşı)', async () => {
+  it('yeni hesabın XP tavanı düşüktür (ek hesap çiftliğine karşı)', async () => {
     const p = await newPlayer();
     await pool.query(`UPDATE users SET created_at = now() + interval '1 hour' WHERE id = $1`, [p.userId]);
     const st = (await p.c.get('/api/attributes')).body;
     expect(st.newAccount).toBe(true);
-    expect(st.xpDayCap).toBe(XP_DAY_CAP / 2);
-    expect(st.xpWeekCap).toBe(XP_WEEK_CAP / 2);
+    expect(st.xpDayCap).toBe(XP_DAY_CAP * XP_NEW_ACCOUNT_FACTOR);
+    expect(st.xpWeekCap).toBe(XP_WEEK_CAP * XP_NEW_ACCOUNT_FACTOR);
     await p.c.post('/api/actions', { kind: 'work', locationId: 'istanbul-work', hours: 8 });
     await advance();
-    expect((await rawChar(p.character.id)).xp).toBeCloseTo(XP_DAY_CAP / 2, 5);
+    expect((await rawChar(p.character.id)).xp).toBeCloseTo(XP_DAY_CAP * XP_NEW_ACCOUNT_FACTOR, 5);
   });
 
   it('oyunun kendi müzisyenleri XP almaz', async () => {
@@ -407,6 +408,7 @@ describe('nitelikler ve XP: sunucu', () => {
       const a = await newPlayer();
       const b = await newPlayer();
       await setAttrs(a.character.id, { charm });
+      await setVip(a.userId); // kesin artış VIP'e gider (VIP olmayana basamak)
       const r = await a.c.post(`/api/relationships/${b.character.id}/hangout`);
       expect(r.status).toBe(200);
       gains.push(r.body.gain);
