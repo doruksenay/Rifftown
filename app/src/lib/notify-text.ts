@@ -43,7 +43,9 @@ function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): st
       }
       if (d.kind === 'write_song' && d.title) {
         const base = `${t('n_action_done', { action: t('action_write_song') })}: "${d.title}", ${tierName('quality', d.quality, lang)}`;
-        const withInspo = d.inspirationBonus ? `${base}. ${t('n_song_inspired', { n: d.inspirationBonus })}` : base;
+        // İlhamın katkısı kelimeyle (VIP olmayana sunucu kaba basamak gönderir)
+        const inspo = Number(d.inspirationBonus ?? 0);
+        const withInspo = inspo > 0 ? `${base}. ${t(inspo < 5 ? 'n_song_inspired_little' : inspo < 10 ? 'n_song_inspired_nicely' : 'n_song_inspired_lot')}` : base;
         return d.fatigued ? `${withInspo}. ${t('n_song_fatigued')}` : withInspo;
       }
       if (d.kind === 'record' && d.title) return t('n_record', { title: d.title, q: tierName('quality', d.quality, lang) });

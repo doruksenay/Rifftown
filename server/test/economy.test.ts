@@ -121,7 +121,9 @@ describe('ilişkiler ve aile', () => {
     expect((await a.c.post(`/api/relationships/${b.character.id}/flirt`)).body.romance).toBe(20);
     const f2 = await b.c.post(`/api/relationships/${a.character.id}/flirt`);
     expect(f2.body.mutual).toBe(true);
-    expect(f2.body.romance).toBeGreaterThan(20);
+    // Yanıt VIP olmayana bulanık gider; ham değer veritabanından
+    expect(f2.body.romance).toBeGreaterThanOrEqual(20);
+    expect(Number((await q('SELECT romance FROM relationships WHERE a_id = $1 AND b_id = $2', [x, y])).rows[0].romance)).toBeGreaterThan(20);
 
     await setMoney(a.character.id, 20000);
     await q('UPDATE relationships SET romance = 36 WHERE a_id = $1 AND b_id = $2', [x, y]);

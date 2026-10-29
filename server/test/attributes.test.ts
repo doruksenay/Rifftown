@@ -407,6 +407,7 @@ describe('nitelikler ve XP: sunucu', () => {
       const a = await newPlayer();
       const b = await newPlayer();
       await setAttrs(a.character.id, { charm });
+      await setVip(a.userId); // kesin artış VIP'e gider (VIP olmayana basamak)
       const r = await a.c.post(`/api/relationships/${b.character.id}/hangout`);
       expect(r.status).toBe(200);
       gains.push(r.body.gain);

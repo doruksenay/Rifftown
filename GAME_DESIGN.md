@@ -56,6 +56,8 @@ Sunucu her şeyi sayıyla hesaplar ve saklar; oyuncu kelimeleri görür. Ölçek
 
 Kesin sayılar VIP avantajıdır (Popmundo'daki gibi). VIP üyeler kelimenin yanında sayıyı da görür ("amatör 37,3"). VIP olmayan oyunculara sunucu her değeri bulunduğu seviyenin içinde dörtte birlik adımlara aşağı yuvarlayarak gönderir: seviye adı ve ilerleme çubuğu doğru kalır, kesin sayı API'den bile okunamaz. Oyundaki bütün eşikler (mekân şöhret şartları, meslek ve makam şartları, öncül beceriler, düşük ruh hâli ve sağlık sınırları) seviye sınırlarına denk gelir, bu yüzden yuvarlanmış değer uygulamadaki kontrollerden de doğru geçer. Yöneticiler sayıları her zaman görür.
 
+Değişimler de bulanıktır, yoksa başlangıç değeri bilinen bir alan (beceri 12, ruh hâli 80, sağlık 100, şöhret 0) kesin değişimler toplanarak bulunurdu: beceri ve arkadaşlık artışı (`gain`) yalnızca "hiç / çok az / biraz / epey / çok" basamağıyla, şöhret değişimi (`fameDelta`) "düştü / arttı / çok arttı" basamağıyla, diğer bütün `...Delta` alanları (ruh hâli, sağlık, enerji, ilham) 5'lik adımlarla, ilhamın şarkıya katkısı 5'lik basamakla, arkadaşlık ve romantizm sayaçları kendi kelime ölçekleriyle gider. `server/test/visibility-leaks.test.ts` gerçek bir oyun akışından sonra bütün uçları dolaşır: VIP olmayana giden her sayısal alan ya bulanık bir kurala ya da bilerek kesin gönderilen listeye (para, kimlik, sayaç, süre, XP; `visibility.ts` `EXACT_NUMERIC_KEYS`) girmelidir, yeni sınıflandırılmamış bir alan testi kırar.
+
 | Ölçek | Seviyeler (eşik) |
 |---|---|
 | Kalite (şarkı, konser) | berbat 0 · zayıf 10 · vasat 20 · fena değil 30 · iyi 40 · çok iyi 50 · harika 60 · muhteşem 70 · olağanüstü 80 · **DESTANSI** 90 |
