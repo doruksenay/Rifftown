@@ -2,9 +2,11 @@
 
 import { type Genre, INSTRUMENTS, type Instrument, type L, type ShopType } from './world';
 import { EXTRA_ITEMS, GEAR_SETS, REWARD_ITEMS, SEASONAL_ITEMS } from './content/items';
+import { COLLECTIONS, MORE_GEAR, MORE_SETS } from './content/gear';
+import { GOODS } from './content/goods';
 import { CITY_IDENTITY } from './content/cities';
 
-export type ItemSlot = Instrument | 'outfit' | 'art' | 'vehicle' | 'pet' | 'fx' | 'material' | 'spray' | 'ring';
+export type ItemSlot = Instrument | 'outfit' | 'art' | 'vehicle' | 'pet' | 'fx' | 'material' | 'spray' | 'ring' | 'consumable' | 'gift';
 
 /** Kuşanılabilen yuvalar (her birinde en fazla bir eşya). Sanat eserleri hep etkindir, diğerleri tüketilir. */
 export const EQUIP_SLOTS: readonly ItemSlot[] = [...INSTRUMENTS, 'outfit', 'vehicle', 'pet'];
@@ -45,7 +47,50 @@ export interface ItemDef {
   season?: Season;
   /** Nadir: yalnızca bu şehrin dükkânında satılır */
   cityOnly?: string;
+  /** Tüketim eşyası (yuva 'consumable'): envanterden kullanılınca verdiği küçük, anlık etkiler.
+   *  Bütün tüketim eşyaları ortak bir beklemeye tabidir (CONSUMABLE_COOLDOWN_HOURS). */
+  use?: ItemUse;
+  /** Hediyelik (yuva 'gift'): bir arkadaşa hediye edilince arkadaşlığa eklenen puan (aynı kişiye günde bir kez) */
+  gift?: { friendship: number };
+  /** Bakım eşyası: yıpranmış ekipmanı onarır. all: bütün kuşanılmış ekipman; slots: yalnızca bu yuvalar (yoksa her yıpranan yuva) */
+  repair?: { wear: number; all?: boolean; slots?: ItemSlot[] };
 }
+
+export interface ItemUse {
+  energy?: number;
+  mood?: number;
+  health?: number;
+  inspiration?: number;
+}
+/** Tüketim etkilerinin tavanı (tek kullanımda); test her eşyayı bununla denetler */
+export const MAX_ITEM_USE: Required<ItemUse> = { energy: 15, mood: 10, health: 8, inspiration: 6 };
+/** İki tüketim eşyası arasında en az bu kadar oyun saati (yemekten ayrı) */
+export const CONSUMABLE_COOLDOWN_HOURS = 3;
+/** Hediyelik eşyanın arkadaşlık katkısı tavanı ve aynı kişiye tekrar etkisi için bekleme (oyun saati) */
+export const MAX_GIFT_FRIENDSHIP = 4;
+export const GIFT_BONUS_COOLDOWN_HOURS = 24;
+
+/** Yuva adları (dükkân rafı ve atölye grupları için) */
+export const SLOT_NAMES: Record<ItemSlot, L> = {
+  vocals: { tr: 'Mikrofonlar', en: 'Microphones' },
+  guitar: { tr: 'Gitarlar', en: 'Guitars' },
+  bass: { tr: 'Bas gitarlar', en: 'Basses' },
+  drums: { tr: 'Davullar', en: 'Drums' },
+  keys: { tr: 'Klavyeler', en: 'Keyboards' },
+  sax: { tr: 'Saksofonlar', en: 'Saxophones' },
+  violin: { tr: 'Kemanlar', en: 'Violins' },
+  percussion: { tr: 'Perküsyon', en: 'Percussion' },
+  outfit: { tr: 'Kıyafetler', en: 'Outfits' },
+  art: { tr: 'Sanat ve koleksiyon', en: 'Art and collectibles' },
+  vehicle: { tr: 'Araçlar', en: 'Vehicles' },
+  pet: { tr: 'Evcil hayvanlar', en: 'Pets' },
+  fx: { tr: 'Sahne efektleri', en: 'Stage effects' },
+  material: { tr: 'Malzeme ve bakım', en: 'Materials and care' },
+  spray: { tr: 'Sprey boyalar', en: 'Spray paints' },
+  ring: { tr: 'Yüzükler', en: 'Rings' },
+  consumable: { tr: 'Tüketim', en: 'Consumables' },
+  gift: { tr: 'Hediyelik', en: 'Gifts' },
+};
 
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 export const SEASONS: Season[] = ['spring', 'summer', 'autumn', 'winter'];
@@ -271,9 +316,30 @@ export const ITEMS: ItemDef[] = [
 
 // Veri dosyasındaki ek eşyalar (packages/shared/src/content/items.ts)
 // Şehre özgü nadir eşyalar (content/cities.ts): yalnızca kendi şehrinin dükkânında
-ITEMS.push(...EXTRA_ITEMS, ...REWARD_ITEMS, ...SEASONAL_ITEMS, ...CITY_IDENTITY.map((c) => c.rareItem));
+// Daha fazla kuşanılabilir eşya ve sanat (content/gear.ts), tüketim, hediye, bakım ve malzeme (content/goods.ts)
+ITEMS.push(...EXTRA_ITEMS, ...REWARD_ITEMS, ...SEASONAL_ITEMS, ...CITY_IDENTITY.map((c) => c.rareItem), ...MORE_GEAR, ...GOODS);
 
 export const ITEM_BY_ID: Record<string, ItemDef> = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
+GEAR_SETS.push(...MORE_SETS);
+// Koleksiyonlarda bütün eşya listesine bağlı gruplar: her mevsimden bir sezonluk eşya; atölyede yapılmış bir enstrüman,
+// kıyafet, sanat eseri ve hediyelik
+for (const col of COLLECTIONS) {
+  if (col.id === 'seasons') col.groups = SEASONS.map((s) => ITEMS.filter((i) => i.season === s).map((i) => i.id));
+  if (col.id === 'workshop') {
+    const crafted = ITEMS.filter((i) => i.crafted);
+    col.groups = [
+      crafted.filter((i) => (INSTRUMENTS as readonly string[]).includes(i.slot)).map((i) => i.id),
+      crafted.filter((i) => i.slot === 'outfit').map((i) => i.id),
+      crafted.filter((i) => i.slot === 'art').map((i) => i.id),
+      crafted.filter((i) => i.slot === 'gift').map((i) => i.id),
+    ];
+  }
+}
+/** Envanterdeki eşyalarla tamamlanan koleksiyonlar */
+export const completedCollections = (owned: Iterable<string>) => {
+  const have = new Set(owned);
+  return COLLECTIONS.filter((c) => c.groups.length > 0 && c.groups.every((g) => g.some((id) => have.has(id)))).map((c) => c.id);
+};
 /** Dükkân rafı; cityId verilirse yalnızca o şehre özgü nadir eşyalar da katılır (başka şehrinkiler çıkar) */
 export const itemsForShop = (shop: ShopType, cityId?: string) => ITEMS.filter((i) => i.shop === shop && !i.crafted && !i.reward && (!i.cityOnly || i.cityOnly === cityId));
 /** Kişiye bağlı eşya el değiştiremez (satış, pazar, takas, hediye) */
@@ -319,15 +385,14 @@ export function sessionLevels(venue: keyof typeof SESSION_MUSICIAN, own: { skill
  */
 export const MAX_FX_BONUS = 6;
 export const FX_STACK_DECAY = 0.5;
-export function fxQualityBonus(itemIds: string[]): number {
-  const seen = new Set<string>();
-  const bonuses: number[] = [];
-  for (const id of itemIds) {
-    if (seen.has(id)) continue;
-    seen.add(id);
-    const b = ITEM_BY_ID[id]?.bonus ?? 0;
-    if (b > 0) bonuses.push(b);
-  }
+/** itemBonuses: her efektin kendi bonusu (atölye ürünü farklı olabilir); verilmezse tanımdaki bonus. Aynı efektten en güçlüsü sayılır. */
+export function fxQualityBonus(itemIds: string[], itemBonuses?: (number | null | undefined)[] | null): number {
+  const best = new Map<string, number>();
+  itemIds.forEach((id, i) => {
+    const b = itemBonuses?.[i] ?? ITEM_BY_ID[id]?.bonus ?? 0;
+    best.set(id, Math.max(best.get(id) ?? 0, b));
+  });
+  const bonuses = [...best.values()].filter((b) => b > 0);
   bonuses.sort((a, b) => b - a);
   const total = bonuses.reduce((sum, b, i) => sum + b * FX_STACK_DECAY ** i, 0);
   return Math.round(Math.min(MAX_FX_BONUS, total) * 10) / 10;
@@ -354,7 +419,7 @@ export const NEW_ACCOUNT_TRADE_HOURS = 72;
  * El değiştiren bir eşya bu kadar oyun saati içinde, bu sürede ona sahip olmuş HİÇ KİMSEYE geri dönemez
  * (takas, pazar, hediye). Eskiden yalnızca bir önceki sahibe bakılıyordu; A → B → C → A zinciriyle eşya aynı saatte
  * geri dönüyor, ek hesabın parası kayıpsız ana hesaba taşınıyordu (denge raporu §7). Geçmiş item_handoffs tablosunda
- * (migration 020) tutulur.
+ * (migration 024) tutulur.
  */
 export const ITEM_RETURN_COOLDOWN_HOURS = 168;
 /** Takasta eklenen para, karşılığında alınan eşyaların dükkân değerinin bu katını geçemez (eskiden 2; pazar tavanı 2 kaldı) */
@@ -364,10 +429,15 @@ export const tradeMoneyValue = (shopPrice: number, legendary = false) => Math.ma
 /**
  * İki oyuncu arasında bir yönde akabilecek NET para (takas parası, pazar alışı, VIP para gönderme), kayan
  * PLAYER_TRANSFER_WINDOW_HOURS penceresinde. Ek hesap çiftliğinden ana hesaba aktarım ikili başına haftada bu kadarla
- * sınırlıdır; oyunun tüccarı (NPC) sayılmaz. Akışlar player_money_flows tablosunda (migration 020).
+ * sınırlıdır; oyunun tüccarı (NPC) sayılmaz. Akışlar player_money_flows tablosunda (migration 024).
  */
 export const PAIR_TRANSFER_CAP = 5000;
 export const PLAYER_TRANSFER_WINDOW_HOURS = 168;
 /** Kiralık müzisyenler setlisti önceden öğrenir. */
 export const SESSION_FAMILIARITY = 70;
 export { GEAR_SETS } from './content/items';
+export { COLLECTIONS, type CollectionDef } from './content/gear';
+
+/** Bir eşya hangi yuvadaki yıpranmayı onarabilir? */
+export const repairFits = (kit: ItemDef | undefined, targetSlot: string) =>
+  !!kit?.repair && !kit.repair.all && (!kit.repair.slots || (kit.repair.slots as string[]).includes(targetSlot));

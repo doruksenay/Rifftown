@@ -105,6 +105,9 @@ export async function deleteAccount(userId: number) {
         else await c.query('DELETE FROM bands WHERE id = $1', [b.id]);
       }
     }
+    // Önceki karakterler (ölen ya da mirasını devredip emekliye ayrılan) de hesapla birlikte silinir; çocuk kayıtları
+    // korunur (ebeveyn alanı boşalır)
+    await c.query('DELETE FROM characters WHERE former_user_id = $1 AND user_id IS NULL', [userId]);
     await c.query('DELETE FROM users WHERE id = $1', [userId]);
   });
 }

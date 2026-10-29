@@ -35,3 +35,6 @@ export * from './content/review-parts';
 export * from './content/rewards';
 export * from './content/cities';
 export * from './lessons';
+export * from './attributes';
+export * from './generations';
+export * from './civic-powers';

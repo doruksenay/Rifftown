@@ -83,8 +83,9 @@ export const EXTRA_ITEMS: ItemDef[] = [
   // Eczane rafı (hastane): tek gecelik macerada koruma; birliktelikte tüketilir
   I('condom', 'hospital', 'material', 1, 4, 0, 'Prezervatif', 'Condom', { stackable: true }),
   // Turne bakım malzemeleri (turne ekibi ve araç arızası için)
-  I('repair_kit', 'hardware', 'material', 1, 120, 0, 'Tamir kiti', 'Repair kit', { stackable: true }),
-  I('gear_service', 'stage_shop', 'material', 1, 200, 0, 'Ekipman bakım paketi', 'Gear service pack', { stackable: true }),
+  // Onarım miktarları touring.ts REPAIR ile aynı (test denetler)
+  I('repair_kit', 'hardware', 'material', 1, 120, 0, 'Tamir kiti', 'Repair kit', { stackable: true, repair: { wear: 60 } }),
+  I('gear_service', 'stage_shop', 'material', 1, 200, 0, 'Ekipman bakım paketi', 'Gear service pack', { stackable: true, repair: { wear: 100, all: true } }),
   // Atölyede üretilen yeni ürünler
   I('art_crafted', 'hardware', 'art', 2, 400, 0, 'El yapımı tablo', 'Handmade painting', { crafted: true }),
   I('fx_crafted', 'hardware', 'fx', 2, 300, 0, 'El yapımı piroteknik', 'Handmade pyrotechnics', { crafted: true, stackable: true }),

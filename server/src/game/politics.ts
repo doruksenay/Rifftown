@@ -1,7 +1,23 @@
 // Seçimler ve siyasi makamlar. Aday olmak ve oy vermek sadece VIP üyelere açıktır.
 // Her şehirde her makam için sürekli bir seçim dönemi açıktır; dönem bitince en çok oyu alan makama gelir.
+// Makam yetkileri (civic-powers.ts): her makamın şehirde dar ve tavanlı tek bir kararı vardır. Karar yalnızca onu veren
+// makam sahibi görevdeyken geçerlidir; makam el değiştirince (seçim, ölüm, emeklilik) varsayılana döner ve kaydedilir.
 
-import { CITIES, CITY_BY_ID, ELECTION_DAYS, OFFICES, OFFICE_BY_ID, gameHoursToMs, unmetRequirement } from '@rifftown/shared';
+import {
+  CITIES,
+  CITY_BY_ID,
+  ELECTION_DAYS,
+  OFFICES,
+  OFFICE_BY_ID,
+  POLICIES,
+  POLICY_CHANGE_COOLDOWN_HOURS,
+  type OfficeId,
+  clampPolicy,
+  gameHoursToMs,
+  officeSalary,
+  policyNews,
+  unmetRequirement,
+} from '@rifftown/shared';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
 import { fail } from '../errors';
@@ -67,6 +83,8 @@ export async function closeDueElections(): Promise<number> {
         if (prev && prev.character_id !== winner.character_id && !ranked.some((r) => r.character_id === prev.character_id)) {
           await notify(c, prev.character_id, 'office_lost', { cityId: e.city_id, office: e.office });
         }
+        // Makam el değiştirdiyse önceki sahibin kararı varsayılana döner (kayıt ve şehir haberiyle)
+        if (prev && Number(prev.character_id) !== Number(winner.character_id)) await resetPolicy(c, e.city_id, e.office, Number(prev.character_id));
       }
       // Aday çıkmazsa mevcut makam sahibi görevine devam eder
       return true;
@@ -84,9 +102,10 @@ export async function payOfficeSalaries(): Promise<number> {
     // Kilitli satırları atla: aynı anda çalışan başka bir zamanlayıcı aynı maaşı iki kez ödeyemez
     const due = await many(
       c,
-      `SELECT h.city_id, h.office, h.character_id, ch.npc,
+      `SELECT h.city_id, h.office, h.character_id, ch.npc, p.level AS policy_level,
               floor(extract(epoch FROM (now() - h.last_paid_at)) * 1000 / $1)::int AS days
          FROM office_holders h JOIN characters ch ON ch.id = h.character_id
+         LEFT JOIN city_policies p ON p.city_id = h.city_id AND p.office = h.office AND p.holder_id = h.character_id
         WHERE h.last_paid_at <= now() - ($1::double precision * interval '1 millisecond')
         FOR UPDATE OF h SKIP LOCKED`,
       [day],
@@ -99,8 +118,9 @@ export async function payOfficeSalaries(): Promise<number> {
           WHERE city_id = $1 AND office = $2`,
         [h.city_id, h.office, h.days * day],
       );
-      // Oyunun kendi makam sahipleri maaş almaz (para basılmasın)
-      if (!h.npc) await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [h.character_id, office.salaryPerDay * h.days]);
+      // Oyunun kendi makam sahipleri maaş almaz (para basılmasın). Karar maaşı hiç artırmaz; valinin indirimi maaşından düşer.
+      const salary = officeSalary(office.salaryPerDay, office.id, Number(h.policy_level ?? 0));
+      if (!h.npc) await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [h.character_id, salary * h.days]);
     }
     return due.length;
   });
@@ -161,6 +181,107 @@ export async function setAnnouncement(characterId: number, cityId: string, text:
   return { ok: true };
 }
 
+// ---------- Makam yetkileri ----------
+
+const hoursMs = (h: number) => gameHoursToMs(h, config.gameSpeed);
+
+/**
+ * Şehirde yürürlükteki kararlar (makam → basamak). Karar yalnızca onu veren makam sahibi hâlâ görevdeyse ve oyuncuysa
+ * geçerlidir; NPC makam sahibi, boş makam ya da el değiştirmiş makamda varsayılan (0).
+ */
+export async function cityPolicies(db: Db, cityId: string): Promise<Record<OfficeId, number>> {
+  const out = { mayor: 0, governor: 0, police_chief: 0 } as Record<OfficeId, number>;
+  const rows = await many(
+    db,
+    `SELECT p.office, p.level FROM city_policies p
+       JOIN office_holders h ON h.city_id = p.city_id AND h.office = p.office AND h.character_id = p.holder_id
+       JOIN characters ch ON ch.id = h.character_id
+      WHERE p.city_id = $1 AND NOT ch.npc`,
+    [cityId],
+  );
+  for (const r of rows) if (r.office in out) out[r.office as OfficeId] = clampPolicy(r.office as OfficeId, Number(r.level));
+  return out;
+}
+
+/** Karar haberi: şehir gazetesinde (kesin sayı yok, kelimeyle); yazar yok, basın etkisi yok */
+async function policyArticle(c: Db, cityId: string, office: OfficeId, change: 'up' | 'down' | 'reset', who: string) {
+  const city = CITY_BY_ID[cityId];
+  if (!city) return null;
+  const n = policyNews(POLICIES[office].id, change, who, city.name);
+  const a = await one(
+    c,
+    `INSERT INTO articles(author_id, city_id, band_id, kind, tone, title, body, title_en, body_en, impact, npc)
+     VALUES (NULL, $1, NULL, 'news', 'neutral', $2, $3, $4, $5, 0, FALSE) RETURNING id`,
+    [cityId, n.tr.title, n.tr.body, n.en.title, n.en.body],
+  );
+  return Number(a.id);
+}
+
+/**
+ * Makam el değiştirdi (seçim, ölüm, emeklilik): önceki sahibin kararı varsayılana döner. Karar zaten varsayılandaysa
+ * kayıt ve haber yazılmaz. Çağıran işlem makam satırını değiştiriyor olmalı (aynı işlem).
+ */
+export async function resetPolicy(c: Db, cityId: string, office: string, prevHolder: number) {
+  if (!(office in POLICIES)) return false;
+  const o = office as OfficeId;
+  const p = await one(c, 'SELECT level, holder_id FROM city_policies WHERE city_id = $1 AND office = $2 FOR UPDATE', [cityId, o]);
+  if (!p || Number(p.holder_id) !== prevHolder || Number(p.level) === 0) return false;
+  await c.query('UPDATE city_policies SET level = 0, holder_id = NULL, set_at = now() WHERE city_id = $1 AND office = $2', [cityId, o]);
+  const articleId = await policyArticle(c, cityId, o, 'reset', '');
+  await c.query(
+    `INSERT INTO policy_log(city_id, office, policy, character_id, old_level, new_level, reason, article_id) VALUES ($1, $2, $3, $4, $5, 0, 'reset', $6)`,
+    [cityId, o, POLICIES[o].id, prevHolder, Number(p.level), articleId],
+  );
+  return true;
+}
+
+/** Makam sahibinin bir sonraki karar zamanı (bekleme süresi): kendi son kararından itibaren */
+async function nextChangeAt(db: Db, cityId: string, office: string, characterId: number): Promise<Date | null> {
+  const last = await one(
+    db,
+    `SELECT max(created_at) AS at FROM policy_log WHERE city_id = $1 AND office = $2 AND character_id = $3 AND reason = 'set'`,
+    [cityId, office, characterId],
+  );
+  if (!last?.at) return null;
+  const at = new Date(last.at.getTime() + hoursMs(POLICY_CHANGE_COOLDOWN_HOURS));
+  return at.getTime() > Date.now() ? at : null;
+}
+
+/**
+ * Makam sahibi kararını değiştirir: yalnızca VIP üye, yalnızca kendi makamında, dar aralıkta, günde bir kez.
+ * Kilit sırası: makam satırı, sonra karar satırı. Karakter satırı kilitlenmez (para ya da karakter değişmez): maaş
+ * ödemesi makam → karakter, ölüm/emeklilik karakter → makam sırasıyla kilitlediği için burada karakteri kilitlemek
+ * kilitlenmeye (deadlock) yol açabilirdi.
+ */
+export async function setPolicy(characterId: number, cityId: string, office: string, level: number, isVip: boolean) {
+  if (!isVip) fail('vip_required', 403);
+  if (!CITY_BY_ID[cityId]) fail('not_found', 404);
+  if (!(office in POLICIES)) fail('invalid_office');
+  const o = office as OfficeId;
+  const def = POLICIES[o];
+  if (!Number.isInteger(level) || level < def.min || level > def.max) fail('invalid_level');
+  return tx(async (c) => {
+    const ch = await getCharacter(c, characterId);
+    const h = await one(c, 'SELECT character_id FROM office_holders WHERE city_id = $1 AND office = $2 FOR UPDATE', [cityId, o]);
+    if (!h || Number(h.character_id) !== characterId) fail('not_office_holder', 403);
+    const cur = await one(c, 'SELECT level, holder_id FROM city_policies WHERE city_id = $1 AND office = $2 FOR UPDATE', [cityId, o]);
+    const old = cur && Number(cur.holder_id) === characterId ? Number(cur.level) : 0;
+    if (old === level) return { ok: true, changed: false, policyLevel: level };
+    if (await nextChangeAt(c, cityId, o, characterId)) fail('policy_cooldown', 429);
+    await c.query(
+      `INSERT INTO city_policies(city_id, office, level, holder_id, set_at) VALUES ($1, $2, $3, $4, now())
+       ON CONFLICT (city_id, office) DO UPDATE SET level = EXCLUDED.level, holder_id = EXCLUDED.holder_id, set_at = now()`,
+      [cityId, o, level, characterId],
+    );
+    const articleId = await policyArticle(c, cityId, o, level > old ? 'up' : 'down', ch.name);
+    await c.query(
+      `INSERT INTO policy_log(city_id, office, policy, character_id, old_level, new_level, reason, article_id) VALUES ($1, $2, $3, $4, $5, $6, 'set', $7)`,
+      [cityId, o, def.id, characterId, old, level, articleId],
+    );
+    return { ok: true, changed: true, policyLevel: level, oldLevel: old };
+  });
+}
+
 export async function civicInfo(cityId: string, viewerId: number) {
   if (!CITY_BY_ID[cityId]) fail('not_found', 404);
   const isVip = await characterIsVip(pool, viewerId);
@@ -213,5 +334,54 @@ export async function civicInfo(cityId: string, viewerId: number) {
       announcement: h.announcement,
     })),
     elections: out,
+    ...(await policiesView(cityId, viewerId)),
+  };
+}
+
+/** Şehirdeki kararlar (herkes görür; VIP olmayana seviye yalnızca yönüyle gider) ve son kayıtlar */
+async function policiesView(cityId: string, viewerId: number) {
+  const levels = await cityPolicies(pool, cityId);
+  const rows = await many(
+    pool,
+    `SELECT p.office, p.set_at, p.holder_id, ch.name FROM city_policies p
+       JOIN office_holders h ON h.city_id = p.city_id AND h.office = p.office AND h.character_id = p.holder_id
+       JOIN characters ch ON ch.id = p.holder_id
+      WHERE p.city_id = $1 AND NOT ch.npc`,
+    [cityId],
+  );
+  const holders = await many(pool, 'SELECT office, character_id FROM office_holders WHERE city_id = $1', [cityId]);
+  const isVip = await characterIsVip(pool, viewerId);
+  const policies = [];
+  for (const o of OFFICES) {
+    const r = rows.find((x) => x.office === o.id);
+    const mine = holders.some((x) => x.office === o.id && Number(x.character_id) === viewerId);
+    const next = mine ? await nextChangeAt(pool, cityId, o.id, viewerId) : null;
+    policies.push({
+      office: o.id,
+      policy: POLICIES[o.id].id,
+      policyLevel: levels[o.id],
+      setBy: r && levels[o.id] !== 0 ? { characterId: Number(r.holder_id), name: r.name as string } : null,
+      setAt: r && levels[o.id] !== 0 ? new Date(r.set_at).toISOString() : null,
+      canChange: mine && isVip && !next,
+      nextChangeAt: next ? next.toISOString() : null,
+    });
+  }
+  const log = await many(
+    pool,
+    `SELECT l.*, ch.name FROM policy_log l LEFT JOIN characters ch ON ch.id = l.character_id
+      WHERE l.city_id = $1 ORDER BY l.created_at DESC, l.id DESC LIMIT 10`,
+    [cityId],
+  );
+  return {
+    policies,
+    policyLog: log.map((l) => ({
+      office: l.office,
+      policy: l.policy,
+      oldLevel: Number(l.old_level),
+      newLevel: Number(l.new_level),
+      reason: l.reason,
+      name: l.reason === 'set' ? (l.name ?? null) : null,
+      at: new Date(l.created_at).toISOString(),
+    })),
   };
 }

@@ -4,8 +4,9 @@
 import { CITY_BY_ID, GENRE_NAMES, type L } from './world';
 import { CITY_IDENTITY } from './content/cities';
 import { STAT_ACHIEVEMENTS, type StatRule } from './content/progress';
+import { COLLECTIONS } from './content/gear';
 
-export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social' | 'media' | 'legacy' | 'discovery' | 'cities';
+export type AchievementCategory = 'start' | 'stage' | 'records' | 'skills' | 'career' | 'crime' | 'social' | 'media' | 'legacy' | 'discovery' | 'cities' | 'collections';
 
 export const ACHIEVEMENT_CATEGORY_NAMES: Record<AchievementCategory, L> = {
   start: { tr: 'İlk adımlar', en: 'First steps' },
@@ -19,6 +20,7 @@ export const ACHIEVEMENT_CATEGORY_NAMES: Record<AchievementCategory, L> = {
   legacy: { tr: 'Efsaneden sonra', en: 'Beyond legend' },
   discovery: { tr: 'Keşifler', en: 'Discoveries' },
   cities: { tr: 'Şehirler', en: 'Cities' },
+  collections: { tr: 'Koleksiyonlar', en: 'Collections' },
 };
 
 export interface AchievementDef {
@@ -123,6 +125,12 @@ ACHIEVEMENTS.push(
 
 // Veri dosyasındaki istatistik kurallı başarımlar
 ACHIEVEMENTS.push(...STAT_ACHIEVEMENTS);
+
+// Koleksiyonlar (content/gear.ts): her gruptan bir eşyaya sahip olunca; sunucu envantere bakar
+export const collectionAchievementId = (collectionId: string) => `collection_${collectionId}`;
+ACHIEVEMENTS.push(
+  ...COLLECTIONS.map((c) => ({ id: collectionAchievementId(c.id), category: 'collections' as const, points: c.points, name: c.name, about: c.about })),
+);
 
 export const ACHIEVEMENT_BY_ID: Record<string, AchievementDef> = Object.fromEntries(ACHIEVEMENTS.map((a) => [a.id, a]));
 export const TOTAL_ACHIEVEMENT_POINTS = ACHIEVEMENTS.reduce((s, a) => s + a.points, 0);

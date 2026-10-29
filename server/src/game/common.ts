@@ -22,6 +22,8 @@ import {
   type Genre,
   gearSetBonus,
   genreAffinity,
+  type Attributes,
+  normalizeAttributes,
 } from '@rifftown/shared';
 import type { Db } from '../db';
 import { many, one } from '../db';
@@ -65,7 +67,23 @@ export interface CharacterRow {
   addicted_since: Date | null;
   critical_since: Date | null;
   dead_at: Date | null;
+  /** Mirası devredip emekliye ayrıldıysa (nesiller); ölü gibi kullanıcıdan koparılır */
+  retired_at?: Date | null;
+  /** Yaş başlangıcı: 18 yaşında olduğu an (boşsa created_at; mirasçıda çocuğun gerçek yaşı) */
+  adult_at?: Date | null;
+  family_name?: string | null;
+  generation?: number;
+  child_id?: number | null;
+  predecessor_id?: number | null;
+  /** Nitelikler (attributes.ts); oyunun kendi müzisyenlerinde boş nesne */
+  attributes: Partial<Attributes>;
+  /** Harcanmamış ve ömür boyu kazanılan XP */
+  xp: number;
+  xp_total: number;
 }
+
+/** Yaşın hesaplandığı an: karakterin 18 yaşında olduğu an (mirasçıda çocuğun doğumundan 18 oyun yılı sonrası) */
+export const ageRef = (r: { created_at: Date; adult_at?: Date | null }) => r.adult_at ?? r.created_at;
 
 /** Profil fotoğrafının adresi (/api'ye göre); fotoğraf yoksa null */
 export const avatarUrl = (id: number, version: number | null | undefined) => (version && version > 0 ? `/avatars/${id}?v=${version}` : null);
@@ -116,8 +134,10 @@ export const toCharacterDto = (
   bank: r.bank ?? 0,
   hotel: extra.hotel ?? null,
   business: extra.business ?? null,
-  age: Math.floor(config.agingEnabled ? ageOf(r.created_at, config.gameSpeed) : START_AGE),
+  age: Math.floor(config.agingEnabled ? ageOf(ageRef(r), config.gameSpeed) : START_AGE),
   addicted: !!r.addicted_since,
+  attributes: normalizeAttributes(r.attributes),
+  xp: Math.floor(Number(r.xp ?? 0) + 1e-6),
   };
 };
 

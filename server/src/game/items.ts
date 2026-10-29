@@ -1,7 +1,6 @@
 // Eşyalar: envanter görünümü, ikinci el pazarı, sprey boya ve isim verme, atölyede üretim.
 
 import {
-  CRAFT_HOURS,
   type InventoryItemDto,
   ITEM_BY_ID,
   type ListingDto,
@@ -10,9 +9,12 @@ import {
   MAX_LISTINGS,
   RECIPE_BY_ID,
   type Skills,
+  meetsRecipeSkill,
+  recipeHours,
   clamp,
   containsProfanity,
   craftBonus,
+  craftAttrBonus,
   diminishing,
   isPaintable,
   knows,
@@ -118,7 +120,7 @@ export async function ringPledged(db: Db, inventoryId: number) {
 /**
  * Eşya bekleme süresi içinde bu kişide bulunmuşsa ona geri dönemez: yalnızca bir önceki sahip değil, zincirdeki
  * HER el (A → B → C → A rotasyonu ek hesabın parasını kayıpsız taşıyordu). Geçmiş item_handoffs tablosunda;
- * migration 020'den önceki tek kayıt (prev_owner, handed_at) da okunur.
+ * migration 024'ten önceki tek kayıt (prev_owner, handed_at) da okunur.
  */
 export async function returnsTooSoon(db: Db, inv: { id: unknown; prev_owner?: unknown; handed_at?: Date | null }, to: number) {
   const since = new Date(Date.now() - gameHoursToMs(ITEM_RETURN_COOLDOWN_HOURS, config.gameSpeed));
@@ -131,7 +133,7 @@ export async function returnsTooSoon(db: Db, inv: { id: unknown; prev_owner?: un
 }
 
 /** Eşya el değiştirir; önceki sahibi ve zamanı not edilir, geçmişe bir satır eklenir */
-export async function handOver(c: Db, inventoryId: number, from: number, to: number, kind: 'trade' | 'market' | 'gift') {
+export async function handOver(c: Db, inventoryId: number, from: number, to: number, kind: 'trade' | 'market' | 'gift' | 'inheritance') {
   await c.query(
     'UPDATE inventory SET character_id = $2, listed = FALSE, equipped = FALSE, prev_owner = $3, handed_at = now() WHERE id = $1',
     [inventoryId, to, from],
@@ -269,6 +271,8 @@ export async function prepareCraft(c: pg.PoolClient, ch: CharacterRow, recipeId:
   const loc = LOCATION_BY_ID[locationId];
   if (!loc || loc.type !== 'hardware') fail('invalid_location');
   if (loc!.cityId !== ch.city_id) fail('not_in_city');
+  // Bazı tarifler bir becerinin belli bir seviyesini ister (ör. arch-top gitar için çalgı yapımcılığında amatör)
+  if (!meetsRecipeSkill(recipe!, ch.skills)) fail('craft_skill_low', 409);
   const used: number[] = [];
   for (const [mat, qty] of Object.entries(recipe!.materials)) {
     const rows = await many(
@@ -280,7 +284,7 @@ export async function prepareCraft(c: pg.PoolClient, ch: CharacterRow, recipeId:
     used.push(...rows.map((r) => Number(r.id)));
   }
   await c.query('DELETE FROM inventory WHERE id = ANY($1::bigint[])', [used]);
-  return { hours: CRAFT_HOURS, locationId: loc!.id, params: { recipe: recipe!.id, materials: recipe!.materials } };
+  return { hours: recipeHours(recipe!), locationId: loc!.id, params: { recipe: recipe!.id, materials: recipe!.materials } };
 }
 
 /** Üretimin sonucu. Yarıda bırakılırsa malzemeler geri verilir, ürün çıkmaz. */
@@ -296,7 +300,8 @@ export async function resolveCraft(c: pg.PoolClient, ch: CharacterRow, params: R
     }
     return { cancelled: true, refunded: true };
   }
-  const bonus = craftBonus(recipe, Math.min(100, lv(skills, 'craftsmanship') + skillBonus(skills, 'crafting')), rand);
+  // El becerisi niteliği el işçiliğine eklenir (en fazla +6, toplam 100'ü geçmez)
+  const bonus = craftBonus(recipe, Math.min(100, lv(skills, 'craftsmanship') + skillBonus(skills, 'crafting') + craftAttrBonus(ch.attributes)), rand);
   const def = ITEM_BY_ID[recipe.itemId];
   const r = await one(c, 'INSERT INTO inventory(character_id, item_id, slot, bonus, crafted_by) VALUES ($1, $2, $3, $4, $1) RETURNING id', [
     ch.id,

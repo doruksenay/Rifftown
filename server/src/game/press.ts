@@ -28,6 +28,7 @@ import {
   lv,
   maskProfanity,
   pressChance,
+  pressAttrBonus,
   pressGain,
   priceFor,
 } from '@rifftown/shared';
@@ -124,7 +125,8 @@ export async function resolvePress(c: pg.PoolClient, ch: CharacterRow, params: R
   const cityId = params.cityId as string;
   const fame = Number((await one(c, 'SELECT fame FROM band_fame WHERE band_id = $1 AND city_id = $2', [m.band_id, cityId]))?.fame ?? 0);
   const s = { media: lv(ch.skills, 'media'), rhetoric: lv(ch.skills, 'rhetoric'), charisma: lv(ch.skills, 'charisma') };
-  const success = rand() < pressChance(s, fame);
+  // Çekicilik niteliği tutma şansına küçük bir pay ekler (en fazla +0,05; üst sınır %95 aynı)
+  const success = rand() < Math.min(0.95, pressChance(s, fame) + pressAttrBonus(ch.attributes));
   let delta = success ? pressGain(mode, s) : -rules.loss;
   let defused = false;
   // Başarılı basın toplantısı son günlerdeki skandalı yatıştırır

@@ -11,7 +11,7 @@ import {
   GIG_GEAR_WEAR,
   INSTRUMENTS,
   ITEM_BY_ID,
-  REPAIR,
+  repairFits,
   TOUR_FAME_BONUS,
   TOUR_MAX_CITIES,
   TOUR_MAX_DAYS,
@@ -133,21 +133,27 @@ export async function wearGigGear(c: Db, characterIds: number[], roles: string[]
   }
 }
 
-/** Tamir kitiyle tek eşya ya da bakım paketiyle bütün kuşanılmış ekipman onarılır */
+/**
+ * Bakım eşyasıyla onarım (items.ts ItemDef.repair): tamir kiti her yıpranan eşyayı, bakım setleri yalnızca kendi
+ * yuvalarını (tel takımı telli çalgıları, araç bakım seti aracı...) onarır; bakım paketi bütün kuşanılmış ekipmanı.
+ */
 export async function repairGear(characterId: number, kitInventoryId: number, targetInventoryId?: number) {
   return tx(async (c) => {
     await lockCharacter(c, characterId);
     const kit = await one(c, 'SELECT * FROM inventory WHERE id = $1 AND character_id = $2 AND NOT listed FOR UPDATE', [kitInventoryId, characterId]);
-    if (!kit || (kit.item_id !== 'repair_kit' && kit.item_id !== 'gear_service')) fail('not_repair_kit');
+    const def = kit ? ITEM_BY_ID[kit.item_id] : undefined;
+    if (!kit || !def?.repair) fail('not_repair_kit');
+    const fix = def!.repair!;
     let repaired = 0;
-    if (kit.item_id === 'gear_service') {
-      const r = await c.query('UPDATE inventory SET wear = GREATEST(0, wear - $2) WHERE character_id = $1 AND equipped AND wear > 0', [characterId, REPAIR.serviceWear]);
+    if (fix.all) {
+      const r = await c.query('UPDATE inventory SET wear = GREATEST(0, wear - $2) WHERE character_id = $1 AND equipped AND wear > 0', [characterId, fix.wear]);
       repaired = r.rowCount ?? 0;
     } else {
       const t = await one(c, 'SELECT * FROM inventory WHERE id = $1 AND character_id = $2 FOR UPDATE', [targetInventoryId ?? 0, characterId]);
       if (!t) fail('not_found', 404);
+      if (!repairFits(def, t.slot)) fail('wrong_repair_kit', 409);
       if (Number(t.wear) <= 0) fail('not_worn', 409);
-      await c.query('UPDATE inventory SET wear = GREATEST(0, wear - $2) WHERE id = $1', [t.id, REPAIR.kitWear]);
+      await c.query('UPDATE inventory SET wear = GREATEST(0, wear - $2) WHERE id = $1', [t.id, fix.wear]);
       repaired = 1;
     }
     if (!repaired) fail('not_worn', 409);

@@ -1,9 +1,24 @@
-import { CITIES, GENRES, GENRE_NAMES, type Genre, INSTRUMENTS, type Instrument, ROLE_NAMES } from '@rifftown/shared';
+import {
+  ATTR_START_MAX_PER,
+  ATTR_START_POINTS,
+  ATTRIBUTE_DEFS,
+  type AttributeId,
+  CITIES,
+  GENRES,
+  GENRE_NAMES,
+  type Genre,
+  INSTRUMENTS,
+  type Instrument,
+  ROLE_NAMES,
+  defaultStartAllocation,
+  startingAttributes,
+} from '@rifftown/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { Avatar, Body, Button, Card, Choice, Field, Heading, Loading, Screen, ScreenHeader, Small, useToast } from '@/components/ui';
+import { TierText } from '@/components/tier';
+import { Avatar, Body, Button, Card, Choice, Field, Heading, Loading, Row, Screen, ScreenHeader, Small, useToast } from '@/components/ui';
 import { money } from '@/lib/format';
 import { api } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
@@ -28,18 +43,30 @@ export default function CreateCharacter() {
   const [genre, setGenre] = useState<Genre>('rock');
   const [color, setColor] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // Başlangıç puanları: oyuncu dokunana kadar ilk enstrümana göre varsayılan dağılım
+  const [custom, setCustom] = useState<Partial<Record<AttributeId, number>> | null>(null);
 
   if (!ready) return <Loading />;
   if (!token) return <Redirect href="/login" />;
   if (me.data?.character) return <Redirect href="/" />;
 
   const countries = [...new Map(CITIES.map((ct) => [ct.countryCode, ct.country])).entries()];
+  const alloc = custom ?? defaultStartAllocation(instrument);
+  const placed = Object.values(alloc).reduce<number>((a, b) => a + (b ?? 0), 0);
+  const left = ATTR_START_POINTS - placed;
+  const preview = startingAttributes(instrument, alloc);
+  const bump = (id: AttributeId, d: number) => {
+    const cur = alloc[id] ?? 0;
+    const next = cur + d;
+    if (next < 0 || next > ATTR_START_MAX_PER || (d > 0 && left <= 0)) return;
+    setCustom({ ...alloc, [id]: next });
+  };
   const picked = color ?? colors.data?.[0] ?? '#0E6FBF';
 
   const submit = async () => {
     setBusy(true);
     try {
-      await api.post('/character', { name: name.trim(), cityId, mainInstrument: instrument, favoriteGenre: genre, avatarColor: picked });
+      await api.post('/character', { name: name.trim(), cityId, mainInstrument: instrument, favoriteGenre: genre, avatarColor: picked, startAttributes: alloc });
       await qc.invalidateQueries({ queryKey: ['me'] });
       router.replace('/');
     } catch (e) {
@@ -57,6 +84,12 @@ export default function CreateCharacter() {
           <Body>{t('deathTitle', { name: me.data.death.name })}</Body>
           <Small>{t(me.data.death.cause === 'old_age' ? 'deathCause_old_age' : 'deathCause_neglect')}</Small>
           {me.data.death.inheritance > 0 ? <Small>{t('deathInheritance', { money: money(me.data.death.inheritance) })}</Small> : null}
+          {me.data.heirsAvailable ? (
+            <>
+              <Small style={{ marginTop: space.sm }}>{t('heirsAvailableDeath')}</Small>
+              <Button title={t('continueAsHeir')} small variant="secondary" style={{ alignSelf: 'flex-start', marginTop: space.sm }} onPress={() => router.push('/succession')} />
+            </>
+          ) : null}
         </Card>
       ) : null}
       <Body color={c.inkSoft} style={{ marginBottom: space.xl }}>
@@ -116,7 +149,28 @@ export default function CreateCharacter() {
       <Heading>{t('favoriteGenre')}</Heading>
       <Choice options={GENRES.map((g) => ({ value: g, label: p(GENRE_NAMES[g]) }))} value={genre} onChange={setGenre} />
 
-      <Button title={t('createCharacter')} onPress={submit} loading={busy} disabled={name.trim().length < 3} style={{ marginTop: space.xxl }} />
+      <Heading>{t('startAttributes')}</Heading>
+      <Small style={{ marginBottom: space.sm }}>{t('startAttributesHint', { n: left })}</Small>
+      {ATTRIBUTE_DEFS.map((def) => (
+        <Row key={def.id} style={{ alignItems: 'center', marginBottom: space.xs }}>
+          <View style={{ flex: 1 }}>
+            <Body>{p(def.name)}</Body>
+            <TierText scale="attribute" value={preview[def.id]} />
+          </View>
+          <Button title="−" small variant="secondary" accessibilityLabel={`${p(def.name)} −1`} disabled={(alloc[def.id] ?? 0) <= 0} onPress={() => bump(def.id, -1)} />
+          <Small style={{ minWidth: 28, textAlign: 'center' }}>{`+${alloc[def.id] ?? 0}`}</Small>
+          <Button
+            title="+"
+            small
+            variant="secondary"
+            accessibilityLabel={`${p(def.name)} +1`}
+            disabled={left <= 0 || (alloc[def.id] ?? 0) >= ATTR_START_MAX_PER}
+            onPress={() => bump(def.id, 1)}
+          />
+        </Row>
+      ))}
+
+      <Button title={t('createCharacter')} onPress={submit} loading={busy} disabled={name.trim().length < 3 || left !== 0} style={{ marginTop: space.xxl }} />
     </Screen>
   );
 }

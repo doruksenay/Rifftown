@@ -8,7 +8,11 @@ import {
   HOTEL_NIGHT_OPTIONS,
   HOTEL_PRICE_PER_NIGHT,
   HOUR_OPTIONS,
+  INSTRUMENTS,
   ITEM_BY_ID,
+  SKILL_BY_ID,
+  meetsRecipeSkill,
+  recipeHours,
   LOCATION_BY_ID,
   mealsIn,
   RECIPES,
@@ -28,6 +32,9 @@ import { duration, money } from '@/lib/format';
 import { useInventory, useRun } from '@/lib/hooks';
 import { useI18n } from '@/lib/i18n';
 import { useMe } from '@/lib/session';
+import { itemBonusText } from '@/lib/item-text';
+import type { StringKey } from '@/lib/strings';
+import { ItemArt } from '@/components/art/items';
 import { space, useColors } from '@/theme';
 
 const cityOf = (locationId: string) => CITY_BY_ID[LOCATION_BY_ID[locationId].cityId];
@@ -237,6 +244,17 @@ export function Gym({ locationId }: { locationId: string }) {
 
 // ---------- Atölye ----------
 
+type RecipeGroup = 'all' | 'instruments' | 'outfit' | 'art' | 'fx' | 'gift' | 'consumable' | 'material';
+const RECIPE_GROUPS: RecipeGroup[] = ['all', 'instruments', 'outfit', 'art', 'fx', 'gift', 'consumable', 'material'];
+/** Tarifin grubu: ürünün yuvasına göre (yüzük hediyelik sayılır) */
+const recipeGroupOf = (itemId: string): RecipeGroup => {
+  const slot = ITEM_BY_ID[itemId]?.slot;
+  if (!slot) return 'material';
+  if ((INSTRUMENTS as readonly string[]).includes(slot)) return 'instruments';
+  if (slot === 'ring') return 'gift';
+  return (RECIPE_GROUPS as string[]).includes(slot) ? (slot as RecipeGroup) : 'material';
+};
+
 export function Workshop({ locationId }: { locationId: string }) {
   const { t, p, lang } = useI18n();
   const c = useColors();
@@ -244,22 +262,39 @@ export function Workshop({ locationId }: { locationId: string }) {
   const inv = useInventory();
   const busy = useBusy();
   const { run, pending } = useRun();
+  const [group, setGroup] = useState<RecipeGroup>('all');
   const have = (id: string) => (inv.data ?? []).filter((i) => i.itemId === id && !i.listed).length;
-  const skill = me.data?.character?.skills.craftsmanship ?? 0;
+  const skills = me.data?.character?.skills ?? {};
+  const skill = skills.craftsmanship ?? 0;
+  const list = RECIPES.filter((r) => group === 'all' || recipeGroupOf(r.itemId) === group);
   return (
     <View>
       <Heading>{t('workshop')}</Heading>
       <Body color={c.inkSoft}>{t('workshopIntro')}</Body>
       <Small style={{ marginTop: space.xs }}>{`${t('skills')}: ${tierName('skill', skill, lang)}`}</Small>
       <View style={{ height: space.md }} />
-      {RECIPES.map((r, i) => {
+      <Choice options={RECIPE_GROUPS.map((g) => ({ value: g, label: t(`recipeGroup_${g}` as StringKey) }))} value={group} onChange={setGroup} />
+      <View style={{ height: space.md }} />
+      {list.map((r, i) => {
         const mats = Object.entries(r.materials);
-        const ready = mats.every(([id, n]) => have(id) >= n);
+        const skillOk = meetsRecipeSkill(r, skills);
+        const ready = skillOk && mats.every(([id, n]) => have(id) >= n);
+        const out = ITEM_BY_ID[r.itemId];
+        const quality = r.bonus[1] > 0 ? t('craftRange', { min: r.bonus[0], max: r.bonus[1] }) : itemBonusText(out, t, p);
+        const needs = r.skill ? t('recipeNeeds', { skill: p(SKILL_BY_ID[r.skill.id]?.name ?? { tr: r.skill.id, en: r.skill.id }), tier: tierName('skill', r.skill.min, lang) }) : null;
         return (
           <ListRow
             key={r.id}
+            left={<ItemArt itemId={r.itemId} size={40} />}
             title={p(r.name)}
-            subtitle={`${t('needs', { list: mats.map(([id, n]) => `${n}× ${p(ITEM_BY_ID[id].name)} (${t('youHave', { n: have(id) })})`).join(', ') })} · ${t('craftRange', { min: r.bonus[0], max: r.bonus[1] })}`}
+            subtitle={[
+              t('needs', { list: mats.map(([id, n]) => `${n}× ${p(ITEM_BY_ID[id].name)} (${t('youHave', { n: have(id) })})`).join(', ') }),
+              quality,
+              t('craftHours', { n: recipeHours(r) }),
+              needs,
+            ]
+              .filter(Boolean)
+              .join(' · ')}
             right={
               <Button
                 title={t('craftIt')}
@@ -272,7 +307,7 @@ export function Workshop({ locationId }: { locationId: string }) {
                 }}
               />
             }
-            last={i === RECIPES.length - 1}
+            last={i === list.length - 1}
           />
         );
       })}

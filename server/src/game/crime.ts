@@ -32,7 +32,10 @@ import {
   lv,
   rankFor,
   solveChance,
+  patrolCrimeDelta,
+  patrolSolveDelta,
 } from '@rifftown/shared';
+import { cityPolicies } from './politics';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
@@ -69,12 +72,13 @@ export async function crimeOptions(characterId: number, locationId: string): Pro
   if (!loc) fail('invalid_location', 404);
   const city = CITY_BY_ID[loc!.cityId];
   const police = await policeOnDuty(pool, loc!.cityId);
+  const patrol = patrolCrimeDelta((await cityPolicies(pool, loc!.cityId)).police_chief);
   return {
     locationId,
     policeOnDuty: police,
     options: crimesAt(loc!.type).map((def) => ({
       id: def.id,
-      chance: Math.round(crimeChance(def, ch.skills, police, ch.convictions ?? 0) * 100) / 100,
+      chance: Math.round(crimeChance(def, ch.skills, police, patrol, ch.convictions ?? 0) * 100) / 100,
       loot: [Math.round(def.loot[0] * city.costMult), Math.round(def.loot[1] * city.costMult)],
       sentenceHours: def.sentenceHours * repeatSentenceMult(ch.convictions ?? 0),
       hours: def.hours,
@@ -95,7 +99,9 @@ export async function prepareCrime(c: Db, char: CharacterRow, crimeId: string, l
   const block = crimeBlocker(char.skills, crimeId);
   if (block) fail(block);
   const police = await policeOnDuty(c, char.city_id!);
-  return { hours: def!.hours, locationId: loc!.id, params: { crime: crimeId, chance: crimeChance(def!, char.skills, police, char.convictions ?? 0) } };
+  // Emniyet müdürünün devriye kararı (civic-powers.ts): şansı en fazla 6 puan düşürür ya da 3 puan artırır
+  const patrol = patrolCrimeDelta((await cityPolicies(c, char.city_id!)).police_chief);
+  return { hours: def!.hours, locationId: loc!.id, params: { crime: crimeId, chance: crimeChance(def!, char.skills, police, patrol, char.convictions ?? 0) } };
 }
 
 /** 'investigate' eylemini başlatırken */
@@ -191,7 +197,7 @@ export async function resolveInvestigation(c: pg.PoolClient, officer: CharacterR
   );
   if (!lead) {
     result.noLeads = true;
-  } else if (rand() < solveChance(skills, officer.profession!, lead.skills)) {
+  } else if (rand() < solveChance(skills, officer.profession!, lead.skills, patrolSolveDelta((await cityPolicies(c, officer.city_id!)).police_chief))) {
     await c.query(`UPDATE crimes SET status = 'solved', solved_by = $2 WHERE id = $1`, [lead.id, officer.id]);
     const { caseId, due } = await openCase(c, lead.id, lead.character_id, officer.city_id!, officer.id);
     await jail(c, lead.character_id, officer.city_id!, custodyUntil(due));

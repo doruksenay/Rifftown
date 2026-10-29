@@ -1,12 +1,29 @@
 // Seçimler ve makamlar: belediye ve emniyet müdürlüğü ekranlarında gösterilir.
+// Makam yetkileri (civic-powers.ts): yürürlükteki karar herkese kelimeyle görünür (VIP kesin değeri de görür);
+// makam sahibi VIP üye dar aralıkta kararını değiştirebilir.
 
-import { type CivicResponse, type CivicType, OFFICES, OFFICE_BY_ID, unmetRequirement } from '@rifftown/shared';
+import {
+  type CityPolicyDto,
+  type CivicResponse,
+  type CivicType,
+  type L,
+  type Lang,
+  OFFICES,
+  OFFICE_BY_ID,
+  POLICIES,
+  POLICY_LIST,
+  POLICY_WORDS,
+  type PolicyId,
+  policyDirection,
+  policyExact,
+  unmetRequirement,
+} from '@rifftown/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { VipUpsell, requirementText } from '@/components/careers';
-import { Avatar, Body, Button, Card, Field, Heading, ListRow, Row, Small, Strong } from '@/components/ui';
+import { Avatar, Body, Button, Card, Choice, Field, Heading, ListRow, Row, Small, Strong } from '@/components/ui';
 import { api } from '@/lib/api';
 import { duration, money } from '@/lib/format';
 import { useRun } from '@/lib/hooks';
@@ -63,6 +80,10 @@ export function Politics({ cityId, zone }: { cityId: string; zone: CivicType }) 
             ) : (
               <Body color={c.inkSoft} style={{ marginTop: space.sm }}>{t('officeVacant')}</Body>
             )}
+
+            {civic.data?.policies ? (
+              <PolicyBox cityId={cityId} policy={civic.data.policies.find((x) => x.office === office.id)} isHolder={isHolder} onChanged={refresh} />
+            ) : null}
 
             {isHolder && office.id === 'mayor' ? (
               <View style={{ marginTop: space.md }}>
@@ -163,6 +184,98 @@ export function MayorAnnouncement({ cityId }: { cityId: string }) {
       <Small>{t('announcement')}</Small>
       <Body style={{ marginTop: space.xs }}>{mayor.announcement}</Body>
       <Small style={{ marginTop: space.xs }}>{mayor.name}</Small>
+    </Card>
+  );
+}
+
+/** Kararın görünen adı: kelime (yönden) + VIP için kesin değer */
+export function policyText(policy: PolicyId, level: number, vip: boolean, p: (l: L) => string, lang: Lang) {
+  const word = p(POLICY_WORDS[policy][policyDirection(level)]);
+  return vip && level !== 0 ? `${word} (${policyExact(policy, level, lang)})` : word;
+}
+
+/** Bir makamın kararı: herkese yürürlükteki karar; makam sahibine (VIP) karar seçimi */
+function PolicyBox({ cityId, policy, isHolder, onChanged }: { cityId: string; policy?: CityPolicyDto; isHolder: boolean; onChanged: () => void }) {
+  const { t, p, lang } = useI18n();
+  const c = useColors();
+  const vip = useIsVip();
+  const { run, pending } = useRun();
+  const [pick, setPick] = useState<number | null>(null);
+  if (!policy) return null;
+  const def = POLICIES[policy.office];
+  const levels = Array.from({ length: def.max - def.min + 1 }, (_, i) => def.min + i);
+  return (
+    <View style={{ marginTop: space.md }}>
+      <Strong>{p(def.name)}</Strong>
+      <Small>{p(def.about)}</Small>
+      <Body style={{ marginTop: space.xs }}>{t('policyInForce', { word: policyText(def.id, policy.policyLevel, vip, p, lang) })}</Body>
+      {policy.setBy ? <Small>{t('policySetBy', { name: policy.setBy.name })}</Small> : null}
+      {isHolder ? (
+        !vip ? (
+          <Small color={c.danger}>{t('policyVipOnly')}</Small>
+        ) : (
+          <View style={{ marginTop: space.sm, gap: space.sm }}>
+            <Choice
+              options={levels.map((lvl) => ({ value: lvl, label: lvl === 0 ? t('policyDefault') : policyText(def.id, lvl, true, p, lang) }))}
+              value={pick ?? policy.policyLevel}
+              onChange={setPick}
+            />
+            {policy.nextChangeAt ? (
+              <Small>{t('policyCooldown', { time: duration(new Date(policy.nextChangeAt).getTime() - Date.now(), lang) })}</Small>
+            ) : null}
+            <Button
+              title={t('policyChange')}
+              small
+              variant="secondary"
+              disabled={pending || pick === null || pick === policy.policyLevel || !policy.canChange}
+              onPress={async () => {
+                await run(() => api.post('/offices/policy', { cityId, office: policy.office, level: pick }), { success: t('policyChanged'), invalidate: [] });
+                setPick(null);
+                onChanged();
+              }}
+            />
+            <Small>{t('policyResetNote')}</Small>
+          </View>
+        )
+      ) : null}
+    </View>
+  );
+}
+
+/** Şehir sayfası: yürürlükteki makam kararları herkese kelimeyle; son kararlar */
+export function CityPolicies({ cityId }: { cityId: string }) {
+  const { t, p, lang } = useI18n();
+  const vip = useIsVip();
+  const civic = useCivic(cityId);
+  const active = civic.data?.policies?.filter((x) => x.policyLevel !== 0) ?? [];
+  const log = civic.data?.policyLog ?? [];
+  if (!active.length && !log.length) return null;
+  const nameOf = (policy: string) => POLICY_LIST.find((d) => d.id === policy)?.name ?? { tr: policy, en: policy };
+  return (
+    <Card style={{ marginTop: space.md }}>
+      <Strong>{t('cityPoliciesTitle')}</Strong>
+      {active.length ? (
+        active.map((x) => (
+          <Small key={x.office} style={{ marginTop: space.xs }}>
+            {`${p(POLICIES[x.office].name)}: ${policyText(POLICIES[x.office].id, x.policyLevel, vip, p, lang)}${x.setBy ? ` · ${x.setBy.name}` : ''}`}
+          </Small>
+        ))
+      ) : (
+        <Small style={{ marginTop: space.xs }}>{t('cityPoliciesNone')}</Small>
+      )}
+      {log.length ? <Small style={{ marginTop: space.sm }}>{t('policyLogTitle')}</Small> : null}
+      {log.slice(0, 5).map((l, i) => (
+        <Small key={`${l.at}-${i}`}>
+          {l.reason === 'reset'
+            ? t('policyLogReset', { policy: p(nameOf(l.policy)) })
+            : t('policyLogSet', {
+                name: l.name ?? '—',
+                policy: p(nameOf(l.policy)),
+                from: policyText(l.policy as PolicyId, l.oldLevel, vip, p, lang),
+                to: policyText(l.policy as PolicyId, l.newLevel, vip, p, lang),
+              })}
+        </Small>
+      ))}
     </Card>
   );
 }

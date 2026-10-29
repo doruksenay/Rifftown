@@ -180,6 +180,61 @@ Zincirlerden (A): Stüdyo günlükleri 4–10. hafta, Sahnenin efendisi stadyum 
 3. **Model daha yavaş tarafta.** Konserlerin kendiliğinden beceri geliştirmesi, eşya bonusları ve tek başına oyuncunun bütün geliri alması modelde yok; gerçek tempo muhtemelen ölçülenden hızlı.
 4. **Kapalı test verisi.** Bu sayılar oyuncu davranışı varsayımına dayanıyor; kapalı testte (README: 14 günlük test) gerçek konser sıklığı, para ve şöhret eğrileri bu tablolarla karşılaştırılmalı.
 
+## Ek ölçüm: içerik hacmi (27 Ekim 2026, 2. iş)
+
+Tarif 19 → 81, eşya 168 → 405, beceri 100 → 142 eklendikten sonra betik aynı tohumla yeniden çalıştırıldı. Aşağıdaki ek dışındaki tablolar ilk ölçümün çıktısıdır; değişen satırlar:
+
+| Ölçüm | Önce | Sonra | Neden |
+|---|---|---|---|
+| Şarkı yazma / sahne / kayıt ağırlık toplamı | 0,22 / 0,33 / 0,15 | aynı | Yeni becerilere bu etkiler bilerek verilmedi; tavana en ucuz yol (146 ve 180 okul saati) ve uzmanlık payı tabloları birebir aynı. Test bu toplamları sabitler. |
+| Prova ağırlığı | 0,38 (3 beceri) | 0,46 (5 beceri) | Ezber tekniği ve nota çıkarma (0,04'er). ×1,5 tavanına hâlâ varılamıyor. |
+| Sokak ağırlığı | 1,60 (9 beceri) | 3,50 (21 beceri) | Yeni enstrümanlar. ×1,5 tavanı zaten 2 beceriyle doluyordu; para etkisi saatte $4–50, değişmedi. |
+| Arkadaşlık ağırlığı | 0,38 | 0,54 | Diplomasi, yabancı dil. Çarpan ×1,5'te durur. |
+| Şöhret temposu (A–E, kulüp/salon/stadyum haftası) | | aynı | Konser formüllerine dokunulmadı. |
+| Oyuncu başına haftalık net (26. hafta, A yeni) | $46.097 | $46.112 | Görev havuzu 29 → 31 (yeni görevler $20 ve $40); fark haftada ~$15. |
+| Tek seferlik harcama kalemleri (VIP hariç) | $105.840 | $136.390 | En iyi araç $28.000 → $45.000 (turne otobüsü), bütün sanat eserleri $19.640 → $32.390. Tüketim eşyaları ve hediyelikler sürekli harcama yeridir (tabloya girmez). |
+
+Yeni gelir kaynağı yok: tüketim eşyaları ve hediyelikler para üretmez; atölyede yapılıp dükkâna satılan bir ürün yok (bakım setlerinin malzemesi fiyatın en az yarısı); tüccar atölye ürününe malzemenin en fazla %25 fazlasını, günde 2 ürün için öder (en kârlı tarifte, ısmarlama davul setinde, ürün başına ~$70, günde ~$140 ve 2 × 10 saatlik üretim; test her tarif için günde en fazla $200 denetler). Ara malzemelerin fiyatı kendi malzemelerinin maliyetine eşittir, kârı şişirmez. Sanat (%40) ve sahne efekti (+12) tavanları yeni eşyalarla daha ucuza dolmuyor: puan başı fiyat en ucuz eski eşyanın altında değil.
+
+Ölçülmedi (tahmin): tüketim eşyalarının ve ilham becerilerinin şarkı kalitesine etkisi. İlham en fazla 100'dür ve şarkıya en fazla +15 katar; ilham defteri 3 saatte bir +5 verir. Zengin bir oyuncu ilhamı sürekli yüksek tutabilir; bu, parayı tavanlı bir kaliteye çeviren bilinçli bir harcama yeridir (öneri 1'in yönünde).
+
+## Ek ölçüm: nitelikler (27 Ekim 2026, 3. iş)
+
+Karakter nitelikleri ve XP (`packages/shared/src/attributes.ts`, GAME_DESIGN.md "Nitelikler ve XP"). Ölçüm yalnızca paylaşılan formüllerle yapıldı (`computeGig` 400 sabit tohumla, 4 kişilik rock grubu, İstanbul, setlist 6 şarkı, aşinalık 70, enerji 70); denge betiğinin kendisi nitelikleri modellemiyor, yukarıdaki tablolar değişmedi.
+
+| Etki (nitelik 100'de) | Ölçüm | Kıyas |
+|---|---|---|
+| Rol becerisi +4 (ses / el becerisi), dört üyenin hepsi tavanda | Konser kalitesi +0,82 – +0,85 (rol 30 – 80, kulüp ve salonda aynı); konser başına şöhret +0,04 (kulüp) / +0,06 (salon) | Sahne yan becerilerinin +10 tavanı kaliteye +0,9 katıyordu; nitelik aynı büyüklükte. Asıl enstrümanı 0'dan 100'e çıkarmak rol becerisine +75. |
+| Şarkı yazma +4 (yaratıcılık) | Şarkı kalitesi +3,2 (yuvarlanmış örnekte +3) | Yan becerilerin tavanı +8, uzmanlık payıyla +12; temel beste 45 → 100 +19,8. |
+| Öğrenme ×1,12 (zekâ) | Yan beceri tavanına en ucuz yol 146 → 130 okul saati (zekâ 30'da 141) | Okul ×2,2, profesör ×3,2. |
+| Bünye, çekicilik | Sağlık kaybı −%15, ilişki kazancı ×1,15, basın şansı +0,05 | Para ya da şöhret üretmez. |
+
+- **Tempo:** tavandaki bir grup konser başına ~0,05 daha fazla şöhret alır; günde 1 konserle 11 haftada (stadyuma varış, profil A) toplam ~+4 şöhret puanı, yani stadyuma birkaç gün erken (tahmin, azalan getiri hesaba katılmadan üst sınır). Bu da ancak dört üyenin de ilgili niteliği 100'deyse; bir niteliği 10'dan 100'e çıkarmak 240 XP, haftalık tavanla ~5 hafta.
+- **XP hızı:** günlük 10, haftalık 50 tavan. Üç niteliği başlangıçtan tavana çıkarmak 700 XP (~14 hafta), altı niteliği 25'e çıkarmak 90 XP (~2 hafta). Çoğu oyuncu 6–12. haftada kimliğini seçmiş olur; kimse çekirdek becerileri geçen bir strateji kuramaz çünkü her etkinin tavanı bir yan beceri tavanı kadar ya da altında.
+- **Para:** nitelikler para üretmez; sokak müziğinde rol becerisi +4 saatlik bahşişe ~$1,4 ekler (×0,35). Atölye bonusu +6 el işçiliği, tüccarın alış tavanı (malzemenin 1,25 katı) değişmediği için atölye-tüccar döngüsü para basmaz.
+- **Risk:** zekâ ×1,12 bütün öğrenmeyi hızlandırır; yaş çarpanı (35'ten sonra yavaşlama) ile birlikte çarpılır. Gerçek oyuncu verisiyle bakılmalı.
+
+## Ek ölçüm: nesiller (27 Ekim 2026, 4. iş)
+
+Mirasçı (GAME_DESIGN.md "Nesiller") yeni bir gelir ya da ilerleme kaynağı değildir; denge betiği değişmedi, yukarıdaki tablolar aynı. Hesap (formülden):
+
+| Ne | Değer | Kıyas |
+|---|---|---|
+| Para | Mal varlığının yarısı, en fazla $10.000, bir kez; + her yeni karakterin $500'ü | Stadyumdaki oyuncunun haftalık netinin (~$46 bin) altında; servetin geri kalanı oyundan çıkar (para yutağı). |
+| Beceri tohumu | En iyi 5 beceri, ebeveynin %15'i, en fazla 10 | Okulda (×2,2) 0'dan 10'a birkaç saat; yan beceri etkisine en fazla 10 × 0,05 = +0,5. Çekirdek becerilerin başlangıcı (enstrüman 12, temel 20) bundan yüksek. |
+| Nitelik tohumu | Toplam en fazla +4 (nitelik başına 2) | Haftalık XP tavanının (50) onda biri kadar; etkisi her nitelikte en fazla +0,08 rol becerisi. |
+| Tempo | Çocuk 18 oyun yılında (~1.000 oyun günü, `GAME_SPEED=1` iken ~2,8 yıl) yetişir | Devir zinciriyle hızlı ilerleme yok; kullanıcı başına 56 oyun gününde bir. |
+
+## Ek ölçüm: makam yetkileri (27 Ekim 2026, 4. iş)
+
+Makam kararları (GAME_DESIGN.md "Makam yetkileri") para üretmez; varsayılanda (0) bütün tablolar aynı. Uç değerlerde (hesap, formülden):
+
+| Karar | Uç değer | Etki | Kıyas |
+|---|---|---|---|
+| Bilet vergisi | %5 | Stadyum oyuncusunun haftalık konser gelirinden ~$2.200 (A profili, 26. hafta ~$44.600 × %5) oyundan çıkar | Para yutağı; "Kalan riskler" 1'deki ekonomi şişmesinin yönünde, tek başına çözmez. Başkana gitmez. |
+| İşletme harcı | ×0,8 / ×1,2 | Bar giderinde haftada ±$70 (şehir çarpanı 1) | Vali indirimi kendi maaşından öder (−2'de günde −$100): indirim para basmaz. |
+| Devriye | +2 / −1 | Suç şansı −6 / +3 puan; sıkı devriyede konser seyircisi −%2 | Görevdeki bir polis 5 puan; seyirci kaybı kulüpte ~7 kişi, şöhret ve gelire etkisi doygunluğun çok altında. Gevşek devriye suçun (dünyaya karşı işlenir, ganimeti para basar) başarı şansını en fazla 3 puan artırır; görevdeki bir polisten az. |
+
 ## Ek: betik çıktısı
 
 Aşağıdaki bölüm `npx tsx scripts/balance/measure.ts` çıktısının kendisidir.

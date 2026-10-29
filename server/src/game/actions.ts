@@ -77,7 +77,15 @@ import {
   skillBonus,
   skillMult,
   PRODUCERS,
+  actionXp,
+  healthShieldAttr,
+  inspirationAttrMult,
+  learningAttrMult,
+  recoveryAttrMult,
+  roleAttrBonus,
+  songwritingAttrBonus,
 } from '@rifftown/shared';
+import { grantXp } from './attributes';
 import { characterAge, treatIndulgence } from './consequences';
 import { prepareArticle, preparePress, resolveArticle, resolvePress } from './press';
 import { prepareVideo, resolveVideo } from './media';
@@ -100,6 +108,7 @@ import { resolveRecording } from './music';
 import {
   type CharacterRow,
   activeAction,
+  ageRef,
   isJailed,
   gearBonuses,
   lockCharacter,
@@ -498,13 +507,16 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   let mood = char.mood;
   let health = char.health;
   if (a.kind === 'rest') {
-    mood += restMoodGain(hours, Math.min(100, gear.art + ((params.restBonus as number) ?? 0) + (params.pet ? gear.pet : 0)));
+    // Hayvan bakımı becerisi evcil hayvanın dinlenme bonusunu artırır (en fazla ×1,3)
+    mood += restMoodGain(hours, Math.min(100, gear.art + ((params.restBonus as number) ?? 0) + (params.pet ? gear.pet * skillMult(char.skills, 'pets') : 0)));
   } else mood += MOOD_PER_HOUR[a.kind as keyof typeof MOOD_PER_HOUR] * hours;
   let healthChange = HEALTH_PER_HOUR[a.kind as keyof typeof HEALTH_PER_HOUR] * hours;
-  // Kondisyon yorucu işlerdeki sağlık kaybını azaltır
-  if (healthChange < 0) healthChange *= 1 - fitnessShield(lv(char.skills, 'fitness') + skillBonus(char.skills, 'fitness'));
+  // Kondisyon yorucu işlerdeki sağlık kaybını azaltır; bünye niteliği de (çarpılarak, en fazla %15)
+  if (healthChange < 0) healthChange *= (1 - fitnessShield(lv(char.skills, 'fitness') + skillBonus(char.skills, 'fitness'))) * (1 - healthShieldAttr(char.attributes));
+  // Bünye dinlenme ve tedavide sağlığın toparlanmasını hızlandırır (en fazla ×1,15)
+  else if (a.kind === 'rest' || a.kind === 'treat') healthChange *= recoveryAttrMult(char.attributes);
   health += healthChange;
-  if (a.kind === 'rest' && params.homeHealth) health += (params.homeHealth as number) * hours;
+  if (a.kind === 'rest' && params.homeHealth) health += (params.homeHealth as number) * hours * recoveryAttrMult(char.attributes);
   if (a.kind === 'rest') {
     // Sanat eserleriyle dinlenmek ilham verir
     inspirationDelta += INSPIRATION_GAIN.artRestPerHourPer10 * (gear.art / 10) * hours;
@@ -537,7 +549,9 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       // Yaş öğrenmeyi yavaşlatır (35 yaştan sonra)
       const focus = typeof params.focus === 'number' ? params.focus : 1;
       if (focus < 1) result.unfocused = true;
-      const gain = studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency * focus * ageLearnFactor(characterAge(char.created_at));
+      // Zekâ niteliği öğrenmeyi hızlandırır (en fazla ×1,12); odak sınırı (STUDY_FOCUS_HOURS)
+      const gain =
+        studyGain(lv(skills, skill), hours, !!params.atSchool, well.mood, char.health, instBonus) * efficiency * focus * ageLearnFactor(characterAge(ageRef(char))) * learningAttrMult(char.attributes);
       skills[skill] = clamp(lv(skills, skill) + gain, 0, 100);
       result.skill = skill;
       result.gain = Math.round(gain * 100) / 100;
@@ -551,7 +565,8 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
       const before = lv(skills, skill);
       const focus = typeof params.focus === 'number' ? params.focus : 1;
       if (focus < 1) result.unfocused = true;
-      const gain0 = studyGain(before, hours, true, well.mood, char.health, instBonus, Number(params.rate)) * efficiency * focus * ageLearnFactor(characterAge(char.created_at));
+      const gain0 =
+        studyGain(before, hours, true, well.mood, char.health, instBonus, Number(params.rate)) * efficiency * focus * ageLearnFactor(characterAge(ageRef(char))) * learningAttrMult(char.attributes);
       const capped = Math.max(before, Math.min(before + gain0, Number(params.cap ?? 100)));
       skills[skill] = clamp(capped, 0, 100);
       result.skill = skill;
@@ -581,7 +596,8 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
     }
     case 'busk': {
       const role = params.role as Instrument;
-      const base = buskPayPerHour(roleSkill(skills, role), stageScore(skills), (params.costMult as number) ?? 1, skillMult(skills, 'busking'));
+      // Ses (vokalde) ya da el becerisi (diğer rollerde) rol becerisine eklenir; bahşiş saatlik tavanlı ve günde azalır
+      const base = buskPayPerHour(clamp(roleSkill(skills, role) + roleAttrBonus(char.attributes, role), 0, 110), stageScore(skills), (params.costMult as number) ?? 1, skillMult(skills, 'busking'));
       const tipFactor = typeof params.tipFactor === 'number' ? params.tipFactor : 1;
       const pay = Math.floor(base * tipFactor * hours * (0.7 + Math.random() * 0.6));
       money += pay;
@@ -610,7 +626,8 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
         new Date(Date.now() - gameHoursToMs(SONG_FATIGUE_WINDOW_DAYS * 24, config.gameSpeed)),
       ]);
       const fatigue = songFatigueFactor(recent?.n ?? 0);
-      const raw = songQuality(songwritingScore(skills, genre), Math.random) + styleBonus(skills, genre, subgenre, tempo);
+      // Yaratıcılık niteliği şarkı yazma puanına eklenir (en fazla +4)
+      const raw = songQuality(Math.min(100, songwritingScore(skills, genre) + songwritingAttrBonus(char.attributes)), Math.random) + styleBonus(skills, genre, subgenre, tempo);
       const quality = Math.round(clamp(raw * fatigue + inspirationBonus, 1, 100));
       setInspiration = well.inspiration * (1 - SONG_INSPIRATION_SPEND);
       result.inspirationBonus = inspirationBonus;
@@ -767,6 +784,9 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
     await c.query('UPDATE characters SET jailed_until = $2 WHERE id = $1', [char.id, jailUntil]);
     await notify(c, char.id, 'arrested', { caseId: result.caseId, crime: result.crime, caught: true, cityId: char.city_id });
   }
+  // İlham becerileri (şiir, meditasyon, saha kaydı, hat) eylemlerden kazanılan ilhamı artırır (en fazla ×1,5)
+  // Yaratıcılık niteliği de ilhamı biraz artırır (en fazla ×1,1)
+  if (inspirationDelta > 0) inspirationDelta *= skillMult(char.skills, 'inspiration') * inspirationAttrMult(char.attributes);
   // Enerji ve ilham (eylemin harcadığı/verdiği; zamanla dolan kısım ayrıca hesaplanır)
   const afterWell = await changeWellbeing(c, char, { energy: energyDelta, inspiration: inspirationDelta, setInspiration });
   result.energyDelta = Math.round(energyDelta * 10) / 10;
@@ -774,5 +794,8 @@ async function applyAction(c: pg.PoolClient, a: any, fraction: number): Promise<
   if (inspirationDelta) result.inspirationDelta = Math.round(inspirationDelta * 10) / 10;
   for (const m of moodlets) await addMoodlet(c, char.id, m);
   await notifySkillUps(c, char.id, char.skills, skills);
+  // XP: eylemde geçen oyun saati kadar (yarıda kesilende geçen kısım), günlük ve haftalık tavanla
+  const xp = await grantXp(c, char, actionXp(a.kind as ActionKind, hours), a.kind);
+  if (xp > 0) result.xp = Math.round(xp * 10) / 10;
   return result;
 }

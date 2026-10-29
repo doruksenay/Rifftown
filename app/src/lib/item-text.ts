@@ -1,4 +1,4 @@
-import { CITY_BY_ID, GENRE_NAMES, SEASON_NAMES, INSTRUMENTS, type ItemDef, type L, LEGENDARY_ITEM_PREFIX, PAINT_COLORS, type PaintColor, ROLE_NAMES, type Instrument } from '@rifftown/shared';
+import { CITY_BY_ID, GENRE_NAMES, SEASON_NAMES, SLOT_NAMES, INSTRUMENTS, type ItemDef, type L, LEGENDARY_ITEM_PREFIX, PAINT_COLORS, type PaintColor, ROLE_NAMES, type Instrument } from '@rifftown/shared';
 import type { StringKey } from './strings';
 
 type T = (k: StringKey, v?: Record<string, string | number>) => string;
@@ -28,7 +28,24 @@ function baseBonusText(item: ItemDef, t: T, p: (l: L) => string, bonus = item.bo
     case 'fx':
       return t('bonusFx', { n: bonus });
     case 'material':
+      if (item.repair) {
+        if (item.repair.all) return t('bonusCareAll', { n: item.repair.wear });
+        if (!item.repair.slots) return t('bonusCareAny', { n: item.repair.wear });
+        return t('bonusCare', { n: item.repair.wear, slots: item.repair.slots.map((s) => p(SLOT_NAMES[s])).join(', ') });
+      }
       return t('bonusMaterial');
+    case 'consumable': {
+      const u = item.use ?? {};
+      const list = [
+        u.energy ? t('useEnergy', { n: u.energy }) : null,
+        u.mood ? t('useMood', { n: u.mood }) : null,
+        u.health ? t('useHealth', { n: u.health }) : null,
+        u.inspiration ? t('useInspiration', { n: u.inspiration }) : null,
+      ].filter(Boolean);
+      return t('bonusConsumable', { list: list.join(', ') });
+    }
+    case 'gift':
+      return t('bonusGift', { n: item.gift?.friendship ?? 0 });
     case 'spray':
       return t('bonusSpray');
     case 'ring':

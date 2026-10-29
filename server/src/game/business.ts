@@ -20,7 +20,9 @@ import {
   staffedRevenue,
   PACING,
   accountingCostMult,
+  businessFeeMult,
 } from '@rifftown/shared';
+import { cityPolicies } from './politics';
 import type pg from 'pg';
 import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
@@ -38,8 +40,10 @@ function lot(locationId: string) {
 }
 
 export const businessPrice = (kind: BusinessType, costMult: number) => Math.round(BUSINESS_RULES[kind].price * costMult);
-/** accounting: sahibinin muhasebe becerisi; haftalık gideri en fazla %10 düşürür (perks.ts) */
-export const businessUpkeep = (kind: BusinessType, costMult: number, accounting = 0) => Math.round(BUSINESS_RULES[kind].upkeep * costMult * accountingCostMult(accounting));
+/** accounting: sahibinin muhasebe becerisi; haftalık gideri en fazla %10 düşürür (perks.ts).
+ *  feeMult: valinin işletme ruhsat harcı kararı (civic-powers.ts, ×0,8–×1,2) */
+export const businessUpkeep = (kind: BusinessType, costMult: number, accounting = 0, feeMult = 1) =>
+  Math.round(BUSINESS_RULES[kind].upkeep * costMult * accountingCostMult(accounting) * feeMult);
 
 export async function businessView(db: Db, locationId: string, viewer: number): Promise<BusinessDto> {
   const { loc, kind, city } = lot(locationId);
@@ -75,7 +79,7 @@ export async function businessView(db: Db, locationId: string, viewer: number): 
     staffStatus: mine?.status ?? null,
     myWage: mine?.wage ?? null,
     till: isOwner ? b.till : null,
-    upkeep: businessUpkeep(kind, city.costMult, isOwner ? lv(b.owner_skills ?? {}, 'accounting') : 0),
+    upkeep: businessUpkeep(kind, city.costMult, isOwner ? lv(b.owner_skills ?? {}, 'accounting') : 0, businessFeeMult((await cityPolicies(db, city.id)).governor)),
     upkeepDue: isOwner ? b.upkeep_due.toISOString() : null,
     totalRevenue: isOwner ? b.total_revenue : null,
     staff: staff ? staff.map((s) => ({ characterId: Number(s.character_id), name: s.name, wage: s.wage, status: s.status })) : null,
@@ -325,7 +329,7 @@ export async function processUpkeep(): Promise<number> {
       const b = await one(c, 'SELECT * FROM businesses WHERE location_id = $1 AND owner_id = $2 AND upkeep_due <= now() FOR UPDATE', [cand.location_id, owner.id]);
       if (!b) return true; // bu arada el değiştirdi ya da ödendi: döngü yeniden bakar
       const { kind, city } = lot(b.location_id);
-      const upkeep = businessUpkeep(kind, city.costMult, lv(owner.skills, 'accounting'));
+      const upkeep = businessUpkeep(kind, city.costMult, lv(owner.skills, 'accounting'), businessFeeMult((await cityPolicies(c, city.id)).governor));
       const fromTill = Math.min(b.till, upkeep);
       const fromPocket = upkeep - fromTill;
       if (owner.money >= fromPocket) {

@@ -58,7 +58,12 @@ import {
   PACING,
   gigProductionCost,
   GIG_PRODUCTION_REFUND,
+  gigXp,
+  roleAttrBonus,
+  patrolAttendanceMult,
+  ticketTaxRate,
 } from '@rifftown/shared';
+import { grantXp } from './attributes';
 import { createScandal, markFameActive, touchFamiliarity } from './consequences';
 import { bandPress } from './press';
 import { afterGigCrew, crewForGig, wearGigGear } from './touring';
@@ -69,9 +74,14 @@ import { fail } from '../errors';
 import { type Wellbeing, addMoodlet, changeWellbeing, wellbeingOf } from './wellbeing';
 import { evaluateMany } from './achievements';
 import { barGigShare } from './business';
+import { cityPolicies } from './politics';
 import { type CharacterRow, gearBonuses, isJailed, lockCharacter, membership, notify, notifySkillUps, toGigDto } from './common';
 
 /** Grubun bir şehirdeki şöhreti (0–100). */
+/** Konserin sahne efektlerinden gelen kalite (tavanlı). Kayıtlı bonus varsa (atölye efektleri) o, yoksa eşyanın bonusu. */
+/** Konserin efekt kalitesi: her efekt türü bir kez, azalan getiri, tavan MAX_FX_BONUS (items.ts fxQualityBonus) */
+export const fxBonusOf = (gig: { effects?: string[] | null; effect_bonuses?: number[] | null }) => fxQualityBonus(gig.effects ?? [], gig.effect_bonuses);
+
 export async function bandFame(db: Db, bandId: number, cityId: string): Promise<number> {
   const r = await one(db, 'SELECT fame FROM band_fame WHERE band_id = $1 AND city_id = $2', [bandId, cityId]);
   return r?.fame ?? 0;
@@ -171,7 +181,7 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     // Sahne efektleri: liderin envanterinden ayrılır, konserde tüketilir (iptalde geri verilir)
     const fxIds = [...new Set((req.effects ?? []).map(Number))];
     const fx = fxIds.length
-      ? await many(c, `SELECT id, item_id FROM inventory WHERE id = ANY($1::bigint[]) AND character_id = $2 AND slot = 'fx' AND NOT listed FOR UPDATE`, [
+      ? await many(c, `SELECT id, item_id, bonus FROM inventory WHERE id = ANY($1::bigint[]) AND character_id = $2 AND slot = 'fx' AND NOT listed FOR UPDATE`, [
           fxIds,
           characterId,
         ])
@@ -183,9 +193,10 @@ export async function bookGig(characterId: number, req: BookGigRequest, opts: { 
     await c.query('UPDATE characters SET money = money - $2 WHERE id = $1', [characterId, fee + production]);
     const gig = await one(
       c,
-      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan, production_cost)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan), production],
+      `INSERT INTO gigs(band_id, city_id, location_id, starts_at, setlist, session_roles, effects, plan, effect_bonuses, production_cost)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      // Atölyede yapılmış efektin bonusu her üründe farklıdır: konsere kendi bonusuyla taşınır (fxBonusOf)
+      [m!.band_id, loc!.cityId, loc!.id, startsAt, setlist, sessionRoles, fx.map((f) => f.item_id), JSON.stringify(plan), fx.map((f) => f.bonus ?? ITEM_BY_ID[f.item_id]?.bonus ?? 0), production],
     );
     const members = await many(c, 'SELECT character_id FROM band_members WHERE band_id = $1', [m!.band_id]);
     for (const mem of members) {
@@ -256,8 +267,10 @@ export async function cancelGig(characterId: number, gigId: number) {
     const penalty = cancelFamePenalty(venue, sold);
     await c.query(`UPDATE gigs SET status = 'cancelled', result = $2 WHERE id = $1`, [gigId, JSON.stringify({ cancelled: true, ticketsSold: sold, famePenalty: penalty })]);
     await c.query('UPDATE characters SET money = money + $2 WHERE id = $1', [characterId, refund]);
-    for (const itemId of gig.effects ?? []) {
-      await c.query(`INSERT INTO inventory(character_id, item_id, slot) VALUES ($1, $2, 'fx')`, [characterId, itemId]);
+    for (const [i, itemId] of (gig.effects ?? []).entries()) {
+      // Atölye efekti kendi bonusuyla geri verilir
+      const bonus = ITEM_BY_ID[itemId]?.crafted ? (gig.effect_bonuses?.[i] ?? null) : null;
+      await c.query(`INSERT INTO inventory(character_id, item_id, slot, bonus) VALUES ($1, $2, 'fx', $3)`, [characterId, itemId, bonus]);
     }
     // İptal şöhret kaybettirir; biletlerin çoğu satılmışsa skandala dönüşür
     await addFame(c, m!.band_id, gig.city_id, -penalty);
@@ -364,7 +377,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       energy: wells.get(ch.id)!.energy,
       inspiration: wells.get(ch.id)!.inspiration,
       present: onStage(ch),
-      instrumentBonus: g.instruments[role] ?? 0,
+      // Enstrüman bonusu + nitelik (vokalde ses, diğer rollerde el becerisi; en fazla +4, attributes.ts roleAttrBonus)
+      instrumentBonus: (g.instruments[role] ?? 0) + roleAttrBonus(ch.attributes, role),
       outfitBonus: g.outfit + g.tattoos + g.setStage,
       // Set bonusu ve tür uyumu (kıyafet + çaldığı rolün enstrümanı) kaliteye doğrudan
       gearQuality: gearQualityBonus(g.setStage, g.affinity + roleAffinity(gearRows, ch.id, role, band.genre as Genre)),
@@ -411,6 +425,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   const marketing = bestOf(chars, 'marketing');
   const crew = await crewForGig(c, gig.band_id, gig.city_id, { accounting: bestOf(chars, 'accounting'), logistics: bestOf(ownChars, 'logistics') });
   const press = await bandPress(c, gig.band_id, gig.city_id);
+  // Makam yetkileri (civic-powers.ts): sıkı devriye seyirciyi biraz azaltır, başkanın bilet vergisi gelirden kesilir
+  const policy = await cityPolicies(c, gig.city_id);
   const res = computeGig({
     venue,
     fame,
@@ -419,11 +435,11 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     performers,
     setlist: gig.setlist.map((id: number) => songs.find((s) => s.id === id)).filter(Boolean),
     rand: Math.random,
-    // Her efekt türü bir kez, azalan getiriyle, tavan MAX_FX_BONUS (items.ts fxQualityBonus)
-    fxBonus: fxQualityBonus(gig.effects ?? []),
+    // Her efekt türü bir kez, azalan getiriyle, tavan MAX_FX_BONUS (items.ts fxQualityBonus; atölye ürününün kendi bonusuyla)
+    fxBonus: fxBonusOf(gig),
     plan: gig.plan ?? {},
     press,
-    crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) },
+    crew: { quality: crew.qualityBonus, attendanceMult: crew.attendanceMult * marketingAttendanceMult(marketing) * patrolAttendanceMult(policy.police_chief) },
     cooldownEvents: gig.plan?.events?.length ? await eventsOnCooldown(c, gig.band_id) : [],
     // Şehrin haftalık etkinliği (content/cities.ts): o gün uyan türdeki konsere daha çok seyirci
     cityEvent: cityEventActive(gig.city_id, band.genre as Genre, gig.starts_at.getTime(), config.gameSpeed),
@@ -436,12 +452,16 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
   // Oyunun kendi gruplarının konserinden bar sahibine pay yok (yoktan para basılmasın; denge raporu §7)
   const ownerShare = band.npc_key ? 0 : await barGigShare(c, gig.location_id, res.revenue, ids);
   res.revenue -= ownerShare;
+  // Şehrin bilet vergisi: oyundan çıkar (şehir kasası), başkana gitmez; para basmaz
+  const cityTax = Math.floor(Math.max(0, res.revenue) * ticketTaxRate(policy.mayor));
+  res.revenue -= cityTax;
   // Ekip ücreti bilet gelirinden ödenir; yetmezse ödenmez ve moral çöker
   const crewPaid = crew.roles.length > 0 && res.revenue >= crew.fee;
   if (crewPaid) res.revenue -= crew.fee;
 
   const presentChars = chars.filter(onStage);
   const perMember = presentChars.length ? Math.floor(res.revenue / presentChars.length) : 0;
+  const xpGained = new Map<number, number>();
   for (const ch of presentChars) {
     const role = memberRows[chars.indexOf(ch)].role as Instrument;
     const skills = { ...ch.skills };
@@ -467,6 +487,8 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     // Sahne yorar ama ilham verir; iyi ya da kötü bir gece ruh hâlinde iz bırakır
     const inspiration = res.legendary ? INSPIRATION_GAIN.legendaryGig : INSPIRATION_GAIN.gig + Math.max(0, (res.quality - 50) / 8);
     await changeWellbeing(c, ch, { energy: -Math.max(0, GIG_ENERGY_COST - crew.energySaved) - (res.encoreEnergy ?? 0), inspiration });
+    // Sahneye çıkılan konser XP verir (günlük/haftalık tavanla; oyunun kendi müzisyenleri almaz)
+    if (res.presentCount > 0) xpGained.set(ch.id, await grantXp(c, ch, gigXp(res.quality), 'gig'));
     if (res.legendary) await addMoodlet(c, ch.id, 'legendary_gig');
     else if (res.quality >= 70) await addMoodlet(c, ch.id, 'great_gig');
     else if (res.quality < GIG_BREAK_EVEN_QUALITY) await addMoodlet(c, ch.id, 'bad_gig');
@@ -562,6 +584,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
     fame: fameAfter,
     effects: gig.effects ?? [],
     ownerShare,
+    cityTax,
     crewFee: crewPaid ? crew.fee : 0,
     productionCost: gig.production_cost ?? 0,
     crewUnpaid: crew.roles.length > 0 && !crewPaid,
@@ -589,6 +612,7 @@ async function resolveGig(c: pg.PoolClient, gig: any) {
       perMember: onStage(ch) ? perMember : 0,
       fameDelta: res.fameDelta,
       review,
+      xp: xpGained.get(ch.id) ?? 0,
     });
     if (fameUp) await notify(c, ch.id, 'fame_up', { bandName: band.name, cityId: gig.city_id, fame: fameAfter });
   }

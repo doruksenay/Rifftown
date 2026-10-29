@@ -305,7 +305,7 @@ describe('madde 8: kayıp sistemleri göz ardı edilemez', () => {
 
   it('sabıka: tekrarlayan suçlunun cezası ve para cezası büyür, başarı şansı düşer', async () => {
     const def = CRIME_BY_ID.pickpocket;
-    expect(crimeChance(def, {}, 0, 5)).toBeCloseTo(crimeChance(def, {}, 0, 0) - 0.1);
+    expect(crimeChance(def, {}, 0, 0, 5)).toBeCloseTo(crimeChance(def, {}, 0, 0, 0) - 0.1);
     expect(repeatSentenceMult(0)).toBe(1);
     expect(repeatSentenceMult(4)).toBe(3);
     expect(repeatSentenceMult(100)).toBe(5);

@@ -19,6 +19,13 @@ type T = (key: StringKey, vars?: Record<string, string | number>) => string;
 
 /** Bildirimi tek satırlık okunur metne çevirir. Sayılar yerine kelimeler kullanılır. */
 export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): string {
+  const text = baseText(n, t, p, lang);
+  // Eylem ve konserden kazanılan XP (para gibi harcanan bir bakiye; kesin sayı gösterilir)
+  const xp = Number((n.data as Record<string, any>)?.xp ?? 0);
+  return (n.kind === 'action_done' || n.kind === 'gig_done') && xp > 0 ? `${text} ${t('n_xp_gained', { n: Math.round(xp * 10) / 10 })}` : text;
+}
+
+function baseText(n: NotificationDto, t: T, p: (l: L) => string, lang: Lang): string {
   const d = n.data as Record<string, any>;
   const skillName = (id: string) => (SKILL_BY_ID[id] ? p(SKILL_BY_ID[id].name) : id);
   switch (n.kind) {
@@ -199,7 +206,17 @@ export function notificationText(n: NotificationDto, t: T, p: (l: L) => string, 
       return t(`n_${n.kind}` as StringKey);
     case 'member_died':
     case 'partner_died':
+    case 'member_retired':
+    case 'partner_retired':
       return t(`n_${n.kind}` as StringKey, { name: d.name ?? '' });
+    case 'heir_consent_request':
+    case 'heir_consent_given':
+    case 'heir_consent_refused':
+      return t(`n_${n.kind}` as StringKey, { name: d.name ?? '', from: d.from ?? '' });
+    case 'heir_started':
+      return t(Number(d.money ?? 0) > 0 ? 'n_heir_started_money' : 'n_heir_started', { from: d.from ?? '', money: money(d.money ?? 0), n: d.items ?? 0 });
+    case 'child_became_heir':
+      return t('n_child_became_heir', { name: d.name ?? '' });
     case 'festival_selected':
       return t('n_festival_selected', { slot: d.slot ?? '' });
     default:
@@ -234,7 +251,8 @@ export function notificationHref(n: NotificationDto, myId?: number): string | nu
   if (n.kind.startsWith('tour_') || n.kind === 'crew_quit') return '/tour';
   if (n.kind === 'video_chart') return '/charts';
   if (n.kind === 'hospitalized' && d.cityId) return `/location/${d.cityId}-hospital`;
-  if (n.kind === 'scandal' || n.kind === 'member_died') return '/band';
+  if (n.kind === 'scandal' || n.kind === 'member_died' || n.kind === 'member_retired') return '/band';
+  if (n.kind === 'heir_consent_request') return '/succession';
   if (n.kind === 'festival_selected' && d.cityId) return `/location/${d.cityId}-festival`;
   return null;
 }

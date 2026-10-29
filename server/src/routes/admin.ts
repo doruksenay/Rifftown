@@ -38,7 +38,8 @@ export async function adminRoutes(app: FastifyInstance) {
     const q = parse(z.object({ q: z.string().max(100).optional() }), req.query);
     const rows = await many(
       pool,
-      `SELECT u.id, u.email, u.is_admin, u.banned, u.created_at, u.vip_until, c.id AS character_id, c.name, c.money, c.city_id, c.profession,
+      `SELECT u.id, u.email, u.is_admin, u.banned, u.created_at, u.vip_until, c.id AS character_id, c.name, c.money, c.city_id, c.profession, c.generation,
+              (SELECT count(*)::int FROM characters f WHERE f.former_user_id = u.id) AS former_count,
               (SELECT max(last_used) FROM sessions s WHERE s.user_id = u.id) AS last_seen
          FROM users u LEFT JOIN characters c ON c.user_id = u.id
         WHERE $1::text IS NULL OR u.email ILIKE '%' || $1 || '%' OR c.name ILIKE '%' || $1 || '%'
@@ -106,6 +107,16 @@ export async function adminRoutes(app: FastifyInstance) {
          FROM articles a LEFT JOIN characters c ON c.id = a.author_id WHERE NOT a.npc ORDER BY a.id DESC LIMIT 100`,
     );
     return { articles: rows };
+  });
+
+  /** Makam yetkileri: son kararlar ve sıfırlamalar (kim, ne zaman, eski/yeni değer) */
+  app.get('/admin/policies', async () => {
+    const rows = await many(
+      pool,
+      `SELECT l.id, l.city_id, l.office, l.policy, l.old_level, l.new_level, l.reason, l.created_at, c.name
+         FROM policy_log l LEFT JOIN characters c ON c.id = l.character_id ORDER BY l.created_at DESC, l.id DESC LIMIT 100`,
+    );
+    return { policies: rows };
   });
 
   app.delete('/admin/articles/:id', async (req) => {

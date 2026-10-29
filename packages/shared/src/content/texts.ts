@@ -213,6 +213,83 @@ export const REVIEW_EVENT: Record<string, { success: L; fail: L }> = {
     success: l('En sessiz bölümde salon nefesini tuttu; bir öksürük bile duyulmadı.', 'In the quietest passage the hall held its breath; not even a cough.'),
     fail: l('En sessiz bölüm telefon zillerine ve fısıltılara yenildi.', 'The quietest passage lost out to ringtones and whispers.'),
   },
+  // Yeni becerilerin sahne olayları
+  banjo_roll: {
+    success: l('Banjo atışması hızlandıkça salon ayağıyla tempo tuttu.', 'As the banjo breakdown sped up, the whole room stamped along.'),
+    fail: l('Banjo atışması kendi hızına yetişemedi ve dağıldı.', 'The banjo breakdown outran itself and fell apart.'),
+  },
+  mandolin_trem: {
+    success: l('Mandolin tremolosu salona tatlı bir hüzün yaydı.', 'The mandolin tremolo spread a sweet melancholy through the room.'),
+    fail: l('Mandolin tremolosu akortsuz bir tıngırtıya döndü.', 'The mandolin tremolo turned into out-of-tune plinking.'),
+  },
+  saz_taksim: {
+    success: l('Saz taksimi bittiğinde salonda bir "Of!" yankılandı.', 'When the saz taksim ended, a heartfelt sigh echoed through the room.'),
+    fail: l('Saz taksimi nereye gittiğini bilemedi ve şarkıya bağlanamadı.', 'The saz taksim lost its way and never found the song.'),
+  },
+  cello_lament: {
+    success: l('Çello ağıtı salonun göğsüne bir taş gibi oturdu.', 'The cello lament settled on the room like a stone on the chest.'),
+    fail: l('Çello ağıtı yayın kaymasıyla gıcırdadı.', 'The cello lament screeched as the bow slipped.'),
+  },
+  harp_gliss: {
+    success: l('Arp glissandosu salona yıldız tozu gibi döküldü.', 'The harp glissando poured over the room like stardust.'),
+    fail: l('Arp glissandosu birkaç telde takıldı.', 'The harp glissando snagged on a few strings.'),
+  },
+  horn_section: {
+    success: l('Trompet vuruşları nakaratı tavana kadar kaldırdı.', 'The trumpet stabs lifted the chorus to the ceiling.'),
+    fail: l('Trompet girişi yarım ölçü erken geldi.', 'The trumpet came in half a bar early.'),
+  },
+  ney_intro: {
+    success: l('Karanlıkta yükselen ney sesi salonu bir anda susturdu.', 'The ney rising in the dark silenced the room in an instant.'),
+    fail: l('Ney girişi nefes sesinden öteye geçemedi.', 'The ney intro never got past the sound of breath.'),
+  },
+  accordion_waltz: {
+    success: l('Akordeon valsiyle çiftler salonun ortasında dönmeye başladı.', 'With the accordion waltz, couples began to turn in the middle of the room.'),
+    fail: l('Akordeon valsi aksak bir yürüyüşe döndü.', 'The accordion waltz limped like a broken march.'),
+  },
+  piano_ballad: {
+    success: l('Piyano baladında salon çakmaklarını yaktı.', 'During the piano ballad the room lit up with lighters.'),
+    fail: l('Piyano baladı yanlış bir akorla sendeledi.', 'The piano ballad stumbled on a wrong chord.'),
+  },
+  theremin_wail: {
+    success: l('Theremin çığlığı ensedeki tüyleri diken diken etti.', 'The theremin wail raised the hair on every neck.'),
+    fail: l('Theremin bir radyo paraziti gibi cızırdadı.', 'The theremin crackled like radio static.'),
+  },
+  beat_switch: {
+    success: l('Ritim değiştiğinde salon bir an durdu, sonra patladı.', 'When the beat switched, the room froze for a second, then exploded.'),
+    fail: l('Ritim değişimi grubu ortada bıraktı.', 'The beat switch left the band stranded.'),
+  },
+  steelpan_groove: {
+    success: l('Çelik tava melodisi salona güneş getirdi.', 'The steelpan melody brought sunshine into the room.'),
+    fail: l('Çelik tava grovu tenekeden bir tıngırtıda kaldı.', 'The steelpan groove came out as tinny clatter.'),
+  },
+  yodel: {
+    success: l('Yodel bittiğinde salon aynı nidayı geri yolladı.', 'When the yodel ended, the room sent the same cry right back.'),
+    fail: l('Yodel bir hıçkırık gibi çıktı; gülüşmeler oldu.', 'The yodel came out like a hiccup, to some giggles.'),
+  },
+  string_swell: {
+    success: l('Son nakarat orkestral bir dalgaya dönüştü; salon ayağa kalktı.', 'The last chorus became an orchestral wave and the room rose to its feet.'),
+    fail: l('Orkestral doruk karmakarışık bir gürültüde boğuldu.', 'The orchestral swell drowned in a muddy din.'),
+  },
+  feedback_wall: {
+    success: l('Amfilerin uğultusu salonu saran kontrollü bir fırtınaya döndü.', 'The howl of the amps became a controlled storm wrapping the room.'),
+    fail: l('Geri besleme kontrolden çıktı; herkes kulaklarını kapattı.', 'The feedback ran wild and everyone covered their ears.'),
+  },
+  acrobatic_leap: {
+    success: l('Davul yükseltisinden atılan takla gecenin videosu oldu.', 'The flip off the drum riser became the video of the night.'),
+    fail: l('Akrobatik sıçrayış sert bir inişle bitti.', 'The acrobatic leap ended in a hard landing.'),
+  },
+  visual_sync: {
+    success: l('Ekrandaki görüntüler her vuruşta müzikle birlikte nefes aldı.', 'The visuals breathed with the music on every beat.'),
+    fail: l('Görüntüler müzikle yarışır gibi bir adım geride kaldı.', 'The visuals lagged a step behind the music the whole time.'),
+  },
+  costume_reveal: {
+    success: l('Kostüm sürprizi salonda çığlıklara yol açtı.', 'The costume reveal set off screams across the room.'),
+    fail: l('Kostüm değişimi uzadı; sahne bir süre boş kaldı.', 'The costume change ran long and the stage sat empty for a while.'),
+  },
+  magic_trick: {
+    success: l('Kaybolan pena ön sıradaki birinin cebinden çıkınca salon alkışa boğuldu.', 'When the vanished pick turned up in a front-row pocket, the room erupted.'),
+    fail: l('Sihirbazlık numarasında pena yere düştü; herkes gördü.', 'The pick dropped to the floor mid-trick, in full view.'),
+  },
 };
 
 /** Basın desteğine göre ek cümle */

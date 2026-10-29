@@ -10,6 +10,7 @@ import type { EncoreOutcome, EncorePlan, StageEventOutcome, Tempo } from './perf
 import type { ArticleTone, PressMode } from './press';
 import type { ProducerTier, VideoDirector } from './broadcast';
 import type { Skills } from './skills';
+import type { Attributes } from './attributes';
 import type { Genre, Instrument, Lang } from './world';
 
 export interface ApiError {
@@ -95,6 +96,25 @@ export interface CharacterDto {
   age: number;
   /** Bağımlı mı (alışveriş/tüketim) */
   addicted: boolean;
+  /** Nitelikler (0–100; VIP olmayanlara bulanık, bkz. attributes.ts) */
+  attributes: Attributes;
+  /** Harcanmamış XP (para gibi harcanan bir bakiye; tam sayıya aşağı yuvarlanır) */
+  xp: number;
+}
+
+/** GET /api/attributes: nitelikler, XP ve tavanlar */
+export interface AttributesDto {
+  attributes: Attributes;
+  xp: number;
+  /** Toplam tavana kalan nitelik puanı (VIP olmayanlara 10'luk adımlarla) */
+  attributeRoom: number;
+  /** Son 24 oyun saatinde ve son 7 oyun gününde kazanılan XP ve tavanlar */
+  xpDay: number;
+  xpWeek: number;
+  xpDayCap: number;
+  xpWeekCap: number;
+  /** Yeni hesap: tavanlar yarı yarıya */
+  newAccount: boolean;
 }
 
 export interface HomeDto {
@@ -127,6 +147,61 @@ export interface MeResponse {
   pendingTrades: number;
   /** Karakteri yoksa ve önceki karakteri öldüyse (PERMADEATH) */
   death?: { characterId: number; name: string; cause: string; at: string; inheritance: number } | null;
+  /** Ölen karakterin mirasçı olabilecek yetişkin çocuk sayısı (nesiller; yeni karakter yerine mirasçıyla devam) */
+  heirsAvailable?: number;
+}
+
+/** Karakterin durumu: oynanıyor, mirasını devredip emekliye ayrılmış ya da ölmüş */
+export type CharacterStatus = 'active' | 'retired' | 'dead';
+
+/** Soy ağacı (nesiller): aile adı, kuşak, anne-baba, devreden ve devralan karakter */
+export interface LineageDto {
+  familyName: string;
+  generation: number;
+  /** Bu karakter bir çocuktan doğduysa anne-babası */
+  parents: { characterId: number; name: string; status: CharacterStatus }[];
+  /** Kimden devraldı */
+  predecessor: { characterId: number; name: string; status: CharacterStatus } | null;
+  /** Kim devraldı */
+  heir: { characterId: number; name: string } | null;
+}
+
+export interface HeirCandidateDto {
+  childId: number;
+  name: string;
+  age: number;
+  stage: 'baby' | 'child' | 'teen' | 'adult';
+  /** Mirasçı olmasını engelleyen durum: not_adult, already_heir, consent_needed (yoksa null: olabilir) */
+  blocker: string | null;
+  /** Zaten oynanabilir karakter olduysa kimliği */
+  heirCharacterId: number | null;
+  coParent: { characterId: number; name: string } | null;
+  /** Diğer ebeveyn başka hesapta yaşayan bir oyuncu: onayı gerekir */
+  consentNeeded: boolean;
+  consentGiven: boolean;
+  consentRequested: boolean;
+  /** Önerilen ad: çocuğun adı + aile adı */
+  defaultName: string;
+}
+
+/** GET /api/family/heirs */
+export interface HeirsResponse {
+  predecessor: { characterId: number; name: string; status: CharacterStatus };
+  /** retire: yaşayan karakter isteyerek devreder (emekli olur); death: ölen karakterden devralınır */
+  mode: 'retire' | 'death';
+  familyName: string;
+  generation: number;
+  /** Mirasçıya geçecek para (tahmini; ölümde kesin) */
+  inheritance: number;
+  heirloomLimit: number;
+  /** Yadigâr olabilecek eşyalar */
+  heirlooms: InventoryItemDto[];
+  /** Devri engelleyen durum (hesap yeni, bekleme süresi, cezaevi, meşgul, hamilelik...) */
+  blocker: string | null;
+  blockedUntil: string | null;
+  children: HeirCandidateDto[];
+  /** Diğer ebeveyni olduğum çocuklar için bana gelen onay istekleri */
+  incomingConsents: { childId: number; name: string; fromId: number; from: string }[];
 }
 
 export interface SongDto {
@@ -255,7 +330,19 @@ export interface PublicCharacterDto {
   home: { homeId: HomeId; cityId: string } | null;
   convictions: number;
   partner: { characterId: number; name: string; stage: 'engaged' | 'married' } | null;
-  children: { name: string; bornAt: string; age?: number; stage?: 'baby' | 'child' | 'teen' | 'adult' }[];
+  children: {
+    id?: number;
+    name: string;
+    bornAt: string;
+    age?: number;
+    stage?: 'baby' | 'child' | 'teen' | 'adult';
+    /** Mirasçı olarak oynanabilir karakter olduysa kimliği */
+    characterId?: number | null;
+  }[];
+  /** Oynanıyor, emekli (mirasını devretti) ya da öldü */
+  status?: CharacterStatus;
+  /** Soy ağacı (nesiller) */
+  lineage?: LineageDto;
   tattoos: string[];
   friendsCount: number;
 }
@@ -345,10 +432,36 @@ export interface OfficeHolderDto {
   announcement: string | null;
 }
 
+/** Şehirde yürürlükteki makam kararı (civic-powers.ts). policyLevel VIP olmayanlara yalnızca yönüyle (−1/0/1) gider. */
+export interface CityPolicyDto {
+  office: 'mayor' | 'governor' | 'police_chief';
+  policy: 'ticket_tax' | 'business_fee' | 'patrol';
+  policyLevel: number;
+  /** Kararı veren ve zamanı (varsayılandaysa null) */
+  setBy: { characterId: number; name: string } | null;
+  setAt: string | null;
+  /** İzleyen makam sahibi bu kararı şimdi değiştirebilir mi (sahip, VIP, bekleme süresi geçti); değilse ne zaman */
+  canChange?: boolean;
+  nextChangeAt?: string | null;
+}
+
+export interface PolicyLogDto {
+  office: string;
+  policy: string;
+  oldLevel: number;
+  newLevel: number;
+  reason: 'set' | 'reset';
+  name: string | null;
+  at: string;
+}
+
 export interface CivicResponse {
   cityId: string;
   holders: OfficeHolderDto[];
   elections: ElectionDto[];
+  /** Makam yetkileri: yürürlükteki kararlar ve son kayıtlar */
+  policies: CityPolicyDto[];
+  policyLog: PolicyLogDto[];
 }
 
 export interface BookGigRequest {

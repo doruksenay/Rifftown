@@ -10,8 +10,12 @@ import {
   type PersonDto,
   maskProfanity,
   isBoundItem,
+  GIFT_BONUS_COOLDOWN_HOURS,
+  MAX_GIFT_FRIENDSHIP,
+  gameHoursToMs,
 } from '@rifftown/shared';
 import type pg from 'pg';
+import { config } from '../config';
 import { type Db, many, one, pool, tx } from '../db';
 import { handOver, returnsTooSoon, ringPledged } from './items';
 import { addMoodlet } from './wellbeing';
@@ -38,8 +42,9 @@ export const toPerson = (r: any, prefix = ''): PersonDto => ({
 
 /** Hedef gerçek bir oyuncu mu (yapay karakterlerle sosyal etkileşim yok) */
 export async function requirePlayer(db: Db, id: number) {
-  const r = await one(db, 'SELECT id, name, npc, city_id, dead_at FROM characters WHERE id = $1', [id]);
-  if (!r || r.dead_at) fail('character_not_found', 404);
+  const r = await one(db, 'SELECT id, name, npc, city_id, dead_at, retired_at FROM characters WHERE id = $1', [id]);
+  // Ölen ya da mirasını devredip emekliye ayrılan karakter sosyal hedef değildir
+  if (!r || r.dead_at || r.retired_at) fail('character_not_found', 404);
   if (r.npc) fail('npc_target', 403);
   return r as { id: number; name: string; npc: boolean; city_id: string | null };
 }
@@ -306,6 +311,18 @@ export async function giveGift(fromId: number, toId: number, inventoryId: number
     }
     await handOver(c, inv.id, fromId, toId, 'gift');
     await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'gift')`, [fromId, toId]);
+    // Hediyelik eşya arkadaşlığa küçük bir katkı verir: aynı kişiye 24 oyun saatinde bir kez (tavanlı, para üretmez)
+    const giftDef = ITEM_BY_ID[inv.item_id]?.gift;
+    if (giftDef) {
+      const since = new Date(Date.now() - gameHoursToMs(GIFT_BONUS_COOLDOWN_HOURS, config.gameSpeed));
+      const recent = await one(c, `SELECT 1 FROM social_log WHERE actor_id = $1 AND target_id = $2 AND kind = 'gift_bonus' AND created_at > $3`, [fromId, toId, since]);
+      if (!recent) {
+        const rel = await lockRel(c, fromId, toId);
+        const gain = Math.min(MAX_GIFT_FRIENDSHIP, giftDef.friendship);
+        await c.query('UPDATE relationships SET friendship = LEAST(100, friendship + $3), updated_at = now() WHERE a_id = $1 AND b_id = $2', [rel.a_id, rel.b_id, gain]);
+        await c.query(`INSERT INTO social_log(actor_id, target_id, kind) VALUES ($1, $2, 'gift_bonus')`, [fromId, toId]);
+      }
+    }
     await addMoodlet(c, toId, 'gift');
     await notify(c, toId, 'gift', { fromId, from: me.name, itemId: inv.item_id, name: ITEM_BY_ID[inv.item_id]?.name ?? null });
     return { ok: true };

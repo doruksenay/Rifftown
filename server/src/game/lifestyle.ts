@@ -18,6 +18,9 @@ import {
   gameHoursToMs,
   INDULGENCE_PER_MEAL,
   PACING,
+  CONSUMABLE_COOLDOWN_HOURS,
+  ITEM_BY_ID,
+  skillMult,
 } from '@rifftown/shared';
 import { indulge } from './consequences';
 import type pg from 'pg';
@@ -87,6 +90,42 @@ export async function eatMeal(characterId: number, locationId: string, mealId: s
     await changeWellbeing(c, ch, { energy });
     await addMoodlet(c, ch.id, meal!.id === 'chef' ? 'feast' : 'good_meal');
     return { price, mood: meal!.mood, health: meal!.health, energy };
+  });
+}
+
+// ---------- Tüketim eşyaları ----------
+
+/** Son tüketim eşyasından bu yana bekleme bitmediyse bitiş zamanı */
+export async function consumableReadyAt(db: Db, characterId: number): Promise<Date | null> {
+  const last = await one(db, 'SELECT max(created_at) AS at FROM item_uses WHERE character_id = $1', [characterId]);
+  if (!last?.at) return null;
+  const at = new Date(last.at.getTime() + hoursMs(CONSUMABLE_COOLDOWN_HOURS));
+  return at.getTime() > Date.now() ? at : null;
+}
+
+/**
+ * Envanterdeki bir tüketim eşyasını kullanmak: küçük ve anlık etki (enerji, ruh hâli, sağlık, ilham), eşya harcanır.
+ * Bütün tüketim eşyaları ortak bir beklemeye tabidir. Beslenme becerisi enerjiyi, ilk yardım sağlığı artırır (en fazla ×1,5).
+ * Yanıtta kesin sayı dönmez (VIP olmayanlara bulanıklık; istemci karakteri yeniden okur).
+ */
+export async function useItem(characterId: number, inventoryId: number) {
+  return tx(async (c) => {
+    const ch = await lockCharacter(c, characterId);
+    if (await activeAction(c, characterId)) fail('busy', 409);
+    const inv = await one(c, 'SELECT * FROM inventory WHERE id = $1 AND character_id = $2 FOR UPDATE', [inventoryId, characterId]);
+    if (!inv) fail('not_found', 404);
+    if (inv.listed) fail('item_listed', 409);
+    const def = ITEM_BY_ID[inv.item_id];
+    if (!def?.use) fail('not_usable');
+    if (await consumableReadyAt(c, characterId)) fail('consumable_cooldown', 409);
+    const u = def!.use!;
+    const health = (u.health ?? 0) * skillMult(ch.skills, 'remedy');
+    const energy = (u.energy ?? 0) * skillMult(ch.skills, 'nutrition');
+    await c.query('UPDATE characters SET mood = LEAST(100, mood + $2), health = LEAST(100, health + $3) WHERE id = $1', [ch.id, u.mood ?? 0, health]);
+    if (energy || u.inspiration) await changeWellbeing(c, ch, { energy, inspiration: u.inspiration ?? 0 });
+    await c.query('DELETE FROM inventory WHERE id = $1', [inv.id]);
+    await c.query('INSERT INTO item_uses(character_id, item_id) VALUES ($1, $2)', [ch.id, def!.id]);
+    return { ok: true, itemId: def!.id, readyAt: new Date(Date.now() + hoursMs(CONSUMABLE_COOLDOWN_HOURS)).toISOString() };
   });
 }
 

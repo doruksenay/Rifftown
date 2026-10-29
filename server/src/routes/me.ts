@@ -22,7 +22,12 @@ import {
   indulgenceForSpend,
   CRAVING_SATISFY_SPEND,
   seasonAt,
+  ATTRIBUTES,
+  ATTR_MAX_SPEND,
+  startAllocationError,
+  startingAttributes,
 } from '@rifftown/shared';
+import { attributesOf, spendAttribute } from '../game/attributes';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { storedMoodlets } from '../game/wellbeing';
@@ -36,10 +41,11 @@ import { bailQuote, inCustody } from '../game/crime';
 import { homeOf } from '../game/homes';
 import { businessOf } from '../game/business';
 import { inventoryOf, recordMoneyFlow, requireTransferRoom, toInventoryDto, ringPledged } from '../game/items';
-import { hotelOf } from '../game/lifestyle';
+import { hotelOf, useItem } from '../game/lifestyle';
 import { pair, unreadMessages } from '../game/social';
 import { idParam, parse } from './util';
-import { indulge, lastDeath } from '../game/consequences';
+import { claimInheritance, indulge, lastDeath } from '../game/consequences';
+import { answerHeirConsent, heirsInfo, requestHeirConsent, succeed } from '../game/generations';
 
 /** Kontrol karakterlerini atar; tek satırlık alanlarda satır sonlarını da */
 const clean = (v: string | undefined, singleLine = false) => {
@@ -70,9 +76,12 @@ export async function meRoutes(app: FastifyInstance) {
     };
     if (!u.characterId) {
       // Karakteri öldüyse (yalnızca PERMADEATH açıkken) yeni karakter ekranında anılır
+      const death = await lastDeath(pool, u.id);
       return {
         ...base, character: null, action: null, band: null, unreadNotifications: 0, pendingInvites: 0, bailCost: null, unreadMessages: 0,
-        death: await lastDeath(pool, u.id),
+        death,
+        // Nesiller: ölen karakterin mirasçı olabilecek yetişkin çocukları (yeni karakter yerine)
+        heirsAvailable: death ? await heirsInfo(u.id, u.isVip, pool).then((h) => h.children.filter((k) => !k.blocker).length).catch(() => 0) : 0,
       };
     }
     await evaluateThrottled(pool, u.characterId);
@@ -126,23 +135,29 @@ export async function meRoutes(app: FastifyInstance) {
         mainInstrument: z.enum(INSTRUMENTS),
         favoriteGenre: z.enum(GENRES).default('rock'),
         avatarColor: z.string().refine((c) => AVATAR_COLORS.includes(c)).optional(),
+        /** Başlangıç puanlarının dağılımı (toplam 20, bir niteliğe en fazla 10). Verilmezse role göre varsayılan. */
+        startAttributes: z.record(z.string().max(20), z.number()).optional(),
       }),
       req.body,
     );
+    if (body.startAttributes) {
+      const bad = startAllocationError(body.startAttributes);
+      if (bad) fail(bad);
+    }
     if (await one(pool, 'SELECT 1 FROM characters WHERE lower(name) = lower($1)', [body.name])) fail('name_taken', 409);
     const color = body.avatarColor ?? AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
     return tx(async (c) => {
       // Ölen karakterin mirası bir kez, yeni karaktere geçer (para yalnızca taşınır, basılmaz). Aynı işlemde: kayıt
-      // başarısız olursa miras kaybolmaz.
-      const heirs = await many(c, 'SELECT id, inherited FROM characters WHERE former_user_id = $1 AND inherited > 0 FOR UPDATE', [req.user!.id]);
-      const inheritance = heirs.reduce((s, h) => s + Number(h.inherited), 0);
-      if (heirs.length) await c.query('UPDATE characters SET inherited = 0 WHERE id = ANY($1::bigint[])', [heirs.map((h) => h.id)]);
+      // başarısız olursa miras kaybolmaz. Mirasçıyla devamda da aynı kod kullanılır (generations.ts).
+      const inheritance = await claimInheritance(c, req.user!.id);
       const ch = await one(
         c,
-        `INSERT INTO characters(user_id, name, avatar_color, main_instrument, money, mood, health, city_id, skills)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+        `INSERT INTO characters(user_id, name, avatar_color, main_instrument, money, mood, health, city_id, skills, attributes)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
         [req.user!.id, body.name, color, body.mainInstrument, START_MONEY + inheritance, START_MOOD, START_HEALTH, body.cityId,
-          JSON.stringify(startingSkills(body.mainInstrument, body.favoriteGenre))],
+          JSON.stringify(startingSkills(body.mainInstrument, body.favoriteGenre)),
+          // Nitelikler: 10 taban + ana enstrüman payı + başlangıç puanları. XP sıfırdan başlar (miras XP taşımaz).
+          JSON.stringify(startingAttributes(body.mainInstrument, body.startAttributes))],
       );
       await c.query(`INSERT INTO notifications(character_id, kind, data) VALUES ($1, 'welcome', '{}')`, [ch.id]);
       return { character: toCharacterDto(ch) };
@@ -150,6 +165,42 @@ export async function meRoutes(app: FastifyInstance) {
   });
 
   app.get('/character/avatar-colors', async () => ({ colors: AVATAR_COLORS }));
+
+  // ---------- Nesiller: mirasçıyla devam ----------
+
+  /** Devredebilecek karakter (yaşayan ya da ölen), olası mirasçılar, tahmini miras ve yadigâr adayları */
+  app.get('/family/heirs', async (req) => heirsInfo(req.user!.id, req.user!.isVip, pool));
+
+  /** Çocuğun diğer ebeveyni başka hesaptaysa onay iste */
+  app.post('/family/children/:id/heir-request', async (req) => requestHeirConsent(req.user!.id, parse(idParam, req.params).id));
+
+  /** Diğer ebeveyn olarak onay ver ya da reddet */
+  app.post('/family/children/:id/heir-consent', async (req) =>
+    answerHeirConsent(charId(req), parse(idParam, req.params).id, parse(z.object({ accept: z.boolean() }), req.body).accept),
+  );
+
+  /** Mirası devret: yetişkin çocuk mirasçı karakter olur; yaşayan ebeveyn emekliye ayrılır (tek işlem) */
+  app.post('/succession', async (req) => {
+    const body = parse(
+      z.object({
+        childId: z.number().int().positive(),
+        name: z.string().trim().max(24).optional(),
+        cityId: z.string().refine((id) => !!CITY_BY_ID[id]),
+        mainInstrument: z.enum(INSTRUMENTS),
+        favoriteGenre: z.enum(GENRES).default('rock'),
+        avatarColor: z.string().refine((c) => AVATAR_COLORS.includes(c)).optional(),
+        startAttributes: z.record(z.string().max(20), z.number()).optional(),
+        heirlooms: z.array(z.number().int().positive()).max(10).optional(),
+      }),
+      req.body,
+    );
+    if (body.startAttributes) {
+      const bad = startAllocationError(body.startAttributes);
+      if (bad) fail(bad);
+    }
+    const color = body.avatarColor ?? AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
+    return succeed(req.user!.id, req.user!.isVip, { ...body, avatarColor: color });
+  });
 
   app.patch('/character', async (req) => {
     const id = charId(req);
@@ -186,6 +237,16 @@ export async function meRoutes(app: FastifyInstance) {
       await c.query('UPDATE characters SET location_id = $2 WHERE id = $1', [id, body.locationId]);
       return { ok: true, locationId: body.locationId };
     });
+  });
+
+  // ---------- Nitelikler ve XP ----------
+
+  app.get('/attributes', async (req) => attributesOf(pool, await getCharacter(pool, charId(req))));
+
+  /** XP harcayıp bir niteliği yükseltir (para ile XP alınamaz; puan geri alınmaz) */
+  app.post('/attributes/spend', async (req) => {
+    const body = parse(z.object({ attribute: z.enum(ATTRIBUTES), points: z.number().int().min(1).max(ATTR_MAX_SPEND).default(1) }), req.body);
+    return spendAttribute(charId(req), body.attribute, body.points);
   });
 
   // ---------- Kitapçı: beceri kitapları ----------
@@ -261,7 +322,7 @@ export async function meRoutes(app: FastifyInstance) {
     requireVip(req);
     const body = parse(z.object({ toName: z.string().trim().min(1), amount: z.number().int().min(1).max(VIP.maxTransfer) }), req.body);
     return tx(async (c) => {
-      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL', [body.toName]);
+      const target = await one(c, 'SELECT id FROM characters WHERE lower(name) = lower($1) AND NOT npc AND dead_at IS NULL AND retired_at IS NULL', [body.toName]);
       if (!target) fail('character_not_found', 404);
       const toId = Number(target.id);
       if (toId === id) fail('invalid_target');
@@ -350,6 +411,12 @@ export async function meRoutes(app: FastifyInstance) {
       await c.query('UPDATE characters SET money = money + $2, location_id = $3 WHERE id = $1', [id, price, loc!.id]);
       return { ok: true, earned: price };
     });
+  });
+
+  // Tüketim eşyası kullan (enerji, ruh hâli, sağlık, ilham; ortak bekleme süresi)
+  app.post('/inventory/:id/use', async (req) => {
+    const { id } = parse(idParam, req.params);
+    return useItem(charId(req), id);
   });
 
   app.post('/inventory/:id/equip', async (req) => {

@@ -1,9 +1,9 @@
-import { CITY_BY_ID, HOME_BY_ID, ITEM_BY_ID, LOCATION_BY_ID, type Lang, OFFICE_BY_ID, PROFESSION_BY_ID, ROLE_NAMES, isEquippable } from '@rifftown/shared';
+import { ATTRIBUTE_DEFS, CITY_BY_ID, HOME_BY_ID, ITEM_BY_ID, LOCATION_BY_ID, type Lang, OFFICE_BY_ID, PROFESSION_BY_ID, ROLE_NAMES, isEquippable } from '@rifftown/shared';
 import { AccountSettings } from '@/components/legal';
 import { ColorDot } from '@/components/market';
 import { ProfileEditor } from '@/components/profile-editor';
 import { SkillList } from '@/components/skill-list';
-import { TierText } from '@/components/tier';
+import { TierMeter, TierText } from '@/components/tier';
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { View } from 'react-native';
@@ -144,6 +144,21 @@ export default function MeTab() {
           last
         />
       ))}
+      {/* Nesiller: yetişkin bir çocukla devam (mirası devret) */}
+      <ListRow title={t('successionTitle')} subtitle={t('successionSub')} right="›" onPress={() => router.push('/succession')} last />
+
+      {/* Nitelikler: kim olduğun (attributes.ts). Ayrıntı ve XP harcama /attributes ekranında. */}
+      <Heading>{t('attributes')}</Heading>
+      {ATTRIBUTE_DEFS.map((def) => (
+        <TierMeter key={def.id} label={p(def.name)} scale="attribute" value={ch.attributes?.[def.id] ?? 0} />
+      ))}
+      <Button
+        title={ch.xp > 0 ? `${t('attrOpen')} · ${t('attrPendingXp', { n: ch.xp })}` : t('attrOpen')}
+        variant={ch.xp > 0 ? 'primary' : 'secondary'}
+        small
+        onPress={() => router.push('/attributes')}
+        style={{ alignSelf: 'flex-start' }}
+      />
 
       <SkillList skills={ch.skills} onlyKnown />
       <Row style={{ marginTop: space.sm }}>

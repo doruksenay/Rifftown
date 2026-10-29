@@ -40,6 +40,10 @@ function CharacterProfileScreen() {
   const recent = [...ch.achievements].sort((a, b) => b.unlockedAt.localeCompare(a.unlockedAt)).slice(0, 5);
   const prof = ch.profession ? PROFESSION_BY_ID[ch.profession.id] : null;
   const isMe = me.data?.character?.id === ch.id;
+  // Nesiller: emekli (mirasını devretmiş) ya da ölmüş karakterin profili arşivdir; sosyal eylem yok
+  const active = !ch.status || ch.status === 'active';
+  const lin = ch.lineage;
+  const playable = ch.children.filter((k) => k.characterId);
   const family = [
     ch.partner ? t('partnerLine', { stage: t(`partnerStage_${ch.partner.stage}` as StringKey), name: ch.partner.name }) : null,
     ch.children.length
@@ -66,6 +70,7 @@ function CharacterProfileScreen() {
           {ch.isVip ? <Badge text={t('vipMember')} color={c.pink} /> : null}
           {ch.npc ? <Badge text={t('npcMusician')} color={c.blue} /> : null}
           {ch.jailed ? <Badge text={t('jailedProfile')} color={c.danger} /> : null}
+          {!active ? <Badge text={t(ch.status === 'dead' ? 'status_dead' : 'status_retired')} color={c.inkSoft} /> : null}
         </Row>
         <Small style={{ textAlign: 'center' }}>
           {`${ch.cityId ? p(CITY_BY_ID[ch.cityId].name) : t('onTheRoad')} · ${t('memberSince', { date: new Date(ch.createdAt).toLocaleDateString(locale) })}`}
@@ -73,7 +78,7 @@ function CharacterProfileScreen() {
         {ch.friendsCount ? <Small style={{ textAlign: 'center' }}>{t('friendsN', { n: ch.friendsCount })}</Small> : null}
       </View>
 
-      {!isMe && !ch.npc ? <ProfileActions id={ch.id} name={ch.name} /> : null}
+      {!isMe && !ch.npc && active ? <ProfileActions id={ch.id} name={ch.name} /> : null}
 
       <Row style={{ marginTop: space.xl, gap: space.sm }}>
         <Stat label={t('achievements')} value={t('achievementPointsN', { n: ch.achievementPoints })} />
@@ -99,9 +104,26 @@ function CharacterProfileScreen() {
         </View>
       ) : null}
 
-      {!isMe && !ch.npc ? <RelationshipPanel id={ch.id} name={ch.name} /> : null}
+      {lin && !ch.npc && (lin.generation > 1 || lin.heir || playable.length) ? (
+        <>
+          <Heading>{t('lineageTitle')}</Heading>
+          <Body>{t('lineageFamily', { name: lin.familyName, n: lin.generation })}</Body>
+          {lin.parents.length ? <Small>{t('lineageParents', { names: lin.parents.map((x) => x.name).join(', ') })}</Small> : null}
+          {lin.predecessor ? (
+            <ListRow title={t('lineagePredecessor', { name: lin.predecessor.name })} right="›" onPress={() => router.push(`/character/${lin.predecessor!.characterId}`)} last={!lin.heir && !playable.length} />
+          ) : null}
+          {lin.heir ? <ListRow title={t('lineageHeir', { name: lin.heir.name })} right="›" onPress={() => router.push(`/character/${lin.heir!.characterId}`)} last={!playable.length} /> : null}
+          {playable
+            .filter((k) => k.characterId !== lin.heir?.characterId)
+            .map((k, i, arr) => (
+              <ListRow key={k.characterId} title={t('childIsCharacter', { name: k.name })} right="›" onPress={() => router.push(`/character/${k.characterId}`)} last={i === arr.length - 1} />
+            ))}
+        </>
+      ) : null}
+
+      {!isMe && !ch.npc && active ? <RelationshipPanel id={ch.id} name={ch.name} /> : null}
       {isMe ? <FamilySettings /> : null}
-      {!isMe && !ch.npc ? <FriendLessons otherId={ch.id} sameCity={!!ch.cityId && ch.cityId === me.data?.character?.cityId} /> : null}
+      {!isMe && !ch.npc && active ? <FriendLessons otherId={ch.id} sameCity={!!ch.cityId && ch.cityId === me.data?.character?.cityId} /> : null}
 
       {ch.band ? (
         <>

@@ -1,6 +1,6 @@
 // Eşya ayrıntısı: kuşan, sprey boyayla boya, isim ver, arkadaşa hediye et.
 
-import { type FriendsResponse, ITEM_BY_ID, PAINT_COLORS, isEquippable, isPaintable } from '@rifftown/shared';
+import { CONSUMABLE_COOLDOWN_HOURS, type FriendsResponse, ITEM_BY_ID, PAINT_COLORS, isEquippable, isPaintable, repairFits } from '@rifftown/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -48,7 +48,10 @@ function ItemScreen() {
   }
   const refresh = () => qc.invalidateQueries({ queryKey: ['inventory'] });
   const sprays = (inv.data ?? []).filter((i) => ITEM_BY_ID[i.itemId]?.slot === 'spray' && !i.listed);
-  const kits = (inv.data ?? []).filter((i) => i.itemId === 'repair_kit' && !i.listed);
+  // Bu eşyaya uyan bakım setleri (tamir kiti her şeye; tel takımı telli çalgılara...); her türden bir düğme
+  const kits = (inv.data ?? [])
+    .filter((i) => !i.listed && repairFits(ITEM_BY_ID[i.itemId], def.slot))
+    .filter((k, i, arr) => arr.findIndex((x) => x.itemId === k.itemId) === i);
   const nameable = isPaintable(def.slot) || def.slot === 'pet' || def.slot === 'art';
   const city = me.data?.character?.cityId;
   const here = (friends.data?.friends ?? []).filter((f) => f.cityId && f.cityId === city);
@@ -75,14 +78,42 @@ function ItemScreen() {
         {item.listed ? <Small color={c.pink}>{t('listedBadge')}</Small> : null}
         {item.wear > 0 ? <Small color={item.wear >= 50 ? c.danger : c.inkSoft}>{t('wearLine', { n: item.wear })}</Small> : null}
       </View>
-      {item.wear > 0 && kits.length ? (
+      {item.wear > 0
+        ? kits.map((k) => (
+            <Button
+              key={k.id}
+              title={k.itemId === 'repair_kit' ? t('repairWithKit') : t('repairWith', { kit: p(ITEM_BY_ID[k.itemId].name) })}
+              variant="secondary"
+              style={{ marginTop: space.md }}
+              disabled={pending || locked}
+              onPress={() => run(() => api.post('/repair', { kitId: k.id, targetId: item.id }), { success: t('repaired'), invalidate: ['inventory', 'me'] })}
+            />
+          ))
+        : null}
+
+      {def.repair?.all ? (
         <Button
-          title={t('repairWithKit')}
-          variant="secondary"
-          style={{ marginTop: space.md }}
+          title={t('serviceAllGear')}
+          style={{ marginTop: space.lg }}
           disabled={pending || locked}
-          onPress={() => run(() => api.post('/repair', { kitId: kits[0].id, targetId: item.id }), { success: t('repaired'), invalidate: ['inventory', 'me'] })}
+          onPress={async () => {
+            if (await run(() => api.post('/repair', { kitId: item.id }), { success: t('repaired'), invalidate: ['inventory', 'me'] })) router.back();
+          }}
         />
+      ) : null}
+
+      {def.use ? (
+        <>
+          <Button
+            title={t('useItem')}
+            style={{ marginTop: space.lg }}
+            disabled={pending || item.listed || !!me.data?.action}
+            onPress={async () => {
+              if (await run(() => api.post(`/inventory/${item.id}/use`), { success: t('usedItem', { item: p(def.name) }), invalidate: ['inventory', 'me'] })) router.back();
+            }}
+          />
+          <Small style={{ marginTop: space.xs }}>{t('consumableHint', { n: CONSUMABLE_COOLDOWN_HOURS })}</Small>
+        </>
       ) : null}
 
       {isEquippable(def.slot) ? (

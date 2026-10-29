@@ -65,6 +65,10 @@ const TEMPLATES: Record<string, Tpl> = {
   pregnancy: (_d, l) => ({ title: T(l, 'Müjde', 'Big news'), body: T(l, 'Aileniz büyüyor!', 'Your family is growing!') }),
   baby_born: (d, l) => ({ title: T(l, 'Hoş geldin bebek', 'Welcome, baby'), body: T(l, `Bebeğiniz dünyaya geldi: ${d.name}.`, `Your baby has arrived: ${d.name}.`) }),
   family_try_offer: (d, l) => ({ title: T(l, 'Aile', 'Family'), body: T(l, `${d.from} seninle çocuk sahibi olmayı denemek istiyor.`, `${d.from} would like to try for a baby with you.`) }),
+  // Nesiller: diğer ebeveynin onayı ve mirasçı
+  heir_consent_request: (d, l) => ({ title: T(l, 'Aile', 'Family'), body: T(l, `${d.from}, ${d.name} mirasçısı olsun istiyor. Onayın gerekiyor.`, `${d.from} wants ${d.name} to become their heir. Your consent is needed.`) }),
+  heir_consent_given: (d, l) => ({ title: T(l, 'Onay geldi', 'Consent given'), body: T(l, `${d.from}, ${d.name} için onay verdi.`, `${d.from} consented for ${d.name}.`) }),
+  child_became_heir: (d, l) => ({ title: T(l, 'Aile', 'Family'), body: T(l, `${d.name} artık kendi hayatını yaşıyor.`, `${d.name} is now living their own life.`) }),
   cheated_on: (d, l) => ({ title: T(l, 'Kötü bir haber', 'Bad news'), body: T(l, `${d.from} sana sadık kalmadı.`, `${d.from} wasn't faithful to you.`) }),
   child_upkeep: (d, l) =>
     d.paid ? null : { title: T(l, 'Aile bütçesi', 'Family budget'), body: T(l, `${d.name} için bu hafta bakım giderini karşılayamadın.`, `You couldn't cover ${d.name}'s care this week.`) },

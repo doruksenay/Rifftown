@@ -12,7 +12,7 @@ export interface Tier {
   name: L;
 }
 
-export type ScaleName = 'quality' | 'skill' | 'familiarity' | 'fame' | 'mood' | 'health' | 'friendship' | 'romance' | 'energy' | 'inspiration' | 'press';
+export type ScaleName = 'quality' | 'skill' | 'familiarity' | 'fame' | 'mood' | 'health' | 'friendship' | 'romance' | 'energy' | 'inspiration' | 'press' | 'attribute';
 
 const t = (min: number, tr: string, en: string): Tier => ({ min, name: { tr, en } });
 
@@ -48,6 +48,16 @@ export const SCALES: Record<ScaleName, Tier[]> = {
     t(45, 'rahat çalıyor', 'plays it comfortably'),
     t(70, 'ezbere biliyor', 'knows it by heart'),
     t(90, 'uykusunda çalar', 'could play it asleep'),
+  ],
+  /** Karakter nitelikleri (çekicilik, ses, zekâ…). 25, 50 ve 75 XP bedel basamaklarıyla örtüşür (attributes.ts). */
+  attribute: [
+    t(0, 'zayıf', 'weak'),
+    t(15, 'sıradan', 'ordinary'),
+    t(25, 'iyi', 'good'),
+    t(40, 'güçlü', 'strong'),
+    t(50, 'çok güçlü', 'very strong'),
+    t(75, 'olağanüstü', 'exceptional'),
+    t(90, 'eşsiz', 'peerless'),
   ],
   /** Bir şehirdeki şöhret. Eşikler mekân şartlarıyla örtüşür: kulüp 15, salon 45. */
   fame: [

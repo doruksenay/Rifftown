@@ -3,7 +3,7 @@
 // Eylem, konser ve liste sonuçlarından hemen sonra; diğer olaylar (oy, para gönderme, VIP) için /me çağrısında
 // en fazla dakikada bir kontrol edilir.
 
-import { CITY_IDENTITY, HEARTBREAKER_FLINGS, INSTRUMENTS, ROLE_SKILLS, STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf } from '@rifftown/shared';
+import { CITY_IDENTITY, HEARTBREAKER_FLINGS, INSTRUMENTS, ROLE_SKILLS, STAT_ACHIEVEMENTS, ACHIEVEMENT_BY_ID, CITY_BY_ID, LOCATION_BY_ID, GOLD_UNITS, RANK_HOURS, VENUE_RULES, type VenueType, tierOf, completedCollections, collectionAchievementId } from '@rifftown/shared';
 import { addMoodlet } from './wellbeing';
 import { type Db, many, one } from '../db';
 import { notify } from './common';
@@ -161,6 +161,10 @@ export async function evaluateAchievements(db: Db, characterId: number): Promise
   for (const c of CITY_IDENTITY) earned[`city_${c.cityId}`] = cityGigs.some((g) => g.city_id === c.cityId && g.genre === c.signatureGenre);
   const dishes = await one(db, `SELECT count(DISTINCT meal_id)::int AS n FROM meals WHERE character_id = $1 AND meal_id LIKE 'local_%'`, [characterId]);
   earned.world_kitchen = Number(dishes?.n ?? 0) >= CITY_IDENTITY.length;
+
+  // Koleksiyonlar: envanterde (pazarda ilanda olanlar dahil) her gruptan bir eşya
+  const owned = await many(db, 'SELECT DISTINCT item_id FROM inventory WHERE character_id = $1', [characterId]);
+  for (const id of completedCollections(owned.map((r) => r.item_id as string))) earned[collectionAchievementId(id)] = true;
 
   // Veri odaklı başarımlar: istatistik eşiği (content/progress.ts)
   const stats = await lifetimeStats(db, characterId);

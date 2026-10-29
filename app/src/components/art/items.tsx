@@ -196,6 +196,8 @@ const ICON_BY_SLOT: Record<string, IconName> = {
   sax: 'saxophone',
   violin: 'violin',
   percussion: 'music-circle',
+  consumable: 'cup-outline',
+  gift: 'gift-outline',
 };
 
 /** Bir eşyanın çıkartması. color: boya rengi (yoksa fabrika rengi). */

@@ -1,4 +1,4 @@
-// Yönetim paneli: istatistikler, online oyuncular, oyuncu arama ve tüm alanlarını düzenleme (para, beceri, profil...),
+// Yönetim paneli: istatistikler, online oyuncular, oyuncu arama ve tüm alanlarını düzenleme (para, beceri, nitelik, XP, profil...),
 // banlama, profil ve sohbet moderasyonu.
 // Sunucu /admin adresinde yayınlar. Sadece is_admin işaretli hesaplar kullanabilir.
 
@@ -79,6 +79,11 @@ export const ADMIN_HTML = /* html */ `<!doctype html>
       <table><thead><tr><th>Zaman</th><th>Tür</th><th>Şehir</th><th>Yazan</th><th>İçerik</th><th></th></tr></thead><tbody id="articles"></tbody></table>
     </section>
     <section>
+      <h2>Şehir kararları</h2>
+      <p style="color:var(--muted);margin:0 0 12px">Makam sahiplerinin kararları (bilet vergisi, işletme harcı, devriye) ve makam el değiştirince yapılan sıfırlamalar.</p>
+      <table><thead><tr><th>Zaman</th><th>Şehir</th><th>Makam</th><th>Karar</th><th>Kim</th><th>Eski → yeni</th></tr></thead><tbody id="policies"></tbody></table>
+    </section>
+    <section>
       <h2>Son profil değişiklikleri</h2>
       <p style="color:var(--muted);margin:0 0 12px">Uygunsuz fotoğraf, başlık ya da açıklamayı buradan kaldırabilirsin.</p>
       <div id="profiles" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px"></div>
@@ -115,7 +120,7 @@ async function loadUsers() {
   const tb = $('users'); tb.replaceChildren();
   for (const u of users) {
     const tr = el('tr');
-    tr.append(el('td', u.id), el('td', u.email), el('td', u.name || '—'), el('td', u.city_id || (u.name ? 'yolda' : '—')), el('td', u.money ?? '—'),
+    tr.append(el('td', u.id), el('td', u.email), el('td', u.name ? u.name + (u.generation > 1 ? ' (' + u.generation + '. kuşak)' : '') : (u.former_count ? '— (önceki: ' + u.former_count + ')' : '—')), el('td', u.city_id || (u.name ? 'yolda' : '—')), el('td', u.money ?? '—'),
       el('td', u.vip_until && new Date(u.vip_until) > new Date() ? new Date(u.vip_until).toLocaleDateString('tr-TR') : '—'),
       el('td', u.last_seen ? new Date(u.last_seen).toLocaleString('tr-TR') : '—'),
       el('td', u.banned ? 'Banlı' : (u.is_admin ? 'Yönetici' : 'Aktif')));
@@ -180,7 +185,7 @@ const numOrNull = (s) => (s === '' ? null : Number(s));
 async function openEditor(userId) {
   try {
     if (!META) META = await api('/admin/meta');
-    const { user, character: ch } = await api('/admin/players/' + userId);
+    const { user, character: ch, formerCharacters, successions } = await api('/admin/players/' + userId);
     editUserId = userId; edFields = [];
     $('edMsg').textContent = '';
     $('edTitle').textContent = 'Düzenle: ' + (ch ? ch.name + ' · ' : '') + user.email + (user.is_admin ? ' (yönetici)' : '');
@@ -195,6 +200,37 @@ async function openEditor(userId) {
       (i) => (i.value ? new Date(i.value).toISOString() : null), user.vip_until && new Date(user.vip_until) > new Date() ? new Date(toLocalInput(user.vip_until)).toISOString() : null);
     g1.append(wrap('Kayıt tarihi', mk('input', { value: new Date(user.created_at).toLocaleString('tr-TR'), disabled: true })));
     g1.append(wrap('Kayıt IP', mk('input', { value: user.register_ip || '—', disabled: true })));
+
+    // Nesiller: önceki (ölen ya da emekli) karakterler ve devir kayıtları; salt okunur
+    if ((formerCharacters && formerCharacters.length) || (ch && ch.generation > 1)) {
+      body.append(el('h3', 'Soy ve devirler'));
+      if (ch) body.append(el('p', 'Aile adı: ' + (ch.familyName || '—') + ' · ' + ch.generation + '. kuşak' + (ch.predecessorId ? ' · devraldığı karakter #' + ch.predecessorId : ''), 'muted'));
+      const STATUS = { dead: 'Öldü', retired: 'Emekli (devretti)', active: 'Oynanıyor' };
+      if (formerCharacters && formerCharacters.length) {
+        const tbl = el('table'); const th = el('tr');
+        for (const h of ['#', 'Ad', 'Durum', 'Zaman', 'Bekleyen miras', 'Kuşak', 'Eşyaları devredildi']) th.append(el('th', h));
+        tbl.append(th);
+        for (const f of formerCharacters) {
+          const tr = el('tr');
+          tr.append(el('td', f.id), el('td', f.name), el('td', STATUS[f.status] || f.status), el('td', f.at ? new Date(f.at).toLocaleString('tr-TR') : '—'),
+            el('td', f.pendingInheritance), el('td', f.generation), el('td', f.estateClaimed ? 'Evet' : 'Hayır'));
+          tbl.append(tr);
+        }
+        body.append(tbl);
+      }
+      if (successions && successions.length) {
+        const tbl = el('table'); const th = el('tr');
+        for (const h of ['Zaman', 'Neden', 'Devreden', 'Mirasçı', 'Para', 'Yadigâr']) th.append(el('th', h));
+        tbl.append(th);
+        for (const s of successions) {
+          const tr = el('tr');
+          tr.append(el('td', new Date(s.at).toLocaleString('tr-TR')), el('td', s.cause === 'death' ? 'Ölüm' : 'İsteyerek'),
+            el('td', s.from ? s.from.name + ' #' + s.from.id : '—'), el('td', s.to ? s.to.name + ' #' + s.to.id : '—'), el('td', s.money), el('td', s.items));
+          tbl.append(tr);
+        }
+        body.append(tbl);
+      }
+    }
 
     if (!ch) { body.append(el('p', 'Bu hesabın henüz karakteri yok.', 'muted')); $('editor').hidden = false; return; }
 
@@ -245,6 +281,18 @@ async function openEditor(userId) {
       g4.append(w);
     }
 
+    body.append(el('h3', 'Nitelikler ve XP (nitelik 0-' + META.attributeMax + '; oyuncunun toplam tavanı ' + META.attributeTotalCap + ')'));
+    const gA = el('div', undefined, 'grid'); body.append(gA);
+    for (const a of META.attributes) {
+      const cur = Math.round((ch.attributes[a.id] ?? 0) * 100) / 100;
+      const input = mk('input', { type: 'number', min: 0, max: META.attributeMax, step: 1, value: cur });
+      gA.append(wrap(a.name, input));
+      edFields.push({ group: 'attributes', key: a.id, read: (i) => Number(i.value), orig: cur, input });
+    }
+    const xpNow = Math.floor((ch.xp ?? 0) * 100) / 100;
+    reg(gA, 'character', 'xp', 'Harcanmamış XP', mk('input', { type: 'number', min: 0, step: 1, value: xpNow }), (i) => Number(i.value), xpNow);
+    gA.append(wrap('Ömür boyu kazanılan XP', mk('input', { value: Math.floor(ch.xpTotal ?? 0), disabled: true })));
+
     body.append(el('h3', 'Beceriler (boş: açılmamış, 0-' + META.maxSkill + ')'));
     const quick = el('div', undefined, 'row');
     quick.append(btn('Hepsini ' + META.maxSkill + ' yap', () => document.querySelectorAll('.skillIn').forEach((i) => { i.value = META.maxSkill; })));
@@ -273,12 +321,15 @@ function box_reg_skill(box, s, input, cur) {
 async function saveEditor() {
   const patch = { user: {}, character: {} };
   const skills = {};
+  const attributes = {};
   for (const f of edFields) {
     const val = f.read(f.input);
     if (f.group === 'skills') { if (val !== f.orig) skills[f.key] = val; continue; }
+    if (f.group === 'attributes') { if (val !== f.orig) attributes[f.key] = val; continue; }
     if (JSON.stringify(val) !== JSON.stringify(f.orig)) patch[f.group][f.key] = val;
   }
   if (Object.keys(skills).length) patch.character.skills = skills;
+  if (Object.keys(attributes).length) patch.character.attributes = attributes;
   if (!Object.keys(patch.user).length) delete patch.user;
   if (!Object.keys(patch.character).length) delete patch.character;
   const msg = $('edMsg');
@@ -341,6 +392,17 @@ async function loadProfiles() {
     card.append(row); box.append(card);
   }
 }
+async function loadPolicies() {
+  const { policies } = await api('/admin/policies');
+  const tb = $('policies'); tb.replaceChildren();
+  if (!policies.length) { const tr = el('tr'); const td = el('td', 'Karar yok.'); td.colSpan = 6; tr.append(td); tb.append(tr); return; }
+  for (const p of policies) {
+    const tr = el('tr');
+    tr.append(el('td', new Date(p.created_at).toLocaleString('tr-TR')), el('td', p.city_id), el('td', p.office), el('td', p.policy + (p.reason === 'reset' ? ' (sıfırlandı)' : '')),
+      el('td', p.name || '—'), el('td', p.old_level + ' → ' + p.new_level));
+    tb.append(tr);
+  }
+}
 async function loadArticles() {
   const { articles } = await api('/admin/articles');
   const tb = $('articles'); tb.replaceChildren();
@@ -360,7 +422,7 @@ async function show() {
     const me = await api('/me');
     if (!me.user.isAdmin) throw new Error('Bu hesap yönetici değil');
     $('login').hidden = true; $('panel').hidden = false;
-    await Promise.all([loadStats(), loadOnline(), loadUsers(), loadReports(), loadArticles(), loadProfiles(), loadChat()]);
+    await Promise.all([loadStats(), loadOnline(), loadUsers(), loadReports(), loadArticles(), loadPolicies(), loadProfiles(), loadChat()]);
     if (!window.__onlineTimer) window.__onlineTimer = setInterval(() => { if (token) { loadOnline().catch(() => {}); loadStats().catch(() => {}); } }, 30000);
   } catch (e) { token = null; localStorage.removeItem('rifftown_admin_token'); $('login').hidden = false; $('panel').hidden = true; $('loginErr').textContent = e.message === 'unauthorized' ? '' : e.message; }
 }
