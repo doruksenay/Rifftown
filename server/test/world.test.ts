@@ -138,7 +138,7 @@ describe('rehber görevler', () => {
     const p = await newPlayer({ cityId: 'lyon' });
     let t = (await p.c.get('/api/tutorial')).body;
     expect(t.steps).toHaveLength(TUTORIAL.length);
-    expect(t.current).toBe('write_song');
+    expect(t.current).toBe('profile');
     expect((await p.c.post('/api/tutorial/write_song/claim')).body.error).toBe('step_not_done');
 
     await p.c.post('/api/actions', { kind: 'write_song', title: 'İlk', genre: 'pop' });
@@ -148,7 +148,8 @@ describe('rehber görevler', () => {
     expect(claim.status).toBe(200);
     expect(claim.body.reward).toBe(25);
     expect((await raw(p.character.id)).money).toBe(before + 25);
-    expect(claim.body.state.current).toBe('work_shift');
+    // Sıradaki: ödülü alınmamış ilk anlık adım
+    expect(claim.body.state.current).toBe('profile');
     expect((await p.c.post('/api/tutorial/write_song/claim')).body.error).toBe('already_claimed');
     expect((await p.c.post('/api/tutorial/nope/claim')).status).toBe(404);
 

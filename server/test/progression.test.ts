@@ -188,7 +188,8 @@ describe('ilk saat dengesi', () => {
   it('rehber bitince sıradaki hedef gelir; ödülü hazır adım önce gösterilir', async () => {
     const p = await newPlayer();
     const t0 = (await p.c.get('/api/tutorial')).body;
-    expect(t0.current).toBe('write_song');
+    // İlk adım anlık (playtest Y-2): profil
+    expect(t0.current).toBe('profile');
     // Hedef her zaman gelir (rehberi gizleyen oyuncu da görür)
     expect(t0.next).toMatchObject({ id: 'band' });
     for (const s of TUTORIAL) {

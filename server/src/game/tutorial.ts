@@ -13,7 +13,10 @@ async function doneSteps(db: Db, characterId: number): Promise<Set<string>> {
   const extra = await one(
     db,
     `SELECT EXISTS (SELECT 1 FROM familiarity WHERE character_id = $1 AND value > 0) AS rehearsed,
-            EXISTS (SELECT 1 FROM homes WHERE character_id = $1) AS home`,
+            EXISTS (SELECT 1 FROM homes WHERE character_id = $1) AS home,
+            EXISTS (SELECT 1 FROM meals WHERE character_id = $1) AS meal,
+            EXISTS (SELECT 1 FROM characters WHERE id = $1 AND (headline <> '' OR bio <> '')) AS profile,
+            EXISTS (SELECT 1 FROM relationships WHERE (a_id = $1 OR b_id = $1) AND (friends OR friend_request = $1)) AS friend`,
     [characterId],
   );
   const done = new Set<string>();
@@ -27,6 +30,9 @@ async function doneSteps(db: Db, characterId: number): Promise<Set<string>> {
     record: ach.has('first_recording'),
     release: ach.has('first_single'),
     home: !!extra?.home,
+    meal: !!extra?.meal,
+    profile: !!extra?.profile,
+    friend: !!extra?.friend,
   };
   for (const [id, ok] of Object.entries(map)) if (ok) done.add(id);
   return done;
@@ -37,10 +43,15 @@ export async function tutorialState(db: Db, characterId: number): Promise<Tutori
   const done = await doneSteps(db, characterId);
   const claimed = new Set((await many(db, 'SELECT step_id FROM tutorial_claims WHERE character_id = $1', [characterId])).map((r) => r.step_id));
   const steps = TUTORIAL.map((s) => ({ id: s.id, done: done.has(s.id), claimed: claimed.has(s.id) }));
-  // Sırayla gitmek zorunda değil: ödülü hazır bir adım varsa önce o gösterilir
-  const current = steps.find((s) => s.done && !s.claimed) ?? steps.find((s) => !s.claimed);
+  // Sırayla gitmek zorunda değil: ödülü hazır bir adım varsa önce o gösterilir. Süreli bir eylem sürüyorsa kart o
+  // eylemin adımında takılmaz (playtest Y-2: ilk saat tek düğmeydi): eylem sürerken yapılabilen ilk adımı gösterir.
+  const active = await one(db, `SELECT kind FROM actions WHERE character_id = $1 AND status = 'active'`, [characterId]);
+  const open = steps.filter((s) => !s.claimed && !s.done);
+  const waiting = active ? (open.find((s) => TUTORIAL_BY_ID[s.id].action === active.kind) ?? null) : null;
+  const doable = active ? open.filter((s) => TUTORIAL_BY_ID[s.id].whileBusy) : open;
+  const current = steps.find((s) => s.done && !s.claimed) ?? doable[0] ?? open.find((s) => s !== waiting) ?? open[0];
   // Hedef her zaman hesaplanır: rehberi gizleyen ya da bir adımı atlayan oyuncu da görür
-  return { steps, current: current?.id ?? null, next: await goalFor(db, characterId) };
+  return { steps, current: current?.id ?? null, next: await goalFor(db, characterId), waiting: waiting?.id ?? null };
 }
 
 /** Rehber bittikten sonraki hedef: grubun şarkı sayısı ve şehirlerdeki şöhreti */

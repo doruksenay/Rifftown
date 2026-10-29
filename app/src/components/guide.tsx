@@ -62,6 +62,10 @@ export function GuideCard() {
           storage.set('guideHidden', '1');
         }} />
       </Row>
+      {/* Süren eylemin adımı (ör. şarkı yazılıyor): kart beklemede kalmaz, bu arada yapılacak adımı gösterir */}
+      {q.data!.waiting && TUTORIAL_BY_ID[q.data!.waiting] && !state.done ? (
+        <Small color={c.inkSoft} style={{ marginTop: space.xs }}>{t('guideWhileWaiting', { step: p(TUTORIAL_BY_ID[q.data!.waiting].title) })}</Small>
+      ) : null}
       <Strong style={{ marginTop: space.xs }}>{p(current.title)}</Strong>
       <Body color={c.inkSoft} style={{ marginTop: space.xs }}>
         {state.done ? t('guideDoneHere') : p(current.about)}

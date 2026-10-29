@@ -449,17 +449,22 @@ Ayrıntı, varsayımlar ve bütün tablolar: [docs/DENGE_OLCUMU.md](docs/DENGE_O
 
 ## Rehber görevler
 
-Yeni oyuncunun ana ekranında "sıradaki adım" kartı görünür. Dokuz adım, toplam $305 ödül (ek hesaplarla para toplamaya değmesin diye küçük):
+Yeni oyuncunun ana ekranında "sıradaki adım" kartı görünür. On iki adım, toplam $315 ödül (ek hesaplarla para toplamaya değmesin diye küçük). Sıra ilk dakikaları doldurur (playtest Y-2: eskiden 2 saatlik "şarkı yaz" ilk adımdı ve gerçek hızda ilk saat tek düğmeyle geçiyordu): önce anlık adımlar, sonra süreli işler.
 
-1. İlk şarkını yaz ($25)
-2. Bir mesai yap ($20)
-3. Kitapçıdan yeni bir beceri öğren ($20)
-4. Grubunu kur ($25)
-5. Prova yap ($25)
-6. İlk konserini ver ($50)
-7. Bir şarkı kaydet ($50)
-8. İlk single'ını yayınla ($75)
-9. Kendine bir ev tut ($15)
+1. Kendini tanıt: profile başlık ya da hakkında yazısı ($10, anlık)
+2. Kitapçıdan yeni bir beceri öğren ($20, anlık)
+3. Grubunu kur ($25, anlık)
+4. Kendine bir ev tut ($15, anlık; ev dinlenmeyi hızlandırır)
+5. Karnını doyur: restoranda bir yemek ($10, anlık)
+6. İlk şarkını yaz ($25, 2 saat)
+7. Bir arkadaş edin: arkadaşlık isteği gönder ($10, eylem sürerken de olur)
+8. Bir mesai yap ($20)
+9. Prova yap ($25)
+10. İlk konserini ver ($50)
+11. Bir şarkı kaydet ($45; eskiden $50)
+12. İlk single'ını yayınla ($60; eskiden $75)
+
+Süreli bir eylem sürerken kart o eylemin adımında takılmaz: eylem sürerken yapılabilen adımları (profil, grup, arkadaş) gösterir ve "… sürüyor. Bu arada:" der. Ölçüm (`scripts/balance/sim-first-hour.ts`, yalnızca kartı izleyen oyuncu, gerçek hız): ilk 10 dakikada alınan ödül 0 → 6, dokunuş 1 → 13; 72. saatte para ~$494 → $454 (ev artık ilk dakikada tutuluyor).
 
 Adımların tamamlanıp tamamlanmadığı oyuncunun yaptıklarından hesaplanır (başarımlarla aynı istatistikler); sırası gelmeden yapılan adımın ödülü de alınabilir ve kart önce ödülü hazır olan adımı gösterir, her ödül bir kez. Kartta "Git" düğmesi ilgili ekranı açar; kart gizlenebilir.
 

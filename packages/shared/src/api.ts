@@ -596,10 +596,13 @@ export interface JusticeResponse {
 
 export interface TutorialResponse {
   steps: { id: string; done: boolean; claimed: boolean }[];
-  /** Sıradaki adım: ödülü hazır olan ilk adım, yoksa ödülü alınmamış ilk adım; hepsi bittiyse null */
+  /** Sıradaki adım: ödülü hazır olan ilk adım; yoksa şu an yapılabilen (eylem sürerken yalnızca whileBusy), ödülü
+   *  alınmamış ilk adım; hepsi bittiyse null */
   current: string | null;
   /** Sıradaki büyük hedef (rehber bitince ya da gizlenince gösterilir) */
   next: NextGoal | null;
+  /** Süren eylemiyle bekleyen adım (ör. şarkı yazılıyor): kart "bu arada" diye sıradaki adımı gösterir */
+  waiting?: string | null;
 }
 
 // ---------- Başarımlar ----------
