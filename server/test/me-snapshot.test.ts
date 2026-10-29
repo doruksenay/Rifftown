@@ -1,5 +1,6 @@
 // /me tek sorguda (playtest O-10): yeni sorgu eski yardımcıların döndürdüğüyle birebir aynı veriyi verir.
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { config } from '../src/config';
 import { pool } from '../src/db';
 import { achievementPoints, achievementQueueIdle } from '../src/game/achievements';
 import { businessOf } from '../src/game/business';
@@ -14,6 +15,16 @@ import { me, newPlayer, setMoney, setup, teardown } from './helpers';
 
 beforeAll(setup);
 afterAll(teardown);
+// Yavaş saat (1 oyun saati = 1 sn): test hızında (1 oyun saati = 1 ms) 48 saatlik "Yeni başlangıç" moodlet'i ~48 ms
+// yaşar; iki sorgu arasında süresi dolabildiği için karşılaştırma zamanlamaya bağlıydı (CI'da kırmızı).
+let prevSpeed = 0;
+beforeEach(() => {
+  prevSpeed = config.gameSpeed;
+  config.gameSpeed = 3600;
+});
+afterEach(() => {
+  config.gameSpeed = prevSpeed;
+});
 
 const q = (sql: string, p: unknown[] = []) => pool.query(sql, p);
 
@@ -45,7 +56,10 @@ describe('/me tek sorgu', () => {
   it('boş ve dolu karakterde eski yardımcılarla aynı', async () => {
     const a = await newPlayer();
     const b = await newPlayer();
-    expect(norm(await meSnapshot(pool, a.character.id))).toEqual(await legacy(a.character.id));
+    const s0 = await meSnapshot(pool, a.character.id);
+    expect(norm(s0)).toEqual(await legacy(a.character.id));
+    // Karakter açılışında verilen moodlet iki tarafta da var
+    expect(s0!.moodlets.map((m) => m.id)).toContain('fresh_start');
 
     // Dolu durum: grup, davet, eylem, ev, otel, moodlet, makam, başarım, mesaj, bildirim, dava
     await setMoney(a.character.id, 5000);
